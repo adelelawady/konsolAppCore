@@ -1,0 +1,225 @@
+<div>
+  <h2 id="page-heading" data-cy="InvoiceItemHeading">
+    <span jhiTranslate="konsolCoreApp.invoiceItem.home.title">Invoice Items</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span jhiTranslate="konsolCoreApp.invoiceItem.home.refreshListLabel">Refresh list</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-invoice-item"
+        [routerLink]="['/invoice-item/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span jhiTranslate="konsolCoreApp.invoiceItem.home.createLabel"> Create a new Invoice Item </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="invoiceItems?.length === 0">
+    <span jhiTranslate="konsolCoreApp.invoiceItem.home.notFound">No Invoice Items found</span>
+  </div>
+
+  <div class="table-responsive table-entities" id="entities" *ngIf="invoiceItems && invoiceItems.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
+          <th scope="col" jhiSortBy="pk">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.invoiceItem.pk">Pk</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="id">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.invoiceItem.id">Id</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="unit">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.invoiceItem.unit">Unit</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="unitPieces">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.invoiceItem.unitPieces">Unit Pieces</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="userQty">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.invoiceItem.userQty">User Qty</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="unitQtyIn">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.invoiceItem.unitQtyIn">Unit Qty In</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="unitQtyOut">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.invoiceItem.unitQtyOut">Unit Qty Out</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="unitCost">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.invoiceItem.unitCost">Unit Cost</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="unitPrice">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.invoiceItem.unitPrice">Unit Price</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="discountPer">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.invoiceItem.discountPer">Discount Per</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="discount">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.invoiceItem.discount">Discount</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="totalCost">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.invoiceItem.totalCost">Total Cost</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="totalPrice">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.invoiceItem.totalPrice">Total Price</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="qtyIn">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.invoiceItem.qtyIn">Qty In</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="qtyOut">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.invoiceItem.qtyOut">Qty Out</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="cost">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.invoiceItem.cost">Cost</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="price">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.invoiceItem.price">Price</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="netCost">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.invoiceItem.netCost">Net Cost</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="netPrice">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.invoiceItem.netPrice">Net Price</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let invoiceItem of invoiceItems; trackBy: trackId" data-cy="entityTable">
+          <td>{{ invoiceItem.pk }}</td>
+          <td>
+            <a [routerLink]="['/invoice-item', invoiceItem.id, 'view']">{{ invoiceItem.id }}</a>
+          </td>
+          <td>{{ invoiceItem.unit }}</td>
+          <td>{{ invoiceItem.unitPieces }}</td>
+          <td>{{ invoiceItem.userQty }}</td>
+          <td>{{ invoiceItem.unitQtyIn }}</td>
+          <td>{{ invoiceItem.unitQtyOut }}</td>
+          <td>{{ invoiceItem.unitCost }}</td>
+          <td>{{ invoiceItem.unitPrice }}</td>
+          <td>{{ invoiceItem.discountPer }}</td>
+          <td>{{ invoiceItem.discount }}</td>
+          <td>{{ invoiceItem.totalCost }}</td>
+          <td>{{ invoiceItem.totalPrice }}</td>
+          <td>{{ invoiceItem.qtyIn }}</td>
+          <td>{{ invoiceItem.qtyOut }}</td>
+          <td>{{ invoiceItem.cost }}</td>
+          <td>{{ invoiceItem.price }}</td>
+          <td>{{ invoiceItem.netCost }}</td>
+          <td>{{ invoiceItem.netPrice }}</td>
+          <td class="text-end">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/invoice-item', invoiceItem.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/invoice-item', invoiceItem.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(invoiceItem)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="invoiceItems && invoiceItems.length > 0">
+    <div class="d-flex justify-content-center">
+      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
+    </div>
+
+    <div class="d-flex justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [page]="page"
+        [pageSize]="itemsPerPage"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="navigateToPage($event)"
+      ></ngb-pagination>
+    </div>
+  </div>
+</div>

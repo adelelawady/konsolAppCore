@@ -7,8 +7,9 @@ import com.konsol.core.repository.AuthorityRepository;
 import com.konsol.core.repository.UserRepository;
 import com.konsol.core.security.AuthoritiesConstants;
 import com.konsol.core.security.SecurityUtils;
-import com.konsol.core.service.dto.AdminUserDTO;
-import com.konsol.core.service.dto.UserDTO;
+import com.konsol.core.service.api.dto.AdminUserDTO;
+import com.konsol.core.service.api.dto.UserDTO;
+import com.konsol.core.service.mapper.UserMapper;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -39,16 +40,20 @@ public class UserService {
 
     private final CacheManager cacheManager;
 
+    private final UserMapper userMapper;
+
     public UserService(
         UserRepository userRepository,
         PasswordEncoder passwordEncoder,
         AuthorityRepository authorityRepository,
-        CacheManager cacheManager
+        CacheManager cacheManager,
+        UserMapper userMapper
     ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authorityRepository = authorityRepository;
         this.cacheManager = cacheManager;
+        this.userMapper = userMapper;
     }
 
     public Optional<User> activateRegistration(String key) {
@@ -200,7 +205,7 @@ public class UserService {
                     user.setEmail(userDTO.getEmail().toLowerCase());
                 }
                 user.setImageUrl(userDTO.getImageUrl());
-                user.setActivated(userDTO.isActivated());
+                user.setActivated(userDTO.getActivated());
                 user.setLangKey(userDTO.getLangKey());
                 Set<Authority> managedAuthorities = user.getAuthorities();
                 managedAuthorities.clear();
@@ -216,7 +221,7 @@ public class UserService {
                 log.debug("Changed Information for User: {}", user);
                 return user;
             })
-            .map(AdminUserDTO::new);
+            .map(userMapper::userToAdminUserDTO);
     }
 
     public void deleteUser(String login) {
@@ -274,11 +279,11 @@ public class UserService {
     }
 
     public Page<AdminUserDTO> getAllManagedUsers(Pageable pageable) {
-        return userRepository.findAll(pageable).map(AdminUserDTO::new);
+        return userRepository.findAll(pageable).map(userMapper::userToAdminUserDTO);
     }
 
     public Page<UserDTO> getAllPublicUsers(Pageable pageable) {
-        return userRepository.findAllByIdNotNullAndActivatedIsTrue(pageable).map(UserDTO::new);
+        return userRepository.findAllByIdNotNullAndActivatedIsTrue(pageable).map(userMapper::userToUserDTO);
     }
 
     public Optional<User> getUserWithAuthoritiesByLogin(String login) {

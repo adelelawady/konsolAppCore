@@ -1,0 +1,10 @@
+{
+  "konsolCoreApp": {
+    "AccountKind": {
+      "null": "",
+      "CUSTOMER": "CUSTOMER",
+      "SUPPLIER": "SUPPLIER",
+      "SALEMAN": "SALEMAN"
+    }
+  }
+}

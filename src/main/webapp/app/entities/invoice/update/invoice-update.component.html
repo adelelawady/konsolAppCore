@@ -1,0 +1,329 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-invoice-heading" data-cy="InvoiceCreateUpdateHeading" jhiTranslate="konsolCoreApp.invoice.home.createOrEditLabel">
+        Create or edit a Invoice
+      </h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="konsolCoreApp.invoice.pk" for="field_pk">Pk</label>
+          <input type="text" class="form-control" name="pk" id="field_pk" data-cy="pk" formControlName="pk" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="konsolCoreApp.invoice.id" for="field_id">Id</label>
+          <input
+            type="text"
+            class="form-control"
+            name="id"
+            id="field_id"
+            data-cy="id"
+            formControlName="id"
+            [readonly]="editForm.get('id')!.value != null"
+          />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="konsolCoreApp.invoice.kind" for="field_kind">Kind</label>
+          <select class="form-control" name="kind" formControlName="kind" id="field_kind" data-cy="kind">
+            <option [ngValue]="null">{{ 'konsolCoreApp.InvoiceKind.null' | translate }}</option>
+            <option *ngFor="let invoiceKind of invoiceKindValues" [value]="invoiceKind">
+              {{ 'konsolCoreApp.InvoiceKind.' + invoiceKind | translate }}
+            </option>
+          </select>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="konsolCoreApp.invoice.totalCost" for="field_totalCost">Total Cost</label>
+          <input type="number" class="form-control" name="totalCost" id="field_totalCost" data-cy="totalCost" formControlName="totalCost" />
+          <div *ngIf="editForm.get('totalCost')!.invalid && (editForm.get('totalCost')!.dirty || editForm.get('totalCost')!.touched)">
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('totalCost')?.errors?.min"
+              jhiTranslate="entity.validation.min"
+              [translateValues]="{ min: 0 }"
+            >
+              This field should be at least 0.
+            </small>
+            <small
+              class="form-text text-danger"
+              [hidden]="!editForm.get('totalCost')?.errors?.number"
+              jhiTranslate="entity.validation.number"
+            >
+              This field should be a number.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="konsolCoreApp.invoice.totalPrice" for="field_totalPrice">Total Price</label>
+          <input
+            type="number"
+            class="form-control"
+            name="totalPrice"
+            id="field_totalPrice"
+            data-cy="totalPrice"
+            formControlName="totalPrice"
+          />
+          <div *ngIf="editForm.get('totalPrice')!.invalid && (editForm.get('totalPrice')!.dirty || editForm.get('totalPrice')!.touched)">
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('totalPrice')?.errors?.min"
+              jhiTranslate="entity.validation.min"
+              [translateValues]="{ min: 0 }"
+            >
+              This field should be at least 0.
+            </small>
+            <small
+              class="form-text text-danger"
+              [hidden]="!editForm.get('totalPrice')?.errors?.number"
+              jhiTranslate="entity.validation.number"
+            >
+              This field should be a number.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="konsolCoreApp.invoice.discountPer" for="field_discountPer">Discount Per</label>
+          <input
+            type="number"
+            class="form-control"
+            name="discountPer"
+            id="field_discountPer"
+            data-cy="discountPer"
+            formControlName="discountPer"
+          />
+          <div *ngIf="editForm.get('discountPer')!.invalid && (editForm.get('discountPer')!.dirty || editForm.get('discountPer')!.touched)">
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('discountPer')?.errors?.min"
+              jhiTranslate="entity.validation.min"
+              [translateValues]="{ min: 0 }"
+            >
+              This field should be at least 0.
+            </small>
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('discountPer')?.errors?.max"
+              jhiTranslate="entity.validation.max"
+              [translateValues]="{ max: 100 }"
+            >
+              This field cannot be more than 100.
+            </small>
+            <small
+              class="form-text text-danger"
+              [hidden]="!editForm.get('discountPer')?.errors?.number"
+              jhiTranslate="entity.validation.number"
+            >
+              This field should be a number.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="konsolCoreApp.invoice.discount" for="field_discount">Discount</label>
+          <input type="number" class="form-control" name="discount" id="field_discount" data-cy="discount" formControlName="discount" />
+          <div *ngIf="editForm.get('discount')!.invalid && (editForm.get('discount')!.dirty || editForm.get('discount')!.touched)">
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('discount')?.errors?.min"
+              jhiTranslate="entity.validation.min"
+              [translateValues]="{ min: 0 }"
+            >
+              This field should be at least 0.
+            </small>
+            <small
+              class="form-text text-danger"
+              [hidden]="!editForm.get('discount')?.errors?.number"
+              jhiTranslate="entity.validation.number"
+            >
+              This field should be a number.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="konsolCoreApp.invoice.additions" for="field_additions">Additions</label>
+          <input type="number" class="form-control" name="additions" id="field_additions" data-cy="additions" formControlName="additions" />
+          <div *ngIf="editForm.get('additions')!.invalid && (editForm.get('additions')!.dirty || editForm.get('additions')!.touched)">
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('additions')?.errors?.min"
+              jhiTranslate="entity.validation.min"
+              [translateValues]="{ min: 0 }"
+            >
+              This field should be at least 0.
+            </small>
+            <small
+              class="form-text text-danger"
+              [hidden]="!editForm.get('additions')?.errors?.number"
+              jhiTranslate="entity.validation.number"
+            >
+              This field should be a number.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="konsolCoreApp.invoice.additionsType" for="field_additionsType">Additions Type</label>
+          <input
+            type="text"
+            class="form-control"
+            name="additionsType"
+            id="field_additionsType"
+            data-cy="additionsType"
+            formControlName="additionsType"
+          />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="konsolCoreApp.invoice.netCost" for="field_netCost">Net Cost</label>
+          <input type="number" class="form-control" name="netCost" id="field_netCost" data-cy="netCost" formControlName="netCost" />
+          <div *ngIf="editForm.get('netCost')!.invalid && (editForm.get('netCost')!.dirty || editForm.get('netCost')!.touched)">
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('netCost')?.errors?.min"
+              jhiTranslate="entity.validation.min"
+              [translateValues]="{ min: 0 }"
+            >
+              This field should be at least 0.
+            </small>
+            <small
+              class="form-text text-danger"
+              [hidden]="!editForm.get('netCost')?.errors?.number"
+              jhiTranslate="entity.validation.number"
+            >
+              This field should be a number.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="konsolCoreApp.invoice.netPrice" for="field_netPrice">Net Price</label>
+          <input type="number" class="form-control" name="netPrice" id="field_netPrice" data-cy="netPrice" formControlName="netPrice" />
+          <div *ngIf="editForm.get('netPrice')!.invalid && (editForm.get('netPrice')!.dirty || editForm.get('netPrice')!.touched)">
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('netPrice')?.errors?.min"
+              jhiTranslate="entity.validation.min"
+              [translateValues]="{ min: 0 }"
+            >
+              This field should be at least 0.
+            </small>
+            <small
+              class="form-text text-danger"
+              [hidden]="!editForm.get('netPrice')?.errors?.number"
+              jhiTranslate="entity.validation.number"
+            >
+              This field should be a number.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="konsolCoreApp.invoice.expenses" for="field_expenses">Expenses</label>
+          <input type="number" class="form-control" name="expenses" id="field_expenses" data-cy="expenses" formControlName="expenses" />
+          <div *ngIf="editForm.get('expenses')!.invalid && (editForm.get('expenses')!.dirty || editForm.get('expenses')!.touched)">
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('expenses')?.errors?.min"
+              jhiTranslate="entity.validation.min"
+              [translateValues]="{ min: 0 }"
+            >
+              This field should be at least 0.
+            </small>
+            <small
+              class="form-text text-danger"
+              [hidden]="!editForm.get('expenses')?.errors?.number"
+              jhiTranslate="entity.validation.number"
+            >
+              This field should be a number.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="konsolCoreApp.invoice.expensesType" for="field_expensesType">Expenses Type</label>
+          <input
+            type="text"
+            class="form-control"
+            name="expensesType"
+            id="field_expensesType"
+            data-cy="expensesType"
+            formControlName="expensesType"
+          />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="konsolCoreApp.invoice.bank" for="field_bank">Bank</label>
+          <select class="form-control" id="field_bank" data-cy="bank" name="bank" formControlName="bank" [compareWith]="compareBank">
+            <option [ngValue]="null"></option>
+            <option [ngValue]="bankOption" *ngFor="let bankOption of banksSharedCollection">{{ bankOption.id }}</option>
+          </select>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="konsolCoreApp.invoice.item" for="field_item">Item</label>
+          <select class="form-control" id="field_item" data-cy="item" name="item" formControlName="item" [compareWith]="compareItem">
+            <option [ngValue]="null"></option>
+            <option [ngValue]="itemOption" *ngFor="let itemOption of itemsSharedCollection">{{ itemOption.id }}</option>
+          </select>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="konsolCoreApp.invoice.account" for="field_account">Account</label>
+          <select
+            class="form-control"
+            id="field_account"
+            data-cy="account"
+            name="account"
+            formControlName="account"
+            [compareWith]="compareAccountUser"
+          >
+            <option [ngValue]="null"></option>
+            <option [ngValue]="accountUserOption" *ngFor="let accountUserOption of accountUsersSharedCollection">
+              {{ accountUserOption.id }}
+            </option>
+          </select>
+        </div>
+
+        <div class="row mb-3">
+          <label jhiTranslate="konsolCoreApp.invoice.invoiceItems" for="field_invoiceItems">Invoice Items</label>
+          <select
+            class="form-control"
+            id="field_invoiceItems"
+            data-cy="invoiceItems"
+            multiple
+            name="invoiceItems"
+            formControlName="invoiceItems"
+            [compareWith]="compareInvoiceItem"
+          >
+            <option [ngValue]="invoiceItemOption" *ngFor="let invoiceItemOption of invoiceItemsSharedCollection">
+              {{ invoiceItemOption.id }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -7,6 +7,16 @@
       "jhipster-needle-menu-add-element": "JHipster will add additional menu entries here (do not translate!)",
       "entities": {
         "main": "الكيانات",
+        "pk": "Pk",
+        "invoice": "Invoice",
+        "invoiceItem": "Invoice Item",
+        "accountUser": "Account User",
+        "bank": "Bank",
+        "money": "Money",
+        "store": "Store",
+        "storeItem": "Store Item",
+        "item": "Item",
+        "itemUnit": "Item Unit",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

@@ -2,8 +2,10 @@ package com.konsol.core.service.mapper;
 
 import com.konsol.core.domain.Authority;
 import com.konsol.core.domain.User;
-import com.konsol.core.service.dto.AdminUserDTO;
-import com.konsol.core.service.dto.UserDTO;
+import com.konsol.core.service.api.dto.AdminUserDTO;
+import com.konsol.core.service.api.dto.UserDTO;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.mapstruct.BeanMapping;
@@ -25,7 +27,12 @@ public class UserMapper {
     }
 
     public UserDTO userToUserDTO(User user) {
-        return new UserDTO(user);
+        UserDTO userX = new UserDTO();
+        userX.setId(user.getId());
+        // Customize it here if you need, or not, firstName/lastName/etc
+        userX.setLogin(user.getLogin());
+
+        return userX;
     }
 
     public List<AdminUserDTO> usersToAdminUserDTOs(List<User> users) {
@@ -33,7 +40,21 @@ public class UserMapper {
     }
 
     public AdminUserDTO userToAdminUserDTO(User user) {
-        return new AdminUserDTO(user);
+        AdminUserDTO adminUserDTO = new AdminUserDTO();
+        adminUserDTO.setId(user.getId());
+        adminUserDTO.setLogin(user.getLogin());
+        adminUserDTO.setFirstName(user.getFirstName());
+        adminUserDTO.setLastName(user.getLastName());
+        adminUserDTO.setEmail(user.getEmail());
+        adminUserDTO.setActivated(user.isActivated());
+        adminUserDTO.setImageUrl(user.getImageUrl());
+        adminUserDTO.setLangKey(user.getLangKey());
+        adminUserDTO.setCreatedBy(user.getCreatedBy());
+        adminUserDTO.setCreatedDate(OffsetDateTime.ofInstant(user.getCreatedDate(), ZoneId.systemDefault()));
+        adminUserDTO.setLastModifiedBy(user.getLastModifiedBy());
+        adminUserDTO.setLastModifiedDate(OffsetDateTime.ofInstant(user.getLastModifiedDate(), ZoneId.systemDefault()));
+        adminUserDTO.setAuthorities(user.getAuthorities().stream().map(Authority::getName).collect(Collectors.toSet()));
+        return adminUserDTO;
     }
 
     public List<User> userDTOsToUsers(List<AdminUserDTO> userDTOs) {
@@ -51,7 +72,7 @@ public class UserMapper {
             user.setLastName(userDTO.getLastName());
             user.setEmail(userDTO.getEmail());
             user.setImageUrl(userDTO.getImageUrl());
-            user.setActivated(userDTO.isActivated());
+            user.setActivated(userDTO.getActivated());
             user.setLangKey(userDTO.getLangKey());
             Set<Authority> authorities = this.authoritiesFromStrings(userDTO.getAuthorities());
             user.setAuthorities(authorities);

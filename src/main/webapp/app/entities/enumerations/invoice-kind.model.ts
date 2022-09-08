@@ -1,0 +1,17 @@
+export enum InvoiceKind {
+  SALE = 'SALE',
+
+  PURCHASE = 'PURCHASE',
+
+  ADJUST = 'ADJUST',
+
+  TRANSFER = 'TRANSFER',
+
+  SALEQUOTE = 'SALEQUOTE',
+
+  RETURNPUR = 'RETURNPUR',
+
+  RETURNSALE = 'RETURNSALE',
+
+  COMPONENT = 'COMPONENT',
+}

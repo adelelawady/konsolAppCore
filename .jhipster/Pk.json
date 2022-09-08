@@ -1,0 +1,31 @@
+{
+  "applications": "*",
+  "changelogDate": "20220907223430",
+  "dto": "mapstruct",
+  "embedded": false,
+  "entityTableName": "pk",
+  "fields": [
+    {
+      "fieldName": "id",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "kind",
+      "fieldType": "PkKind",
+      "fieldValues": "INVOICE,InvoicesItems,Money"
+    },
+    {
+      "fieldName": "value",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["min"],
+      "fieldValidateRulesMin": "0"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "name": "Pk",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [],
+  "service": "serviceImpl"
+}

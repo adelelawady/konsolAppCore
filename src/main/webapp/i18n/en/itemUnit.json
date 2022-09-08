@@ -1,0 +1,27 @@
+{
+  "konsolCoreApp": {
+    "itemUnit": {
+      "home": {
+        "title": "Item Units",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Item Unit",
+        "createOrEditLabel": "Create or edit a Item Unit",
+        "notFound": "No Item Units found"
+      },
+      "created": "A new Item Unit is created with identifier {{ param }}",
+      "updated": "A Item Unit is updated with identifier {{ param }}",
+      "deleted": "A Item Unit is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Item Unit {{ id }}?"
+      },
+      "detail": {
+        "title": "Item Unit"
+      },
+      "id": "Id",
+      "name": "Name",
+      "pieces": "Pieces",
+      "price": "Price",
+      "item": "Item"
+    }
+  }
+}

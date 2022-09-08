@@ -1,0 +1,40 @@
+{
+  "applications": "*",
+  "changelogDate": "20220907223437",
+  "dto": "mapstruct",
+  "embedded": false,
+  "entityTableName": "store_items",
+  "fields": [
+    {
+      "fieldName": "id",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "qty",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["min"],
+      "fieldValidateRulesMin": "0"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "name": "StoreItem",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "item",
+      "ownerSide": true,
+      "relationshipName": "item",
+      "relationshipType": "one-to-one"
+    },
+    {
+      "otherEntityName": "store",
+      "otherEntityRelationshipName": "items",
+      "ownerSide": false,
+      "relationshipName": "storeId",
+      "relationshipType": "many-to-many"
+    }
+  ],
+  "service": "serviceImpl"
+}

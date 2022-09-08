@@ -1,0 +1,42 @@
+{
+  "konsolCoreApp": {
+    "invoiceItem": {
+      "home": {
+        "title": "Invoice Items",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Invoice Item",
+        "createOrEditLabel": "Create or edit a Invoice Item",
+        "notFound": "No Invoice Items found"
+      },
+      "created": "A new Invoice Item is created with identifier {{ param }}",
+      "updated": "A Invoice Item is updated with identifier {{ param }}",
+      "deleted": "A Invoice Item is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Invoice Item {{ id }}?"
+      },
+      "detail": {
+        "title": "Invoice Item"
+      },
+      "pk": "Pk",
+      "id": "Id",
+      "unit": "Unit",
+      "unitPieces": "Unit Pieces",
+      "userQty": "User Qty",
+      "unitQtyIn": "Unit Qty In",
+      "unitQtyOut": "Unit Qty Out",
+      "unitCost": "Unit Cost",
+      "unitPrice": "Unit Price",
+      "discountPer": "Discount Per",
+      "discount": "Discount",
+      "totalCost": "Total Cost",
+      "totalPrice": "Total Price",
+      "qtyIn": "Qty In",
+      "qtyOut": "Qty Out",
+      "cost": "Cost",
+      "price": "Price",
+      "netCost": "Net Cost",
+      "netPrice": "Net Price",
+      "invoice": "Invoice"
+    }
+  }
+}

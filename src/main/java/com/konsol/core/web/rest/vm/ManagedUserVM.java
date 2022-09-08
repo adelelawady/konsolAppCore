@@ -1,11 +1,10 @@
-package com.konsol.core.web.rest.vm;
+/* package com.konsol.core.web.rest.vm;
 
-import com.konsol.core.service.dto.AdminUserDTO;
+import com.konsol.core.service.api.dto.AdminUserDTO;
+
 import javax.validation.constraints.Size;
 
-/**
- * View Model extending the AdminUserDTO, which is meant to be used in the user management UI.
- */
+
 public class ManagedUserVM extends AdminUserDTO {
 
     public static final int PASSWORD_MIN_LENGTH = 4;
@@ -33,3 +32,4 @@ public class ManagedUserVM extends AdminUserDTO {
         return "ManagedUserVM{" + super.toString() + "} ";
     }
 }
+*/

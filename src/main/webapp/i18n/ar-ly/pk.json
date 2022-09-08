@@ -1,0 +1,25 @@
+{
+  "konsolCoreApp": {
+    "pk": {
+      "home": {
+        "title": "Pks",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Pk",
+        "createOrEditLabel": "Create or edit a Pk",
+        "notFound": "No Pks found"
+      },
+      "created": "A new Pk is created with identifier {{ param }}",
+      "updated": "A Pk is updated with identifier {{ param }}",
+      "deleted": "A Pk is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Pk {{ id }}?"
+      },
+      "detail": {
+        "title": "Pk"
+      },
+      "id": "Id",
+      "kind": "Kind",
+      "value": "Value"
+    }
+  }
+}

@@ -1,0 +1,132 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2
+        id="jhi-account-user-heading"
+        data-cy="AccountUserCreateUpdateHeading"
+        jhiTranslate="konsolCoreApp.accountUser.home.createOrEditLabel"
+      >
+        Create or edit a Account User
+      </h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="konsolCoreApp.accountUser.id" for="field_id">Id</label>
+          <input
+            type="text"
+            class="form-control"
+            name="id"
+            id="field_id"
+            data-cy="id"
+            formControlName="id"
+            [readonly]="editForm.get('id')!.value != null"
+          />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="konsolCoreApp.accountUser.name" for="field_name">Name</label>
+          <input type="text" class="form-control" name="name" id="field_name" data-cy="name" formControlName="name" />
+          <div *ngIf="editForm.get('name')!.invalid && (editForm.get('name')!.dirty || editForm.get('name')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('name')?.errors?.required" jhiTranslate="entity.validation.required">
+              This field is required.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="konsolCoreApp.accountUser.kind" for="field_kind">Kind</label>
+          <select class="form-control" name="kind" formControlName="kind" id="field_kind" data-cy="kind">
+            <option [ngValue]="null">{{ 'konsolCoreApp.AccountKind.null' | translate }}</option>
+            <option *ngFor="let accountKind of accountKindValues" [value]="accountKind">
+              {{ 'konsolCoreApp.AccountKind.' + accountKind | translate }}
+            </option>
+          </select>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="konsolCoreApp.accountUser.balanceIn" for="field_balanceIn">Balance In</label>
+          <input type="number" class="form-control" name="balanceIn" id="field_balanceIn" data-cy="balanceIn" formControlName="balanceIn" />
+          <div *ngIf="editForm.get('balanceIn')!.invalid && (editForm.get('balanceIn')!.dirty || editForm.get('balanceIn')!.touched)">
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('balanceIn')?.errors?.min"
+              jhiTranslate="entity.validation.min"
+              [translateValues]="{ min: 0 }"
+            >
+              This field should be at least 0.
+            </small>
+            <small
+              class="form-text text-danger"
+              [hidden]="!editForm.get('balanceIn')?.errors?.number"
+              jhiTranslate="entity.validation.number"
+            >
+              This field should be a number.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="konsolCoreApp.accountUser.balanceOut" for="field_balanceOut">Balance Out</label>
+          <input
+            type="number"
+            class="form-control"
+            name="balanceOut"
+            id="field_balanceOut"
+            data-cy="balanceOut"
+            formControlName="balanceOut"
+          />
+          <div *ngIf="editForm.get('balanceOut')!.invalid && (editForm.get('balanceOut')!.dirty || editForm.get('balanceOut')!.touched)">
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('balanceOut')?.errors?.min"
+              jhiTranslate="entity.validation.min"
+              [translateValues]="{ min: 0 }"
+            >
+              This field should be at least 0.
+            </small>
+            <small
+              class="form-text text-danger"
+              [hidden]="!editForm.get('balanceOut')?.errors?.number"
+              jhiTranslate="entity.validation.number"
+            >
+              This field should be a number.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="konsolCoreApp.accountUser.phone" for="field_phone">Phone</label>
+          <input type="text" class="form-control" name="phone" id="field_phone" data-cy="phone" formControlName="phone" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="konsolCoreApp.accountUser.address" for="field_address">Address</label>
+          <input type="text" class="form-control" name="address" id="field_address" data-cy="address" formControlName="address" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="konsolCoreApp.accountUser.address2" for="field_address2">Address 2</label>
+          <input type="text" class="form-control" name="address2" id="field_address2" data-cy="address2" formControlName="address2" />
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

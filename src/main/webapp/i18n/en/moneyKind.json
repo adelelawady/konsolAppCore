@@ -1,0 +1,9 @@
+{
+  "konsolCoreApp": {
+    "MoneyKind": {
+      "null": "",
+      "PAYMENT": "PAYMENT",
+      "RECEIPT": "RECEIPT"
+    }
+  }
+}

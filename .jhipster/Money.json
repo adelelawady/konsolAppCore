@@ -1,0 +1,60 @@
+{
+  "applications": "*",
+  "changelogDate": "20220907223435",
+  "dto": "mapstruct",
+  "embedded": false,
+  "entityTableName": "monies",
+  "fields": [
+    {
+      "fieldName": "pk",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "id",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "kind",
+      "fieldType": "MoneyKind",
+      "fieldValues": "PAYMENT,RECEIPT"
+    },
+    {
+      "fieldName": "moneyIn",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["min"],
+      "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "moneyOut",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["min"],
+      "fieldValidateRulesMin": "0"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "name": "Money",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "bank",
+      "ownerSide": true,
+      "relationshipName": "bank",
+      "relationshipType": "one-to-one"
+    },
+    {
+      "otherEntityName": "item",
+      "ownerSide": true,
+      "relationshipName": "item",
+      "relationshipType": "one-to-one"
+    },
+    {
+      "otherEntityName": "accountUser",
+      "ownerSide": true,
+      "relationshipName": "account",
+      "relationshipType": "one-to-one"
+    }
+  ],
+  "service": "serviceImpl"
+}

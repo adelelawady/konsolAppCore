@@ -1,34 +1,2170 @@
-# API-first development with OpenAPI
-# This file will be used at compile time to generate Spring-MVC endpoint stubs using openapi-generator
-openapi: '3.0.1'
+openapi: 3.0.1
 info:
-  title: 'KonsolCore'
+  title: Konsol Core API
+  description: Konsol Core API documentation
+  termsOfService: ''
+  contact:
+    url: 'https://github.com/adelelawady'
+    name: ADEL ALI (KONSOL)
+    email: adel50ali50@gmail.com
+  license:
+    name: 'APACHE LICENSE, VERSION 2.0'
+    url: 'https://www.apache.org/licenses/LICENSE-2.0'
   version: 0.0.1
 servers:
-  - url: http://localhost:8080/api
-    description: Development server
-  - url: https://localhost:8080/api
-    description: Development server with TLS Profile
-paths: {}
-components:
-  responses:
-    Problem:
-      description: error occurred - see status code and problem object for more information.
-      content:
-        'application/problem+json':
+  - url: 'http://localhost:8080/api'
+    description: Generated server url
+paths:
+  '/api/stores/{id}':
+    get:
+      tags:
+        - store-resource
+      operationId: getStore
+      parameters:
+        - name: id
+          in: path
+          required: true
           schema:
-            $ref: 'https://opensource.zalando.com/problem/schema.yaml#/Problem'
-
-  securitySchemes:
-    jwt:
-      type: http
-      description: JWT Authentication
-      scheme: bearer
-      bearerFormat: JWT
-    basic:
-      type: http
-      description: Basic Authentication
-      scheme: basic
-security:
-  - jwt: []
-  - basic: []
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/StoreDTO'
+    put:
+      tags:
+        - store-resource
+      operationId: updateStore
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/StoreDTO'
+    delete:
+      tags:
+        - store-resource
+      operationId: deleteStore
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+    patch:
+      tags:
+        - store-resource
+      operationId: partialUpdateStore
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreDTO'
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/StoreDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/StoreDTO'
+  '/api/store-items/{id}':
+    get:
+      tags:
+        - store-item-resource
+      operationId: getStoreItem
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/StoreItemDTO'
+    put:
+      tags:
+        - store-item-resource
+      operationId: updateStoreItem
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreItemDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/StoreItemDTO'
+    delete:
+      tags:
+        - store-item-resource
+      operationId: deleteStoreItem
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+    patch:
+      tags:
+        - store-item-resource
+      operationId: partialUpdateStoreItem
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreItemDTO'
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/StoreItemDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/StoreItemDTO'
+  '/api/pks/{id}':
+    get:
+      tags:
+        - pk-resource
+      operationId: getPk
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PkDTO'
+    put:
+      tags:
+        - pk-resource
+      operationId: updatePk
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PkDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PkDTO'
+    delete:
+      tags:
+        - pk-resource
+      operationId: deletePk
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+    patch:
+      tags:
+        - pk-resource
+      operationId: partialUpdatePk
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PkDTO'
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/PkDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PkDTO'
+  '/api/monies/{id}':
+    get:
+      tags:
+        - money-resource
+      operationId: getMoney
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/MoneyDTO'
+    put:
+      tags:
+        - money-resource
+      operationId: updateMoney
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MoneyDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/MoneyDTO'
+    delete:
+      tags:
+        - money-resource
+      operationId: deleteMoney
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+    patch:
+      tags:
+        - money-resource
+      operationId: partialUpdateMoney
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MoneyDTO'
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/MoneyDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/MoneyDTO'
+  '/api/items/{id}':
+    get:
+      tags:
+        - item-resource
+      operationId: getItem
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ItemDTO'
+    put:
+      tags:
+        - item-resource
+      operationId: updateItem
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ItemDTO'
+    delete:
+      tags:
+        - item-resource
+      operationId: deleteItem
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+    patch:
+      tags:
+        - item-resource
+      operationId: partialUpdateItem
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemDTO'
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/ItemDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ItemDTO'
+  '/api/item-units/{id}':
+    get:
+      tags:
+        - item-unit-resource
+      operationId: getItemUnit
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ItemUnitDTO'
+    put:
+      tags:
+        - item-unit-resource
+      operationId: updateItemUnit
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemUnitDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ItemUnitDTO'
+    delete:
+      tags:
+        - item-unit-resource
+      operationId: deleteItemUnit
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+    patch:
+      tags:
+        - item-unit-resource
+      operationId: partialUpdateItemUnit
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemUnitDTO'
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/ItemUnitDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ItemUnitDTO'
+  '/api/invoices/{id}':
+    get:
+      tags:
+        - invoice-resource
+      operationId: getInvoice
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/InvoiceDTO'
+    put:
+      tags:
+        - invoice-resource
+      operationId: updateInvoice
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvoiceDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/InvoiceDTO'
+    delete:
+      tags:
+        - invoice-resource
+      operationId: deleteInvoice
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+    patch:
+      tags:
+        - invoice-resource
+      operationId: partialUpdateInvoice
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvoiceDTO'
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/InvoiceDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/InvoiceDTO'
+  '/api/invoice-items/{id}':
+    get:
+      tags:
+        - invoice-item-resource
+      operationId: getInvoiceItem
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/InvoiceItemDTO'
+    put:
+      tags:
+        - invoice-item-resource
+      operationId: updateInvoiceItem
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvoiceItemDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/InvoiceItemDTO'
+    delete:
+      tags:
+        - invoice-item-resource
+      operationId: deleteInvoiceItem
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+    patch:
+      tags:
+        - invoice-item-resource
+      operationId: partialUpdateInvoiceItem
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvoiceItemDTO'
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/InvoiceItemDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/InvoiceItemDTO'
+  '/api/banks/{id}':
+    get:
+      tags:
+        - bank-resource
+      operationId: getBank
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BankDTO'
+    put:
+      tags:
+        - bank-resource
+      operationId: updateBank
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BankDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BankDTO'
+    delete:
+      tags:
+        - bank-resource
+      operationId: deleteBank
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+    patch:
+      tags:
+        - bank-resource
+      operationId: partialUpdateBank
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BankDTO'
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/BankDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BankDTO'
+  '/api/account-users/{id}':
+    get:
+      tags:
+        - account-user-resource
+      operationId: getAccountUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AccountUserDTO'
+    put:
+      tags:
+        - account-user-resource
+      operationId: updateAccountUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountUserDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AccountUserDTO'
+    delete:
+      tags:
+        - account-user-resource
+      operationId: deleteAccountUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+    patch:
+      tags:
+        - account-user-resource
+      operationId: partialUpdateAccountUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountUserDTO'
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/AccountUserDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AccountUserDTO'
+  /api/stores:
+    get:
+      tags:
+        - store-resource
+      operationId: getAllStores
+      parameters:
+        - name: page
+          in: query
+          description: Zero-based page index (0..N)
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          description: The size of the page to be returned
+          required: false
+          schema:
+            minimum: 1
+            type: integer
+            default: 20
+        - name: sort
+          in: query
+          description: 'Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+        - name: eagerload
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StoreDTO'
+    post:
+      tags:
+        - store-resource
+      operationId: createStore
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/StoreDTO'
+  /api/store-items:
+    get:
+      tags:
+        - store-item-resource
+      operationId: getAllStoreItems
+      parameters:
+        - name: page
+          in: query
+          description: Zero-based page index (0..N)
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          description: The size of the page to be returned
+          required: false
+          schema:
+            minimum: 1
+            type: integer
+            default: 20
+        - name: sort
+          in: query
+          description: 'Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StoreItemDTO'
+    post:
+      tags:
+        - store-item-resource
+      operationId: createStoreItem
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreItemDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/StoreItemDTO'
+  /api/pks:
+    get:
+      tags:
+        - pk-resource
+      operationId: getAllPks
+      parameters:
+        - name: page
+          in: query
+          description: Zero-based page index (0..N)
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          description: The size of the page to be returned
+          required: false
+          schema:
+            minimum: 1
+            type: integer
+            default: 20
+        - name: sort
+          in: query
+          description: 'Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PkDTO'
+    post:
+      tags:
+        - pk-resource
+      operationId: createPk
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PkDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PkDTO'
+  /api/monies:
+    get:
+      tags:
+        - money-resource
+      operationId: getAllMonies
+      parameters:
+        - name: page
+          in: query
+          description: Zero-based page index (0..N)
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          description: The size of the page to be returned
+          required: false
+          schema:
+            minimum: 1
+            type: integer
+            default: 20
+        - name: sort
+          in: query
+          description: 'Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MoneyDTO'
+    post:
+      tags:
+        - money-resource
+      operationId: createMoney
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MoneyDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/MoneyDTO'
+  /api/items:
+    get:
+      tags:
+        - item-resource
+      operationId: getAllItems
+      parameters:
+        - name: page
+          in: query
+          description: Zero-based page index (0..N)
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          description: The size of the page to be returned
+          required: false
+          schema:
+            minimum: 1
+            type: integer
+            default: 20
+        - name: sort
+          in: query
+          description: 'Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+        - name: eagerload
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ItemDTO'
+    post:
+      tags:
+        - item-resource
+      operationId: createItem
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ItemDTO'
+  /api/item-units:
+    get:
+      tags:
+        - item-unit-resource
+      operationId: getAllItemUnits
+      parameters:
+        - name: page
+          in: query
+          description: Zero-based page index (0..N)
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          description: The size of the page to be returned
+          required: false
+          schema:
+            minimum: 1
+            type: integer
+            default: 20
+        - name: sort
+          in: query
+          description: 'Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ItemUnitDTO'
+    post:
+      tags:
+        - item-unit-resource
+      operationId: createItemUnit
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemUnitDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ItemUnitDTO'
+  /api/invoices:
+    get:
+      tags:
+        - invoice-resource
+      operationId: getAllInvoices
+      parameters:
+        - name: page
+          in: query
+          description: Zero-based page index (0..N)
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          description: The size of the page to be returned
+          required: false
+          schema:
+            minimum: 1
+            type: integer
+            default: 20
+        - name: sort
+          in: query
+          description: 'Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+        - name: eagerload
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InvoiceDTO'
+    post:
+      tags:
+        - invoice-resource
+      operationId: createInvoice
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvoiceDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/InvoiceDTO'
+  /api/invoice-items:
+    get:
+      tags:
+        - invoice-item-resource
+      operationId: getAllInvoiceItems
+      parameters:
+        - name: page
+          in: query
+          description: Zero-based page index (0..N)
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          description: The size of the page to be returned
+          required: false
+          schema:
+            minimum: 1
+            type: integer
+            default: 20
+        - name: sort
+          in: query
+          description: 'Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InvoiceItemDTO'
+    post:
+      tags:
+        - invoice-item-resource
+      operationId: createInvoiceItem
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvoiceItemDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/InvoiceItemDTO'
+  /api/banks:
+    get:
+      tags:
+        - bank-resource
+      operationId: getAllBanks
+      parameters:
+        - name: page
+          in: query
+          description: Zero-based page index (0..N)
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          description: The size of the page to be returned
+          required: false
+          schema:
+            minimum: 1
+            type: integer
+            default: 20
+        - name: sort
+          in: query
+          description: 'Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BankDTO'
+    post:
+      tags:
+        - bank-resource
+      operationId: createBank
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BankDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BankDTO'
+  /account-user/account-users:
+    get:
+      tags:
+        - account-user-resource
+      operationId: getAllAccountUsers
+      parameters:
+        - name: page
+          in: query
+          description: Zero-based page index (0..N)
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          description: The size of the page to be returned
+          required: false
+          schema:
+            minimum: 1
+            type: integer
+            default: 20
+        - name: sort
+          in: query
+          description: 'Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccountUserDTO'
+    post:
+      tags:
+        - account-user-resource
+      operationId: createAccountUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountUserDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AccountUserDTO'
+    parameters: []
+  /register:
+    post:
+      tags:
+        - account-resource
+      operationId: registerAccount
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ManagedUserVM'
+        required: true
+      responses:
+        '201':
+          description: Created
+      description: ''
+    parameters: []
+  /admin/users:
+    get:
+      tags:
+        - user-resource
+      operationId: getAllUsers
+      parameters:
+        - name: page
+          in: query
+          description: Zero-based page index (0..N)
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          description: The size of the page to be returned
+          required: false
+          schema:
+            minimum: 1
+            type: integer
+            default: 20
+        - name: sort
+          in: query
+          description: 'Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AdminUserDTO'
+    put:
+      tags:
+        - user-resource
+      operationId: updateUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminUserDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AdminUserDTO'
+    post:
+      tags:
+        - user-resource
+      operationId: createUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminUserDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/User'
+    parameters: []
+  /authenticate:
+    get:
+      tags:
+        - account-resource
+      operationId: isAuthenticated
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+    post:
+      tags:
+        - user-jwt-controller
+      operationId: authorize
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginVM'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/JWTToken'
+    parameters: []
+  /account:
+    get:
+      tags:
+        - account-resource
+      operationId: getAccount
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AdminUserDTO'
+    post:
+      tags:
+        - account-resource
+      operationId: saveAccount
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminUserDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+    parameters: []
+  /account/reset-password/init:
+    post:
+      tags:
+        - account-resource
+      operationId: requestPasswordReset
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+        required: true
+      responses:
+        '200':
+          description: OK
+    parameters: []
+  /account/reset-password/finish:
+    post:
+      tags:
+        - account-resource
+      operationId: finishPasswordReset
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KeyAndPasswordVM'
+        required: true
+      responses:
+        '200':
+          description: OK
+    parameters: []
+  /account/change-password:
+    post:
+      tags:
+        - account-resource
+      operationId: changePassword
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordChangeDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+    parameters: []
+  /users:
+    get:
+      tags:
+        - public-user-resource
+      operationId: getAllPublicUsers
+      parameters:
+        - name: page
+          in: query
+          description: Zero-based page index (0..N)
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          description: The size of the page to be returned
+          required: false
+          schema:
+            minimum: 1
+            type: integer
+            default: 20
+        - name: sort
+          in: query
+          description: 'Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserDTO'
+    parameters: []
+  /authorities:
+    get:
+      tags:
+        - public-user-resource
+      operationId: getAuthorities
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  type: string
+    parameters: []
+  '/admin/users/{login}':
+    get:
+      tags:
+        - user-resource
+      operationId: getUser
+      parameters:
+        - name: login
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AdminUserDTO'
+    delete:
+      tags:
+        - user-resource
+      operationId: deleteUser
+      parameters:
+        - name: login
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+    parameters:
+      - schema:
+          type: string
+        name: login
+        in: path
+        required: true
+  /activate:
+    get:
+      tags:
+        - account-resource
+      operationId: activateAccount
+      parameters:
+        - name: key
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+    parameters: []
+components:
+  schemas:
+    ItemDTO:
+      required:
+        - name
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        barcode:
+          type: string
+        price1:
+          type: string
+        price2:
+          type: string
+        price3:
+          type: string
+        category:
+          type: string
+        qty:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        cost:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        index:
+          type: integer
+          format: int32
+        itemUnits:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemUnitDTO'
+    ItemUnitDTO:
+      required:
+        - name
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        pieces:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        price:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+    StoreDTO:
+      required:
+        - name
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        items:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/StoreItemDTO'
+    StoreItemDTO:
+      type: object
+      properties:
+        id:
+          type: string
+        qty:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        item:
+          $ref: '#/components/schemas/ItemDTO'
+    PkDTO:
+      type: object
+      properties:
+        id:
+          type: string
+        kind:
+          type: string
+          enum:
+            - INVOICE
+            - InvoicesItems
+            - Money
+        value:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+    AccountUserDTO:
+      required:
+        - name
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        kind:
+          type: string
+          enum:
+            - CUSTOMER
+            - SUPPLIER
+            - SALEMAN
+        balanceIn:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        balanceOut:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        phone:
+          type: string
+        address:
+          type: string
+        address2:
+          type: string
+    BankDTO:
+      required:
+        - name
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+    MoneyDTO:
+      type: object
+      properties:
+        pk:
+          type: string
+        id:
+          type: string
+        kind:
+          type: string
+          enum:
+            - PAYMENT
+            - RECEIPT
+        moneyIn:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        moneyOut:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        bank:
+          $ref: '#/components/schemas/BankDTO'
+        item:
+          $ref: '#/components/schemas/ItemDTO'
+        account:
+          $ref: '#/components/schemas/AccountUserDTO'
+    InvoiceDTO:
+      type: object
+      properties:
+        pk:
+          type: string
+        id:
+          type: string
+        kind:
+          type: string
+          enum:
+            - SALE
+            - PURCHASE
+            - ADJUST
+            - TRANSFER
+            - SALEQUOTE
+            - RETURNPUR
+            - RETURNSALE
+            - COMPONENT
+        totalCost:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        totalPrice:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        discountPer:
+          maximum: 100
+          minimum: 0
+          type: integer
+          format: int32
+        discount:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        additions:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        additionsType:
+          type: string
+        netCost:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        netPrice:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        expenses:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        expensesType:
+          type: string
+        bank:
+          $ref: '#/components/schemas/BankDTO'
+        item:
+          $ref: '#/components/schemas/ItemDTO'
+        account:
+          $ref: '#/components/schemas/AccountUserDTO'
+        invoiceItems:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/InvoiceItemDTO'
+    InvoiceItemDTO:
+      type: object
+      properties:
+        pk:
+          type: string
+        id:
+          type: string
+        unit:
+          type: string
+        unitPieces:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        userQty:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        unitQtyIn:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        unitQtyOut:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        unitCost:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        unitPrice:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        discountPer:
+          maximum: 100
+          minimum: 0
+          type: integer
+          format: int32
+        discount:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        totalCost:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        totalPrice:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        qtyIn:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        qtyOut:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        cost:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        price:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        netCost:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        netPrice:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+    AdminUserDTO:
+      required:
+        - login
+      type: object
+      properties:
+        id:
+          type: string
+        login:
+          maxLength: 50
+          minLength: 1
+          type: string
+        firstName:
+          maxLength: 50
+          minLength: 0
+          type: string
+        lastName:
+          maxLength: 50
+          minLength: 0
+          type: string
+        email:
+          maxLength: 254
+          minLength: 5
+          type: string
+        imageUrl:
+          maxLength: 256
+          minLength: 0
+          type: string
+        activated:
+          type: boolean
+        langKey:
+          maxLength: 10
+          minLength: 2
+          type: string
+        createdBy:
+          type: string
+        createdDate:
+          type: string
+          format: date-time
+        lastModifiedBy:
+          type: string
+        lastModifiedDate:
+          type: string
+          format: date-time
+        authorities:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+    ManagedUserVM:
+      required:
+        - login
+      type: object
+      properties:
+        id:
+          type: string
+        login:
+          maxLength: 50
+          minLength: 1
+          type: string
+        firstName:
+          maxLength: 50
+          minLength: 0
+          type: string
+        lastName:
+          maxLength: 50
+          minLength: 0
+          type: string
+        email:
+          maxLength: 254
+          minLength: 5
+          type: string
+        imageUrl:
+          maxLength: 256
+          minLength: 0
+          type: string
+        activated:
+          type: boolean
+        langKey:
+          maxLength: 10
+          minLength: 2
+          type: string
+        createdBy:
+          type: string
+        createdDate:
+          type: string
+          format: date-time
+        lastModifiedBy:
+          type: string
+        lastModifiedDate:
+          type: string
+          format: date-time
+        authorities:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        password:
+          maxLength: 100
+          minLength: 4
+          type: string
+    LoginVM:
+      required:
+        - password
+        - username
+      type: object
+      properties:
+        username:
+          maxLength: 50
+          minLength: 1
+          type: string
+        password:
+          maxLength: 100
+          minLength: 4
+          type: string
+        rememberMe:
+          type: boolean
+    JWTToken:
+      type: object
+      properties:
+        id_token:
+          type: string
+    User:
+      required:
+        - login
+      type: object
+      properties:
+        id:
+          type: string
+        login:
+          maxLength: 50
+          minLength: 1
+          type: string
+        firstName:
+          maxLength: 50
+          minLength: 0
+          type: string
+        lastName:
+          maxLength: 50
+          minLength: 0
+          type: string
+        email:
+          maxLength: 254
+          minLength: 5
+          type: string
+        activated:
+          type: boolean
+        langKey:
+          maxLength: 10
+          minLength: 2
+          type: string
+        imageUrl:
+          maxLength: 256
+          minLength: 0
+          type: string
+        resetDate:
+          type: string
+          format: date-time
+    KeyAndPasswordVM:
+      type: object
+      properties:
+        key:
+          type: string
+        newPassword:
+          type: string
+    PasswordChangeDTO:
+      type: object
+      properties:
+        currentPassword:
+          type: string
+        newPassword:
+          type: string
+    UserDTO:
+      type: object
+      properties:
+        id:
+          type: string
+        login:
+          type: string

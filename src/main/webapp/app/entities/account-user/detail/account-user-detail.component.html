@@ -1,0 +1,56 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="accountUser">
+      <h2 data-cy="accountUserDetailsHeading"><span jhiTranslate="konsolCoreApp.accountUser.detail.title">Account User</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="konsolCoreApp.accountUser.id">Id</span></dt>
+        <dd>
+          <span>{{ accountUser.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="konsolCoreApp.accountUser.name">Name</span></dt>
+        <dd>
+          <span>{{ accountUser.name }}</span>
+        </dd>
+        <dt><span jhiTranslate="konsolCoreApp.accountUser.kind">Kind</span></dt>
+        <dd>
+          <span jhiTranslate="{{ 'konsolCoreApp.AccountKind.' + accountUser.kind }}">{{ accountUser.kind }}</span>
+        </dd>
+        <dt><span jhiTranslate="konsolCoreApp.accountUser.balanceIn">Balance In</span></dt>
+        <dd>
+          <span>{{ accountUser.balanceIn }}</span>
+        </dd>
+        <dt><span jhiTranslate="konsolCoreApp.accountUser.balanceOut">Balance Out</span></dt>
+        <dd>
+          <span>{{ accountUser.balanceOut }}</span>
+        </dd>
+        <dt><span jhiTranslate="konsolCoreApp.accountUser.phone">Phone</span></dt>
+        <dd>
+          <span>{{ accountUser.phone }}</span>
+        </dd>
+        <dt><span jhiTranslate="konsolCoreApp.accountUser.address">Address</span></dt>
+        <dd>
+          <span>{{ accountUser.address }}</span>
+        </dd>
+        <dt><span jhiTranslate="konsolCoreApp.accountUser.address2">Address 2</span></dt>
+        <dd>
+          <span>{{ accountUser.address2 }}</span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/account-user', accountUser.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

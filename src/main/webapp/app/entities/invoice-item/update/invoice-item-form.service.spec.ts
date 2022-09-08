@@ -1,0 +1,123 @@
+import { TestBed } from '@angular/core/testing';
+
+import { sampleWithRequiredData, sampleWithNewData } from '../invoice-item.test-samples';
+
+import { InvoiceItemFormService } from './invoice-item-form.service';
+
+describe('InvoiceItem Form Service', () => {
+  let service: InvoiceItemFormService;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({});
+    service = TestBed.inject(InvoiceItemFormService);
+  });
+
+  describe('Service methods', () => {
+    describe('createInvoiceItemFormGroup', () => {
+      it('should create a new form with FormControl', () => {
+        const formGroup = service.createInvoiceItemFormGroup();
+
+        expect(formGroup.controls).toEqual(
+          expect.objectContaining({
+            pk: expect.any(Object),
+            id: expect.any(Object),
+            unit: expect.any(Object),
+            unitPieces: expect.any(Object),
+            userQty: expect.any(Object),
+            unitQtyIn: expect.any(Object),
+            unitQtyOut: expect.any(Object),
+            unitCost: expect.any(Object),
+            unitPrice: expect.any(Object),
+            discountPer: expect.any(Object),
+            discount: expect.any(Object),
+            totalCost: expect.any(Object),
+            totalPrice: expect.any(Object),
+            qtyIn: expect.any(Object),
+            qtyOut: expect.any(Object),
+            cost: expect.any(Object),
+            price: expect.any(Object),
+            netCost: expect.any(Object),
+            netPrice: expect.any(Object),
+            invoices: expect.any(Object),
+          })
+        );
+      });
+
+      it('passing IInvoiceItem should create a new form with FormGroup', () => {
+        const formGroup = service.createInvoiceItemFormGroup(sampleWithRequiredData);
+
+        expect(formGroup.controls).toEqual(
+          expect.objectContaining({
+            pk: expect.any(Object),
+            id: expect.any(Object),
+            unit: expect.any(Object),
+            unitPieces: expect.any(Object),
+            userQty: expect.any(Object),
+            unitQtyIn: expect.any(Object),
+            unitQtyOut: expect.any(Object),
+            unitCost: expect.any(Object),
+            unitPrice: expect.any(Object),
+            discountPer: expect.any(Object),
+            discount: expect.any(Object),
+            totalCost: expect.any(Object),
+            totalPrice: expect.any(Object),
+            qtyIn: expect.any(Object),
+            qtyOut: expect.any(Object),
+            cost: expect.any(Object),
+            price: expect.any(Object),
+            netCost: expect.any(Object),
+            netPrice: expect.any(Object),
+            invoices: expect.any(Object),
+          })
+        );
+      });
+    });
+
+    describe('getInvoiceItem', () => {
+      it('should return NewInvoiceItem for default InvoiceItem initial value', () => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const formGroup = service.createInvoiceItemFormGroup(sampleWithNewData);
+
+        const invoiceItem = service.getInvoiceItem(formGroup) as any;
+
+        expect(invoiceItem).toMatchObject(sampleWithNewData);
+      });
+
+      it('should return NewInvoiceItem for empty InvoiceItem initial value', () => {
+        const formGroup = service.createInvoiceItemFormGroup();
+
+        const invoiceItem = service.getInvoiceItem(formGroup) as any;
+
+        expect(invoiceItem).toMatchObject({});
+      });
+
+      it('should return IInvoiceItem', () => {
+        const formGroup = service.createInvoiceItemFormGroup(sampleWithRequiredData);
+
+        const invoiceItem = service.getInvoiceItem(formGroup) as any;
+
+        expect(invoiceItem).toMatchObject(sampleWithRequiredData);
+      });
+    });
+
+    describe('resetForm', () => {
+      it('passing IInvoiceItem should not enable id FormControl', () => {
+        const formGroup = service.createInvoiceItemFormGroup();
+        expect(formGroup.controls.id.disabled).toBe(true);
+
+        service.resetForm(formGroup, sampleWithRequiredData);
+
+        expect(formGroup.controls.id.disabled).toBe(true);
+      });
+
+      it('passing NewInvoiceItem should disable id FormControl', () => {
+        const formGroup = service.createInvoiceItemFormGroup(sampleWithRequiredData);
+        expect(formGroup.controls.id.disabled).toBe(true);
+
+        service.resetForm(formGroup, { id: null });
+
+        expect(formGroup.controls.id.disabled).toBe(true);
+      });
+    });
+  });
+});

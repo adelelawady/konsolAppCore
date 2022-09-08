@@ -1,0 +1,133 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-item-heading" data-cy="ItemCreateUpdateHeading" jhiTranslate="konsolCoreApp.item.home.createOrEditLabel">
+        Create or edit a Item
+      </h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="konsolCoreApp.item.id" for="field_id">Id</label>
+          <input
+            type="text"
+            class="form-control"
+            name="id"
+            id="field_id"
+            data-cy="id"
+            formControlName="id"
+            [readonly]="editForm.get('id')!.value != null"
+          />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="konsolCoreApp.item.name" for="field_name">Name</label>
+          <input type="text" class="form-control" name="name" id="field_name" data-cy="name" formControlName="name" />
+          <div *ngIf="editForm.get('name')!.invalid && (editForm.get('name')!.dirty || editForm.get('name')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('name')?.errors?.required" jhiTranslate="entity.validation.required">
+              This field is required.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="konsolCoreApp.item.barcode" for="field_barcode">Barcode</label>
+          <input type="text" class="form-control" name="barcode" id="field_barcode" data-cy="barcode" formControlName="barcode" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="konsolCoreApp.item.price1" for="field_price1">Price 1</label>
+          <input type="text" class="form-control" name="price1" id="field_price1" data-cy="price1" formControlName="price1" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="konsolCoreApp.item.price2" for="field_price2">Price 2</label>
+          <input type="text" class="form-control" name="price2" id="field_price2" data-cy="price2" formControlName="price2" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="konsolCoreApp.item.price3" for="field_price3">Price 3</label>
+          <input type="text" class="form-control" name="price3" id="field_price3" data-cy="price3" formControlName="price3" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="konsolCoreApp.item.category" for="field_category">Category</label>
+          <input type="text" class="form-control" name="category" id="field_category" data-cy="category" formControlName="category" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="konsolCoreApp.item.qty" for="field_qty">Qty</label>
+          <input type="number" class="form-control" name="qty" id="field_qty" data-cy="qty" formControlName="qty" />
+          <div *ngIf="editForm.get('qty')!.invalid && (editForm.get('qty')!.dirty || editForm.get('qty')!.touched)">
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('qty')?.errors?.min"
+              jhiTranslate="entity.validation.min"
+              [translateValues]="{ min: 0 }"
+            >
+              This field should be at least 0.
+            </small>
+            <small class="form-text text-danger" [hidden]="!editForm.get('qty')?.errors?.number" jhiTranslate="entity.validation.number">
+              This field should be a number.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="konsolCoreApp.item.cost" for="field_cost">Cost</label>
+          <input type="number" class="form-control" name="cost" id="field_cost" data-cy="cost" formControlName="cost" />
+          <div *ngIf="editForm.get('cost')!.invalid && (editForm.get('cost')!.dirty || editForm.get('cost')!.touched)">
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('cost')?.errors?.min"
+              jhiTranslate="entity.validation.min"
+              [translateValues]="{ min: 0 }"
+            >
+              This field should be at least 0.
+            </small>
+            <small class="form-text text-danger" [hidden]="!editForm.get('cost')?.errors?.number" jhiTranslate="entity.validation.number">
+              This field should be a number.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="konsolCoreApp.item.index" for="field_index">Index</label>
+          <input type="number" class="form-control" name="index" id="field_index" data-cy="index" formControlName="index" />
+        </div>
+
+        <div class="row mb-3">
+          <label jhiTranslate="konsolCoreApp.item.itemUnits" for="field_itemUnits">Item Units</label>
+          <select
+            class="form-control"
+            id="field_itemUnits"
+            data-cy="itemUnits"
+            multiple
+            name="itemUnits"
+            formControlName="itemUnits"
+            [compareWith]="compareItemUnit"
+          >
+            <option [ngValue]="itemUnitOption" *ngFor="let itemUnitOption of itemUnitsSharedCollection">{{ itemUnitOption.id }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
