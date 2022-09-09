@@ -3,7 +3,7 @@ package com.konsol.core.service.impl;
 import com.konsol.core.domain.Item;
 import com.konsol.core.repository.ItemRepository;
 import com.konsol.core.service.ItemService;
-import com.konsol.core.service.dto.ItemDTO;
+import com.konsol.core.service.api.dto.ItemDTO;
 import com.konsol.core.service.mapper.ItemMapper;
 import java.util.Optional;
 import org.slf4j.Logger;

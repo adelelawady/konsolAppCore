@@ -1,6 +1,6 @@
 package com.konsol.core.service;
 
-import com.konsol.core.service.dto.ItemUnitDTO;
+import com.konsol.core.service.api.dto.ItemUnitDTO;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

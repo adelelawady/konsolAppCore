@@ -23,9 +23,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-/**
- * Integration tests for the {@link AccountUserResource} REST controller.
- */
 @IntegrationTest
 @AutoConfigureMockMvc
 @WithMockUser

@@ -11,7 +11,6 @@ import com.konsol.core.service.mapper.UserMapper;
 import com.konsol.core.service.mapper.UtilitsMapper;
 import com.konsol.core.web.api.AccountApiDelegate;
 import com.konsol.core.web.rest.errors.*;
-import com.konsol.core.web.rest.vm.KeyAndPasswordVM;
 import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -22,11 +21,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * REST controller for managing the current user's account.
- */
-//@RestController
-//@RequestMapping("/api")
 @Service
 public class AccountResource implements AccountApiDelegate {
 

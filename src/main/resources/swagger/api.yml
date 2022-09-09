@@ -335,7 +335,7 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/MoneyDTO'
-  '/api/items/{id}':
+  '/items/{id}':
     get:
       tags:
         - item-resource
@@ -415,7 +415,13 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/ItemDTO'
-  '/api/item-units/{id}':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+  '/item-units/{id}':
     get:
       tags:
         - item-unit-resource
@@ -495,6 +501,12 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/ItemUnitDTO'
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
   '/api/invoices/{id}':
     get:
       tags:
@@ -1045,7 +1057,7 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/MoneyDTO'
-  /api/items:
+  /items:
     get:
       tags:
         - item-resource
@@ -1107,7 +1119,8 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/ItemDTO'
-  /api/item-units:
+    parameters: []
+  /item-units:
     get:
       tags:
         - item-unit-resource
@@ -1163,6 +1176,7 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/ItemUnitDTO'
+    parameters: []
   /api/invoices:
     get:
       tags:
@@ -1493,7 +1507,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 type: string
     post:
@@ -1510,7 +1524,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/JWTToken'
     parameters: []
