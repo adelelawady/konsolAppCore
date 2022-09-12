@@ -1,9 +1,12 @@
 package com.konsol.core.service;
 
+import com.konsol.core.service.api.dto.CategoryItem;
 import com.konsol.core.service.api.dto.ItemDTO;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 
 /**
  * Service Interface for managing {@link com.konsol.core.domain.Item}.
@@ -63,4 +66,22 @@ public interface ItemService {
      * @param id the id of the entity.
      */
     void delete(String id);
+
+    /**
+     * get all items categories in items list
+     * @return list of string contains all categories distinct
+     */
+    List<CategoryItem> getAllItemCategories();
+
+    /**
+     * Get the "pk" item.
+     *
+     * @param pk the pk of the entity.
+     * @return the entity.
+     */
+    Optional<ItemDTO> findOneByPk(String pk);
+
+    Optional<ItemDTO> getItemBeforeItemById(String id);
+
+    Optional<ItemDTO> getItemAfterItemById(String id);
 }

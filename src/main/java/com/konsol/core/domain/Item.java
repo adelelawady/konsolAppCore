@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.validation.constraints.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -16,12 +17,18 @@ import org.springframework.data.mongodb.core.mapping.Field;
  */
 @Document(collection = "items")
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class Item implements Serializable {
+public class Item extends AbstractAuditingEntity<String> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    //{ $gte :  11, $lte : 100}
+
     @Id
     private String id;
+
+    @Field("pk")
+    @Indexed(unique = true)
+    private Integer pk;
 
     @NotNull
     @Field("name")
@@ -36,9 +43,6 @@ public class Item implements Serializable {
     @Field("price_2")
     private String price2;
 
-    @Field("price_3")
-    private String price3;
-
     @Field("category")
     private String category;
 
@@ -49,9 +53,6 @@ public class Item implements Serializable {
     @DecimalMin(value = "0")
     @Field("cost")
     private BigDecimal cost;
-
-    @Field("index")
-    private Integer index;
 
     @DBRef
     @Field("itemUnits")
@@ -71,6 +72,14 @@ public class Item implements Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Integer getPk() {
+        return pk;
+    }
+
+    public void setPk(Integer pk) {
+        this.pk = pk;
     }
 
     public String getName() {
@@ -125,19 +134,6 @@ public class Item implements Serializable {
         this.price2 = price2;
     }
 
-    public String getPrice3() {
-        return this.price3;
-    }
-
-    public Item price3(String price3) {
-        this.setPrice3(price3);
-        return this;
-    }
-
-    public void setPrice3(String price3) {
-        this.price3 = price3;
-    }
-
     public String getCategory() {
         return this.category;
     }
@@ -175,19 +171,6 @@ public class Item implements Serializable {
 
     public void setCost(BigDecimal cost) {
         this.cost = cost;
-    }
-
-    public Integer getIndex() {
-        return this.index;
-    }
-
-    public Item index(Integer index) {
-        this.setIndex(index);
-        return this;
-    }
-
-    public void setIndex(Integer index) {
-        this.index = index;
     }
 
     public Set<ItemUnit> getItemUnits() {
@@ -243,11 +226,9 @@ public class Item implements Serializable {
             ", barcode='" + getBarcode() + "'" +
             ", price1='" + getPrice1() + "'" +
             ", price2='" + getPrice2() + "'" +
-            ", price3='" + getPrice3() + "'" +
             ", category='" + getCategory() + "'" +
             ", qty=" + getQty() +
             ", cost=" + getCost() +
-            ", index=" + getIndex() +
             "}";
     }
 }

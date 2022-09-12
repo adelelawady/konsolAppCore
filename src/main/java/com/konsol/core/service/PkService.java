@@ -1,5 +1,7 @@
 package com.konsol.core.service;
 
+import com.konsol.core.domain.Pk;
+import com.konsol.core.domain.enumeration.PkKind;
 import com.konsol.core.service.dto.PkDTO;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -55,4 +57,18 @@ public interface PkService {
      * @param id the id of the entity.
      */
     void delete(String id);
+
+    /**
+     * create new entity pk number or updates current pk for selected entity
+     * @param entityKind type for pk required to be created ex items , invoice
+     * @return new or found pk for current entity
+     */
+    Pk generatePkEntity(PkKind entityKind);
+
+    /**
+     * gets current pk for selected entity
+     * @param entityKind type for pk required to search for ex items , invoice
+     * @return found pk for current entity
+     */
+    Pk getPkEntity(PkKind entityKind);
 }

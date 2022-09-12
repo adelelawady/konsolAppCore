@@ -1,10 +1,12 @@
 package com.konsol.core.service.impl;
 
 import com.konsol.core.domain.Pk;
+import com.konsol.core.domain.enumeration.PkKind;
 import com.konsol.core.repository.PkRepository;
 import com.konsol.core.service.PkService;
 import com.konsol.core.service.dto.PkDTO;
 import com.konsol.core.service.mapper.PkMapper;
+import java.math.BigDecimal;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,5 +78,29 @@ public class PkServiceImpl implements PkService {
     public void delete(String id) {
         log.debug("Request to delete Pk : {}", id);
         pkRepository.deleteById(id);
+    }
+
+    @Override
+    public Pk generatePkEntity(PkKind entityKind) {
+        Pk entityPk = getPkEntity(entityKind);
+        entityPk.setValue(entityPk.getValue().add(BigDecimal.valueOf(1)));
+        return this.pkRepository.save(entityPk);
+    }
+
+    @Override
+    public Pk getPkEntity(PkKind entityKind) {
+        Optional<Pk> foundPkOp = this.pkRepository.findOneByKind(entityKind);
+        if (foundPkOp.isPresent()) {
+            return foundPkOp.get();
+        } else {
+            return createNewPkForEntity(entityKind);
+        }
+    }
+
+    private Pk createNewPkForEntity(PkKind entityKind) {
+        Pk pk = new Pk();
+        pk.setKind(entityKind);
+        pk.setValue(BigDecimal.valueOf(0));
+        return this.pkRepository.save(pk);
     }
 }

@@ -30,7 +30,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/StoreDTO'
     put:
@@ -53,7 +53,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/StoreDTO'
     delete:
@@ -92,7 +92,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/StoreDTO'
   '/api/store-items/{id}':
@@ -110,7 +110,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/StoreItemDTO'
     put:
@@ -133,7 +133,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/StoreItemDTO'
     delete:
@@ -172,7 +172,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/StoreItemDTO'
   '/api/pks/{id}':
@@ -190,7 +190,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/PkDTO'
     put:
@@ -213,7 +213,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/PkDTO'
     delete:
@@ -252,7 +252,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/PkDTO'
   '/api/monies/{id}':
@@ -270,7 +270,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/MoneyDTO'
     put:
@@ -293,7 +293,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/MoneyDTO'
     delete:
@@ -332,7 +332,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/MoneyDTO'
   '/items/{id}':
@@ -350,7 +350,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/ItemDTO'
     put:
@@ -373,7 +373,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/ItemDTO'
     delete:
@@ -412,7 +412,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/ItemDTO'
     parameters:
@@ -436,7 +436,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/ItemUnitDTO'
     put:
@@ -459,7 +459,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/ItemUnitDTO'
     delete:
@@ -498,7 +498,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/ItemUnitDTO'
     parameters:
@@ -522,7 +522,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/InvoiceDTO'
     put:
@@ -545,7 +545,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/InvoiceDTO'
     delete:
@@ -584,7 +584,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/InvoiceDTO'
   '/api/invoice-items/{id}':
@@ -602,7 +602,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/InvoiceItemDTO'
     put:
@@ -625,7 +625,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/InvoiceItemDTO'
     delete:
@@ -664,7 +664,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/InvoiceItemDTO'
   '/api/banks/{id}':
@@ -682,7 +682,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/BankDTO'
     put:
@@ -705,7 +705,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/BankDTO'
     delete:
@@ -744,7 +744,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/BankDTO'
   '/api/account-users/{id}':
@@ -762,7 +762,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/AccountUserDTO'
     put:
@@ -785,7 +785,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/AccountUserDTO'
     delete:
@@ -824,7 +824,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/AccountUserDTO'
   /api/stores:
@@ -867,7 +867,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 type: array
                 items:
@@ -886,7 +886,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/StoreDTO'
   /api/store-items:
@@ -923,7 +923,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 type: array
                 items:
@@ -942,7 +942,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/StoreItemDTO'
   /api/pks:
@@ -979,7 +979,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 type: array
                 items:
@@ -998,7 +998,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/PkDTO'
   /api/monies:
@@ -1035,7 +1035,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 type: array
                 items:
@@ -1054,7 +1054,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/MoneyDTO'
   /items:
@@ -1097,7 +1097,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 type: array
                 items:
@@ -1116,10 +1116,87 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/ItemDTO'
     parameters: []
+  /items/categories:
+    get:
+      tags:
+        - item-resource
+      operationId: getAllItemsCategories
+      parameters: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CategoryItem'
+      description: 'get categories from all items available '
+    parameters: []
+  '/items/pk/{PkId}':
+    get:
+      tags:
+        - item-resource
+      operationId: getItemByPk
+      parameters: []
+      description: 'get item by pk id '
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemDTO'
+    parameters:
+      - schema:
+          type: string
+        name: PkId
+        in: path
+        required: true
+  '/items/id/{id}/before':
+    get:
+      tags:
+        - item-resource
+      operationId: getItemBeforeItemById
+      parameters: []
+      description: get the item before this item by id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemDTO'
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+  '/items/id/{id}/after':
+    get:
+      tags:
+        - item-resource
+      operationId: getItemAfterItemById
+      parameters: []
+      description: get the item before this item by id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemDTO'
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
   /item-units:
     get:
       tags:
@@ -1154,7 +1231,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 type: array
                 items:
@@ -1173,7 +1250,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/ItemUnitDTO'
     parameters: []
@@ -1217,7 +1294,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 type: array
                 items:
@@ -1236,7 +1313,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/InvoiceDTO'
   /api/invoice-items:
@@ -1273,7 +1350,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 type: array
                 items:
@@ -1292,7 +1369,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/InvoiceItemDTO'
   /api/banks:
@@ -1329,7 +1406,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 type: array
                 items:
@@ -1348,7 +1425,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/BankDTO'
   /account-user/account-users:
@@ -1385,7 +1462,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 type: array
                 items:
@@ -1404,7 +1481,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/AccountUserDTO'
     parameters: []
@@ -1458,7 +1535,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 type: array
                 items:
@@ -1477,7 +1554,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/AdminUserDTO'
     post:
@@ -1494,7 +1571,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/User'
     parameters: []
@@ -1537,7 +1614,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/AdminUserDTO'
     post:
@@ -1633,7 +1710,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 type: array
                 items:
@@ -1648,7 +1725,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 type: array
                 items:
@@ -1669,7 +1746,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/AdminUserDTO'
     delete:
@@ -1709,12 +1786,13 @@ paths:
 components:
   schemas:
     ItemDTO:
-      required:
-        - name
       type: object
       properties:
         id:
           type: string
+        pk:
+          type: integer
+          default: -1
         name:
           type: string
         barcode:
@@ -1722,8 +1800,6 @@ components:
         price1:
           type: string
         price2:
-          type: string
-        price3:
           type: string
         category:
           type: string
@@ -1735,14 +1811,13 @@ components:
           minimum: 0
           exclusiveMinimum: false
           type: number
-        index:
-          type: integer
-          format: int32
         itemUnits:
           uniqueItems: true
           type: array
           items:
             $ref: '#/components/schemas/ItemUnitDTO'
+      required:
+        - name
     ItemUnitDTO:
       required:
         - name
@@ -2181,4 +2256,12 @@ components:
         id:
           type: string
         login:
+          type: string
+    CategoryItem:
+      title: CategoryItem
+      x-stoplight:
+        id: c3hb648r6gfz2
+      type: object
+      properties:
+        name:
           type: string

@@ -22,4 +22,8 @@ public interface ItemRepository extends MongoRepository<Item, String> {
 
     @Query("{'id': ?0}")
     Optional<Item> findOneWithEagerRelationships(String id);
+
+    List<Item> findAllDistinctByCategoryNotIn(List<String> categories);
+
+    Optional<Item> findOneByPk(int pk);
 }

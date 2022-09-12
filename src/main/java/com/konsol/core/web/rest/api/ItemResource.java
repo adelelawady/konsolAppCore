@@ -1,7 +1,11 @@
 package com.konsol.core.web.rest.api;
 
+import com.konsol.core.domain.Pk;
+import com.konsol.core.domain.enumeration.PkKind;
 import com.konsol.core.repository.ItemRepository;
 import com.konsol.core.service.ItemService;
+import com.konsol.core.service.PkService;
+import com.konsol.core.service.api.dto.CategoryItem;
 import com.konsol.core.service.api.dto.ItemDTO;
 import com.konsol.core.web.api.ItemsApiDelegate;
 import com.konsol.core.web.rest.errors.BadRequestAlertException;
@@ -19,7 +23,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
@@ -42,9 +45,12 @@ public class ItemResource implements ItemsApiDelegate {
 
     private final ItemRepository itemRepository;
 
-    public ItemResource(ItemService itemService, ItemRepository itemRepository) {
+    private final PkService pkService;
+
+    public ItemResource(ItemService itemService, ItemRepository itemRepository, PkService pkService) {
         this.itemService = itemService;
         this.itemRepository = itemRepository;
+        this.pkService = pkService;
     }
 
     /**
@@ -59,6 +65,8 @@ public class ItemResource implements ItemsApiDelegate {
         if (itemDTO.getId() != null) {
             throw new BadRequestAlertException("A new item cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        Pk pk = pkService.generatePkEntity(PkKind.ITEM);
+        itemDTO.setPk(pk.getValue().intValue());
         ItemDTO result = itemService.save(itemDTO);
         try {
             return ResponseEntity
@@ -179,5 +187,25 @@ public class ItemResource implements ItemsApiDelegate {
         log.debug("REST request to delete Item : {}", id);
         itemService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id)).build();
+    }
+
+    @Override
+    public ResponseEntity<List<CategoryItem>> getAllItemsCategories() {
+        return ResponseEntity.ok(itemService.getAllItemCategories());
+    }
+
+    @Override
+    public ResponseEntity<ItemDTO> getItemByPk(String pkId) {
+        return ResponseEntity.ok(itemService.findOneByPk(pkId).orElse(null));
+    }
+
+    @Override
+    public ResponseEntity<ItemDTO> getItemBeforeItemById(String id) {
+        return ResponseEntity.ok(itemService.getItemBeforeItemById(id).orElse(null));
+    }
+
+    @Override
+    public ResponseEntity<ItemDTO> getItemAfterItemById(String id) {
+        return ResponseEntity.ok(itemService.getItemAfterItemById(id).orElse(null));
     }
 }

@@ -35,10 +35,8 @@ public class ItemUnit implements Serializable {
     @Field("price")
     private BigDecimal price;
 
-    @DBRef
-    @Field("items")
-    @JsonIgnoreProperties(value = { "itemUnits" }, allowSetters = true)
-    private Set<Item> items = new HashSet<>();
+    @Field("basic")
+    private boolean basic;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -62,6 +60,14 @@ public class ItemUnit implements Serializable {
     public ItemUnit name(String name) {
         this.setName(name);
         return this;
+    }
+
+    public boolean isBasic() {
+        return basic;
+    }
+
+    public void setBasic(boolean basic) {
+        this.basic = basic;
     }
 
     public void setName(String name) {
@@ -92,37 +98,6 @@ public class ItemUnit implements Serializable {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
-    }
-
-    public Set<Item> getItems() {
-        return this.items;
-    }
-
-    public void setItems(Set<Item> items) {
-        if (this.items != null) {
-            this.items.forEach(i -> i.removeItemUnits(this));
-        }
-        if (items != null) {
-            items.forEach(i -> i.addItemUnits(this));
-        }
-        this.items = items;
-    }
-
-    public ItemUnit items(Set<Item> items) {
-        this.setItems(items);
-        return this;
-    }
-
-    public ItemUnit addItem(Item item) {
-        this.items.add(item);
-        item.getItemUnits().add(this);
-        return this;
-    }
-
-    public ItemUnit removeItem(Item item) {
-        this.items.remove(item);
-        item.getItemUnits().remove(this);
-        return this;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
