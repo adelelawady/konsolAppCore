@@ -3,7 +3,6 @@ package com.konsol.core.web.rest.api;
 import com.konsol.core.repository.ItemUnitRepository;
 import com.konsol.core.service.ItemUnitService;
 import com.konsol.core.service.api.dto.ItemUnitDTO;
-import com.konsol.core.web.api.ItemUnitsApiDelegate;
 import com.konsol.core.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -31,8 +30,8 @@ import tech.jhipster.web.util.ResponseUtil;
 /**
  * REST controller for managing {@link com.konsol.core.domain.ItemUnit}.
  */
-@Service
-public class ItemUnitResource implements ItemUnitsApiDelegate {
+
+public class ItemUnitResource {
 
     private final Logger log = LoggerFactory.getLogger(ItemUnitResource.class);
 
@@ -56,7 +55,7 @@ public class ItemUnitResource implements ItemUnitsApiDelegate {
      * @param itemUnitDTO the itemUnitDTO to create.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new itemUnitDTO, or with status {@code 400 (Bad Request)} if the itemUnit has already an ID.
      */
-    @Override
+
     public ResponseEntity<ItemUnitDTO> createItemUnit(@Valid @RequestBody ItemUnitDTO itemUnitDTO) {
         log.debug("REST request to save ItemUnit : {}", itemUnitDTO);
         if (itemUnitDTO.getId() != null) {
@@ -82,7 +81,7 @@ public class ItemUnitResource implements ItemUnitsApiDelegate {
      * or with status {@code 400 (Bad Request)} if the itemUnitDTO is not valid,
      * or with status {@code 500 (Internal Server Error)} if the itemUnitDTO couldn't be updated.
      */
-    @Override
+
     public ResponseEntity<ItemUnitDTO> updateItemUnit(
         @PathVariable(value = "id", required = false) final String id,
         @Valid @RequestBody ItemUnitDTO itemUnitDTO
@@ -116,7 +115,7 @@ public class ItemUnitResource implements ItemUnitsApiDelegate {
      * or with status {@code 404 (Not Found)} if the itemUnitDTO is not found,
      * or with status {@code 500 (Internal Server Error)} if the itemUnitDTO couldn't be updated.
      */
-    @Override
+
     public ResponseEntity<ItemUnitDTO> partialUpdateItemUnit(
         @PathVariable(value = "id", required = false) final String id,
         @NotNull @RequestBody ItemUnitDTO itemUnitDTO
@@ -146,7 +145,7 @@ public class ItemUnitResource implements ItemUnitsApiDelegate {
      *
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of itemUnits in body.
      */
-    @Override
+
     public ResponseEntity<List<ItemUnitDTO>> getAllItemUnits(Integer pager, Integer size, List<String> sort) {
         Pageable pageable = PageRequest.of(pager, size);
         log.debug("REST request to get a page of ItemUnits");
@@ -161,7 +160,7 @@ public class ItemUnitResource implements ItemUnitsApiDelegate {
      * @param id the id of the itemUnitDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the itemUnitDTO, or with status {@code 404 (Not Found)}.
      */
-    @Override
+
     public ResponseEntity<ItemUnitDTO> getItemUnit(@PathVariable String id) {
         log.debug("REST request to get ItemUnit : {}", id);
         Optional<ItemUnitDTO> itemUnitDTO = itemUnitService.findOne(id);
@@ -174,7 +173,7 @@ public class ItemUnitResource implements ItemUnitsApiDelegate {
      * @param id the id of the itemUnitDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @Override
+
     public ResponseEntity<Void> deleteItemUnit(@PathVariable String id) {
         log.debug("REST request to delete ItemUnit : {}", id);
         itemUnitService.delete(id);

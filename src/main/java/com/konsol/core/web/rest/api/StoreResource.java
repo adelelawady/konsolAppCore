@@ -1,8 +1,15 @@
 package com.konsol.core.web.rest.api;
 
+import com.konsol.core.repository.StoreItemRepository;
 import com.konsol.core.repository.StoreRepository;
+import com.konsol.core.service.StoreItemService;
 import com.konsol.core.service.StoreService;
-import com.konsol.core.service.dto.StoreDTO;
+import com.konsol.core.service.api.dto.StoreDTO;
+import com.konsol.core.service.api.dto.StoreItemDTO;
+import com.konsol.core.service.api.dto.StoreItemIdOnlyDTO;
+import com.konsol.core.service.api.dto.StoreNameDTO;
+import com.konsol.core.web.api.StoresApi;
+import com.konsol.core.web.api.StoresApiDelegate;
 import com.konsol.core.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -15,10 +22,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -28,9 +36,8 @@ import tech.jhipster.web.util.ResponseUtil;
 /**
  * REST controller for managing {@link com.konsol.core.domain.Store}.
  */
-@RestController
-@RequestMapping("/api")
-public class StoreResource {
+@Service
+public class StoreResource implements StoresApiDelegate {
 
     private final Logger log = LoggerFactory.getLogger(StoreResource.class);
 
@@ -55,17 +62,21 @@ public class StoreResource {
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new storeDTO, or with status {@code 400 (Bad Request)} if the store has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/stores")
-    public ResponseEntity<StoreDTO> createStore(@Valid @RequestBody StoreDTO storeDTO) throws URISyntaxException {
+    @Override
+    public ResponseEntity<StoreDTO> createStore(@Valid @RequestBody StoreDTO storeDTO) {
         log.debug("REST request to save Store : {}", storeDTO);
         if (storeDTO.getId() != null) {
             throw new BadRequestAlertException("A new store cannot already have an ID", ENTITY_NAME, "idexists");
         }
         StoreDTO result = storeService.save(storeDTO);
-        return ResponseEntity
-            .created(new URI("/api/stores/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId()))
-            .body(result);
+        try {
+            return ResponseEntity
+                .created(new URI("/api/stores/" + result.getId()))
+                .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId()))
+                .body(result);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -78,11 +89,11 @@ public class StoreResource {
      * or with status {@code 500 (Internal Server Error)} if the storeDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/stores/{id}")
+    @Override
     public ResponseEntity<StoreDTO> updateStore(
         @PathVariable(value = "id", required = false) final String id,
         @Valid @RequestBody StoreDTO storeDTO
-    ) throws URISyntaxException {
+    ) {
         log.debug("REST request to update Store : {}, {}", id, storeDTO);
         if (storeDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
@@ -113,11 +124,11 @@ public class StoreResource {
      * or with status {@code 500 (Internal Server Error)} if the storeDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PatchMapping(value = "/stores/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    @Override
     public ResponseEntity<StoreDTO> partialUpdateStore(
         @PathVariable(value = "id", required = false) final String id,
         @NotNull @RequestBody StoreDTO storeDTO
-    ) throws URISyntaxException {
+    ) {
         log.debug("REST request to partial update Store partially : {}, {}", id, storeDTO);
         if (storeDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
@@ -139,18 +150,19 @@ public class StoreResource {
     }
 
     /**
-     * {@code GET  /stores} : get all the stores.
+     * GET /stores
      *
-     * @param pageable the pagination information.
-     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of stores in body.
+     * @param pager Zero-based page index (0..N) (optional, default to 0)
+     * @param size The size of the page to be returned (optional, default to 20)
+     * @param sort Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported. (optional)
+     * @param eagerload  (optional, default to false)
+     * @return OK (status code 200)
+     * @see StoresApi#getAllStores
      */
-    @GetMapping("/stores")
-    public ResponseEntity<List<StoreDTO>> getAllStores(
-        @org.springdoc.api.annotations.ParameterObject Pageable pageable,
-        @RequestParam(required = false, defaultValue = "false") boolean eagerload
-    ) {
+    @Override
+    public ResponseEntity<List<StoreDTO>> getAllStores(Integer pager, Integer size, List<String> sort, Boolean eagerload) {
         log.debug("REST request to get a page of Stores");
+        Pageable pageable = PageRequest.of(pager, size);
         Page<StoreDTO> page;
         if (eagerload) {
             page = storeService.findAllWithEagerRelationships(pageable);
@@ -167,7 +179,7 @@ public class StoreResource {
      * @param id the id of the storeDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the storeDTO, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/stores/{id}")
+    @Override
     public ResponseEntity<StoreDTO> getStore(@PathVariable String id) {
         log.debug("REST request to get Store : {}", id);
         Optional<StoreDTO> storeDTO = storeService.findOne(id);
@@ -180,10 +192,60 @@ public class StoreResource {
      * @param id the id of the storeDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/stores/{id}")
+    @Override
     public ResponseEntity<Void> deleteStore(@PathVariable String id) {
         log.debug("REST request to delete Store : {}", id);
         storeService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id)).build();
+    }
+
+    /**
+     * GET /stores/names
+     * return all store names with id
+     *
+     * @return OK (status code 200)
+     */
+    @Override
+    public ResponseEntity<List<StoreNameDTO>> getAllStoresNames() {
+        return ResponseEntity.ok().body(storeService.getAllStoresNames());
+    }
+
+    /**
+     * GET /stores/item/{id}/storeItems
+     * return all store items qty in all stores item availabe in with item id
+     *
+     * @param id  (required)
+     * @return OK (status code 200)
+     * @see StoresApi#getAllStoresItemsForItem
+     */
+    @Override
+    public ResponseEntity<List<StoreItemDTO>> getAllStoresItemsForItem(String id) {
+        return ResponseEntity.ok().body(storeService.getAllStoresItemsForItem(id));
+    }
+
+    /**
+     * GET /stores/item/{id}/storeItems/all
+     * return all store items qty in all stores with item id
+     *
+     * @param id  (required)
+     * @return OK (status code 200)
+     * @see StoresApi#getAllStoresItemsInAllStoresForItem
+     */
+    @Override
+    public ResponseEntity<List<StoreItemDTO>> getAllStoresItemsInAllStoresForItem(String id) {
+        return ResponseEntity.ok().body(storeService.getAllStoresItemsInAllStoresForItem(id));
+    }
+
+    /**
+     * POST /stores/storeItems :
+     * creates if not exsits or updates exsitsing store item  for selected item and store
+     *
+     * @param storeItemIdOnlyDTO store item contains item.id and store.id and qty required (optional)
+     * @return OK (status code 200)
+     * @see StoresApi#setStoreItem
+     */
+    @Override
+    public ResponseEntity<StoreItemDTO> setStoreItem(StoreItemIdOnlyDTO storeItemIdOnlyDTO) {
+        return ResponseEntity.ok().body(storeService.setStoreItem(storeItemIdOnlyDTO));
     }
 }

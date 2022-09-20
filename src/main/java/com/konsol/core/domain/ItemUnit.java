@@ -38,6 +38,9 @@ public class ItemUnit implements Serializable {
     @Field("basic")
     private boolean basic;
 
+    @Field("itemId")
+    private String itemId;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
     public String getId() {
@@ -98,6 +101,14 @@ public class ItemUnit implements Serializable {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public String getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

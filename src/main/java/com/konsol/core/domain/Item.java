@@ -28,7 +28,7 @@ public class Item extends AbstractAuditingEntity<String> implements Serializable
 
     @Field("pk")
     @Indexed(unique = true)
-    private Integer pk;
+    private String pk;
 
     @NotNull
     @Field("name")
@@ -56,7 +56,7 @@ public class Item extends AbstractAuditingEntity<String> implements Serializable
 
     @DBRef
     @Field("itemUnits")
-    @JsonIgnoreProperties(value = { "items" }, allowSetters = true)
+    //@JsonIgnoreProperties(value = { "items" }, allowSetters = true)
     private Set<ItemUnit> itemUnits = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -74,11 +74,11 @@ public class Item extends AbstractAuditingEntity<String> implements Serializable
         this.id = id;
     }
 
-    public Integer getPk() {
+    public String getPk() {
         return pk;
     }
 
-    public void setPk(Integer pk) {
+    public void setPk(String pk) {
         this.pk = pk;
     }
 
@@ -183,18 +183,6 @@ public class Item extends AbstractAuditingEntity<String> implements Serializable
 
     public Item itemUnits(Set<ItemUnit> itemUnits) {
         this.setItemUnits(itemUnits);
-        return this;
-    }
-
-    public Item addItemUnits(ItemUnit itemUnit) {
-        this.itemUnits.add(itemUnit);
-        itemUnit.getItems().add(this);
-        return this;
-    }
-
-    public Item removeItemUnits(ItemUnit itemUnit) {
-        this.itemUnits.remove(itemUnit);
-        itemUnit.getItems().remove(this);
         return this;
     }
 

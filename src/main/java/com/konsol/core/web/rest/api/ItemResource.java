@@ -5,8 +5,8 @@ import com.konsol.core.domain.enumeration.PkKind;
 import com.konsol.core.repository.ItemRepository;
 import com.konsol.core.service.ItemService;
 import com.konsol.core.service.PkService;
-import com.konsol.core.service.api.dto.CategoryItem;
-import com.konsol.core.service.api.dto.ItemDTO;
+import com.konsol.core.service.api.dto.*;
+import com.konsol.core.web.api.ItemsApi;
 import com.konsol.core.web.api.ItemsApiDelegate;
 import com.konsol.core.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
@@ -45,12 +45,9 @@ public class ItemResource implements ItemsApiDelegate {
 
     private final ItemRepository itemRepository;
 
-    private final PkService pkService;
-
-    public ItemResource(ItemService itemService, ItemRepository itemRepository, PkService pkService) {
+    public ItemResource(ItemService itemService, ItemRepository itemRepository) {
         this.itemService = itemService;
         this.itemRepository = itemRepository;
-        this.pkService = pkService;
     }
 
     /**
@@ -65,9 +62,8 @@ public class ItemResource implements ItemsApiDelegate {
         if (itemDTO.getId() != null) {
             throw new BadRequestAlertException("A new item cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Pk pk = pkService.generatePkEntity(PkKind.ITEM);
-        itemDTO.setPk(pk.getValue().intValue());
-        ItemDTO result = itemService.save(itemDTO);
+
+        ItemDTO result = itemService.create(itemDTO);
         try {
             return ResponseEntity
                 .created(new URI("/api/items/" + result.getId()))
@@ -189,23 +185,81 @@ public class ItemResource implements ItemsApiDelegate {
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id)).build();
     }
 
+    /**
+     * GET /items/categories
+     * get categories from all items available
+     *
+     * @return OK (status code 200)
+     * @see ItemsApi#getAllItemsCategories
+     */
     @Override
     public ResponseEntity<List<CategoryItem>> getAllItemsCategories() {
         return ResponseEntity.ok(itemService.getAllItemCategories());
     }
 
+    /**
+     * GET /items/pk/{PkId}
+     * get item by pk id
+     *
+     * @param pkId  (required)
+     * @return OK (status code 200)
+     * @see ItemsApi#getItemByPk
+     */
     @Override
     public ResponseEntity<ItemDTO> getItemByPk(String pkId) {
         return ResponseEntity.ok(itemService.findOneByPk(pkId).orElse(null));
     }
 
+    /**
+     * GET /items/id/{id}/before
+     * get the item before this item by id
+     *
+     * @param id  (required)
+     * @return OK (status code 200)
+     * @see ItemsApi#getItemBeforeItemById
+     */
     @Override
     public ResponseEntity<ItemDTO> getItemBeforeItemById(String id) {
         return ResponseEntity.ok(itemService.getItemBeforeItemById(id).orElse(null));
     }
 
+    /**
+     * GET /items/id/{id}/after
+     * get the item before this item by id
+     *
+     * @param id  (required)
+     * @return OK (status code 200)
+     * @see ItemsApi#getItemAfterItemById
+     */
     @Override
     public ResponseEntity<ItemDTO> getItemAfterItemById(String id) {
         return ResponseEntity.ok(itemService.getItemAfterItemById(id).orElse(null));
+    }
+
+    /**
+     * POST /items/view :
+     * item view dto search and pagination and sort request
+     *
+     * @param paginationSearchModel  (optional)
+     * @return OK (status code 200)
+     * @see ItemsApi#itemsViewSearchPaginate
+     */
+    @Override
+    public ResponseEntity<ItemViewDTOContainer> itemsViewSearchPaginate(PaginationSearchModel paginationSearchModel) {
+        return ResponseEntity.ok().body(itemService.findAllItemsViewDTO(paginationSearchModel));
+    }
+
+    /**
+     * DELETE /items/units/{id}/delete :
+     *
+     * @param id  (required)
+     * @return OK (status code 200)
+     * @see ItemsApi#deleteUnitItemById
+     */
+    @Override
+    public ResponseEntity<Void> deleteUnitItemById(String id) {
+        log.debug("REST request to delete ItemUnit : {}", id);
+        itemService.deleteUnitItemById(id);
+        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id)).build();
     }
 }

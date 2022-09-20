@@ -63,8 +63,8 @@ public class PublicUserResource implements UsersApiDelegate {
      * Gets a list of all roles.
      * @return a string list of all roles.
      */
-    @GetMapping("/authorities")
-    public List<String> getAuthorities() {
-        return userService.getAuthorities();
+    //@Override
+    public ResponseEntity<List<String>> getAuthorities() {
+        return ResponseEntity.ok(userService.getAuthorities());
     }
 }

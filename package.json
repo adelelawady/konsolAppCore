@@ -35,7 +35,7 @@
     "docker:others:down": "",
     "predocker:others:up": "",
     "docker:others:up": "",
-    "gAPI": "openapi-generator-cli generate -i src/main/resources/swagger/api.yml -g csharp-dotnet2 -o ../KONSOL.UI/KONSOL.UI/Core --package-name com.konsol.core && mvnw generate-sources",
+    "gAPI": "openapi-generator-cli generate -i src/main/resources/swagger/api.yml -g csharp-dotnet2 -o ../konsol/konsol/Core --package-name com.konsol.core && mvnw generate-sources",
     "java:docker": "./mvnw -ntp verify -DskipTests -Pprod jib:dockerBuild",
     "java:docker:arm64": "npm run java:docker -- -Djib-maven-plugin.architecture=arm64",
     "java:docker:dev": "npm run java:docker -- -Pdev,webapp",

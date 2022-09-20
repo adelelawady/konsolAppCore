@@ -4,16 +4,16 @@ import com.konsol.core.domain.AccountUser;
 import com.konsol.core.domain.Bank;
 import com.konsol.core.domain.Item;
 import com.konsol.core.domain.Money;
+import com.konsol.core.service.api.dto.ItemDTO;
 import com.konsol.core.service.dto.AccountUserDTO;
 import com.konsol.core.service.dto.BankDTO;
-import com.konsol.core.service.dto.ItemDTO;
 import com.konsol.core.service.dto.MoneyDTO;
 import org.mapstruct.*;
 
 /**
  * Mapper for the entity {@link Money} and its DTO {@link MoneyDTO}.
  */
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = { UtilitsMapper.class })
 public interface MoneyMapper extends EntityMapper<MoneyDTO, Money> {
     @Mapping(target = "bank", source = "bank", qualifiedByName = "bankId")
     @Mapping(target = "item", source = "item", qualifiedByName = "itemId")

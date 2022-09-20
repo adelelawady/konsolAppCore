@@ -32,9 +32,9 @@ public class StoreItem implements Serializable {
     private Item item;
 
     @DBRef
-    @Field("storeIds")
+    @Field("store")
     @JsonIgnoreProperties(value = { "items" }, allowSetters = true)
-    private Set<Store> storeIds = new HashSet<>();
+    private Store store;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -77,35 +77,12 @@ public class StoreItem implements Serializable {
         return this;
     }
 
-    public Set<Store> getStoreIds() {
-        return this.storeIds;
+    public Store getStore() {
+        return store;
     }
 
-    public void setStoreIds(Set<Store> stores) {
-        if (this.storeIds != null) {
-            this.storeIds.forEach(i -> i.removeItems(this));
-        }
-        if (stores != null) {
-            stores.forEach(i -> i.addItems(this));
-        }
-        this.storeIds = stores;
-    }
-
-    public StoreItem storeIds(Set<Store> stores) {
-        this.setStoreIds(stores);
-        return this;
-    }
-
-    public StoreItem addStoreId(Store store) {
-        this.storeIds.add(store);
-        store.getItems().add(this);
-        return this;
-    }
-
-    public StoreItem removeStoreId(Store store) {
-        this.storeIds.remove(store);
-        store.getItems().remove(this);
-        return this;
+    public void setStore(Store storeIds) {
+        this.store = storeIds;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

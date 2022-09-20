@@ -1,6 +1,7 @@
 package com.konsol.core.service.dto;
 
 import com.konsol.core.domain.enumeration.MoneyKind;
+import com.konsol.core.service.api.dto.ItemDTO;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;

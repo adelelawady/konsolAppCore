@@ -15,7 +15,7 @@ servers:
   - url: 'http://localhost:8080/api'
     description: Generated server url
 paths:
-  '/api/stores/{id}':
+  '/stores/{id}':
     get:
       tags:
         - store-resource
@@ -95,166 +95,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StoreDTO'
-  '/api/store-items/{id}':
-    get:
-      tags:
-        - store-item-resource
-      operationId: getStoreItem
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StoreItemDTO'
-    put:
-      tags:
-        - store-item-resource
-      operationId: updateStoreItem
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/StoreItemDTO'
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
         required: true
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StoreItemDTO'
-    delete:
-      tags:
-        - store-item-resource
-      operationId: deleteStoreItem
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: OK
-    patch:
-      tags:
-        - store-item-resource
-      operationId: partialUpdateStoreItem
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/StoreItemDTO'
-          application/merge-patch+json:
-            schema:
-              $ref: '#/components/schemas/StoreItemDTO'
-        required: true
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StoreItemDTO'
-  '/api/pks/{id}':
-    get:
-      tags:
-        - pk-resource
-      operationId: getPk
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PkDTO'
-    put:
-      tags:
-        - pk-resource
-      operationId: updatePk
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PkDTO'
-        required: true
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PkDTO'
-    delete:
-      tags:
-        - pk-resource
-      operationId: deletePk
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: OK
-    patch:
-      tags:
-        - pk-resource
-      operationId: partialUpdatePk
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PkDTO'
-          application/merge-patch+json:
-            schema:
-              $ref: '#/components/schemas/PkDTO'
-        required: true
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PkDTO'
   '/api/monies/{id}':
     get:
       tags:
@@ -353,6 +199,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ItemDTO'
+      summary: ''
     put:
       tags:
         - item-resource
@@ -415,92 +262,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ItemDTO'
-    parameters:
-      - schema:
-          type: string
-        name: id
-        in: path
-        required: true
-  '/item-units/{id}':
-    get:
-      tags:
-        - item-unit-resource
-      operationId: getItemUnit
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ItemUnitDTO'
-    put:
-      tags:
-        - item-unit-resource
-      operationId: updateItemUnit
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ItemUnitDTO'
-        required: true
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ItemUnitDTO'
-    delete:
-      tags:
-        - item-unit-resource
-      operationId: deleteItemUnit
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: OK
-    patch:
-      tags:
-        - item-unit-resource
-      operationId: partialUpdateItemUnit
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ItemUnitDTO'
-          application/merge-patch+json:
-            schema:
-              $ref: '#/components/schemas/ItemUnitDTO'
-        required: true
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ItemUnitDTO'
     parameters:
       - schema:
           type: string
@@ -827,7 +588,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AccountUserDTO'
-  /api/stores:
+  /stores:
     get:
       tags:
         - store-resource
@@ -889,36 +650,53 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StoreDTO'
-  /api/store-items:
+    parameters: []
+  /stores/names:
     get:
       tags:
-        - store-item-resource
-      operationId: getAllStoreItems
-      parameters:
-        - name: page
-          in: query
-          description: Zero-based page index (0..N)
-          required: false
-          schema:
-            minimum: 0
-            type: integer
-            default: 0
-        - name: size
-          in: query
-          description: The size of the page to be returned
-          required: false
-          schema:
-            minimum: 1
-            type: integer
-            default: 20
-        - name: sort
-          in: query
-          description: 'Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.'
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
+        - store-resource
+      operationId: getAllStoresNames
+      parameters: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StoreNameDTO'
+      description: 'return all store names with id '
+    parameters: []
+  /stores/storeItems:
+    parameters: []
+    post:
+      summary: ''
+      operationId: SetStoreItem
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoreItemDTO'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreItemIdOnlyDTO'
+        description: store item contains item.id and store.id and qty required
+      tags:
+        - store-resource
+      description: |-
+        creates if not exsits or updates exsitsing store item 
+        for selected item and store
+  '/stores/item/{id}/storeItems':
+    get:
+      tags:
+        - store-resource
+      operationId: getAllStoresItemsForItem
+      parameters: []
       responses:
         '200':
           description: OK
@@ -928,53 +706,19 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/StoreItemDTO'
-    post:
-      tags:
-        - store-item-resource
-      operationId: createStoreItem
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/StoreItemDTO'
+      description: return all store items qty in all stores item availabe in with item id
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
         required: true
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StoreItemDTO'
-  /api/pks:
+  '/stores/item/{id}/storeItems/all':
     get:
       tags:
-        - pk-resource
-      operationId: getAllPks
-      parameters:
-        - name: page
-          in: query
-          description: Zero-based page index (0..N)
-          required: false
-          schema:
-            minimum: 0
-            type: integer
-            default: 0
-        - name: size
-          in: query
-          description: The size of the page to be returned
-          required: false
-          schema:
-            minimum: 1
-            type: integer
-            default: 20
-        - name: sort
-          in: query
-          description: 'Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.'
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
+        - store-resource
+      operationId: getAllStoresItemsInAllStoresForItem
+      parameters: []
       responses:
         '200':
           description: OK
@@ -983,24 +727,14 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/PkDTO'
-    post:
-      tags:
-        - pk-resource
-      operationId: createPk
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PkDTO'
+                  $ref: '#/components/schemas/StoreItemDTO'
+      description: return all store items qty in all stores with item id
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
         required: true
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PkDTO'
   /api/monies:
     get:
       tags:
@@ -1120,6 +854,41 @@ paths:
               schema:
                 $ref: '#/components/schemas/ItemDTO'
     parameters: []
+  '/items/units/{id}/delete':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    delete:
+      summary: ''
+      operationId: deleteUnitItemById
+      responses:
+        '200':
+          description: OK
+      tags:
+        - item-resource
+  /items/view:
+    parameters: []
+    post:
+      summary: ''
+      operationId: ItemsViewSearchPaginate
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemViewDTOContainer'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaginationSearchModel'
+      description: item view dto search and pagination and sort request
+      tags:
+        - item-resource
   /items/categories:
     get:
       tags:
@@ -1197,63 +966,6 @@ paths:
         name: id
         in: path
         required: true
-  /item-units:
-    get:
-      tags:
-        - item-unit-resource
-      operationId: getAllItemUnits
-      parameters:
-        - name: page
-          in: query
-          description: Zero-based page index (0..N)
-          required: false
-          schema:
-            minimum: 0
-            type: integer
-            default: 0
-        - name: size
-          in: query
-          description: The size of the page to be returned
-          required: false
-          schema:
-            minimum: 1
-            type: integer
-            default: 20
-        - name: sort
-          in: query
-          description: 'Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.'
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ItemUnitDTO'
-    post:
-      tags:
-        - item-unit-resource
-      operationId: createItemUnit
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ItemUnitDTO'
-        required: true
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ItemUnitDTO'
-    parameters: []
   /api/invoices:
     get:
       tags:
@@ -1787,6 +1499,80 @@ components:
   schemas:
     ItemDTO:
       type: object
+      x-tags:
+        - item
+      properties:
+        id:
+          type: string
+        pk:
+          type: integer
+          default: -1
+        name:
+          type: string
+        barcode:
+          type: string
+        price1:
+          type: string
+        price2:
+          type: string
+        category:
+          type: string
+        qty:
+          type: number
+          minimum: 0
+          exclusiveMinimum: false
+          default: 0
+        cost:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        itemUnits:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemUnitDTO'
+        createdBy:
+          type: string
+        createdDate:
+          type: string
+          format: date-time
+      required:
+        - name
+    ItemSimpleDTO:
+      type: object
+      x-tags:
+        - item
+      properties:
+        id:
+          type: string
+        pk:
+          type: integer
+          default: -1
+        name:
+          type: string
+        price1:
+          type: string
+        category:
+          type: string
+        qty:
+          type: number
+          minimum: 0
+          exclusiveMinimum: false
+          default: 0
+        cost:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+      required:
+        - name
+      title: itemSimpleDTO
+      description: 'simple model details for item '
+    ItemViewDTO:
+      type: object
+      title: ItemViewDTO
+      x-tags:
+        - item
+      description: It is used to display the item in the inventory view
       properties:
         id:
           type: string
@@ -1811,16 +1597,19 @@ components:
           minimum: 0
           exclusiveMinimum: false
           type: number
-        itemUnits:
-          uniqueItems: true
-          type: array
-          items:
-            $ref: '#/components/schemas/ItemUnitDTO'
+        createdBy:
+          type: string
+        createdDate:
+          type: string
+          format: date-time
+        lastModifiedBy:
+          type: string
+        lastModifiedDate:
+          type: string
+          format: date-time
       required:
         - name
     ItemUnitDTO:
-      required:
-        - name
       type: object
       properties:
         id:
@@ -1835,20 +1624,20 @@ components:
           minimum: 0
           exclusiveMinimum: false
           type: number
-    StoreDTO:
+        basic:
+          type: boolean
+          default: false
       required:
         - name
+    StoreDTO:
       type: object
       properties:
         id:
           type: string
         name:
           type: string
-        items:
-          uniqueItems: true
-          type: array
-          items:
-            $ref: '#/components/schemas/StoreItemDTO'
+      required:
+        - name
     StoreItemDTO:
       type: object
       properties:
@@ -1859,7 +1648,24 @@ components:
           exclusiveMinimum: false
           type: number
         item:
-          $ref: '#/components/schemas/ItemDTO'
+          $ref: '#/components/schemas/ItemSimpleDTO'
+        store:
+          $ref: '#/components/schemas/StoreNameDTO'
+    StoreItemIdOnlyDTO:
+      type: object
+      properties:
+        qty:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        itemId:
+          type: string
+        storeId:
+          type: string
+      required:
+        - qty
+        - itemId
+        - storeId
     PkDTO:
       type: object
       properties:
@@ -2263,5 +2069,45 @@ components:
         id: c3hb648r6gfz2
       type: object
       properties:
+        name:
+          type: string
+    PaginationSearchModel:
+      title: PaginationSearchModel
+      x-stoplight:
+        id: kdba1ibk06p8b
+      type: object
+      properties:
+        page:
+          type: integer
+          default: 0
+        size:
+          type: integer
+          default: 10
+        sortField:
+          type: string
+        sortOrder:
+          type: string
+        searchText:
+          type: string
+    ItemViewDTOContainer:
+      title: ItemViewDTOContainer
+      x-stoplight:
+        id: dpnzre10uswhm
+      type: object
+      properties:
+        result:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemViewDTO'
+        total:
+          type: integer
+    StoreNameDTO:
+      title: StoreNameDTO
+      x-stoplight:
+        id: 1rng5h6x237wc
+      type: object
+      properties:
+        id:
+          type: string
         name:
           type: string

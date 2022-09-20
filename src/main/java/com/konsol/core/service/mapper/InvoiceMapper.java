@@ -5,11 +5,11 @@ import com.konsol.core.domain.Bank;
 import com.konsol.core.domain.Invoice;
 import com.konsol.core.domain.InvoiceItem;
 import com.konsol.core.domain.Item;
+import com.konsol.core.service.api.dto.ItemDTO;
 import com.konsol.core.service.dto.AccountUserDTO;
 import com.konsol.core.service.dto.BankDTO;
 import com.konsol.core.service.dto.InvoiceDTO;
 import com.konsol.core.service.dto.InvoiceItemDTO;
-import com.konsol.core.service.dto.ItemDTO;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.mapstruct.*;
@@ -17,7 +17,7 @@ import org.mapstruct.*;
 /**
  * Mapper for the entity {@link Invoice} and its DTO {@link InvoiceDTO}.
  */
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = { UtilitsMapper.class })
 public interface InvoiceMapper extends EntityMapper<InvoiceDTO, Invoice> {
     @Mapping(target = "bank", source = "bank", qualifiedByName = "bankId")
     @Mapping(target = "item", source = "item", qualifiedByName = "itemId")

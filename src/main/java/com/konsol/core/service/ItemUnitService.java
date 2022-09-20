@@ -1,5 +1,6 @@
 package com.konsol.core.service;
 
+import com.konsol.core.domain.ItemUnit;
 import com.konsol.core.service.api.dto.ItemUnitDTO;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -16,6 +17,16 @@ public interface ItemUnitService {
      * @return the persisted entity.
      */
     ItemUnitDTO save(ItemUnitDTO itemUnitDTO);
+
+    /**
+     * Save a itemUnit.
+     *
+     * @param itemUnitDTO the entity to save.
+     * @return the persisted entity.
+     */
+    ItemUnit saveDomain(ItemUnitDTO itemUnitDTO);
+
+    ItemUnit saveDomain(ItemUnit itemUnit);
 
     /**
      * Updates a itemUnit.

@@ -23,4 +23,12 @@ public interface UtilitsMapper {
     default OffsetDateTime map(Instant value) {
         return OffsetDateTime.ofInstant(value, ZoneId.systemDefault());
     }
+
+    default Instant map(OffsetDateTime value) {
+        return value.toInstant();
+    }
+
+    default String intToString(Integer value) {
+        return String.valueOf(value);
+    }
 }

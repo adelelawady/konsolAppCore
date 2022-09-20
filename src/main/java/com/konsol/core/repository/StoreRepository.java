@@ -22,4 +22,6 @@ public interface StoreRepository extends MongoRepository<Store, String> {
 
     @Query("{'id': ?0}")
     Optional<Store> findOneWithEagerRelationships(String id);
+
+    List<Store> findAllByIdNotIn(List<String> ids);
 }
