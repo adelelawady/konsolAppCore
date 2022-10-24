@@ -1,27 +1,33 @@
 package com.konsol.core.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.konsol.core.domain.enumeration.InvoiceKind;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 import javax.validation.constraints.*;
+import org.checkerframework.common.aliasing.qual.Unique;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.Unwrapped;
 
 /**
  * A Invoice.
  */
 @Document(collection = "invoices")
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class Invoice implements Serializable {
+public class Invoice extends AbstractAuditingEntity<String> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Field("pk")
+    @Indexed(unique = true)
+    @Unwrapped.Nullable
     private String pk;
 
     @Id
@@ -30,13 +36,19 @@ public class Invoice implements Serializable {
     @Field("kind")
     private InvoiceKind kind;
 
+    @Field("active")
+    private boolean active = false;
+
+    @Field("temp")
+    private boolean temp = true;
+
     @DecimalMin(value = "0")
     @Field("total_cost")
-    private BigDecimal totalCost;
+    private BigDecimal totalCost = new BigDecimal(0);
 
     @DecimalMin(value = "0")
     @Field("total_price")
-    private BigDecimal totalPrice;
+    private BigDecimal totalPrice = new BigDecimal(0);
 
     @Min(value = 0)
     @Max(value = 100)
@@ -45,7 +57,7 @@ public class Invoice implements Serializable {
 
     @DecimalMin(value = "0")
     @Field("discount")
-    private BigDecimal discount;
+    private BigDecimal discount = new BigDecimal(0);
 
     @DecimalMin(value = "0")
     @Field("additions")
@@ -56,11 +68,11 @@ public class Invoice implements Serializable {
 
     @DecimalMin(value = "0")
     @Field("net_cost")
-    private BigDecimal netCost;
+    private BigDecimal netCost = new BigDecimal(0);
 
     @DecimalMin(value = "0")
     @Field("net_price")
-    private BigDecimal netPrice;
+    private BigDecimal netPrice = new BigDecimal(0);
 
     @DecimalMin(value = "0")
     @Field("expenses")
@@ -74,16 +86,12 @@ public class Invoice implements Serializable {
     private Bank bank;
 
     @DBRef
-    @Field("item")
-    private Item item;
-
-    @DBRef
     @Field("account")
     private AccountUser account;
 
     @DBRef
     @Field("invoiceItems")
-    @JsonIgnoreProperties(value = { "invoices" }, allowSetters = true)
+    @JsonIgnoreProperties(allowSetters = true)
     private Set<InvoiceItem> invoiceItems = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -110,6 +118,14 @@ public class Invoice implements Serializable {
         return this;
     }
 
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     public void setId(String id) {
         this.id = id;
     }
@@ -129,6 +145,14 @@ public class Invoice implements Serializable {
 
     public BigDecimal getTotalCost() {
         return this.totalCost;
+    }
+
+    public boolean isTemp() {
+        return temp;
+    }
+
+    public void setTemp(boolean temp) {
+        this.temp = temp;
     }
 
     public Invoice totalCost(BigDecimal totalCost) {
@@ -270,19 +294,6 @@ public class Invoice implements Serializable {
         return this;
     }
 
-    public Item getItem() {
-        return this.item;
-    }
-
-    public void setItem(Item item) {
-        this.item = item;
-    }
-
-    public Invoice item(Item item) {
-        this.setItem(item);
-        return this;
-    }
-
     public AccountUser getAccount() {
         return this.account;
     }
@@ -306,18 +317,6 @@ public class Invoice implements Serializable {
 
     public Invoice invoiceItems(Set<InvoiceItem> invoiceItems) {
         this.setInvoiceItems(invoiceItems);
-        return this;
-    }
-
-    public Invoice addInvoiceItems(InvoiceItem invoiceItem) {
-        this.invoiceItems.add(invoiceItem);
-        invoiceItem.getInvoices().add(this);
-        return this;
-    }
-
-    public Invoice removeInvoiceItems(InvoiceItem invoiceItem) {
-        this.invoiceItems.remove(invoiceItem);
-        invoiceItem.getInvoices().remove(this);
         return this;
     }
 

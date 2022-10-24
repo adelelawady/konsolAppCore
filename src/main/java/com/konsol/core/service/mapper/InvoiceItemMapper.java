@@ -1,7 +1,7 @@
 package com.konsol.core.service.mapper;
 
 import com.konsol.core.domain.InvoiceItem;
-import com.konsol.core.service.dto.InvoiceItemDTO;
+import com.konsol.core.service.api.dto.InvoiceItemDTO;
 import org.mapstruct.*;
 
 /**

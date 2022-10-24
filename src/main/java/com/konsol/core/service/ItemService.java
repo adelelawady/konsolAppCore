@@ -1,6 +1,7 @@
 package com.konsol.core.service;
 
 import com.konsol.core.domain.Item;
+import com.konsol.core.domain.ItemUnit;
 import com.konsol.core.service.api.dto.*;
 import com.konsol.core.service.mapper.ItemMapper;
 import java.util.List;
@@ -141,4 +142,6 @@ public interface ItemService {
      * @param id the id of the entity.
      */
     void deleteUnitItemById(String id);
+
+    Optional<ItemUnit> getUnitItemById(String id);
 }

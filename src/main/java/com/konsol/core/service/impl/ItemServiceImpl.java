@@ -15,6 +15,8 @@ import com.konsol.core.service.mapper.ItemUnitMapper;
 import com.konsol.core.web.rest.api.errors.ItemUnitException;
 import com.mongodb.client.DistinctIterable;
 import com.mongodb.client.MongoCursor;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.bson.types.ObjectId;
@@ -188,6 +190,18 @@ public class ItemServiceImpl implements ItemService {
                 } else {
                     for (ItemUnitDTO itemUnitDTO : itemDTO.getItemUnits()) {
                         ItemUnit itemUnit = itemUnitService.saveDomain(itemUnitDTO);
+
+                        if (itemUnitDTO.getBasic() != null && itemUnitDTO.getBasic()) {
+                            itemUnit.setPieces(new BigDecimal(1));
+                        } else {
+                            if (itemUnit.getPieces() == null || (itemUnit.getPieces()).compareTo(new BigDecimal(0)) == 0) {
+                                itemUnit.setPieces(new BigDecimal(1));
+                            }
+                            if (itemUnit.getPrice() == null || (itemUnit.getPrice()).compareTo(new BigDecimal(0)) == 0) {
+                                itemUnit.setPrice(new BigDecimal(itemDTO.getPrice1()).multiply(itemUnit.getPieces()));
+                            }
+                        }
+
                         itemUnit.setItemId(itemDTO.getId());
                         itemUnit = itemUnitService.saveDomain(itemUnit);
                         item.getItemUnits().add(itemUnit);
@@ -204,10 +218,15 @@ public class ItemServiceImpl implements ItemService {
 
         this.validateNewItemUnits(itemDTO);
         SaveItemUnits(itemDTO);
-        itemDTO.setItemUnits(null);
+
         return itemRepository
             .findById(itemDTO.getId())
             .map(existingItem -> {
+                /**
+                 * disable changing qty and itemUnits
+                 */
+                itemDTO.setItemUnits(null);
+                itemDTO.setQty(existingItem.getQty());
                 itemMapper.partialUpdate(existingItem, itemDTO);
                 return existingItem;
             })
@@ -440,6 +459,11 @@ public class ItemServiceImpl implements ItemService {
         Query query = Query.query(Criteria.where("$id").is(new ObjectId(id)));
         Update update = new Update().pull("itemUnits", query);
         mongoTemplate.updateMulti(new Query(), update, Item.class);
+    }
+
+    @Override
+    public Optional<ItemUnit> getUnitItemById(String id) {
+        return itemUnitRepository.findById(id);
     }
 
     public Optional<ItemDTO> getLastItem() {

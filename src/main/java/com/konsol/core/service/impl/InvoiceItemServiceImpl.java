@@ -3,7 +3,7 @@ package com.konsol.core.service.impl;
 import com.konsol.core.domain.InvoiceItem;
 import com.konsol.core.repository.InvoiceItemRepository;
 import com.konsol.core.service.InvoiceItemService;
-import com.konsol.core.service.dto.InvoiceItemDTO;
+import com.konsol.core.service.api.dto.InvoiceItemDTO;
 import com.konsol.core.service.mapper.InvoiceItemMapper;
 import java.util.Optional;
 import org.slf4j.Logger;

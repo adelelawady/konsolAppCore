@@ -12,6 +12,7 @@ import com.konsol.core.service.mapper.StoreItemMapper;
 import com.konsol.core.service.mapper.StoreMapper;
 import com.konsol.core.web.api.StoresApi;
 import com.konsol.core.web.rest.api.errors.ItemNotFoundException;
+import com.konsol.core.web.rest.api.errors.ItemQtyException;
 import com.konsol.core.web.rest.api.errors.StoreNotFoundException;
 import com.mongodb.client.*;
 import com.mongodb.client.FindIterable;
@@ -198,6 +199,19 @@ public class StoreServiceImpl implements StoreService {
             throw new ItemNotFoundException(String.format("الصنف {0} غير متاح لتعديل سجلات المخازن", ItemId), null);
         }
 
+        Item item1 = item.get();
+        item1.qty(getItemQty(ItemId));
+        itemService.save(item1);
+    }
+
+    @Override
+    public boolean checkItemQtyAvailable(String ItemId, BigDecimal qty) {
+        return getItemQty(ItemId).compareTo(qty) >= 0;
+        //  return itemService.findOneById(ItemId).orElseGet(null).getQty().compareTo(qty)<1;
+    }
+
+    @Override
+    public BigDecimal getItemQty(String ItemId) {
         MongoCollection<Document> collection = mongoTemplate.getCollection("store_items");
 
         AggregateIterable<Document> result = collection.aggregate(
@@ -221,12 +235,38 @@ public class StoreServiceImpl implements StoreService {
             )
         );
 
-        MongoCursor<Document> iterator = result.iterator();
-        org.bson.types.Decimal128 total = (org.bson.types.Decimal128) iterator.next().get("total");
+        try {
+            MongoCursor<Document> iterator = result.iterator();
+            org.bson.types.Decimal128 total = (org.bson.types.Decimal128) iterator.next().get("total");
+            return total.bigDecimalValue();
+        } catch (Exception e) {
+            return new BigDecimal(0);
+        }
+    }
 
-        Item item1 = item.get();
-        item1.qty(total.bigDecimalValue());
-        itemService.save(item1);
+    @Override
+    public void subtractItemQtyFromStores(String ItemId, BigDecimal qty) {
+        Optional<Item> item = itemService.findOneById(ItemId);
+        if (item.isEmpty()) {
+            throw new ItemNotFoundException(String.format("الصنف {0} غير متاح لتعديل سجلات المخازن", ItemId), null);
+        }
+
+        if (!checkItemQtyAvailable(ItemId, qty)) {
+            throw new ItemQtyException("مشكلة ف كمية الصنف", "لا يوجد ما يكفي من الصنف ف المخازن", null);
+        }
+
+        for (StoreItemDTO storeItemDTO : this.getAllStoresItemsForItem(ItemId)) {
+            if (storeItemDTO.getQty().compareTo(qty) >= 0) {
+                storeItemDTO.setQty(storeItemDTO.getQty().subtract(qty));
+
+                this.setStoreItem(storeItemMapper.toStoreItemIdOnlyDTO(storeItemDTO));
+                break;
+            } else {
+                qty = qty.subtract(storeItemDTO.getQty());
+                storeItemDTO.setQty(new BigDecimal(0));
+                this.setStoreItem(storeItemMapper.toStoreItemIdOnlyDTO(storeItemDTO));
+            }
+        }
     }
 
     /**

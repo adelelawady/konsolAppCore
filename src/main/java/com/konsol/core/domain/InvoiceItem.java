@@ -26,6 +26,14 @@ public class InvoiceItem implements Serializable {
     @Id
     private String id;
 
+    @DBRef
+    @Field("item")
+    private Item item;
+
+    @DBRef
+    @Field("ItemUnit")
+    private ItemUnit ItemUnit;
+
     @Field("unit")
     private String unit;
 
@@ -94,12 +102,18 @@ public class InvoiceItem implements Serializable {
     @Field("net_price")
     private BigDecimal netPrice;
 
-    @DBRef
-    @Field("invoices")
-    @JsonIgnoreProperties(value = { "bank", "item", "account", "invoiceItems" }, allowSetters = true)
-    private Set<Invoice> invoices = new HashSet<>();
+    @Field("invoice_id")
+    private String invoiceId;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
+
+    public Item getItem() {
+        return item;
+    }
+
+    public void setItem(Item item) {
+        this.item = item;
+    }
 
     public String getPk() {
         return this.pk;
@@ -108,6 +122,14 @@ public class InvoiceItem implements Serializable {
     public InvoiceItem pk(String pk) {
         this.setPk(pk);
         return this;
+    }
+
+    public String getInvoiceId() {
+        return invoiceId;
+    }
+
+    public void setInvoiceId(String invoiceId) {
+        this.invoiceId = invoiceId;
     }
 
     public void setPk(String pk) {
@@ -127,13 +149,16 @@ public class InvoiceItem implements Serializable {
         this.id = id;
     }
 
-    public String getUnit() {
-        return this.unit;
+    public com.konsol.core.domain.ItemUnit getItemUnit() {
+        return ItemUnit;
     }
 
-    public InvoiceItem unit(String unit) {
-        this.setUnit(unit);
-        return this;
+    public void setItemUnit(com.konsol.core.domain.ItemUnit itemUnit) {
+        ItemUnit = itemUnit;
+    }
+
+    public String getUnit() {
+        return unit;
     }
 
     public void setUnit(String unit) {
@@ -348,37 +373,6 @@ public class InvoiceItem implements Serializable {
         this.netPrice = netPrice;
     }
 
-    public Set<Invoice> getInvoices() {
-        return this.invoices;
-    }
-
-    public void setInvoices(Set<Invoice> invoices) {
-        if (this.invoices != null) {
-            this.invoices.forEach(i -> i.removeInvoiceItems(this));
-        }
-        if (invoices != null) {
-            invoices.forEach(i -> i.addInvoiceItems(this));
-        }
-        this.invoices = invoices;
-    }
-
-    public InvoiceItem invoices(Set<Invoice> invoices) {
-        this.setInvoices(invoices);
-        return this;
-    }
-
-    public InvoiceItem addInvoice(Invoice invoice) {
-        this.invoices.add(invoice);
-        invoice.getInvoiceItems().add(this);
-        return this;
-    }
-
-    public InvoiceItem removeInvoice(Invoice invoice) {
-        this.invoices.remove(invoice);
-        invoice.getInvoiceItems().remove(this);
-        return this;
-    }
-
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -404,7 +398,6 @@ public class InvoiceItem implements Serializable {
         return "InvoiceItem{" +
             "id=" + getId() +
             ", pk='" + getPk() + "'" +
-            ", unit='" + getUnit() + "'" +
             ", unitPieces=" + getUnitPieces() +
             ", userQty=" + getUserQty() +
             ", unitQtyIn=" + getUnitQtyIn() +

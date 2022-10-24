@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 import javax.validation.constraints.*;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -29,11 +30,11 @@ public class ItemUnit implements Serializable {
 
     @DecimalMin(value = "0")
     @Field("pieces")
-    private BigDecimal pieces;
+    private BigDecimal pieces = new BigDecimal(0);
 
     @DecimalMin(value = "0")
     @Field("price")
-    private BigDecimal price;
+    private BigDecimal price = new BigDecimal(0);
 
     @Field("basic")
     private boolean basic;

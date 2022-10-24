@@ -268,7 +268,7 @@ paths:
         name: id
         in: path
         required: true
-  '/api/invoices/{id}':
+  '/invoices/{id}':
     get:
       tags:
         - invoice-resource
@@ -286,29 +286,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InvoiceDTO'
-    put:
-      tags:
-        - invoice-resource
-      operationId: updateInvoice
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/InvoiceDTO'
-        required: true
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InvoiceDTO'
+      description: 'get single invoice by id '
     delete:
       tags:
         - invoice-resource
@@ -322,10 +300,11 @@ paths:
       responses:
         '200':
           description: OK
+      description: delete invoice by invoice id
     patch:
       tags:
         - invoice-resource
-      operationId: partialUpdateInvoice
+      operationId: updateInvoice
       parameters:
         - name: id
           in: path
@@ -336,19 +315,67 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/InvoiceDTO'
+              $ref: '#/components/schemas/InvoiceUpdateDTO'
           application/merge-patch+json:
             schema:
               $ref: '#/components/schemas/InvoiceDTO'
         required: true
+        description: ''
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InvoiceDTO'
-  '/api/invoice-items/{id}':
+                $ref: '#/components/schemas/InvoiceViewSimpleDTO'
+      description: 'update invoice '
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    post:
+      summary: save and submit invoice
+      operationId: saveInvoice
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceViewSimpleDTO'
+      tags:
+        - invoice-resource
+      description: |
+        save and submit invoice by invoice id 
+        changes invoice status to active
+  '/invoices/view/{id}':
+    get:
+      tags:
+        - invoice-resource
+      operationId: getInvoiceView
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceViewDTO'
+      description: 'get single invoice by id '
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+  '/invoice-items/{id}':
     get:
       tags:
         - invoice-item-resource
@@ -428,6 +455,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InvoiceItemDTO'
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
   '/api/banks/{id}':
     get:
       tags:
@@ -886,6 +919,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/PaginationSearchModel'
+        description: ''
       description: item view dto search and pagination and sort request
       tags:
         - item-resource
@@ -966,7 +1000,7 @@ paths:
         name: id
         in: path
         required: true
-  /api/invoices:
+  /invoices:
     get:
       tags:
         - invoice-resource
@@ -1028,7 +1062,88 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InvoiceDTO'
-  /api/invoice-items:
+    parameters: []
+  '/invoices/{kind}/create':
+    get:
+      tags:
+        - invoice-resource
+      operationId: initializeNewInvoice
+      parameters: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceDTO'
+      description: initialize a new Invoice
+    parameters:
+      - schema:
+          type: string
+        name: kind
+        in: path
+        required: true
+  '/invoices/{id}/print':
+    get:
+      tags:
+        - invoice-resource
+      operationId: getPrintInvoiceObject
+      parameters: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoicePrintDTO'
+      description: create a printable object of invoice print dto and global options used for user and general info
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+  '/invoices/{id}/add':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    post:
+      summary: add invoice item to invocie
+      operationId: AddInvoiceItem
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceDTO'
+      tags:
+        - invoice-resource
+      description: add item to invoice includes price qty etc ..
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateInvoiceItemDTO'
+  '/invoices/invoice-items/{id}/delete':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    delete:
+      summary: ''
+      operationId: deleteInvoiceItemFromInvoice
+      responses:
+        '200':
+          description: OK
+      tags:
+        - invoice-resource
+  /invoice-items:
     get:
       tags:
         - invoice-item-resource
@@ -1084,6 +1199,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InvoiceItemDTO'
+    parameters: []
   /api/banks:
     get:
       tags:
@@ -1495,6 +1611,47 @@ paths:
         '200':
           description: OK
     parameters: []
+  /sys/options:
+    get:
+      summary: Get System Options
+      tags:
+        - GLOBAL
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SysOptions'
+      operationId: getGlobalSystemOptions
+      description: 'get main system invoices , handlers ,  pos global options file '
+    patch:
+      summary: Update Global Application options
+      operationId: updateGlobalSystemOptions
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SysOptions'
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SysOptions'
+      description: Update Global Application options
+      tags:
+        - GLOBAL
+    put:
+      summary: ''
+      operationId: put-sys-options
+      responses:
+        '200':
+          description: OK
+      tags:
+        - GLOBAL
 components:
   schemas:
     ItemDTO:
@@ -1750,6 +1907,77 @@ components:
       properties:
         pk:
           type: string
+          description: 'Invoice pk '
+        id:
+          type: string
+        kind:
+          type: string
+          enum:
+            - SALE
+            - PURCHASE
+            - ADJUST
+            - TRANSFER
+            - SALEQUOTE
+            - RETURNPUR
+            - RETURNSALE
+            - COMPONENT
+        totalCost:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        totalPrice:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        discountPer:
+          maximum: 100
+          minimum: 0
+          type: integer
+          format: int32
+        discount:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        additions:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        additionsType:
+          type: string
+        netCost:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        netPrice:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        expenses:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        expensesType:
+          type: string
+        bank:
+          $ref: '#/components/schemas/BankDTO'
+        account:
+          $ref: '#/components/schemas/AccountUserDTO'
+        invoiceItems:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/InvoiceItemDTO'
+        created_by:
+          type: string
+        created_date:
+          type: string
+          format: date-time
+    InvoiceViewDTO:
+      type: object
+      properties:
+        pk:
+          type: string
+          description: 'Invoice pk '
         id:
           type: string
         kind:
@@ -1807,10 +2035,190 @@ components:
         account:
           $ref: '#/components/schemas/AccountUserDTO'
         invoiceItems:
-          uniqueItems: true
           type: array
           items:
-            $ref: '#/components/schemas/InvoiceItemDTO'
+            $ref: '#/components/schemas/InvoiceItemViewDTO'
+        created_by:
+          type: string
+        created_date:
+          type: string
+          format: date-time
+        last_modified_by:
+          type: string
+        last_modified_date:
+          type: string
+          format: date-time
+        invoiceItemsCount:
+          type: string
+      x-examples:
+        example-1:
+          pk: string
+          id: string
+          kind: SALE
+          totalCost: 0
+          totalPrice: 0
+          discountPer: 0
+          discount: 0
+          additions: 0
+          additionsType: string
+          netCost: 0
+          netPrice: 0
+          expenses: 0
+          expensesType: string
+          bank:
+            id: string
+            name: string
+          item:
+            id: string
+            pk: -1
+            name: string
+            barcode: string
+            price1: string
+            price2: string
+            category: string
+            qty: 0
+            cost: 0
+            itemUnits:
+              - id: string
+                name: string
+                pieces: 0
+                price: 0
+                basic: false
+            createdBy: string
+            createdDate: '2019-08-24T14:15:22Z'
+          account:
+            id: string
+            name: string
+            kind: CUSTOMER
+            balanceIn: 0
+            balanceOut: 0
+            phone: string
+            address: string
+            address2: string
+          invoiceItems:
+            - pk: string
+              id: string
+              unit: string
+              unitQtyIn: 0
+              unitQtyOut: 0
+              discount: 0
+              discountPer: 0
+              totalCost: 0
+              totalPrice: 0
+              qtyIn: 0
+              qtyOut: 0
+              netCost: 0
+              netPrice: 0
+              itemName: string
+          created_by: string
+          created_date: '2019-08-24T14:15:22Z'
+          last_modified_by: string
+          last_modified_date: '2019-08-24T14:15:22Z'
+          invoiceItemsCount: string
+    InvoiceViewSimpleDTO:
+      type: object
+      properties:
+        pk:
+          type: string
+          description: 'Invoice pk '
+        id:
+          type: string
+        kind:
+          type: string
+          enum:
+            - SALE
+            - PURCHASE
+            - ADJUST
+            - TRANSFER
+            - SALEQUOTE
+            - RETURNPUR
+            - RETURNSALE
+            - COMPONENT
+        totalCost:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        totalPrice:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        discountPer:
+          maximum: 100
+          minimum: 0
+          type: integer
+          format: int32
+        discount:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        additions:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        additionsType:
+          type: string
+        netPrice:
+          type: number
+          minimum: 0
+        netCost:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        created_by:
+          type: string
+        ItemsCount:
+          type: string
+        created_date:
+          type: string
+          format: date-time
+        last_modified_by:
+          type: string
+        last_modified_date:
+          type: string
+          format: date-time
+        bank:
+          $ref: '#/components/schemas/BankDTO'
+        item:
+          $ref: '#/components/schemas/ItemSimpleDTO'
+        account:
+          $ref: '#/components/schemas/AccountUserDTO'
+    InvoiceUpdateDTO:
+      type: object
+      properties:
+        id:
+          type: string
+        discountPer:
+          maximum: 100
+          minimum: 0
+          type: integer
+          format: int32
+        discount:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        additions:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        additionsType:
+          type: string
+        expenses:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        expensesType:
+          type: string
+        bankId:
+          type: string
+        accountId:
+          type: string
+        created_date:
+          type: string
+          format: date-time
+      description: |-
+        A model that contains all the elements that can be modified 
+        in the invoice by requesting the modification
+      title: Invoice update DTO
     InvoiceItemDTO:
       type: object
       properties:
@@ -1885,6 +2293,82 @@ components:
           minimum: 0
           exclusiveMinimum: false
           type: number
+        item:
+          $ref: '#/components/schemas/ItemSimpleDTO'
+    InvoiceItemViewDTO:
+      type: object
+      properties:
+        pk:
+          type: string
+        id:
+          type: string
+        unit:
+          type: string
+        unitQtyIn:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        unitQtyOut:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        discount:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        discountPer:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 100
+        totalCost:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        totalPrice:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        qtyIn:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        qtyOut:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        netCost:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        netPrice:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        itemName:
+          type: string
+    CreateInvoiceItemDTO:
+      type: object
+      title: CreateInvoiceItemDTO
+      description: model for creating new invoice items
+      properties:
+        id:
+          type: string
+        itemId:
+          type: string
+        unitId:
+          type: string
+        qty:
+          type: number
+          minimum: 0
+          exclusiveMinimum: false
+          default: 0
+        price:
+          type: number
+          default: 0
+          minimum: 0
+      required:
+        - itemId
     AdminUserDTO:
       required:
         - login
@@ -2110,4 +2594,221 @@ components:
         id:
           type: string
         name:
+          type: string
+    GridColumn:
+      title: GridColumnModel
+      x-stoplight:
+        id: pg1ha7lkm12tk
+      type: object
+      x-examples: {}
+      description: ''
+      properties:
+        fieldName:
+          type: string
+          default: name
+        capition:
+          type: string
+          default: capition
+        visible:
+          type: boolean
+        visibleCustomization:
+          type: boolean
+        description:
+          type: string
+        displayFormat:
+          type: string
+    GridModelCollection:
+      title: GridModelCollection
+      x-stoplight:
+        id: bvrw2oram2umb
+      type: object
+      x-examples:
+        example-1:
+          gridId: MyModel
+          gridModels:
+            - fieldName: name
+              capition: capition
+              width: width
+              font: string
+              visible: true
+              visibleCostomization: true
+          modelObjectType:
+            id: string
+            pk: -1
+            name: string
+            barcode: string
+            price1: string
+            price2: string
+            category: string
+            qty: 0
+            cost: 0
+            itemUnits:
+              - id: string
+                name: string
+                pieces: 0
+                price: 0
+                basic: false
+            createdBy: string
+            createdDate: '2019-08-24T14:15:22Z'
+      properties:
+        id:
+          type: string
+          default: MyModel
+        gridModels:
+          type: array
+          items:
+            $ref: '#/components/schemas/GridColumnModel'
+        modelType:
+          oneOf:
+            - $ref: '#/components/schemas/ItemDTO'
+            - $ref: '#/components/schemas/ItemSimpleDTO'
+        gridName:
+          type: string
+    SysOptions:
+      title: SysOptions
+      x-stoplight:
+        id: zyfwknmaoo5pi
+      type: object
+      description: ''
+      x-examples:
+        example-1:
+          appName: اسم الشركة
+          appVersion: 1.0.0.0
+          reportFilesDir: KONSOL_REPORTS
+          contactInfo:
+            VendorContactName: اسم صاحب العمل
+            VendorPhone: هاتف صاحب العمل
+            VendorAddress: عنوان صاحب العمل
+            VendorCity: 'مدينة '
+            VendorCountry: دولة
+            VendorWebsite: موقع
+            VendorEmail: بريد
+          options:
+            salesInvoiceOptions:
+              selectedInvoiceReport: string
+              isDefault: true
+      properties:
+        appName:
+          type: string
+          default: اسم الشركة
+        appVersion:
+          type: string
+          default: 1.0.0.0
+        contactInfo:
+          $ref: '#/components/schemas/ContactInfo'
+        settings:
+          $ref: '#/components/schemas/GlobalSettings'
+    InvoicePrintDTO:
+      title: InvoicePrintDTO
+      x-stoplight:
+        id: undra196b9cyo
+      type: object
+      properties:
+        invoice:
+          $ref: '#/components/schemas/InvoiceDTO'
+        global_info:
+          $ref: '#/components/schemas/ContactInfo'
+    ContactInfo:
+      title: ContactInfo
+      x-stoplight:
+        id: gkeun9pxkdpgc
+      type: object
+      properties:
+        VendorContactName:
+          type: string
+          default: اسم صاحب العمل
+        VendorPhone:
+          type: string
+          default: هاتف صاحب العمل
+        VendorAddress:
+          type: string
+          default: عنوان صاحب العمل
+        VendorCity:
+          type: string
+          default: 'مدينة '
+        VendorCountry:
+          type: string
+          default: دولة
+        VendorWebsite:
+          type: string
+          default: موقع
+        VendorEmail:
+          type: string
+          default: بريد
+    GlobalSettings:
+      title: GlobalSettings
+      x-stoplight:
+        id: 7djw1ifd9eagq
+      type: object
+      properties:
+        salesInvoiceOptions:
+          type: object
+          properties:
+            selectedInvoiceReport:
+              type: string
+              default: Default
+            autoPrintAfterSave:
+              type: boolean
+              default: true
+            printPreview:
+              type: boolean
+              default: false
+            userReportFile:
+              type: boolean
+            selectedPrinterName:
+              type: string
+              default: default
+            checkItemQty:
+              type: boolean
+              default: true
+        reportFilesDir:
+          type: string
+          default: reports
+        selectedStoreId:
+          type: string
+          default: default
+        mainPrinterName:
+          type: string
+          default: default
+        cultureName:
+          type: string
+          default: ar-EG
+      x-examples:
+        example-1:
+          salesInvoiceOptions:
+            selectedInvoiceReport: Default
+            autoPrintAfterSave: true
+            printPreview: false
+            userReportFile: true
+            selectedPrinterName: default
+            checkItemQty: true
+          reportFilesDir: reports
+          selectedStoreId: default
+          mainPrinterName: default
+          cultureName: ar-EG
+    GridOptions:
+      title: GridOptions
+      x-stoplight:
+        id: orxnk6df31kl4
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+          default: default
+        allowBands:
+          type: boolean
+          default: true
+        showSearch:
+          type: boolean
+          default: false
+        showGroupSearch:
+          type: boolean
+          default: false
+        columns:
+          type: array
+          items:
+            $ref: ''
+        sortField:
           type: string

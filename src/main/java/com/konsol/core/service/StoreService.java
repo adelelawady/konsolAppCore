@@ -5,6 +5,7 @@ import com.konsol.core.service.api.dto.StoreItemDTO;
 import com.konsol.core.service.api.dto.StoreItemIdOnlyDTO;
 import com.konsol.core.service.api.dto.StoreNameDTO;
 import com.konsol.core.web.api.StoresApi;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -109,4 +110,10 @@ public interface StoreService {
      * @param ItemId item id to update
      */
     void UpdateItemQty(String ItemId);
+
+    boolean checkItemQtyAvailable(String ItemId, BigDecimal qty);
+
+    BigDecimal getItemQty(String ItemId);
+
+    void subtractItemQtyFromStores(String ItemId, BigDecimal qty);
 }
