@@ -3,23 +3,20 @@ package com.konsol.core.service;
 import com.konsol.core.domain.Invoice;
 import com.konsol.core.domain.InvoiceItem;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 /**
- * Service Interface for managing Sales {@link com.konsol.core.domain.Invoice}.
+ * Service Interface for managing Sales {@link Invoice}.
  */
-
-public interface SaleService extends InvoiceController {
+public interface PurchaseService extends InvoiceController {
     /**
      * sets qty out based on unitQtyOut
      * @param invoiceItem selected invoice item to update
      * @return modified {@link InvoiceItem} object
      */
-    default void setQtyOut(InvoiceItem invoiceItem) {
-        invoiceItem.qtyOut(invoiceItem.getUnitQtyOut().multiply(invoiceItem.getUnitPieces()));
+    default void setQtyIn(InvoiceItem invoiceItem) {
+        invoiceItem.qtyIn(invoiceItem.getUnitQtyIn().multiply(invoiceItem.getUnitPieces()));
     }
 
     /**
@@ -28,7 +25,7 @@ public interface SaleService extends InvoiceController {
      * @return modified {@link InvoiceItem} object
      */
     default void setTotalPrice(InvoiceItem invoiceItem) {
-        invoiceItem.setTotalPrice(invoiceItem.getUnitPrice().multiply(invoiceItem.getUnitQtyOut()));
+        invoiceItem.setTotalPrice(invoiceItem.getUnitPrice().multiply(invoiceItem.getUnitQtyIn()));
     }
 
     /**
@@ -37,7 +34,7 @@ public interface SaleService extends InvoiceController {
      * @return modified {@link InvoiceItem} object
      */
     default void setTotalCost(InvoiceItem invoiceItem) {
-        invoiceItem.setTotalCost(invoiceItem.getUnitCost().multiply(invoiceItem.getUnitQtyOut()));
+        invoiceItem.setTotalCost(invoiceItem.getUnitCost().multiply(invoiceItem.getUnitQtyIn()));
     }
 
     /**
@@ -65,11 +62,11 @@ public interface SaleService extends InvoiceController {
      * @param invoiceItem
      */
     default void updateInvoiceItem(InvoiceItem invoiceItem) {
-        setQtyOut(invoiceItem);
+        setQtyIn(invoiceItem);
         setTotalPrice(invoiceItem);
         setTotalCost(invoiceItem);
-        calcInvoiceDiscount(invoiceItem, true);
-        setTotalNetCost(invoiceItem);
-        // setTotalNetPrice(invoiceItem);
+        calcInvoiceDiscount(invoiceItem, false);
+        //setTotalNetCost(invoiceItem);
+        setTotalNetPrice(invoiceItem);
     }
 }

@@ -116,4 +116,6 @@ public interface StoreService {
     BigDecimal getItemQty(String ItemId);
 
     void subtractItemQtyFromStores(String ItemId, BigDecimal qty);
+
+    void addItemQtyToStores(String ItemId, BigDecimal qty, String storeId);
 }

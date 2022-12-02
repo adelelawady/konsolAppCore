@@ -123,4 +123,9 @@ public class InvoiceResource implements InvoicesApiDelegate {
         invoiceService.deleteInvoiceItem(id);
         return ResponseEntity.ok().build();
     }
+
+    @Override
+    public ResponseEntity<InvoiceItemViewDTO> updateInvoiceItem(String id, InvoiceItemUpdateDTO invoiceItemUpdateDTO) {
+        return ResponseEntity.ok(invoiceService.updateInvoiceItem(id, invoiceItemUpdateDTO));
+    }
 }

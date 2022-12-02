@@ -5,7 +5,6 @@ import com.konsol.core.domain.enumeration.InvoiceKind;
 import com.konsol.core.domain.enumeration.PkKind;
 import com.konsol.core.repository.InvoiceItemRepository;
 import com.konsol.core.repository.InvoiceRepository;
-import com.konsol.core.repository.SystemConfigurationRepository;
 import com.konsol.core.service.*;
 import com.konsol.core.service.api.dto.*;
 import com.konsol.core.service.mapper.InvoiceItemMapper;
@@ -24,12 +23,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import org.bson.Document;
 import org.bson.types.Decimal128;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -58,7 +59,11 @@ public class InvoiceServiceImpl implements InvoiceService {
     private final MongoQueryService mongoQueryService;
     private final InvoiceItemMapper invoiceItemMapper;
 
+    @Qualifier(value = "SALES")
     private final SaleService saleService;
+
+    @Qualifier(value = "PURCHASE")
+    private final PurchaseService purchaseService;
 
     private final MongoTemplate mongoTemplate;
 
@@ -76,6 +81,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         MongoQueryService mongoQueryService,
         InvoiceItemMapper invoiceItemMapper,
         SaleService saleService,
+        PurchaseService purchaseService,
         MongoTemplate mongoTemplate,
         SystemResource systemResource
     ) {
@@ -88,6 +94,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         this.mongoQueryService = mongoQueryService;
         this.invoiceItemMapper = invoiceItemMapper;
         this.saleService = saleService;
+        this.purchaseService = purchaseService;
         this.mongoTemplate = mongoTemplate;
         this.systemResource = systemResource;
         systemConfiguration = systemResource.getSystemConfigurations();
@@ -185,7 +192,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public InvoiceItem initializeNewInvoiceItem(String ItemId, String unitId, BigDecimal userQty, BigDecimal userPrice) {
+    public InvoiceItem initializeNewInvoiceItem(InvoiceKind kind, String ItemId, String unitId, BigDecimal userQty, BigDecimal userPrice) {
         Optional<Item> itemOp = itemService.findOneById(ItemId);
         InvoiceItem invoiceItem = new InvoiceItem();
         /**
@@ -200,8 +207,16 @@ public class InvoiceServiceImpl implements InvoiceService {
          * QTY COST PRICE
          */
         invoiceItem.setUserQty(userQty);
-        invoiceItem.setPrice(userPrice);
-        invoiceItem.setCost(invoiceItem.getItem().getCost());
+        switch (kind) {
+            case SALE:
+                invoiceItem.setPrice(userPrice);
+                invoiceItem.setCost(invoiceItem.getItem().getCost());
+                break;
+            case PURCHASE:
+                invoiceItem.setCost(userPrice);
+                invoiceItem.setPrice(new BigDecimal(invoiceItem.getItem().getPrice1()));
+                break;
+        }
 
         /**
          *  Unit
@@ -211,9 +226,22 @@ public class InvoiceServiceImpl implements InvoiceService {
         return this.invoiceItemRepository.save(invoiceItem);
     }
 
-    public InvoiceItem calcInvoiceInvoiceItem(Invoice invoice, InvoiceItem invoiceItem) {
-        if (invoice.getKind() == InvoiceKind.SALE) {
+    @Override
+    public InvoiceItem calcInvoiceInvoiceItem(InvoiceItem invoiceItem) {
+        Optional<Invoice> invoiceOp = invoiceRepository.findById(invoiceItem.getInvoiceId());
+
+        /**
+         * invoice
+         */
+        if (!invoiceOp.isPresent()) {
+            return invoiceItem;
+        }
+
+        if (invoiceOp.get().getKind() == InvoiceKind.SALE) {
             return invoiceItemRepository.save(saleService.calcInvoiceItem(invoiceItem));
+        }
+        if (invoiceOp.get().getKind() == InvoiceKind.PURCHASE) {
+            return invoiceItemRepository.save(purchaseService.calcInvoiceItem(invoiceItem));
         }
         return invoiceItemRepository.save(invoiceItem);
     }
@@ -225,6 +253,7 @@ public class InvoiceServiceImpl implements InvoiceService {
          */
 
         InvoiceItem invoiceItem = initializeNewInvoiceItem(
+            invoice.getKind(),
             createInvoiceItemDTO.getItemId(),
             createInvoiceItemDTO.getUnitId(),
             createInvoiceItemDTO.getQty(),
@@ -240,7 +269,7 @@ public class InvoiceServiceImpl implements InvoiceService {
          *  calc invoice in, out qty and total price
          */
 
-        InvoiceItem savedInvoiceitem = calcInvoiceInvoiceItem(invoice, invoiceItem);
+        InvoiceItem savedInvoiceitem = calcInvoiceInvoiceItem(invoiceItem);
 
         invoice.getInvoiceItems().add(savedInvoiceitem);
 
@@ -252,7 +281,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public BigDecimal calcItemQtyOutInInvoiceItems(String invoiceId, String itemId) {
+    public BigDecimal calcItemQtyOutInInvoiceItems(String invoiceId, String itemId, boolean out) {
         /**
          * [{
          *     $match: {
@@ -321,8 +350,13 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         if (iterator.hasNext()) {
             var tResult = iterator.next();
-            Decimal128 totalQtyIn = Decimal128.parse(tResult.get("totalQtyOut").toString());
-            return totalQtyIn.bigDecimalValue();
+            if (out) {
+                Decimal128 totalQtyOut = Decimal128.parse(tResult.get("totalQtyOut").toString());
+                return totalQtyOut.bigDecimalValue();
+            } else {
+                Decimal128 totalQtyIn = Decimal128.parse(tResult.get("totalQtyIn").toString());
+                return totalQtyIn.bigDecimalValue();
+            }
         } else {
             return new BigDecimal(0);
         }
@@ -334,8 +368,6 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         // Optional<Item> itemOp = itemService.findOneById(createInvoiceItemDTO.getItemId());
 
-        boolean checkQty = systemConfiguration.getSysOptions().getSettings().getSalesInvoiceOptions().getCheckItemQty();
-
         /**
          * invoice
          */
@@ -343,22 +375,35 @@ public class InvoiceServiceImpl implements InvoiceService {
             throw new InvoiceNotFoundException(null, null);
         }
 
+        boolean isPriceCalc = invoiceOp.get().getKind().equals(InvoiceKind.SALE);
+        boolean isCostCalc = invoiceOp.get().getKind().equals(InvoiceKind.PURCHASE);
+
+        boolean checkQty =
+            invoiceOp.get().getKind().equals(InvoiceKind.SALE) &&
+            systemConfiguration.getSysOptions().getSettings().getSalesInvoiceOptions().getCheckItemQty();
+
         InvoiceItem invFound = null;
         if (createInvoiceItemDTO.getUnitId() != null) {
             invFound =
-                findInvoiceItemByItemIdAndUnitIdAndPrice(
+                findInvoiceItemByItemIdAndUnitIdAndMoney(
                     invoiceOp.get().getId(),
                     createInvoiceItemDTO.getItemId(),
                     createInvoiceItemDTO.getUnitId(),
-                    createInvoiceItemDTO.getPrice()
+                    createInvoiceItemDTO.getPrice(),
+                    isPriceCalc
                 );
         } else {
             invFound =
-                findInvoiceItemByItemIdAndPrice(invoiceOp.get().getId(), createInvoiceItemDTO.getItemId(), createInvoiceItemDTO.getPrice());
+                findInvoiceItemByItemIdAndMoney(
+                    invoiceOp.get().getId(),
+                    createInvoiceItemDTO.getItemId(),
+                    createInvoiceItemDTO.getPrice(),
+                    isPriceCalc
+                );
         }
 
         if (invFound != null) {
-            BigDecimal totalInvoiceItemitemQtyInInvoice = calcItemQtyOutInInvoiceItems(invoiceId, createInvoiceItemDTO.getItemId());
+            BigDecimal totalInvoiceItemitemQtyInInvoice = calcItemQtyOutInInvoiceItems(invoiceId, createInvoiceItemDTO.getItemId(), true);
             if (
                 checkQty &&
                 !storeService.checkItemQtyAvailable(
@@ -373,6 +418,7 @@ public class InvoiceServiceImpl implements InvoiceService {
              * add to invoice item found
              */
             AddQtyToInvoiceItem(invoiceOp.get(), invFound.getId(), createInvoiceItemDTO.getQty());
+            regenerateInvoiceItemsPk(invoiceId);
             return findOne(invoiceId).orElseGet(null);
         }
 
@@ -395,7 +441,7 @@ public class InvoiceServiceImpl implements InvoiceService {
          * create new Invoice item and add it to invoice
          */
         createInvoiceItem(invoiceOp.get(), createInvoiceItemDTO);
-
+        regenerateInvoiceItemsPk(invoiceId);
         return findOne(invoiceId).orElseGet(null);
     }
 
@@ -411,6 +457,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
                 calcInvoice(invoiceRepository.save(updatedInvoice), true);
                 invoiceItemRepository.delete(invoiceItem.get());
+                regenerateInvoiceItemsPk(updatedInvoice.getId());
             }
         }
     }
@@ -446,6 +493,29 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         addInvoiceAddititon(invoice);
         return save ? invoiceRepository.save(invoice) : invoice;
+    }
+
+    @Override
+    public void regenerateInvoiceItemsPk(String invoiceId) {
+        Optional<Invoice> invoiceOp = invoiceRepository.findById(invoiceId);
+
+        /**
+         * invoice
+         */
+        if (!invoiceOp.isPresent()) {
+            throw new InvoiceNotFoundException(null, null);
+        }
+
+        Invoice invoice = invoiceOp.get();
+        AtomicInteger c = new AtomicInteger();
+        invoice
+            .getInvoiceItems()
+            .stream()
+            .forEach(invoiceItem -> {
+                invoiceItem.setPk(c.getAndIncrement() + "");
+
+                invoiceItemRepository.save(invoiceItem);
+            });
     }
 
     @Override
@@ -514,6 +584,12 @@ public class InvoiceServiceImpl implements InvoiceService {
             return invoice;
         }
 
+        boolean updateItemQtyAfterSave = systemConfiguration
+            .getSysOptions()
+            .getSettings()
+            .getSalesInvoiceOptions()
+            .getUpdateItemQtyAfterSave();
+
         if (invoice.getInvoiceItems() == null || invoice.getInvoiceItems().isEmpty()) {
             throw new InvoiceException("مشكلة فاتورة ", "لايوجد اصناف ف الفاتورة", null);
         }
@@ -531,18 +607,44 @@ public class InvoiceServiceImpl implements InvoiceService {
          */
 
         /**
+         * handle Store
+         */
+
+        /**
          * handle account
          */
 
         /**
          * item's QTY
          */
-        invoice
-            .getInvoiceItems()
-            .stream()
-            .forEach(invoiceItem -> {
-                storeService.subtractItemQtyFromStores(invoiceItem.getItem().getId(), invoiceItem.getQtyOut());
-            });
+
+        if (updateItemQtyAfterSave) {
+            switch (invoice.getKind()) {
+                case SALE:
+                    {
+                        // TODO selected store to subtract from
+                        invoice
+                            .getInvoiceItems()
+                            .stream()
+                            .forEach(invoiceItem -> {
+                                storeService.subtractItemQtyFromStores(invoiceItem.getItem().getId(), invoiceItem.getQtyOut());
+                            });
+                        break;
+                    }
+                case PURCHASE:
+                    {
+                        // TODO selected store to add to
+
+                        invoice
+                            .getInvoiceItems()
+                            .stream()
+                            .forEach(invoiceItem -> {
+                                storeService.addItemQtyToStores(invoiceItem.getItem().getId(), invoiceItem.getQtyIn(), null);
+                            });
+                        break;
+                    }
+            }
+        }
 
         Thread thread = new Thread(() -> {
             systemConfiguration = systemResource.getSystemConfigurations();
@@ -607,15 +709,17 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public InvoiceItem findInvoiceItemByItemIdAndPrice(String invoiceId, String itemId, BigDecimal price) {
+    public InvoiceItem findInvoiceItemByItemIdAndMoney(String invoiceId, String itemId, BigDecimal money, boolean isPrice) {
         MongoCollection<Document> collection = mongoTemplate.getCollection("invoice_items");
+        String moneyFieldName = isPrice ? "price" : "cost";
+
         AggregateIterable<Document> result = collection.aggregate(
             Arrays.asList(
                 new Document(
                     "$match",
                     new Document("invoice_id", invoiceId)
                         .append("item.$id", new ObjectId(itemId))
-                        .append("price", Decimal128.parse(price.toString()).toString())
+                        .append(moneyFieldName, Decimal128.parse(money.toString()).toString())
                 )
             )
         );
@@ -658,8 +762,16 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public InvoiceItem findInvoiceItemByItemIdAndUnitIdAndPrice(String invoiceId, String itemId, String unitId, BigDecimal price) {
+    public InvoiceItem findInvoiceItemByItemIdAndUnitIdAndMoney(
+        String invoiceId,
+        String itemId,
+        String unitId,
+        BigDecimal money,
+        boolean isPrice
+    ) {
         MongoCollection<Document> collection = mongoTemplate.getCollection("invoice_items");
+
+        String moneyFieldName = isPrice ? "price" : "cost";
 
         /**
          * [{
@@ -691,7 +803,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                     new Document("invoice_id", invoiceId)
                         .append("item.$id", new ObjectId(itemId))
                         .append("ItemUnit.$id", new ObjectId(unitId))
-                        .append("price", Decimal128.parse(price.toString()).toString())
+                        .append(moneyFieldName, Decimal128.parse(money.toString()).toString())
                 )
             )
         );
@@ -716,7 +828,14 @@ public class InvoiceServiceImpl implements InvoiceService {
             switch (invoice.getKind()) {
                 case SALE:
                     {
-                        InvoiceItem invoiceItem1 = this.saleService.AddQtyToInvoiceItem(invFound, qty);
+                        InvoiceItem invoiceItem1 = this.saleService.AddQtyToInvoiceItem(invFound, qty, true);
+                        invoiceItem1 = invoiceItemRepository.save(invoiceItem1);
+                        this.calcInvoice(invoice, true);
+                        return invoiceItem1;
+                    }
+                case PURCHASE:
+                    {
+                        InvoiceItem invoiceItem1 = this.purchaseService.AddQtyToInvoiceItem(invFound, qty, false);
                         invoiceItem1 = invoiceItemRepository.save(invoiceItem1);
                         this.calcInvoice(invoice, true);
                         return invoiceItem1;
@@ -738,5 +857,19 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoiceItem.setItemUnit(null);
         invoiceItem.setUnit("-");
         return invoiceItem;
+    }
+
+    @Override
+    public InvoiceItemViewDTO updateInvoiceItem(String id, InvoiceItemUpdateDTO invoiceItemUpdateDTO) {
+        return invoiceItemRepository
+            .findById(id)
+            .map(existingInvoiceItem -> {
+                invoiceItemMapper.partialUpdate(existingInvoiceItem, invoiceItemUpdateDTO);
+                calcInvoiceInvoiceItem(existingInvoiceItem);
+                return existingInvoiceItem;
+            })
+            .map(invoiceItemRepository::save)
+            .map(invoiceItemMapper::toInvoiceItemViewDTO)
+            .orElseGet(null);
     }
 }

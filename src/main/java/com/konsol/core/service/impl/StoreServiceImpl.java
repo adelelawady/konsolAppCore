@@ -17,6 +17,7 @@ import com.konsol.core.web.rest.api.errors.StoreNotFoundException;
 import com.mongodb.client.*;
 import com.mongodb.client.FindIterable;
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.*;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
@@ -266,6 +267,50 @@ public class StoreServiceImpl implements StoreService {
                 storeItemDTO.setQty(new BigDecimal(0));
                 this.setStoreItem(storeItemMapper.toStoreItemIdOnlyDTO(storeItemDTO));
             }
+        }
+    }
+
+    /**
+     * @param ItemId
+     * @param qty
+     * @param storeId
+     */
+    @Override
+    public void addItemQtyToStores(String ItemId, BigDecimal qty, String storeId) {
+        Optional<Item> item = itemService.findOneById(ItemId);
+        if (!item.isPresent()) {
+            throw new ItemNotFoundException(String.format("الصنف {0} غير متاح لتعديل سجلات المخازن", ItemId), null);
+        }
+
+        if (storeId != null) {
+            Optional<Store> storeOptional = storeRepository.findById(ItemId);
+
+            if (storeOptional.isPresent()) {
+                Optional<StoreItem> storeItemOptional = storeItemRepository.findOneByItemIdAndStoreId(
+                    item.get().getId(),
+                    storeOptional.get().getId()
+                );
+
+                if (storeItemOptional.isPresent()) {
+                    StoreItem storeItem = storeItemOptional.get();
+
+                    StoreItemIdOnlyDTO storeItemDTO = new StoreItemIdOnlyDTO();
+                    storeItemDTO.setItemId(item.get().getId());
+                    storeItemDTO.setStoreId(storeId);
+                    // storeItemDTO.setQty(storeItem.getQty().add(qty));
+                    BigDecimal qtyToSave = storeItemDTO.getQty().add(qty, MathContext.UNLIMITED);
+                    storeItemDTO.setQty(qtyToSave);
+                    this.setStoreItem(storeItemDTO);
+                    return;
+                }
+            }
+        }
+
+        for (StoreItemDTO storeItemDTO : this.getAllStoresItemsInAllStoresForItem(ItemId)) {
+            BigDecimal qtyToSave = storeItemDTO.getQty().add(qty, MathContext.UNLIMITED);
+            storeItemDTO.setQty(qtyToSave);
+            this.setStoreItem(storeItemMapper.toStoreItemIdOnlyDTO(storeItemDTO));
+            break;
         }
     }
 

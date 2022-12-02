@@ -36,6 +36,10 @@ public class ItemUnit implements Serializable {
     @Field("price")
     private BigDecimal price = new BigDecimal(0);
 
+    @DecimalMin(value = "0")
+    @Field("cost")
+    private BigDecimal cost = new BigDecimal(0);
+
     @Field("basic")
     private boolean basic;
 
@@ -64,6 +68,14 @@ public class ItemUnit implements Serializable {
     public ItemUnit name(String name) {
         this.setName(name);
         return this;
+    }
+
+    public BigDecimal getCost() {
+        return cost;
+    }
+
+    public void setCost(BigDecimal cost) {
+        this.cost = cost;
     }
 
     public boolean isBasic() {

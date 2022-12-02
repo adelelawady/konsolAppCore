@@ -375,92 +375,6 @@ paths:
         name: id
         in: path
         required: true
-  '/invoice-items/{id}':
-    get:
-      tags:
-        - invoice-item-resource
-      operationId: getInvoiceItem
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InvoiceItemDTO'
-    put:
-      tags:
-        - invoice-item-resource
-      operationId: updateInvoiceItem
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/InvoiceItemDTO'
-        required: true
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InvoiceItemDTO'
-    delete:
-      tags:
-        - invoice-item-resource
-      operationId: deleteInvoiceItem
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: OK
-    patch:
-      tags:
-        - invoice-item-resource
-      operationId: partialUpdateInvoiceItem
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/InvoiceItemDTO'
-          application/merge-patch+json:
-            schema:
-              $ref: '#/components/schemas/InvoiceItemDTO'
-        required: true
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InvoiceItemDTO'
-    parameters:
-      - schema:
-          type: string
-        name: id
-        in: path
-        required: true
   '/api/banks/{id}':
     get:
       tags:
@@ -1128,7 +1042,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateInvoiceItemDTO'
-  '/invoices/invoice-items/{id}/delete':
+  '/invoices/invoice-items/{id}':
     parameters:
       - schema:
           type: string
@@ -1143,63 +1057,24 @@ paths:
           description: OK
       tags:
         - invoice-resource
-  /invoice-items:
-    get:
-      tags:
-        - invoice-item-resource
-      operationId: getAllInvoiceItems
-      parameters:
-        - name: page
-          in: query
-          description: Zero-based page index (0..N)
-          required: false
-          schema:
-            minimum: 0
-            type: integer
-            default: 0
-        - name: size
-          in: query
-          description: The size of the page to be returned
-          required: false
-          schema:
-            minimum: 1
-            type: integer
-            default: 20
-        - name: sort
-          in: query
-          description: 'Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.'
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
+    patch:
+      summary: ''
+      operationId: updateInvoiceItem
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/InvoiceItemDTO'
-    post:
-      tags:
-        - invoice-item-resource
-      operationId: createInvoiceItem
+                $ref: '#/components/schemas/InvoiceItemViewDTO'
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/InvoiceItemDTO'
-        required: true
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InvoiceItemDTO'
-    parameters: []
+              $ref: '#/components/schemas/InvoiceItemUpdateDTO'
+      description: update invoices invoice item
+      tags:
+        - invoice-resource
   /api/banks:
     get:
       tags:
@@ -1784,6 +1659,9 @@ components:
         basic:
           type: boolean
           default: false
+        cost:
+          type: number
+          minimum: 0
       required:
         - name
     StoreDTO:
@@ -2295,6 +2173,48 @@ components:
           type: number
         item:
           $ref: '#/components/schemas/ItemSimpleDTO'
+    InvoiceItemUpdateDTO:
+      type: object
+      properties:
+        id:
+          type: string
+        unitPieces:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        unitQty:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        unitCost:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        unitPrice:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        discountPer:
+          maximum: 100
+          minimum: 0
+          type: integer
+          format: int32
+        discount:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        qty:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        cost:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        price:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
     InvoiceItemViewDTO:
       type: object
       properties:
@@ -2595,28 +2515,6 @@ components:
           type: string
         name:
           type: string
-    GridColumn:
-      title: GridColumnModel
-      x-stoplight:
-        id: pg1ha7lkm12tk
-      type: object
-      x-examples: {}
-      description: ''
-      properties:
-        fieldName:
-          type: string
-          default: name
-        capition:
-          type: string
-          default: capition
-        visible:
-          type: boolean
-        visibleCustomization:
-          type: boolean
-        description:
-          type: string
-        displayFormat:
-          type: string
     GridModelCollection:
       title: GridModelCollection
       x-stoplight:
@@ -2669,7 +2567,6 @@ components:
       x-stoplight:
         id: zyfwknmaoo5pi
       type: object
-      description: ''
       x-examples:
         example-1:
           appName: اسم الشركة
@@ -2687,13 +2584,16 @@ components:
             salesInvoiceOptions:
               selectedInvoiceReport: string
               isDefault: true
+      description: 'Main Application options and settings '
       properties:
         appName:
           type: string
           default: اسم الشركة
+          description: 'Main Application name '
         appVersion:
           type: string
           default: 1.0.0.0
+          description: current application version
         contactInfo:
           $ref: '#/components/schemas/ContactInfo'
         settings:
@@ -2713,6 +2613,9 @@ components:
       x-stoplight:
         id: gkeun9pxkdpgc
       type: object
+      description: |-
+        main app owner contact info
+         [ used in print designer ]
       properties:
         VendorContactName:
           type: string
@@ -2740,39 +2643,6 @@ components:
       x-stoplight:
         id: 7djw1ifd9eagq
       type: object
-      properties:
-        salesInvoiceOptions:
-          type: object
-          properties:
-            selectedInvoiceReport:
-              type: string
-              default: Default
-            autoPrintAfterSave:
-              type: boolean
-              default: true
-            printPreview:
-              type: boolean
-              default: false
-            userReportFile:
-              type: boolean
-            selectedPrinterName:
-              type: string
-              default: default
-            checkItemQty:
-              type: boolean
-              default: true
-        reportFilesDir:
-          type: string
-          default: reports
-        selectedStoreId:
-          type: string
-          default: default
-        mainPrinterName:
-          type: string
-          default: default
-        cultureName:
-          type: string
-          default: ar-EG
       x-examples:
         example-1:
           salesInvoiceOptions:
@@ -2786,7 +2656,104 @@ components:
           selectedStoreId: default
           mainPrinterName: default
           cultureName: ar-EG
-    GridOptions:
+      properties:
+        salesInvoiceOptions:
+          type: object
+          properties:
+            selectedInvoiceReport:
+              type: string
+              default: Default
+              description: selected file for invoice to print UI_OPTION
+            autoPrintAfterSave:
+              type: boolean
+              default: true
+              description: send print order directly to printer after saving  UI_OPTION
+            printPreview:
+              type: boolean
+              default: false
+              description: show preview after saving invoice UI_OPTION
+            userReportFile:
+              type: boolean
+            selectedPrinterName:
+              type: string
+              default: default
+              description: selected printer name to send print file to UI_OPTION
+            checkItemQty:
+              type: boolean
+              default: true
+              description: check if item has required qty in store BE_OPTION
+            updateItemQtyAfterSave:
+              type: boolean
+              default: true
+              description: updates item qty saving invoice add/subtract BE_OPTION
+        reportFilesDir:
+          type: string
+          default: reports
+          description: selected folder for report files
+        selectedStoreId:
+          type: string
+          default: default
+          description: selected store to add and subtract items qty from after saving invoice BE_OPTION
+        mainPrinterName:
+          type: string
+          default: default
+          description: selected printer name to send print file to UI_OPTION
+        cultureName:
+          type: string
+          default: ar-EG
+          description: 'culture language for currency persentation in ui / table / print / preview '
+    KonsolGridBand:
+      title: KonsolGridBand
+      x-stoplight:
+        id: pg1ha7lkm12tk
+      type: object
+      x-examples: {}
+      description: ''
+      properties:
+        caption:
+          type: string
+        visible:
+          type: boolean
+          default: true
+        visibleCustomization:
+          type: boolean
+          default: true
+        columns:
+          type: array
+          items:
+            type: string
+    KonsolGridColumn:
+      title: KonsolGridColumn
+      x-stoplight:
+        id: pg1ha7lkm12tk
+      type: object
+      x-examples: {}
+      description: ''
+      properties:
+        fieldName:
+          type: string
+          default: name
+        capition:
+          type: string
+          default: capition
+        visible:
+          type: boolean
+          default: true
+        visibleCustomization:
+          type: boolean
+          default: true
+        description:
+          type: string
+        displayFormat:
+          type: string
+        editable:
+          type: boolean
+          default: false
+        foreColor:
+          type: string
+        index:
+          type: integer
+    KonsolGridOptions:
       title: GridOptions
       x-stoplight:
         id: orxnk6df31kl4
@@ -2806,9 +2773,19 @@ components:
         showGroupSearch:
           type: boolean
           default: false
+        sortField:
+          type: string
         columns:
           type: array
           items:
-            $ref: ''
-        sortField:
-          type: string
+            $ref: '#/components/schemas/KonsolGridColumn'
+        bands:
+          type: array
+          items:
+            $ref: '#/components/schemas/KonsolGridBand'
+        rowHeight:
+          type: integer
+          default: 30
+        showCurrency:
+          type: boolean
+          default: true

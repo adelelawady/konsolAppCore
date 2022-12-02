@@ -1,28 +1,24 @@
 package com.konsol.core.service.core.impl;
 
-import com.konsol.core.domain.Invoice;
 import com.konsol.core.domain.InvoiceItem;
 import com.konsol.core.repository.InvoiceItemRepository;
+import com.konsol.core.service.PurchaseService;
 import com.konsol.core.service.SaleService;
-import java.math.BigDecimal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 /**
- * Service Implementation for managing {@link com.konsol.core.domain.InvoiceItem}.
+ * Service Implementation for managing {@link InvoiceItem}.
  */
-//@Service(value = "SALES")
-@Service(value = "SALES")
-public class SaleServiceImpl implements SaleService {
+@Service(value = "PURCHASE")
+public class PurchaseServiceImpl implements PurchaseService {
 
-    private final Logger log = LoggerFactory.getLogger(SaleServiceImpl.class);
+    private final Logger log = LoggerFactory.getLogger(PurchaseServiceImpl.class);
 
     private final InvoiceItemRepository invoiceItemRepository;
 
-    public SaleServiceImpl(InvoiceItemRepository invoiceItemRepository) {
+    public PurchaseServiceImpl(InvoiceItemRepository invoiceItemRepository) {
         this.invoiceItemRepository = invoiceItemRepository;
     }
 
@@ -30,7 +26,6 @@ public class SaleServiceImpl implements SaleService {
      * calculate Invoice Item for selected invoice
      *
      * @param invoiceItem     selected invoice item
-    // * @param saveInvoiceItem if true save invoiceItem to db
      * @return saved or modified {@link InvoiceItem} object
      */
     @Override
@@ -38,7 +33,7 @@ public class SaleServiceImpl implements SaleService {
         /**
          * SET QTY_OUT
          */
-        invoiceItem.unitQtyOut(invoiceItem.getUserQty());
+        invoiceItem.unitQtyIn(invoiceItem.getUserQty());
         updateInvoiceItem(invoiceItem);
 
         return invoiceItem;

@@ -8,10 +8,12 @@ import com.konsol.core.service.api.dto.InvoiceDTO;
 import com.konsol.core.service.api.dto.InvoiceItemDTO;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import org.springframework.context.annotation.Primary;
 
 /**
  * Service Interface for managing Sales {@link com.konsol.core.domain.Invoice}.
  */
+
 public interface InvoiceController {
     /**
      * calculate Invoice Item for selected invoice
@@ -28,8 +30,13 @@ public interface InvoiceController {
      * @param qty         qty to add
      * @return saved or modified {@link InvoiceItem} object
      */
-    default InvoiceItem AddQtyToInvoiceItem(InvoiceItem invoiceItem, BigDecimal qty) {
-        invoiceItem.setUserQty(invoiceItem.getUnitQtyOut().add(qty));
+    default InvoiceItem AddQtyToInvoiceItem(InvoiceItem invoiceItem, BigDecimal qty, boolean out) {
+        if (out) {
+            invoiceItem.setUserQty(invoiceItem.getUnitQtyOut().add(qty));
+        } else {
+            invoiceItem.setUserQty(invoiceItem.getUnitQtyIn().add(qty));
+        }
+
         return calcInvoiceItem(invoiceItem);
     }
 
@@ -75,7 +82,7 @@ public interface InvoiceController {
         if (!(invoiceItem.getDiscount() == null || (invoiceItem.getDiscount().compareTo(new BigDecimal(0))) == 0)) {
             BigDecimal discountPer =
                 (invoiceItem.getDiscount().divide(invoiceItem.getTotalPrice(), 4, RoundingMode.CEILING)).multiply(BigDecimal.valueOf(100));
-            if (invoiceItem.getDiscount().compareTo(invoiceItem.getTotalPrice()) == -1) {
+            if (invoiceItem.getDiscount().compareTo(invoiceItem.getTotalPrice()) < 0) {
                 invoiceItem.discountPer(discountPer.intValue());
 
                 if (netPrice) {

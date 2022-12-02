@@ -62,6 +62,7 @@ public class InvoiceItemResource implements InvoiceItemsApiDelegate {
         if (invoiceItemDTO.getId() != null) {
             throw new BadRequestAlertException("A new invoiceItem cannot already have an ID", ENTITY_NAME, "idexists");
         }
+
         InvoiceItemDTO result = invoiceItemService.save(invoiceItemDTO);
         try {
             return ResponseEntity
@@ -83,7 +84,6 @@ public class InvoiceItemResource implements InvoiceItemsApiDelegate {
      * or with status {@code 500 (Internal Server Error)} if the invoiceItemDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @Override
     public ResponseEntity<InvoiceItemDTO> updateInvoiceItem(
         @PathVariable(value = "id", required = false) final String id,
         @Valid @RequestBody InvoiceItemDTO invoiceItemDTO
@@ -118,7 +118,6 @@ public class InvoiceItemResource implements InvoiceItemsApiDelegate {
      * or with status {@code 500 (Internal Server Error)} if the invoiceItemDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @Override
     public ResponseEntity<InvoiceItemDTO> partialUpdateInvoiceItem(
         @PathVariable(value = "id", required = false) final String id,
         @NotNull @RequestBody InvoiceItemDTO invoiceItemDTO
@@ -148,7 +147,6 @@ public class InvoiceItemResource implements InvoiceItemsApiDelegate {
      *
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of invoiceItems in body.
      */
-    @Override
     public ResponseEntity<List<InvoiceItemDTO>> getAllInvoiceItems(Integer pager, Integer size, List<String> sort) {
         log.debug("REST request to get a page of InvoiceItems");
         Pageable pageable = PageRequest.of(pager, size);
@@ -163,7 +161,6 @@ public class InvoiceItemResource implements InvoiceItemsApiDelegate {
      * @param id the id of the invoiceItemDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the invoiceItemDTO, or with status {@code 404 (Not Found)}.
      */
-    @Override
     public ResponseEntity<InvoiceItemDTO> getInvoiceItem(@PathVariable String id) {
         log.debug("REST request to get InvoiceItem : {}", id);
         Optional<InvoiceItemDTO> invoiceItemDTO = invoiceItemService.findOne(id);
@@ -176,7 +173,6 @@ public class InvoiceItemResource implements InvoiceItemsApiDelegate {
      * @param id the id of the invoiceItemDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @Override
     public ResponseEntity<Void> deleteInvoiceItem(@PathVariable String id) {
         log.debug("REST request to delete InvoiceItem : {}", id);
         invoiceItemService.delete(id);

@@ -193,6 +193,10 @@ public class ItemServiceImpl implements ItemService {
 
                         if (itemUnitDTO.getBasic() != null && itemUnitDTO.getBasic()) {
                             itemUnit.setPieces(new BigDecimal(1));
+                            itemUnit.setCost(itemDTO.getCost().multiply(itemUnit.getPieces()));
+                            if (itemUnit.getPrice() == null || (itemUnit.getPrice()).compareTo(new BigDecimal(0)) == 0) {
+                                itemUnit.setPrice(new BigDecimal(itemDTO.getPrice1()).multiply(itemUnit.getPieces()));
+                            }
                         } else {
                             if (itemUnit.getPieces() == null || (itemUnit.getPieces()).compareTo(new BigDecimal(0)) == 0) {
                                 itemUnit.setPieces(new BigDecimal(1));
@@ -200,6 +204,9 @@ public class ItemServiceImpl implements ItemService {
                             if (itemUnit.getPrice() == null || (itemUnit.getPrice()).compareTo(new BigDecimal(0)) == 0) {
                                 itemUnit.setPrice(new BigDecimal(itemDTO.getPrice1()).multiply(itemUnit.getPieces()));
                             }
+                            //  if (itemUnit.getPrice() == null || (itemUnit.getPrice()).compareTo(new BigDecimal(0)) == 0) {
+                            itemUnit.setCost(itemDTO.getCost().multiply(itemUnit.getPieces()));
+                            //  }
                         }
 
                         itemUnit.setItemId(itemDTO.getId());
