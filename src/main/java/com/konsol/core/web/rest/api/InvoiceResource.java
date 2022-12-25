@@ -8,11 +8,13 @@ import com.konsol.core.service.api.dto.*;
 import com.konsol.core.web.api.InvoicesApiDelegate;
 import com.konsol.core.web.rest.errors.BadRequestAlertException;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
@@ -127,5 +129,10 @@ public class InvoiceResource implements InvoicesApiDelegate {
     @Override
     public ResponseEntity<InvoiceItemViewDTO> updateInvoiceItem(String id, InvoiceItemUpdateDTO invoiceItemUpdateDTO) {
         return ResponseEntity.ok(invoiceService.updateInvoiceItem(id, invoiceItemUpdateDTO));
+    }
+
+    @Override
+    public ResponseEntity<List<InvoiceDTO>> getAllInvoices(Integer page, Integer size, List<String> sort, Boolean eagerload) {
+        return ResponseEntity.ok(invoiceService.findAll(PageRequest.of(0, 1000)).getContent());
     }
 }

@@ -144,4 +144,14 @@ public interface ItemService {
     void deleteUnitItemById(String id);
 
     Optional<ItemUnit> getUnitItemById(String id);
+
+    /**
+     * get all item available units
+     * @param id item id
+     * @return list of {@link ItemUnitDTO} found for this item
+     */
+    List<ItemUnitDTO> getItemUnits(String id);
+    /***
+     * TODO advanced options for single item :  round total , math , store options unlimited store warn etc...
+     */
 }

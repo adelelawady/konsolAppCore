@@ -262,4 +262,9 @@ public class ItemResource implements ItemsApiDelegate {
         itemService.deleteUnitItemById(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id)).build();
     }
+
+    @Override
+    public ResponseEntity<List<ItemUnitDTO>> getItemUnits(String id) {
+        return ResponseEntity.ok().body(itemService.getItemUnits(id));
+    }
 }

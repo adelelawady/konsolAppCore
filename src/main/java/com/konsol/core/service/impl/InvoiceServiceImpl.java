@@ -19,10 +19,9 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import org.bson.Document;
@@ -34,6 +33,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 /**
@@ -143,10 +143,19 @@ public class InvoiceServiceImpl implements InvoiceService {
         return this.invoiceRepository.findById(id);
     }
 
+    /**
+     * Delete the "id" invoice.
+     * and delete all invoice items
+     * @param id the id of the entity.
+     */
     @Override
     public void delete(String id) {
         log.debug("Request to delete Invoice : {}", id);
-        invoiceRepository.deleteById(id);
+        Optional<Invoice> invoiceOp = invoiceRepository.findById(id);
+        invoiceOp.ifPresent(invoice -> {
+            invoiceItemRepository.deleteAll(invoice.getInvoiceItems());
+            invoiceRepository.deleteById(id);
+        });
     }
 
     /**
@@ -482,16 +491,19 @@ public class InvoiceServiceImpl implements InvoiceService {
             invoice.setNetCost(totalNetCost.bigDecimalValue());
 
             calcInvoiceDiscount(invoice);
+            addInvoiceAddititon(invoice);
+
+            invoice.setNetResult(invoice.getNetPrice().subtract(invoice.getNetCost()));
         } else {
             invoice.setTotalPrice(new BigDecimal(0));
             invoice.setTotalCost(new BigDecimal(0));
             invoice.setNetPrice(new BigDecimal(0));
             invoice.setNetCost(new BigDecimal(0));
+            invoice.setNetResult(new BigDecimal(0));
             //invoice.setDiscount(new BigDecimal(0));
             //invoice.setDiscountPer(0);
         }
 
-        addInvoiceAddititon(invoice);
         return save ? invoiceRepository.save(invoice) : invoice;
     }
 
@@ -598,20 +610,20 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoice.setTemp(false);
 
         /**
-         * TODO invoice PK dublicated value not inserted
+         * TODO error invoice PK dublicated value not inserted
          */
         Pk invoicePk = pkService.generatePkEntity(PkKind.INVOICE);
         invoice.setPk(invoicePk.getValue().toString());
         /**
-         * handle bank
+         * TODO handle bank on invoice saving
          */
 
         /**
-         * handle Store
+         * TODO handle Store on invoice saving
          */
 
         /**
-         * handle account
+         * TODO handle account on invoice saving
          */
 
         /**
@@ -866,10 +878,22 @@ public class InvoiceServiceImpl implements InvoiceService {
             .map(existingInvoiceItem -> {
                 invoiceItemMapper.partialUpdate(existingInvoiceItem, invoiceItemUpdateDTO);
                 calcInvoiceInvoiceItem(existingInvoiceItem);
+                calcInvoice(findOneDomain(existingInvoiceItem.getInvoiceId()).get(), true);
                 return existingInvoiceItem;
             })
-            .map(invoiceItemRepository::save)
+            //.map(invoiceItemRepository::save)
             .map(invoiceItemMapper::toInvoiceItemViewDTO)
             .orElseGet(null);
+    }
+
+    @Override
+    @Scheduled(cron = "0 0 1 * * ?")
+    public void removeTempInvoices() {
+        log.info("Removing all temp and not activated invoices", new Date().getTime());
+        invoiceRepository
+            .findAllByActiveIsFalseAndTempIsTrueAndCreatedDateBefore(Instant.now().minus(3, ChronoUnit.DAYS))
+            .forEach(tempNotActiveInvoice -> {
+                this.delete(tempNotActiveInvoice.getId());
+            });
     }
 }

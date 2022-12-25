@@ -1,6 +1,7 @@
 package com.konsol.core.repository;
 
 import com.konsol.core.domain.Invoice;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -22,4 +23,6 @@ public interface InvoiceRepository extends MongoRepository<Invoice, String> {
 
     @Query("{'id': ?0}")
     Optional<Invoice> findOneWithEagerRelationships(String id);
+
+    List<Invoice> findAllByActiveIsFalseAndTempIsTrueAndCreatedDateBefore(Instant dateTime);
 }

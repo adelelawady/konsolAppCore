@@ -57,7 +57,7 @@ public interface InvoiceController {
         if (!(invoiceItem.getDiscountPer() == null || (invoiceItem.getDiscountPer() == 0))) {
             BigDecimal discount =
                 (BigDecimal.valueOf(invoiceItem.getDiscountPer()).divide(BigDecimal.valueOf(100), 4, RoundingMode.CEILING)).multiply(
-                        invoiceItem.getTotalPrice()
+                        requiredTotal
                     );
             if (discount.compareTo(requiredTotal) < 0) {
                 invoiceItem.discount(discount);
@@ -81,8 +81,9 @@ public interface InvoiceController {
 
         if (!(invoiceItem.getDiscount() == null || (invoiceItem.getDiscount().compareTo(new BigDecimal(0))) == 0)) {
             BigDecimal discountPer =
-                (invoiceItem.getDiscount().divide(invoiceItem.getTotalPrice(), 4, RoundingMode.CEILING)).multiply(BigDecimal.valueOf(100));
-            if (invoiceItem.getDiscount().compareTo(invoiceItem.getTotalPrice()) < 0) {
+                (invoiceItem.getDiscount().divide(requiredTotal, 4, RoundingMode.CEILING)).multiply(BigDecimal.valueOf(100));
+
+            if (invoiceItem.getDiscount().compareTo(requiredTotal) < 0) {
                 invoiceItem.discountPer(discountPer.intValue());
 
                 if (netPrice) {

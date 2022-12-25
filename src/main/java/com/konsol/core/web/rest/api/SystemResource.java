@@ -48,6 +48,8 @@ public class SystemResource implements SysApiDelegate {
             sysOptions.setContactInfo(new ContactInfo());
             GlobalSettings globalSettings = new GlobalSettings();
             globalSettings.setSalesInvoiceOptions(new GlobalSettingsSalesInvoiceOptions());
+            globalSettings.setPurchaseInvoiceOptions(new GlobalSettingsPurchaseInvoiceOptions());
+            globalSettings.setItemsOptions(new GlobalSettingsItemsOptions());
             sysOptions.setSettings(globalSettings);
             systemConfigurationsUpdate.setSysOptions(sysOptions);
             return systemConfigurationRepository.save(systemConfigurationsUpdate);

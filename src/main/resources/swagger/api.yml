@@ -801,6 +801,28 @@ paths:
               schema:
                 $ref: '#/components/schemas/ItemDTO'
     parameters: []
+  '/items/{id}/units':
+    get:
+      tags:
+        - item-resource
+      operationId: getItemUnits
+      parameters: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ItemUnitDTO'
+      description: get all item units available
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
   '/items/units/{id}/delete':
     parameters:
       - schema:
@@ -1057,6 +1079,7 @@ paths:
           description: OK
       tags:
         - invoice-resource
+      description: ''
     patch:
       summary: ''
       operationId: updateInvoiceItem
@@ -1067,11 +1090,41 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InvoiceItemViewDTO'
+              examples:
+                example-1:
+                  value:
+                    pk: string
+                    id: string
+                    unit: string
+                    unitQtyIn: 0
+                    unitQtyOut: 0
+                    discount: 0
+                    discountPer: 0
+                    totalCost: 0
+                    totalPrice: 0
+                    qtyIn: 0
+                    qtyOut: 0
+                    netCost: 0
+                    netPrice: 0
+                    itemName: string
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/InvoiceItemUpdateDTO'
+            examples:
+              example-1:
+                value:
+                  id: string
+                  unitPieces: 0
+                  unitQty: 0
+                  unitCost: 0
+                  unitPrice: 0
+                  discountPer: 0
+                  discount: 0
+                  qty: 0
+                  cost: 0
+                  price: 0
       description: update invoices invoice item
       tags:
         - invoice-resource
@@ -2505,6 +2558,30 @@ components:
             $ref: '#/components/schemas/ItemViewDTO'
         total:
           type: integer
+    InvoiceViewDTOContainer:
+      title: ItemViewDTOContainer
+      x-stoplight:
+        id: dpnzre10uswhm
+      type: object
+      properties:
+        result:
+          type: array
+          items:
+            $ref: '#/components/schemas/InvoiceViewSimpleDTO'
+        total:
+          type: integer
+        totalCost:
+          type: integer
+        totalPrice:
+          type: integer
+        netCost:
+          type: integer
+        netPrice:
+          type: integer
+        profit:
+          type: integer
+        loss:
+          type: integer
     StoreNameDTO:
       title: StoreNameDTO
       x-stoplight:
@@ -2598,6 +2675,9 @@ components:
           $ref: '#/components/schemas/ContactInfo'
         settings:
           $ref: '#/components/schemas/GlobalSettings'
+        showTimer:
+          type: boolean
+          default: true
     InvoicePrintDTO:
       title: InvoicePrintDTO
       x-stoplight:
@@ -2608,6 +2688,17 @@ components:
           $ref: '#/components/schemas/InvoiceDTO'
         global_info:
           $ref: '#/components/schemas/ContactInfo'
+    ItemsPrintDTO:
+      title: InvoicePrintDTO
+      x-stoplight:
+        id: undra196b9cyo
+      type: object
+      properties:
+        global_info:
+          $ref: '#/components/schemas/ContactInfo'
+        item:
+          $ref: '#/components/schemas/ItemViewDTO'
+      description: ''
     ContactInfo:
       title: ContactInfo
       x-stoplight:
@@ -2638,6 +2729,7 @@ components:
         VendorEmail:
           type: string
           default: بريد
+      x-internal: false
     GlobalSettings:
       title: GlobalSettings
       x-stoplight:
@@ -2702,6 +2794,32 @@ components:
           type: string
           default: ar-EG
           description: 'culture language for currency persentation in ui / table / print / preview '
+        ItemsOptions:
+          type: object
+          properties:
+            selectedReport:
+              type: string
+              default: Default
+        purchaseInvoiceOptions:
+          type: object
+          properties:
+            selectedInvoiceReport:
+              type: string
+              default: Default
+            autoPrintAfterSave:
+              type: boolean
+              default: true
+            printPreview:
+              type: boolean
+              default: true
+            userReportFile:
+              type: string
+            selectedPrinterName:
+              type: string
+              default: default
+            updateItemQtyAfterSave:
+              type: boolean
+              default: true
     KonsolGridBand:
       title: KonsolGridBand
       x-stoplight:

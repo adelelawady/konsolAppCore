@@ -12,6 +12,7 @@ import com.konsol.core.service.PkService;
 import com.konsol.core.service.api.dto.*;
 import com.konsol.core.service.mapper.ItemMapper;
 import com.konsol.core.service.mapper.ItemUnitMapper;
+import com.konsol.core.web.rest.api.errors.ItemNotFoundException;
 import com.konsol.core.web.rest.api.errors.ItemUnitException;
 import com.mongodb.client.DistinctIterable;
 import com.mongodb.client.MongoCursor;
@@ -471,6 +472,16 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public Optional<ItemUnit> getUnitItemById(String id) {
         return itemUnitRepository.findById(id);
+    }
+
+    @Override
+    public List<ItemUnitDTO> getItemUnits(String id) {
+        Optional<Item> itemFound = itemRepository.findById(id);
+
+        if (!itemFound.isPresent()) {
+            throw new ItemNotFoundException(null, null);
+        }
+        return itemFound.get().getItemUnits().stream().map(itemUnitMapper::toDto).collect(Collectors.toList());
     }
 
     public Optional<ItemDTO> getLastItem() {

@@ -25,8 +25,22 @@ public interface InvoiceService {
      */
     Invoice updateInvoice(InvoiceUpdateDTO invoiceUpdateDTO);
 
+    /**
+     * handle invoice saving and activating
+     * removes temp tag from invoice and
+     * adds it to central invoices data
+     * @param invoice invoice to save
+     * @return activated invoice after being saved
+     */
     Invoice saveInvoice(Invoice invoice);
 
+    /**
+     * handle invoice saving and activating
+     * removes temp tag from invoice and
+     * adds it to central invoices data
+     * @param invoiceId invoiceId to find and save
+     * @return activated invoice after being saved
+     */
     Invoice saveInvoice(String invoiceId);
     /**
      * Get all the invoices.
@@ -135,4 +149,11 @@ public interface InvoiceService {
     InvoiceItem setInvoiceItemNullUnit(InvoiceItem invoiceItem);
 
     InvoiceItemViewDTO updateInvoiceItem(String id, InvoiceItemUpdateDTO invoiceItemUpdateDTO);
+
+    /**
+     * Not activated temp Invoices should be automatically deleted after 3 days.
+     * <p>
+     * This is scheduled to get fired everyday, at 01:00 (am).
+     */
+    void removeTempInvoices();
 }

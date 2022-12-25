@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 /**
  * Service Implementation for managing {@link com.konsol.core.domain.InvoiceItem}.
  */
-//@Service(value = "SALES")
 @Service(value = "SALES")
 public class SaleServiceImpl implements SaleService {
 
