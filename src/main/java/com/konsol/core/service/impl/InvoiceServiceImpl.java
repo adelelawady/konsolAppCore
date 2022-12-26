@@ -896,4 +896,9 @@ public class InvoiceServiceImpl implements InvoiceService {
                 this.delete(tempNotActiveInvoice.getId());
             });
     }
+
+    @Override
+    public InvoiceViewDTOContainer invoicesViewSearch(PaginationTimeSearchModel paginationTimeSearchModel) {
+        return this.mongoQueryService.searchInvoicesQUERY(paginationTimeSearchModel);
+    }
 }

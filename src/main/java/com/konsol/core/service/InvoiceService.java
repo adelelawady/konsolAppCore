@@ -156,4 +156,6 @@ public interface InvoiceService {
      * This is scheduled to get fired everyday, at 01:00 (am).
      */
     void removeTempInvoices();
+
+    InvoiceViewDTOContainer invoicesViewSearch(PaginationTimeSearchModel paginationTimeSearchModel);
 }

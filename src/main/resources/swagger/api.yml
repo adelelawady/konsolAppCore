@@ -999,6 +999,27 @@ paths:
               schema:
                 $ref: '#/components/schemas/InvoiceDTO'
     parameters: []
+  /invoices/view:
+    post:
+      tags:
+        - invoice-resource
+      operationId: InvoicesViewSearchPaginate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaginationTimeSearchModel'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceViewDTOContainer'
+      description: invoice view dto search and pagination and sort request
+      summary: 'Search Invoices [ pagination , time , plaintext , sort ] { view model dto }'
+    parameters: []
   '/invoices/{kind}/create':
     get:
       tags:
@@ -1883,6 +1904,8 @@ components:
           minimum: 0
           exclusiveMinimum: false
           type: number
+        netResult:
+          type: number
         expenses:
           minimum: 0
           exclusiveMinimum: false
@@ -1905,82 +1928,6 @@ components:
           format: date-time
     InvoiceViewDTO:
       type: object
-      properties:
-        pk:
-          type: string
-          description: 'Invoice pk '
-        id:
-          type: string
-        kind:
-          type: string
-          enum:
-            - SALE
-            - PURCHASE
-            - ADJUST
-            - TRANSFER
-            - SALEQUOTE
-            - RETURNPUR
-            - RETURNSALE
-            - COMPONENT
-        totalCost:
-          minimum: 0
-          exclusiveMinimum: false
-          type: number
-        totalPrice:
-          minimum: 0
-          exclusiveMinimum: false
-          type: number
-        discountPer:
-          maximum: 100
-          minimum: 0
-          type: integer
-          format: int32
-        discount:
-          minimum: 0
-          exclusiveMinimum: false
-          type: number
-        additions:
-          minimum: 0
-          exclusiveMinimum: false
-          type: number
-        additionsType:
-          type: string
-        netCost:
-          minimum: 0
-          exclusiveMinimum: false
-          type: number
-        netPrice:
-          minimum: 0
-          exclusiveMinimum: false
-          type: number
-        expenses:
-          minimum: 0
-          exclusiveMinimum: false
-          type: number
-        expensesType:
-          type: string
-        bank:
-          $ref: '#/components/schemas/BankDTO'
-        item:
-          $ref: '#/components/schemas/ItemDTO'
-        account:
-          $ref: '#/components/schemas/AccountUserDTO'
-        invoiceItems:
-          type: array
-          items:
-            $ref: '#/components/schemas/InvoiceItemViewDTO'
-        created_by:
-          type: string
-        created_date:
-          type: string
-          format: date-time
-        last_modified_by:
-          type: string
-        last_modified_date:
-          type: string
-          format: date-time
-        invoiceItemsCount:
-          type: string
       x-examples:
         example-1:
           pk: string
@@ -2046,6 +1993,84 @@ components:
           last_modified_by: string
           last_modified_date: '2019-08-24T14:15:22Z'
           invoiceItemsCount: string
+      properties:
+        pk:
+          type: string
+          description: 'Invoice pk '
+        id:
+          type: string
+        kind:
+          type: string
+          enum:
+            - SALE
+            - PURCHASE
+            - ADJUST
+            - TRANSFER
+            - SALEQUOTE
+            - RETURNPUR
+            - RETURNSALE
+            - COMPONENT
+        totalCost:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        totalPrice:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        discountPer:
+          maximum: 100
+          minimum: 0
+          type: integer
+          format: int32
+        discount:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        additions:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        additionsType:
+          type: string
+        netCost:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        netPrice:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        netResult:
+          type: number
+        expenses:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        expensesType:
+          type: string
+        bank:
+          $ref: '#/components/schemas/BankDTO'
+        item:
+          $ref: '#/components/schemas/ItemDTO'
+        account:
+          $ref: '#/components/schemas/AccountUserDTO'
+        invoiceItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/InvoiceItemViewDTO'
+        created_by:
+          type: string
+        created_date:
+          type: string
+          format: date-time
+        last_modified_by:
+          type: string
+        last_modified_date:
+          type: string
+          format: date-time
+        invoiceItemsCount:
+          type: string
     InvoiceViewSimpleDTO:
       type: object
       properties:
@@ -2094,6 +2119,8 @@ components:
         netCost:
           minimum: 0
           exclusiveMinimum: false
+          type: number
+        netResult:
           type: number
         created_by:
           type: string
@@ -2546,6 +2573,31 @@ components:
           type: string
         searchText:
           type: string
+    PaginationTimeSearchModel:
+      title: PaginationTimeSearchModel
+      x-stoplight:
+        id: kdba1ibk06p8b
+      type: object
+      description: 'search with pagination , plain text , date [ from , to ]'
+      properties:
+        page:
+          type: integer
+          default: 0
+        size:
+          type: integer
+          default: 10
+        sortField:
+          type: string
+        sortOrder:
+          type: string
+        searchText:
+          type: string
+        dateFrom:
+          type: string
+          format: date-time
+        dateTo:
+          type: string
+          format: date-time
     ItemViewDTOContainer:
       title: ItemViewDTOContainer
       x-stoplight:
@@ -2559,10 +2611,11 @@ components:
         total:
           type: integer
     InvoiceViewDTOContainer:
-      title: ItemViewDTOContainer
+      title: InvoiceViewDTOContainer
       x-stoplight:
         id: dpnzre10uswhm
       type: object
+      description: ''
       properties:
         result:
           type: array
@@ -2571,17 +2624,17 @@ components:
         total:
           type: integer
         totalCost:
-          type: integer
+          type: number
         totalPrice:
-          type: integer
+          type: number
         netCost:
-          type: integer
+          type: number
         netPrice:
-          type: integer
-        profit:
-          type: integer
-        loss:
-          type: integer
+          type: number
+        netResult:
+          type: number
+        totalDiscount:
+          type: number
     StoreNameDTO:
       title: StoreNameDTO
       x-stoplight:

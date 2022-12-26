@@ -135,4 +135,9 @@ public class InvoiceResource implements InvoicesApiDelegate {
     public ResponseEntity<List<InvoiceDTO>> getAllInvoices(Integer page, Integer size, List<String> sort, Boolean eagerload) {
         return ResponseEntity.ok(invoiceService.findAll(PageRequest.of(0, 1000)).getContent());
     }
+
+    @Override
+    public ResponseEntity<InvoiceViewDTOContainer> invoicesViewSearchPaginate(PaginationTimeSearchModel paginationTimeSearchModel) {
+        return ResponseEntity.ok(invoiceService.invoicesViewSearch(paginationTimeSearchModel));
+    }
 }

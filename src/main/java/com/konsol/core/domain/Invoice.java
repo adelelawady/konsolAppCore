@@ -74,8 +74,6 @@ public class Invoice extends AbstractAuditingEntity<String> implements Serializa
     @Field("net_price")
     private BigDecimal netPrice = new BigDecimal(0);
 
-    // net result
-    @DecimalMin(value = "0")
     @Field("net_result")
     private BigDecimal netResult = new BigDecimal(0);
 
