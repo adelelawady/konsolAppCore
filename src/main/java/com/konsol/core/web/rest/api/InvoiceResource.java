@@ -137,7 +137,12 @@ public class InvoiceResource implements InvoicesApiDelegate {
     }
 
     @Override
-    public ResponseEntity<InvoiceViewDTOContainer> invoicesViewSearchPaginate(PaginationTimeSearchModel paginationTimeSearchModel) {
-        return ResponseEntity.ok(invoiceService.invoicesViewSearch(paginationTimeSearchModel));
+    public ResponseEntity<InvoiceViewDTOContainer> invoicesViewSearchPaginate(InvoicesSearchModel invoicesSearchModel) {
+        return ResponseEntity.ok(invoiceService.invoicesViewSearch(invoicesSearchModel));
+    }
+
+    @Override
+    public ResponseEntity<List<InvoiceItemDTO>> getInvoiceItems(String id) {
+        return ResponseEntity.ok(invoiceService.getInvoiceItems(id));
     }
 }

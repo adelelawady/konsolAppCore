@@ -2,10 +2,7 @@ package com.konsol.core.service;
 
 import com.konsol.core.domain.Invoice;
 import com.konsol.core.domain.Item;
-import com.konsol.core.service.api.dto.InvoiceViewDTOContainer;
-import com.konsol.core.service.api.dto.InvoiceViewSimpleDTO;
-import com.konsol.core.service.api.dto.PaginationSearchModel;
-import com.konsol.core.service.api.dto.PaginationTimeSearchModel;
+import com.konsol.core.service.api.dto.*;
 import com.konsol.core.service.mapper.InvoiceMapper;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
@@ -16,6 +13,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.annotation.Nullable;
 import org.bson.Document;
 import org.bson.types.Decimal128;
 import org.bson.types.ObjectId;
@@ -47,101 +45,104 @@ public class MongoQueryService {
 
     // getAllItemsQuery
 
-    public InvoiceViewDTOContainer searchInvoicesQUERY(PaginationTimeSearchModel paginationTimeSearchModel) {
+    public InvoiceViewDTOContainer searchInvoicesQUERY(InvoicesSearchModel invoicesSearchModel) {
         org.springframework.data.mongodb.core.query.Query query = new org.springframework.data.mongodb.core.query.Query();
         org.springframework.data.mongodb.core.query.Query countQuery = new Query();
         /**
          * pagination
          */
-        if (
-            paginationTimeSearchModel.getPage() != null &&
-            paginationTimeSearchModel.getSize() != null &&
-            paginationTimeSearchModel.getSize() > 0
-        ) {
-            Pageable pageable = PageRequest.of(paginationTimeSearchModel.getPage(), paginationTimeSearchModel.getSize());
+        if (invoicesSearchModel.getPage() != null && invoicesSearchModel.getSize() != null && invoicesSearchModel.getSize() > 0) {
+            Pageable pageable = PageRequest.of(invoicesSearchModel.getPage(), invoicesSearchModel.getSize());
             query.with(pageable);
         }
 
         /**
          * sort
          */
-        if (paginationTimeSearchModel.getSortField() != null && !paginationTimeSearchModel.getSortField().isEmpty()) {
-            if (paginationTimeSearchModel.getSortOrder() != null && !paginationTimeSearchModel.getSortOrder().isEmpty()) {
-                switch (paginationTimeSearchModel.getSortOrder().toLowerCase()) {
+        if (invoicesSearchModel.getSortField() != null && !invoicesSearchModel.getSortField().isEmpty()) {
+            if (invoicesSearchModel.getSortOrder() != null && !invoicesSearchModel.getSortOrder().isEmpty()) {
+                switch (invoicesSearchModel.getSortOrder().toLowerCase()) {
                     case "asc":
                         {
-                            query.with(Sort.by(Sort.Direction.ASC, paginationTimeSearchModel.getSortField()));
+                            query.with(Sort.by(Sort.Direction.ASC, invoicesSearchModel.getSortField()));
                             break;
                         }
                     case "desc":
                         {
-                            query.with(Sort.by(Sort.Direction.DESC, paginationTimeSearchModel.getSortField()));
+                            query.with(Sort.by(Sort.Direction.DESC, invoicesSearchModel.getSortField()));
                             break;
                         }
                 }
             } else {
-                query.with(Sort.by(Sort.Direction.DESC, paginationTimeSearchModel.getSortField()));
+                query.with(Sort.by(Sort.Direction.DESC, invoicesSearchModel.getSortField()));
             }
         } else {
             query.with(Sort.by(Sort.Direction.ASC, "pk"));
         }
+
         /**
-         * query
+         * query plain text
          */
-        if (paginationTimeSearchModel.getSearchText() != null && !paginationTimeSearchModel.getSearchText().isEmpty()) {
+        if (invoicesSearchModel.getSearchText() != null && !invoicesSearchModel.getSearchText().isEmpty()) {
             ObjectId objectId = new ObjectId();
-            if (ObjectId.isValid(paginationTimeSearchModel.getSearchText())) {
-                objectId = new ObjectId(paginationTimeSearchModel.getSearchText());
+            if (ObjectId.isValid(invoicesSearchModel.getSearchText())) {
+                objectId = new ObjectId(invoicesSearchModel.getSearchText());
             } else {
                 objectId = null;
             }
 
-            Criteria andCriteria = new Criteria().andOperator(Criteria.where("active").is(true), Criteria.where("temp").is(false));
-
-            Criteria timeCriteria = new Criteria()
-                .andOperator(
-                    Criteria.where("created_date").gte(Date.from(paginationTimeSearchModel.getDateFrom().toInstant())),
-                    Criteria.where("created_date").lt(Date.from(paginationTimeSearchModel.getDateTo().toInstant()))
-                );
-
             Criteria orCriteria = new Criteria()
                 .orOperator(
                     Criteria.where("_id").is(objectId),
-                    Criteria.where("pk").regex(paginationTimeSearchModel.getSearchText(), "i"),
-                    Criteria.where("kind").regex(paginationTimeSearchModel.getSearchText(), "i"),
-                    Criteria.where("total_cost").regex(paginationTimeSearchModel.getSearchText(), "i"),
-                    Criteria.where("total_price").regex(paginationTimeSearchModel.getSearchText(), "i"),
-                    Criteria.where("discount_per").regex(paginationTimeSearchModel.getSearchText(), "i"),
-                    Criteria.where("discount").regex(paginationTimeSearchModel.getSearchText(), "i"),
-                    Criteria.where("additions").regex(paginationTimeSearchModel.getSearchText(), "i"),
-                    Criteria.where("net_cost").regex(paginationTimeSearchModel.getSearchText(), "i"),
-                    Criteria.where("net_price").regex(paginationTimeSearchModel.getSearchText(), "i"),
-                    Criteria.where("net_result").regex(paginationTimeSearchModel.getSearchText(), "i"),
-                    Criteria.where("expenses").regex(paginationTimeSearchModel.getSearchText(), "i"),
-                    Criteria.where("expenses_type").regex(paginationTimeSearchModel.getSearchText(), "i"),
-                    Criteria.where("created_by").regex(paginationTimeSearchModel.getSearchText(), "i"),
-                    Criteria.where("last_modified_by").regex(paginationTimeSearchModel.getSearchText(), "i")
+                    Criteria.where("pk").regex(invoicesSearchModel.getSearchText(), "i"),
+                    Criteria.where("total_cost").regex(invoicesSearchModel.getSearchText(), "i"),
+                    Criteria.where("total_price").regex(invoicesSearchModel.getSearchText(), "i"),
+                    Criteria.where("discount_per").regex(invoicesSearchModel.getSearchText(), "i"),
+                    Criteria.where("discount").regex(invoicesSearchModel.getSearchText(), "i"),
+                    Criteria.where("additions").regex(invoicesSearchModel.getSearchText(), "i"),
+                    Criteria.where("net_cost").regex(invoicesSearchModel.getSearchText(), "i"),
+                    Criteria.where("net_price").regex(invoicesSearchModel.getSearchText(), "i"),
+                    Criteria.where("net_result").regex(invoicesSearchModel.getSearchText(), "i"),
+                    Criteria.where("expenses").regex(invoicesSearchModel.getSearchText(), "i"),
+                    Criteria.where("expenses_type").regex(invoicesSearchModel.getSearchText(), "i"),
+                    Criteria.where("created_by").regex(invoicesSearchModel.getSearchText(), "i"),
+                    Criteria.where("last_modified_by").regex(invoicesSearchModel.getSearchText(), "i")
                 );
-            query.addCriteria(andCriteria);
 
-            if ((paginationTimeSearchModel.getDateFrom() != null)) {
-                query.addCriteria(timeCriteria);
-            }
-            if (paginationTimeSearchModel.getSearchText() != null) {
-                query.addCriteria(orCriteria);
-            }
-            /**
-             * date
-             */
-
-            // query.addCriteria(criteria);
-            //countQuery.addCriteria();
+            query.addCriteria(orCriteria);
         }
+
+        /**
+         * static active & temp
+         */
+        Criteria andCriteria = new Criteria()
+            .andOperator(
+                Criteria.where("active").is(true),
+                // Criteria.where("temp").is(false),
+                (
+                    (invoicesSearchModel.getKind() != null && (!invoicesSearchModel.getKind().toString().equals("ALL")))
+                        ? Criteria.where("kind").is(invoicesSearchModel.getKind())
+                        : Criteria.where("kind").ne(null)
+                )
+            );
+
+        query.addCriteria(andCriteria);
+        /**
+         * date
+         */
+        if ((invoicesSearchModel.getDateFrom() != null)) {
+            andCriteria
+                .and("created_date")
+                .gte(Date.from(invoicesSearchModel.getDateFrom().toInstant()))
+                .lt(Date.from(invoicesSearchModel.getDateTo().toInstant()));
+        }
+
+        countQuery.addCriteria(andCriteria);
 
         InvoiceViewDTOContainer invoiceViewDTOContainer = new InvoiceViewDTOContainer();
 
         List<Invoice> invoicesFound = mongoTemplate.find(query, Invoice.class);
-        Long ResultCount = mongoTemplate.count(query, Invoice.class);
+        Long ResultCount = mongoTemplate.count(countQuery, Invoice.class);
 
         invoiceViewDTOContainer.setResult(invoicesFound.stream().map(invoiceMapper::toInvoiceViewSimpleDTO).collect(Collectors.toList()));
 
@@ -220,6 +221,7 @@ public class MongoQueryService {
             }
         }
  */
+
         MongoCollection<Document> collection = mongoTemplate.getCollection("invoices");
 
         AggregateIterable<Document> result = collection.aggregate(

@@ -999,6 +999,27 @@ paths:
               schema:
                 $ref: '#/components/schemas/InvoiceDTO'
     parameters: []
+  '/invoices/{id}/invoiceItems':
+    get:
+      tags:
+        - invoice-resource
+      operationId: getInvoiceItems
+      parameters: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InvoiceItemDTO'
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
   /invoices/view:
     post:
       tags:
@@ -1008,7 +1029,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PaginationTimeSearchModel'
+              $ref: '#/components/schemas/InvoicesSearchModel'
         required: true
       responses:
         '200':
@@ -1019,6 +1040,7 @@ paths:
                 $ref: '#/components/schemas/InvoiceViewDTOContainer'
       description: invoice view dto search and pagination and sort request
       summary: 'Search Invoices [ pagination , time , plaintext , sort ] { view model dto }'
+      parameters: []
     parameters: []
   '/invoices/{kind}/create':
     get:
@@ -2573,8 +2595,8 @@ components:
           type: string
         searchText:
           type: string
-    PaginationTimeSearchModel:
-      title: PaginationTimeSearchModel
+    InvoicesSearchModel:
+      title: InvoicesSearchModel
       x-stoplight:
         id: kdba1ibk06p8b
       type: object
@@ -2598,6 +2620,12 @@ components:
         dateTo:
           type: string
           format: date-time
+        kind:
+          type: string
+          enum:
+            - ALL
+            - SALE
+            - PURCHASE
     ItemViewDTOContainer:
       title: ItemViewDTOContainer
       x-stoplight:
@@ -2831,6 +2859,9 @@ components:
               type: boolean
               default: true
               description: updates item qty saving invoice add/subtract BE_OPTION
+            report_page_name:
+              type: string
+              default: sale
         reportFilesDir:
           type: string
           default: reports
@@ -2853,6 +2884,9 @@ components:
             selectedReport:
               type: string
               default: Default
+            report_page_name:
+              type: string
+              default: items
         purchaseInvoiceOptions:
           type: object
           properties:
@@ -2873,6 +2907,19 @@ components:
             updateItemQtyAfterSave:
               type: boolean
               default: true
+            report_page_name:
+              type: string
+              default: pur
+        report_page_names_List:
+          type: array
+          items:
+            type: string
+            enum:
+              - sale
+              - pur
+              - items
+              - invoiceReport
+            default: 'sale,pur,items,invoiceReport'
     KonsolGridBand:
       title: KonsolGridBand
       x-stoplight:

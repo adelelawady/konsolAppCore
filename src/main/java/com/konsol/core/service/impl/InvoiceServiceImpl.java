@@ -898,7 +898,22 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public InvoiceViewDTOContainer invoicesViewSearch(PaginationTimeSearchModel paginationTimeSearchModel) {
-        return this.mongoQueryService.searchInvoicesQUERY(paginationTimeSearchModel);
+    public InvoiceViewDTOContainer invoicesViewSearch(InvoicesSearchModel invoicesSearchModel) {
+        return this.mongoQueryService.searchInvoicesQUERY(invoicesSearchModel);
+    }
+
+    /**
+     * get invoice's Invoice items list
+     *
+     * @param id invoice id
+     * @return list of invoice invoiceitems
+     */
+    @Override
+    public List<InvoiceItemDTO> getInvoiceItems(String id) {
+        Optional<Invoice> invoiceItem = findOneDomain(id);
+        if (!invoiceItem.isPresent()) {
+            throw new InvoiceNotFoundException(null, null);
+        }
+        return invoiceItem.get().getInvoiceItems().stream().map(invoiceItemMapper::toDto).collect(Collectors.toList());
     }
 }

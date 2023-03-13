@@ -157,5 +157,12 @@ public interface InvoiceService {
      */
     void removeTempInvoices();
 
-    InvoiceViewDTOContainer invoicesViewSearch(PaginationTimeSearchModel paginationTimeSearchModel);
+    InvoiceViewDTOContainer invoicesViewSearch(InvoicesSearchModel invoicesSearchModel);
+
+    /**
+     * get invoice's Invoice items list
+     * @param id invoice id
+     * @return list of invoice invoiceitems
+     */
+    List<InvoiceItemDTO> getInvoiceItems(String id);
 }

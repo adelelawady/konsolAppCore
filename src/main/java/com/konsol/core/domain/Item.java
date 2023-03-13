@@ -21,8 +21,6 @@ public class Item extends AbstractAuditingEntity<String> implements Serializable
 
     private static final long serialVersionUID = 1L;
 
-    //{ $gte :  11, $lte : 100}
-
     @Id
     private String id;
 
