@@ -5,6 +5,8 @@ import com.konsol.core.domain.enumeration.MoneyKind;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import javax.validation.constraints.*;
+import org.bson.codecs.pojo.annotations.BsonDiscriminator;
+import org.bson.codecs.pojo.annotations.BsonProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -15,7 +17,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  */
 @Document(collection = "monies")
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class Money implements Serializable {
+public class Money extends AbstractAuditingEntity<String> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

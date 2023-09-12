@@ -2,7 +2,11 @@ package com.konsol.core.web.rest.api;
 
 import com.konsol.core.repository.MoneyRepository;
 import com.konsol.core.service.MoneyService;
-import com.konsol.core.service.dto.MoneyDTO;
+import com.konsol.core.service.MongoQueryService;
+import com.konsol.core.service.api.dto.MoneyDTO;
+import com.konsol.core.service.api.dto.MoniesSearchModel;
+import com.konsol.core.service.api.dto.MoniesViewDTOContainer;
+import com.konsol.core.web.api.MoniesApiDelegate;
 import com.konsol.core.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -15,9 +19,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -30,7 +34,7 @@ import tech.jhipster.web.util.ResponseUtil;
  */
 @RestController
 @RequestMapping("/api")
-public class MoneyResource {
+public class MoneyResource implements MoniesApiDelegate {
 
     private final Logger log = LoggerFactory.getLogger(MoneyResource.class);
 
@@ -43,9 +47,12 @@ public class MoneyResource {
 
     private final MoneyRepository moneyRepository;
 
-    public MoneyResource(MoneyService moneyService, MoneyRepository moneyRepository) {
+    private final MongoQueryService mongoQueryService;
+
+    public MoneyResource(MoneyService moneyService, MoneyRepository moneyRepository, MongoQueryService mongoQueryService) {
         this.moneyService = moneyService;
         this.moneyRepository = moneyRepository;
+        this.mongoQueryService = mongoQueryService;
     }
 
     /**
@@ -55,17 +62,21 @@ public class MoneyResource {
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new moneyDTO, or with status {@code 400 (Bad Request)} if the money has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/monies")
-    public ResponseEntity<MoneyDTO> createMoney(@Valid @RequestBody MoneyDTO moneyDTO) throws URISyntaxException {
+    @Override
+    public ResponseEntity<MoneyDTO> createMoney(@Valid @RequestBody MoneyDTO moneyDTO) {
         log.debug("REST request to save Money : {}", moneyDTO);
         if (moneyDTO.getId() != null) {
             throw new BadRequestAlertException("A new money cannot already have an ID", ENTITY_NAME, "idexists");
         }
         MoneyDTO result = moneyService.save(moneyDTO);
-        return ResponseEntity
-            .created(new URI("/api/monies/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId()))
-            .body(result);
+        try {
+            return ResponseEntity
+                .created(new URI("/api/monies/" + result.getId()))
+                .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId()))
+                .body(result);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -78,11 +89,11 @@ public class MoneyResource {
      * or with status {@code 500 (Internal Server Error)} if the moneyDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/monies/{id}")
+    @Override
     public ResponseEntity<MoneyDTO> updateMoney(
         @PathVariable(value = "id", required = false) final String id,
         @Valid @RequestBody MoneyDTO moneyDTO
-    ) throws URISyntaxException {
+    ) {
         log.debug("REST request to update Money : {}, {}", id, moneyDTO);
         if (moneyDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
@@ -113,11 +124,11 @@ public class MoneyResource {
      * or with status {@code 500 (Internal Server Error)} if the moneyDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PatchMapping(value = "/monies/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    @Override
     public ResponseEntity<MoneyDTO> partialUpdateMoney(
         @PathVariable(value = "id", required = false) final String id,
         @NotNull @RequestBody MoneyDTO moneyDTO
-    ) throws URISyntaxException {
+    ) {
         log.debug("REST request to partial update Money partially : {}, {}", id, moneyDTO);
         if (moneyDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
@@ -144,12 +155,13 @@ public class MoneyResource {
      * @param pageable the pagination information.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of monies in body.
      */
-    @GetMapping("/monies")
-    public ResponseEntity<List<MoneyDTO>> getAllMonies(@org.springdoc.api.annotations.ParameterObject Pageable pageable) {
+    @Override
+    public ResponseEntity<List<MoneyDTO>> getAllMonies(Integer page, Integer size, List<String> sort) {
         log.debug("REST request to get a page of Monies");
-        Page<MoneyDTO> page = moneyService.findAll(pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
+        Pageable pageable = PageRequest.of(page, size);
+        Page<MoneyDTO> pages = moneyService.findAll(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), pages);
+        return ResponseEntity.ok().headers(headers).body(pages.getContent());
     }
 
     /**
@@ -158,7 +170,7 @@ public class MoneyResource {
      * @param id the id of the moneyDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the moneyDTO, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/monies/{id}")
+    @Override
     public ResponseEntity<MoneyDTO> getMoney(@PathVariable String id) {
         log.debug("REST request to get Money : {}", id);
         Optional<MoneyDTO> moneyDTO = moneyService.findOne(id);
@@ -171,10 +183,15 @@ public class MoneyResource {
      * @param id the id of the moneyDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/monies/{id}")
+    @Override
     public ResponseEntity<Void> deleteMoney(@PathVariable String id) {
         log.debug("REST request to delete Money : {}", id);
         moneyService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id)).build();
+    }
+
+    @Override
+    public ResponseEntity<MoniesViewDTOContainer> moniesViewSearchPaginate(MoniesSearchModel moniesSearchModel) {
+        return ResponseEntity.ok(mongoQueryService.moniesViewSearchPaginate(moniesSearchModel));
     }
 }

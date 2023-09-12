@@ -614,6 +614,7 @@ public class InvoiceServiceImpl implements InvoiceService {
          */
         Pk invoicePk = pkService.generatePkEntity(PkKind.INVOICE);
         invoice.setPk(invoicePk.getValue().toString());
+
         /**
          * TODO handle bank on invoice saving
          */

@@ -1,19 +1,19 @@
 package com.konsol.core.service;
 
 import com.konsol.core.domain.Invoice;
-import com.konsol.core.domain.Item;
+import com.konsol.core.domain.Money;
+import com.konsol.core.repository.MoneyRepository;
 import com.konsol.core.service.api.dto.*;
 import com.konsol.core.service.mapper.InvoiceMapper;
+import com.konsol.core.service.mapper.MoneyMapper;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.annotation.Nullable;
 import org.bson.Document;
 import org.bson.types.Decimal128;
 import org.bson.types.ObjectId;
@@ -37,6 +37,12 @@ public class MongoQueryService {
 
     @Autowired
     private final InvoiceMapper invoiceMapper;
+
+    @Autowired
+    private MoneyMapper moneyMapper;
+
+    @Autowired
+    private MoneyRepository moneyRepository;
 
     public MongoQueryService(MongoTemplate mongoTemplate, InvoiceMapper invoiceMapper) {
         this.mongoTemplate = mongoTemplate;
@@ -478,5 +484,109 @@ public class MongoQueryService {
                 )
             )
         );
+    }
+
+    /*
+   import java.util.Arrays;
+import org.bson.Document;
+import org.bson.types.ObjectId;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import org.bson.conversions.Bson;
+import java.util.concurrent.TimeUnit;
+import org.bson.Document;
+
+
+      Requires the MongoDB Java Driver.
+      https://mongodb.github.io/mongo-java-driver
+
+
+    MongoClient mongoClient = new MongoClient(
+        new MongoClientURI(
+            "mongodb://localhost:27017/"
+        )
+    );
+    MongoDatabase database = mongoClient.getDatabase("KonsolCore");
+    MongoCollection<Document> collection = database.getCollection("monies");
+
+    FindIterable<Document> result = collection.aggregate(Arrays.asList(new Document("$match",
+        new Document("$or", Arrays.asList(new Document("$and", Arrays.asList(new Document("kind", "PAYMENT"),
+                new Document("created_date",
+                    new Document("$gte", "2022-12-20T10:47:50.498+00:00")),
+                new Document("created_date",
+                    new Document("$lt", "2022-12-29T10:47:50.498+00:00")))),
+            new Document("pk", "2"),
+            new Document("_id",
+                new ObjectId("641331ab3a789e767dec3d2c")),
+            new Document("bank.$id",
+                new ObjectId("6412e314ec9e5356ae48c5f2")),
+            new Document("account.$id",
+                new ObjectId("6412e714ec9e5356ae48c5f2")),
+            new Document("item.$id",
+                new ObjectId("6412e714e49e5356ae48c5f2")))))));
+
+     */
+
+    public MoniesViewDTOContainer moniesViewSearchPaginate(MoniesSearchModel moniesSearchModel) {
+        MongoCollection<Document> collection = mongoTemplate.getCollection("monies");
+        //.withCodecRegistry(pojoCodecRegistry);
+
+        List<Document> staticOrList = new ArrayList<>(List.of(new Document("item.$id", new ObjectId("641331ab3a789e767dec3d2c"))));
+
+        if (moniesSearchModel.getBankId() != null) {
+            staticOrList.add(new Document("bank.$id", new ObjectId(moniesSearchModel.getBankId())));
+        }
+        if (moniesSearchModel.getAccountId() != null) {
+            staticOrList.add(new Document("account.$id", new ObjectId(moniesSearchModel.getAccountId())));
+        }
+        if (moniesSearchModel.getPk() != null) {
+            staticOrList.add(new Document("pk", moniesSearchModel.getPk()));
+        }
+        if (moniesSearchModel.getId() != null) {
+            staticOrList.add(new Document("_id", new ObjectId(moniesSearchModel.getId())));
+        }
+
+        List<Document> mainANDList = new ArrayList<>(List.of(new Document("$or", staticOrList)));
+
+        // KIND
+        if (moniesSearchModel.getKind() != null) {
+            mainANDList.add(new Document("kind", moniesSearchModel.getKind().toString()));
+        }
+        // DATE
+        if (moniesSearchModel.getDateFrom() != null && moniesSearchModel.getDateTo() != null) {
+            mainANDList.add(
+                new Document(
+                    "created_date",
+                    new Document("$gte", moniesSearchModel.getDateFrom()).append("$lt", moniesSearchModel.getDateTo())
+                )
+            );
+        }
+
+        //TODO important info here for pagination using mongo java service api
+
+        AggregateIterable<Document> result = collection.aggregate(
+            Arrays.asList(
+                new Document("$match", new Document("$and", mainANDList)),
+                new Document("$skip", (moniesSearchModel.getPage()) * moniesSearchModel.getSize()),
+                new Document("$limit", moniesSearchModel.getSize()),
+                new Document("$sort", new Document("created_date", -1L))
+            )
+        );
+
+        MoniesViewDTOContainer moniesViewDTOContainer = new MoniesViewDTOContainer();
+
+        MongoCursor<Document> iterator = result.iterator();
+        List<String> ids = new ArrayList<>();
+        while (iterator.hasNext()) {
+            Document next = iterator.next();
+            String id = next.getObjectId("_id").toString();
+            ids.add(id);
+        }
+        moniesViewDTOContainer.result(moneyRepository.findAllByIdIn(ids).stream().map(moneyMapper::toDto).collect(Collectors.toList()));
+
+        return moniesViewDTOContainer;
     }
 }

@@ -2,7 +2,8 @@ package com.konsol.core.web.rest.api;
 
 import com.konsol.core.repository.BankRepository;
 import com.konsol.core.service.BankService;
-import com.konsol.core.service.dto.BankDTO;
+import com.konsol.core.service.api.dto.BankDTO;
+import com.konsol.core.web.api.BanksApiDelegate;
 import com.konsol.core.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -15,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -30,7 +32,7 @@ import tech.jhipster.web.util.ResponseUtil;
  */
 @RestController
 @RequestMapping("/api")
-public class BankResource {
+public class BankResource implements BanksApiDelegate {
 
     private final Logger log = LoggerFactory.getLogger(BankResource.class);
 
@@ -55,17 +57,22 @@ public class BankResource {
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new bankDTO, or with status {@code 400 (Bad Request)} if the bank has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/banks")
-    public ResponseEntity<BankDTO> createBank(@Valid @RequestBody BankDTO bankDTO) throws URISyntaxException {
+    //@PostMapping("/banks")
+    @Override
+    public ResponseEntity<BankDTO> createBank(@Valid @RequestBody BankDTO bankDTO) {
         log.debug("REST request to save Bank : {}", bankDTO);
         if (bankDTO.getId() != null) {
             throw new BadRequestAlertException("A new bank cannot already have an ID", ENTITY_NAME, "idexists");
         }
         BankDTO result = bankService.save(bankDTO);
-        return ResponseEntity
-            .created(new URI("/api/banks/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId()))
-            .body(result);
+        try {
+            return ResponseEntity
+                .created(new URI("/api/banks/" + result.getId()))
+                .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId()))
+                .body(result);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -78,11 +85,11 @@ public class BankResource {
      * or with status {@code 500 (Internal Server Error)} if the bankDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/banks/{id}")
+    @Override
     public ResponseEntity<BankDTO> updateBank(
         @PathVariable(value = "id", required = false) final String id,
         @Valid @RequestBody BankDTO bankDTO
-    ) throws URISyntaxException {
+    ) {
         log.debug("REST request to update Bank : {}, {}", id, bankDTO);
         if (bankDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
@@ -113,11 +120,11 @@ public class BankResource {
      * or with status {@code 500 (Internal Server Error)} if the bankDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PatchMapping(value = "/banks/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    @Override
     public ResponseEntity<BankDTO> partialUpdateBank(
         @PathVariable(value = "id", required = false) final String id,
         @NotNull @RequestBody BankDTO bankDTO
-    ) throws URISyntaxException {
+    ) {
         log.debug("REST request to partial update Bank partially : {}, {}", id, bankDTO);
         if (bankDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
@@ -138,15 +145,15 @@ public class BankResource {
     /**
      * {@code GET  /banks} : get all the banks.
      *
-     * @param pageable the pagination information.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of banks in body.
      */
-    @GetMapping("/banks")
-    public ResponseEntity<List<BankDTO>> getAllBanks(@org.springdoc.api.annotations.ParameterObject Pageable pageable) {
+    @Override
+    public ResponseEntity<List<BankDTO>> getAllBanks(Integer page, Integer size, List<String> sort) {
         log.debug("REST request to get a page of Banks");
-        Page<BankDTO> page = bankService.findAll(pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
+        Pageable pageable = PageRequest.of(page, size);
+        Page<BankDTO> pages = bankService.findAll(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), pages);
+        return ResponseEntity.ok().headers(headers).body(pages.getContent());
     }
 
     /**
@@ -155,7 +162,7 @@ public class BankResource {
      * @param id the id of the bankDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the bankDTO, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/banks/{id}")
+    @Override
     public ResponseEntity<BankDTO> getBank(@PathVariable String id) {
         log.debug("REST request to get Bank : {}", id);
         Optional<BankDTO> bankDTO = bankService.findOne(id);
@@ -168,7 +175,7 @@ public class BankResource {
      * @param id the id of the bankDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/banks/{id}")
+    @Override
     public ResponseEntity<Void> deleteBank(@PathVariable String id) {
         log.debug("REST request to delete Bank : {}", id);
         bankService.delete(id);

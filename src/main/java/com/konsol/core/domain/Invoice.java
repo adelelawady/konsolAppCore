@@ -93,6 +93,10 @@ public class Invoice extends AbstractAuditingEntity<String> implements Serializa
     private AccountUser account;
 
     @DBRef
+    @Field("store")
+    private Store store;
+
+    @DBRef
     @Field("invoiceItems")
     @JsonIgnoreProperties(allowSetters = true)
     private Set<InvoiceItem> invoiceItems = new HashSet<>();
@@ -368,5 +372,13 @@ public class Invoice extends AbstractAuditingEntity<String> implements Serializa
 
     public void setNetResult(BigDecimal netResult) {
         this.netResult = netResult;
+    }
+
+    public Store getStore() {
+        return store;
+    }
+
+    public void setStore(Store store) {
+        this.store = store;
     }
 }

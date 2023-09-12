@@ -1,7 +1,7 @@
 package com.konsol.core.service.mapper;
 
 import com.konsol.core.domain.Bank;
-import com.konsol.core.service.dto.BankDTO;
+import com.konsol.core.service.api.dto.BankDTO;
 import org.mapstruct.*;
 
 /**

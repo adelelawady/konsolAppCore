@@ -3,7 +3,7 @@ package com.konsol.core.service.impl;
 import com.konsol.core.domain.Bank;
 import com.konsol.core.repository.BankRepository;
 import com.konsol.core.service.BankService;
-import com.konsol.core.service.dto.BankDTO;
+import com.konsol.core.service.api.dto.BankDTO;
 import com.konsol.core.service.mapper.BankMapper;
 import java.util.Optional;
 import org.slf4j.Logger;

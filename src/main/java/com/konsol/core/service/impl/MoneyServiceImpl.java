@@ -3,13 +3,24 @@ package com.konsol.core.service.impl;
 import com.konsol.core.domain.Money;
 import com.konsol.core.repository.MoneyRepository;
 import com.konsol.core.service.MoneyService;
-import com.konsol.core.service.dto.MoneyDTO;
+import com.konsol.core.service.api.dto.MoneyDTO;
+import com.konsol.core.service.api.dto.MoniesSearchModel;
+import com.konsol.core.service.api.dto.MoniesViewDTOContainer;
 import com.konsol.core.service.mapper.MoneyMapper;
+import com.mongodb.client.AggregateIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import java.util.Arrays;
 import java.util.Optional;
+import org.bson.BsonNull;
+import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 /**
@@ -24,9 +35,13 @@ public class MoneyServiceImpl implements MoneyService {
 
     private final MoneyMapper moneyMapper;
 
-    public MoneyServiceImpl(MoneyRepository moneyRepository, MoneyMapper moneyMapper) {
+    @Autowired
+    public final MongoTemplate mongoTemplate;
+
+    public MoneyServiceImpl(MoneyRepository moneyRepository, MoneyMapper moneyMapper, MongoTemplate mongoTemplate) {
         this.moneyRepository = moneyRepository;
         this.moneyMapper = moneyMapper;
+        this.mongoTemplate = mongoTemplate;
     }
 
     @Override
@@ -76,5 +91,44 @@ public class MoneyServiceImpl implements MoneyService {
     public void delete(String id) {
         log.debug("Request to delete Money : {}", id);
         moneyRepository.deleteById(id);
+    }
+
+    @Override
+    public MoniesViewDTOContainer moniesViewSearchPaginate(MoniesSearchModel moniesSearchModel) {
+        MongoCollection<Document> collection = mongoTemplate.getCollection("monies");
+        AggregateIterable<Document> result = collection.aggregate(
+            Arrays.asList(
+                new Document(
+                    "$match",
+                    new Document(
+                        "$or",
+                        Arrays.asList(
+                            new Document(
+                                "$or",
+                                Arrays.asList(
+                                    new Document("pk", new BsonNull()),
+                                    new Document("kind", new BsonNull()),
+                                    new Document("created_date", new Document("$gte", new BsonNull()).append("$lt", new BsonNull()))
+                                )
+                            ),
+                            new Document(
+                                "$or",
+                                Arrays.asList(
+                                    new Document("_id", new ObjectId("641331ab3a789e767dec3d2c")),
+                                    new Document("bank.$id", new ObjectId("641331ab3a789e767dec3d2c")),
+                                    new Document("account.$id", new ObjectId("641331ab3a789e767dec3d2c")),
+                                    new Document("item.$id", new ObjectId("641331ab3a789e767dec3d2c"))
+                                )
+                            )
+                        )
+                    )
+                ),
+                new Document("$skip", 0L),
+                new Document("$limit", 10L),
+                new Document("$sort", new Document("created_date", -1L))
+            )
+        );
+
+        return null;
     }
 }
