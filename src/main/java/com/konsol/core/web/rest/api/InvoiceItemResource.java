@@ -3,7 +3,6 @@ package com.konsol.core.web.rest.api;
 import com.konsol.core.repository.InvoiceItemRepository;
 import com.konsol.core.service.InvoiceItemService;
 import com.konsol.core.service.api.dto.InvoiceItemDTO;
-import com.konsol.core.web.api.InvoiceItemsApiDelegate;
 import com.konsol.core.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -56,7 +55,7 @@ public class InvoiceItemResource implements InvoiceItemsApiDelegate {
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new invoiceItemDTO, or with status {@code 400 (Bad Request)} if the invoiceItem has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @Override
+    // @Override
     public ResponseEntity<InvoiceItemDTO> createInvoiceItem(@Valid @RequestBody InvoiceItemDTO invoiceItemDTO) {
         log.debug("REST request to save InvoiceItem : {}", invoiceItemDTO);
         if (invoiceItemDTO.getId() != null) {

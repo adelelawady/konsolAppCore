@@ -26,8 +26,8 @@ public class SystemConfiguration implements Serializable {
     @Id
     private String id;
 
-    @Field("grid_collection")
-    private List<GridModelCollection> gridModelCollections = new ArrayList<>();
+    //  @Field("grid_collection")
+    //  private List<GridModelCollection> gridModelCollections = new ArrayList<>();
 
     @Field("system_options")
     private SysOptions sysOptions = new SysOptions();

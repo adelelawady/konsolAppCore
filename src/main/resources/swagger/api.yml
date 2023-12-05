@@ -2776,53 +2776,6 @@ components:
           type: string
         name:
           type: string
-    GridModelCollection:
-      title: GridModelCollection
-      x-stoplight:
-        id: bvrw2oram2umb
-      type: object
-      x-examples:
-        example-1:
-          gridId: MyModel
-          gridModels:
-            - fieldName: name
-              capition: capition
-              width: width
-              font: string
-              visible: true
-              visibleCostomization: true
-          modelObjectType:
-            id: string
-            pk: -1
-            name: string
-            barcode: string
-            price1: string
-            price2: string
-            category: string
-            qty: 0
-            cost: 0
-            itemUnits:
-              - id: string
-                name: string
-                pieces: 0
-                price: 0
-                basic: false
-            createdBy: string
-            createdDate: '2019-08-24T14:15:22Z'
-      properties:
-        id:
-          type: string
-          default: MyModel
-        gridModels:
-          type: array
-          items:
-            $ref: '#/components/schemas/GridColumnModel'
-        modelType:
-          oneOf:
-            - $ref: '#/components/schemas/ItemDTO'
-            - $ref: '#/components/schemas/ItemSimpleDTO'
-        gridName:
-          type: string
     SysOptions:
       title: SysOptions
       x-stoplight:
