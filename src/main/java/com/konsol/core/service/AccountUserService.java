@@ -1,6 +1,8 @@
 package com.konsol.core.service;
 
-import com.konsol.core.service.dto.AccountUserDTO;
+import com.konsol.core.domain.AccountUser;
+import com.konsol.core.service.api.dto.*;
+import java.math.BigDecimal;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,14 +18,15 @@ public interface AccountUserService {
      * @return the persisted entity.
      */
     AccountUserDTO save(AccountUserDTO accountUserDTO);
+    AccountUser save(AccountUser accountUser);
 
     /**
-     * Updates a accountUser.
+     * create a accountUser.
      *
-     * @param accountUserDTO the entity to update.
+     * @param createAccountUserDTO the entity to save.
      * @return the persisted entity.
      */
-    AccountUserDTO update(AccountUserDTO accountUserDTO);
+    AccountUserDTO create(CreateAccountUserDTO createAccountUserDTO);
 
     /**
      * Partially updates a accountUser.
@@ -31,7 +34,7 @@ public interface AccountUserService {
      * @param accountUserDTO the entity to update partially.
      * @return the persisted entity.
      */
-    Optional<AccountUserDTO> partialUpdate(AccountUserDTO accountUserDTO);
+    Optional<AccountUserDTO> update(AccountUserDTO accountUserDTO);
 
     /**
      * Get all the accountUsers.
@@ -49,10 +52,23 @@ public interface AccountUserService {
      */
     Optional<AccountUserDTO> findOne(String id);
 
+    Optional<AccountUser> findOneDomain(String id);
+
     /**
      * Delete the "id" accountUser.
      *
      * @param id the id of the entity.
      */
     void delete(String id);
+
+    /**
+     * search accountUser daftar
+     * @param accountUserSearchModel model holds all search model fields
+     * @return AccountUserContainer List of Account User [result]
+]     */
+    AccountUserContainer accountUserSearchPaginate(AccountUserSearchModel accountUserSearchModel);
+
+    void addAccountBalance(String accountId, BigDecimal value);
+
+    void subtractAccountBalance(String accountId, BigDecimal value);
 }

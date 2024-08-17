@@ -2,6 +2,8 @@ package com.konsol.core.config.dbmigrations;
 
 import com.konsol.core.config.Constants;
 import com.konsol.core.domain.Authority;
+import com.konsol.core.domain.Bank;
+import com.konsol.core.domain.Store;
 import com.konsol.core.domain.User;
 import com.konsol.core.security.AuthoritiesConstants;
 import io.mongock.api.annotations.ChangeUnit;
@@ -29,6 +31,8 @@ public class InitialSetupMigration {
         Authority adminAuthority = createAdminAuthority();
         adminAuthority = template.save(adminAuthority);
         addUsers(userAuthority, adminAuthority);
+        createFirstBank();
+        createFirstStore();
     }
 
     @RollbackExecution
@@ -88,5 +92,17 @@ public class InitialSetupMigration {
         adminUser.getAuthorities().add(adminAuthority);
         adminUser.getAuthorities().add(userAuthority);
         return adminUser;
+    }
+
+    private Bank createFirstBank() {
+        Bank bank = new Bank();
+        bank.name("Bank_1");
+        return template.save(bank);
+    }
+
+    private Store createFirstStore() {
+        Store store = new Store();
+        store.name("Store_1");
+        return template.save(store);
     }
 }

@@ -3,6 +3,7 @@ package com.konsol.core.web.rest.api;
 import com.konsol.core.repository.MoneyRepository;
 import com.konsol.core.service.MoneyService;
 import com.konsol.core.service.MongoQueryService;
+import com.konsol.core.service.api.dto.CreateMoneyDTO;
 import com.konsol.core.service.api.dto.MoneyDTO;
 import com.konsol.core.service.api.dto.MoniesSearchModel;
 import com.konsol.core.service.api.dto.MoniesViewDTOContainer;
@@ -58,17 +59,15 @@ public class MoneyResource implements MoniesApiDelegate {
     /**
      * {@code POST  /monies} : Create a new money.
      *
-     * @param moneyDTO the moneyDTO to create.
+     * @param createMoneyDTO the moneyDTO to create.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new moneyDTO, or with status {@code 400 (Bad Request)} if the money has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @Override
-    public ResponseEntity<MoneyDTO> createMoney(@Valid @RequestBody MoneyDTO moneyDTO) {
-        log.debug("REST request to save Money : {}", moneyDTO);
-        if (moneyDTO.getId() != null) {
-            throw new BadRequestAlertException("A new money cannot already have an ID", ENTITY_NAME, "idexists");
-        }
-        MoneyDTO result = moneyService.save(moneyDTO);
+    public ResponseEntity<MoneyDTO> createMoney(@Valid @RequestBody CreateMoneyDTO createMoneyDTO) {
+        log.debug("REST request to save Money : {}", createMoneyDTO);
+
+        MoneyDTO result = moneyService.createMoney(createMoneyDTO);
         try {
             return ResponseEntity
                 .created(new URI("/api/monies/" + result.getId()))
@@ -77,40 +76,6 @@ public class MoneyResource implements MoniesApiDelegate {
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    /**
-     * {@code PUT  /monies/:id} : Updates an existing money.
-     *
-     * @param id the id of the moneyDTO to save.
-     * @param moneyDTO the moneyDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated moneyDTO,
-     * or with status {@code 400 (Bad Request)} if the moneyDTO is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the moneyDTO couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
-     */
-    @Override
-    public ResponseEntity<MoneyDTO> updateMoney(
-        @PathVariable(value = "id", required = false) final String id,
-        @Valid @RequestBody MoneyDTO moneyDTO
-    ) {
-        log.debug("REST request to update Money : {}, {}", id, moneyDTO);
-        if (moneyDTO.getId() == null) {
-            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
-        }
-        if (!Objects.equals(id, moneyDTO.getId())) {
-            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
-        }
-
-        if (!moneyRepository.existsById(id)) {
-            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
-        }
-
-        MoneyDTO result = moneyService.update(moneyDTO);
-        return ResponseEntity
-            .ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, moneyDTO.getId()))
-            .body(result);
     }
 
     /**
@@ -125,7 +90,7 @@ public class MoneyResource implements MoniesApiDelegate {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @Override
-    public ResponseEntity<MoneyDTO> partialUpdateMoney(
+    public ResponseEntity<MoneyDTO> updateMoney(
         @PathVariable(value = "id", required = false) final String id,
         @NotNull @RequestBody MoneyDTO moneyDTO
     ) {
@@ -141,7 +106,7 @@ public class MoneyResource implements MoniesApiDelegate {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<MoneyDTO> result = moneyService.partialUpdate(moneyDTO);
+        Optional<MoneyDTO> result = moneyService.update(moneyDTO);
 
         return ResponseUtil.wrapOrNotFound(
             result,
@@ -152,7 +117,7 @@ public class MoneyResource implements MoniesApiDelegate {
     /**
      * {@code GET  /monies} : get all the monies.
      *
-     * @param pageable the pagination information.
+     * @param page the pagination information.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of monies in body.
      */
     @Override

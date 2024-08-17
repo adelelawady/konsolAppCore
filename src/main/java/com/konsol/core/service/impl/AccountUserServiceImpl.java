@@ -3,8 +3,13 @@ package com.konsol.core.service.impl;
 import com.konsol.core.domain.AccountUser;
 import com.konsol.core.repository.AccountUserRepository;
 import com.konsol.core.service.AccountUserService;
-import com.konsol.core.service.dto.AccountUserDTO;
+import com.konsol.core.service.MongoQueryService;
+import com.konsol.core.service.api.dto.AccountUserContainer;
+import com.konsol.core.service.api.dto.AccountUserDTO;
+import com.konsol.core.service.api.dto.AccountUserSearchModel;
+import com.konsol.core.service.api.dto.CreateAccountUserDTO;
 import com.konsol.core.service.mapper.AccountUserMapper;
+import java.math.BigDecimal;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,9 +29,16 @@ public class AccountUserServiceImpl implements AccountUserService {
 
     private final AccountUserMapper accountUserMapper;
 
-    public AccountUserServiceImpl(AccountUserRepository accountUserRepository, AccountUserMapper accountUserMapper) {
+    private final MongoQueryService mongoQueryService;
+
+    public AccountUserServiceImpl(
+        AccountUserRepository accountUserRepository,
+        AccountUserMapper accountUserMapper,
+        MongoQueryService mongoQueryService
+    ) {
         this.accountUserRepository = accountUserRepository;
         this.accountUserMapper = accountUserMapper;
+        this.mongoQueryService = mongoQueryService;
     }
 
     @Override
@@ -38,15 +50,22 @@ public class AccountUserServiceImpl implements AccountUserService {
     }
 
     @Override
-    public AccountUserDTO update(AccountUserDTO accountUserDTO) {
-        log.debug("Request to update AccountUser : {}", accountUserDTO);
-        AccountUser accountUser = accountUserMapper.toEntity(accountUserDTO);
+    public AccountUser save(AccountUser accountUser) {
+        return accountUserRepository.save(accountUser);
+    }
+
+    @Override
+    public AccountUserDTO create(CreateAccountUserDTO createAccountUserDTO) {
+        log.debug("Request to save AccountUser : {}", createAccountUserDTO);
+
+        AccountUser accountUser = accountUserMapper.fromCreateAccountUser(createAccountUserDTO);
+
         accountUser = accountUserRepository.save(accountUser);
         return accountUserMapper.toDto(accountUser);
     }
 
     @Override
-    public Optional<AccountUserDTO> partialUpdate(AccountUserDTO accountUserDTO) {
+    public Optional<AccountUserDTO> update(AccountUserDTO accountUserDTO) {
         log.debug("Request to partially update AccountUser : {}", accountUserDTO);
 
         return accountUserRepository
@@ -73,8 +92,84 @@ public class AccountUserServiceImpl implements AccountUserService {
     }
 
     @Override
+    public Optional<AccountUser> findOneDomain(String id) {
+        log.debug("Request to get AccountUser : {}", id);
+        return accountUserRepository.findById(id);
+    }
+
+    @Override
     public void delete(String id) {
         log.debug("Request to delete AccountUser : {}", id);
         accountUserRepository.deleteById(id);
+    }
+
+    /**
+     * Do a monog service query for searching all account users
+     * @param accountUserSearchModel model holds all search model fields
+     * @return AccountUserContainer List of Account User [result]
+     */
+    @Override
+    public AccountUserContainer accountUserSearchPaginate(AccountUserSearchModel accountUserSearchModel) {
+        return this.mongoQueryService.accountUserSearchPaginate(accountUserSearchModel);
+    }
+
+    @Override
+    public void addAccountBalance(String accountId, BigDecimal value) {
+        Optional<AccountUser> optionalAccountUser = this.findOneDomain(accountId);
+        if (optionalAccountUser.isPresent()) {
+            AccountUser accountUser = optionalAccountUser.get();
+
+            if (accountUser.getBalanceOut().compareTo(new BigDecimal(0)) > 0) { // >
+                /**
+                 * has money out
+                 * remove from money out
+                 */
+                if (accountUser.getBalanceOut().compareTo(value) >= 0) {
+                    accountUser.balanceOut(accountUser.getBalanceOut().subtract(value));
+                } else {
+                    BigDecimal afterSubtract = value.subtract(accountUser.getBalanceOut());
+                    accountUser.balanceOut(new BigDecimal(0));
+                    accountUser.balanceIn(afterSubtract);
+                }
+            } else {
+                /**
+                 * has no money out
+                 * add to money in
+                 */
+                accountUser.balanceIn(accountUser.getBalanceIn().add(value));
+            }
+            this.save(accountUser);
+        }
+    }
+
+    @Override
+    public void subtractAccountBalance(String accountId, BigDecimal value) {
+        Optional<AccountUser> optionalAccountUser = this.findOneDomain(accountId);
+        if (optionalAccountUser.isPresent()) {
+            AccountUser accountUser = optionalAccountUser.get();
+
+            if (accountUser.getBalanceIn().compareTo(new BigDecimal(0)) > 0) { // >
+                /**
+                 * has money In
+                 * remove from money In
+                 */
+
+                if (accountUser.getBalanceIn().compareTo(value) >= 0) {
+                    accountUser.balanceIn(accountUser.getBalanceIn().subtract(value));
+                } else {
+                    BigDecimal afterSubtract = value.subtract(accountUser.getBalanceIn());
+                    accountUser.balanceIn(new BigDecimal(0));
+                    accountUser.balanceOut(afterSubtract);
+                }
+            } else {
+                /**
+                 * has no money in
+                 * add to money Out
+                 */
+
+                accountUser.balanceOut(accountUser.getBalanceOut().add(value));
+            }
+            this.save(accountUser);
+        }
     }
 }

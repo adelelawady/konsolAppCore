@@ -1,9 +1,10 @@
 package com.konsol.core.service;
 
 import com.konsol.core.domain.Invoice;
-import com.konsol.core.domain.Money;
+import com.konsol.core.repository.AccountUserRepository;
 import com.konsol.core.repository.MoneyRepository;
 import com.konsol.core.service.api.dto.*;
+import com.konsol.core.service.mapper.AccountUserMapper;
 import com.konsol.core.service.mapper.InvoiceMapper;
 import com.konsol.core.service.mapper.MoneyMapper;
 import com.mongodb.client.AggregateIterable;
@@ -43,6 +44,12 @@ public class MongoQueryService {
 
     @Autowired
     private MoneyRepository moneyRepository;
+
+    @Autowired
+    private AccountUserRepository accountUserRepository;
+
+    @Autowired
+    private AccountUserMapper accountUserMapper;
 
     public MongoQueryService(MongoTemplate mongoTemplate, InvoiceMapper invoiceMapper) {
         this.mongoTemplate = mongoTemplate;
@@ -99,7 +106,7 @@ public class MongoQueryService {
 
             Criteria orCriteria = new Criteria()
                 .orOperator(
-                    Criteria.where("_id").is(objectId),
+                    //Criteria.where("_id").is(objectId),
                     Criteria.where("pk").regex(invoicesSearchModel.getSearchText(), "i"),
                     Criteria.where("total_cost").regex(invoicesSearchModel.getSearchText(), "i"),
                     Criteria.where("total_price").regex(invoicesSearchModel.getSearchText(), "i"),
@@ -340,6 +347,7 @@ public class MongoQueryService {
     /**
      * calculate total price , total cost for all invoice items and
      * sum them
+     *
      * @param invoiceId invoice to calculate
      * @return totalPrice , totalCost , totalNetPrice , totalNetCost
      */
@@ -486,6 +494,7 @@ public class MongoQueryService {
         );
     }
 
+    /* UPDATED */
     /*
    import java.util.Arrays;
 import org.bson.Document;
@@ -534,7 +543,7 @@ import org.bson.Document;
         MongoCollection<Document> collection = mongoTemplate.getCollection("monies");
         //.withCodecRegistry(pojoCodecRegistry);
 
-        List<Document> staticOrList = new ArrayList<>(List.of(new Document("item.$id", new ObjectId("641331ab3a789e767dec3d2c"))));
+        List<Document> staticOrList = new ArrayList<>(List.of(new Document("item.$id", "")));
 
         if (moniesSearchModel.getBankId() != null) {
             staticOrList.add(new Document("bank.$id", new ObjectId(moniesSearchModel.getBankId())));
@@ -549,12 +558,20 @@ import org.bson.Document;
             staticOrList.add(new Document("_id", new ObjectId(moniesSearchModel.getId())));
         }
 
+        // Details
+        if (moniesSearchModel.getDetails() != null) {
+            staticOrList.add(
+                new Document("details", new Document("$regex", moniesSearchModel.getDetails().toString()).append("$options", "i"))
+            );
+        }
+
         List<Document> mainANDList = new ArrayList<>(List.of(new Document("$or", staticOrList)));
 
         // KIND
         if (moniesSearchModel.getKind() != null) {
             mainANDList.add(new Document("kind", moniesSearchModel.getKind().toString()));
         }
+
         // DATE
         if (moniesSearchModel.getDateFrom() != null && moniesSearchModel.getDateTo() != null) {
             mainANDList.add(
@@ -571,8 +588,8 @@ import org.bson.Document;
             Arrays.asList(
                 new Document("$match", new Document("$and", mainANDList)),
                 new Document("$skip", (moniesSearchModel.getPage()) * moniesSearchModel.getSize()),
-                new Document("$limit", moniesSearchModel.getSize()),
-                new Document("$sort", new Document("created_date", -1L))
+                new Document("$limit", moniesSearchModel.getSize())
+                //new Document("$sort", new Document("created_date", -1L))
             )
         );
 
@@ -588,5 +605,119 @@ import org.bson.Document;
         moniesViewDTOContainer.result(moneyRepository.findAllByIdIn(ids).stream().map(moneyMapper::toDto).collect(Collectors.toList()));
 
         return moniesViewDTOContainer;
+    }
+
+    /*
+
+    {
+  $or: [
+    {
+      kind: {
+        $regex: ".*value.*",
+        $options: "i"
+      }
+    },
+    {
+      name: {
+        $regex: ".*lica.*",
+        $options: "i"
+      }
+    },
+    {
+      phone: {
+        $regex: ".*value.*",
+        $options: "i"
+      }
+    },
+    {
+      address: {
+        $regex: ".*value.*",
+        $options: "i"
+      }
+    },
+    {
+      address_2: {
+        $regex: ".*value.*",
+        $options: "i"
+      }
+    }
+  ]
+}
+
+     */
+
+    /**
+     * @param accountUserSearchModel
+     * @return
+     */
+    public AccountUserContainer accountUserSearchPaginate(AccountUserSearchModel accountUserSearchModel) {
+        List<Document> arrays = new ArrayList<>();
+
+        if (accountUserSearchModel.getKind() != null) {
+            arrays.add(new Document("kind", new Document("$regex", accountUserSearchModel.getKind().toString()).append("$options", "i")));
+        }
+
+        if (accountUserSearchModel.getName() != null) {
+            arrays.add(new Document("name", new Document("$regex", accountUserSearchModel.getName()).append("$options", "i")));
+        }
+
+        if (accountUserSearchModel.getPhone() != null) {
+            arrays.add(new Document("phone", new Document("$regex", accountUserSearchModel.getPhone()).append("$options", "i")));
+        }
+
+        if (accountUserSearchModel.getAddress() != null) {
+            arrays.add(new Document("address", new Document("$regex", accountUserSearchModel.getAddress()).append("$options", "i")));
+        }
+
+        if (accountUserSearchModel.getAddress2() != null) {
+            arrays.add(new Document("address_2", new Document("$regex", accountUserSearchModel.getAddress2()).append("$options", "i")));
+        }
+
+        MongoCollection<Document> collection = mongoTemplate.getCollection("accounts");
+        AccountUserContainer accountUserContainer = new AccountUserContainer();
+        if (!arrays.isEmpty()) {
+            //
+            AggregateIterable<Document> result;
+            if (accountUserSearchModel.getPage() != null) {
+                result =
+                    collection.aggregate(
+                        List.of(
+                            new Document("$match", new Document("$or", arrays)),
+                            new Document("$skip", (accountUserSearchModel.getPage()) * accountUserSearchModel.getSize()),
+                            new Document("$limit", accountUserSearchModel.getSize())
+                        )
+                    );
+            } else {
+                result = collection.aggregate(List.of(new Document("$match", new Document("$or", arrays))));
+            }
+
+            if (result.iterator().hasNext()) {
+                MongoCursor<Document> iterator = result.iterator();
+                List<String> ids = new ArrayList<>();
+                while (iterator.hasNext()) {
+                    Document next = iterator.next();
+                    String id = next.getObjectId("_id").toString();
+                    ids.add(id);
+                }
+                accountUserContainer.result(
+                    accountUserRepository.findAllByIdIn(ids).stream().map(accountUserMapper::toDto).collect(Collectors.toList())
+                );
+                accountUserContainer.total((int) accountUserRepository.count());
+            }
+        } else {
+            accountUserContainer.total((int) accountUserRepository.count());
+
+            if (accountUserSearchModel.getPage() != null) {
+                Pageable pageable = PageRequest.of(accountUserSearchModel.getPage(), accountUserSearchModel.getSize());
+                accountUserContainer.result(
+                    accountUserRepository.findAll(pageable).stream().map(accountUserMapper::toDto).collect(Collectors.toList())
+                );
+            } else {
+                accountUserContainer.result(
+                    accountUserRepository.findAll().stream().map(accountUserMapper::toDto).collect(Collectors.toList())
+                );
+            }
+        }
+        return accountUserContainer;
     }
 }

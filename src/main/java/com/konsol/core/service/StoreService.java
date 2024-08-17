@@ -25,20 +25,12 @@ public interface StoreService {
     StoreDTO save(StoreDTO storeDTO);
 
     /**
-     * Updates a store.
-     *
-     * @param storeDTO the entity to update.
-     * @return the persisted entity.
-     */
-    StoreDTO update(StoreDTO storeDTO);
-
-    /**
      * Partially updates a store.
      *
      * @param storeDTO the entity to update partially.
      * @return the persisted entity.
      */
-    Optional<StoreDTO> partialUpdate(StoreDTO storeDTO);
+    Optional<StoreDTO> update(StoreDTO storeDTO);
 
     /**
      * Get all the stores.

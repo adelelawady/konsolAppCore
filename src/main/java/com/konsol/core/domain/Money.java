@@ -30,6 +30,9 @@ public class Money extends AbstractAuditingEntity<String> implements Serializabl
     @Field("kind")
     private MoneyKind kind;
 
+    @Field("details")
+    private String Details;
+
     @DecimalMin(value = "0")
     @Field("money_in")
     private BigDecimal moneyIn;
@@ -128,6 +131,14 @@ public class Money extends AbstractAuditingEntity<String> implements Serializabl
     public Money bank(Bank bank) {
         this.setBank(bank);
         return this;
+    }
+
+    public String getDetails() {
+        return Details;
+    }
+
+    public void setDetails(String details) {
+        Details = details;
     }
 
     public Item getItem() {

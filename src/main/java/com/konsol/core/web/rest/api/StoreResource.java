@@ -80,40 +80,6 @@ public class StoreResource implements StoresApiDelegate {
     }
 
     /**
-     * {@code PUT  /stores/:id} : Updates an existing store.
-     *
-     * @param id the id of the storeDTO to save.
-     * @param storeDTO the storeDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated storeDTO,
-     * or with status {@code 400 (Bad Request)} if the storeDTO is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the storeDTO couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
-     */
-    @Override
-    public ResponseEntity<StoreDTO> updateStore(
-        @PathVariable(value = "id", required = false) final String id,
-        @Valid @RequestBody StoreDTO storeDTO
-    ) {
-        log.debug("REST request to update Store : {}, {}", id, storeDTO);
-        if (storeDTO.getId() == null) {
-            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
-        }
-        if (!Objects.equals(id, storeDTO.getId())) {
-            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
-        }
-
-        if (!storeRepository.existsById(id)) {
-            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
-        }
-
-        StoreDTO result = storeService.update(storeDTO);
-        return ResponseEntity
-            .ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, storeDTO.getId()))
-            .body(result);
-    }
-
-    /**
      * {@code PATCH  /stores/:id} : Partial updates given fields of an existing store, field will ignore if it is null
      *
      * @param id the id of the storeDTO to save.
@@ -125,7 +91,7 @@ public class StoreResource implements StoresApiDelegate {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @Override
-    public ResponseEntity<StoreDTO> partialUpdateStore(
+    public ResponseEntity<StoreDTO> updateStore(
         @PathVariable(value = "id", required = false) final String id,
         @NotNull @RequestBody StoreDTO storeDTO
     ) {
@@ -141,7 +107,7 @@ public class StoreResource implements StoresApiDelegate {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<StoreDTO> result = storeService.partialUpdate(storeDTO);
+        Optional<StoreDTO> result = storeService.update(storeDTO);
 
         return ResponseUtil.wrapOrNotFound(
             result,

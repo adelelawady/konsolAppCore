@@ -38,15 +38,7 @@ public class BankServiceImpl implements BankService {
     }
 
     @Override
-    public BankDTO update(BankDTO bankDTO) {
-        log.debug("Request to update Bank : {}", bankDTO);
-        Bank bank = bankMapper.toEntity(bankDTO);
-        bank = bankRepository.save(bank);
-        return bankMapper.toDto(bank);
-    }
-
-    @Override
-    public Optional<BankDTO> partialUpdate(BankDTO bankDTO) {
+    public Optional<BankDTO> update(BankDTO bankDTO) {
         log.debug("Request to partially update Bank : {}", bankDTO);
 
         return bankRepository
@@ -70,6 +62,12 @@ public class BankServiceImpl implements BankService {
     public Optional<BankDTO> findOne(String id) {
         log.debug("Request to get Bank : {}", id);
         return bankRepository.findById(id).map(bankMapper::toDto);
+    }
+
+    @Override
+    public Optional<Bank> findOneDomain(String id) {
+        log.debug("Request to get Bank : {}", id);
+        return bankRepository.findById(id);
     }
 
     @Override

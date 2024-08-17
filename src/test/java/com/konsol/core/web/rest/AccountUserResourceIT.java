@@ -10,7 +10,7 @@ import com.konsol.core.IntegrationTest;
 import com.konsol.core.domain.AccountUser;
 import com.konsol.core.domain.enumeration.AccountKind;
 import com.konsol.core.repository.AccountUserRepository;
-import com.konsol.core.service.dto.AccountUserDTO;
+import com.konsol.core.service.api.dto.AccountUserDTO;
 import com.konsol.core.service.mapper.AccountUserMapper;
 import java.math.BigDecimal;
 import java.util.List;

@@ -41,21 +41,21 @@ public class SystemResource implements SysApiDelegate {
     }
 
     public SystemConfiguration getSystemConfigurations() {
-        List<SystemConfiguration> systemConfigurations = systemConfigurationRepository.findAll();
-        if (systemConfigurations.isEmpty()) {
-            SystemConfiguration systemConfigurationsUpdate = new SystemConfiguration();
-            SysOptions sysOptions = new SysOptions();
-            sysOptions.setContactInfo(new ContactInfo());
-            GlobalSettings globalSettings = new GlobalSettings();
-            globalSettings.setSalesInvoiceOptions(new GlobalSettingsSalesInvoiceOptions());
-            globalSettings.setPurchaseInvoiceOptions(new GlobalSettingsPurchaseInvoiceOptions());
-            globalSettings.setItemsOptions(new GlobalSettingsItemsOptions());
-            sysOptions.setSettings(globalSettings);
-            systemConfigurationsUpdate.setSysOptions(sysOptions);
-            return systemConfigurationRepository.save(systemConfigurationsUpdate);
-        } else {
-            Optional<SystemConfiguration> systemConfigurationOptional = systemConfigurations.stream().findFirst();
-            return systemConfigurationOptional.orElseGet(null);
-        }
+        // List<SystemConfiguration> systemConfigurations = systemConfigurationRepository.findAll();
+        // if (systemConfigurations.isEmpty()) {
+        SystemConfiguration systemConfigurationsUpdate = new SystemConfiguration();
+        SysOptions sysOptions = new SysOptions();
+        sysOptions.setContactInfo(new ContactInfo());
+        GlobalSettings globalSettings = new GlobalSettings();
+        globalSettings.setSalesInvoiceOptions(new GlobalSettingsSalesInvoiceOptions());
+        globalSettings.setPurchaseInvoiceOptions(new GlobalSettingsPurchaseInvoiceOptions());
+        globalSettings.setItemsOptions(new GlobalSettingsItemsOptions());
+        sysOptions.setSettings(globalSettings);
+        systemConfigurationsUpdate.setSysOptions(sysOptions);
+        return systemConfigurationRepository.save(systemConfigurationsUpdate);
+        // } else {
+        //     Optional<SystemConfiguration> systemConfigurationOptional = systemConfigurations.stream().findFirst();
+        //     return systemConfigurationOptional.orElseGet(null);
+        // }
     }
 }

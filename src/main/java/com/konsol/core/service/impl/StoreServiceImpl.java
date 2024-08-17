@@ -80,15 +80,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public StoreDTO update(StoreDTO storeDTO) {
-        log.debug("Request to update Store : {}", storeDTO);
-        Store store = storeMapper.toEntity(storeDTO);
-        store = storeRepository.save(store);
-        return storeMapper.toDto(store);
-    }
-
-    @Override
-    public Optional<StoreDTO> partialUpdate(StoreDTO storeDTO) {
+    public Optional<StoreDTO> update(StoreDTO storeDTO) {
         log.debug("Request to partially update Store : {}", storeDTO);
 
         return storeRepository

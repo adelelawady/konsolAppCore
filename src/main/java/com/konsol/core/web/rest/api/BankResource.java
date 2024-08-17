@@ -21,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -30,8 +31,7 @@ import tech.jhipster.web.util.ResponseUtil;
 /**
  * REST controller for managing {@link com.konsol.core.domain.Bank}.
  */
-@RestController
-@RequestMapping("/api")
+@Service
 public class BankResource implements BanksApiDelegate {
 
     private final Logger log = LoggerFactory.getLogger(BankResource.class);
@@ -76,40 +76,6 @@ public class BankResource implements BanksApiDelegate {
     }
 
     /**
-     * {@code PUT  /banks/:id} : Updates an existing bank.
-     *
-     * @param id the id of the bankDTO to save.
-     * @param bankDTO the bankDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated bankDTO,
-     * or with status {@code 400 (Bad Request)} if the bankDTO is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the bankDTO couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
-     */
-    @Override
-    public ResponseEntity<BankDTO> updateBank(
-        @PathVariable(value = "id", required = false) final String id,
-        @Valid @RequestBody BankDTO bankDTO
-    ) {
-        log.debug("REST request to update Bank : {}, {}", id, bankDTO);
-        if (bankDTO.getId() == null) {
-            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
-        }
-        if (!Objects.equals(id, bankDTO.getId())) {
-            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
-        }
-
-        if (!bankRepository.existsById(id)) {
-            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
-        }
-
-        BankDTO result = bankService.update(bankDTO);
-        return ResponseEntity
-            .ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, bankDTO.getId()))
-            .body(result);
-    }
-
-    /**
      * {@code PATCH  /banks/:id} : Partial updates given fields of an existing bank, field will ignore if it is null
      *
      * @param id the id of the bankDTO to save.
@@ -121,7 +87,7 @@ public class BankResource implements BanksApiDelegate {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @Override
-    public ResponseEntity<BankDTO> partialUpdateBank(
+    public ResponseEntity<BankDTO> updateBank(
         @PathVariable(value = "id", required = false) final String id,
         @NotNull @RequestBody BankDTO bankDTO
     ) {
@@ -137,7 +103,7 @@ public class BankResource implements BanksApiDelegate {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<BankDTO> result = bankService.partialUpdate(bankDTO);
+        Optional<BankDTO> result = bankService.update(bankDTO);
 
         return ResponseUtil.wrapOrNotFound(result, HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, bankDTO.getId()));
     }

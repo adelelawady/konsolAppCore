@@ -1,5 +1,6 @@
 package com.konsol.core.service;
 
+import com.konsol.core.service.api.dto.CreateMoneyDTO;
 import com.konsol.core.service.api.dto.MoneyDTO;
 import com.konsol.core.service.api.dto.MoniesSearchModel;
 import com.konsol.core.service.api.dto.MoniesViewDTOContainer;
@@ -21,20 +22,12 @@ public interface MoneyService {
     MoneyDTO save(MoneyDTO moneyDTO);
 
     /**
-     * Updates a money.
-     *
-     * @param moneyDTO the entity to update.
-     * @return the persisted entity.
-     */
-    MoneyDTO update(MoneyDTO moneyDTO);
-
-    /**
      * Partially updates a money.
      *
      * @param moneyDTO the entity to update partially.
      * @return the persisted entity.
      */
-    Optional<MoneyDTO> partialUpdate(MoneyDTO moneyDTO);
+    Optional<MoneyDTO> update(MoneyDTO moneyDTO);
 
     /**
      * Get all the monies.
@@ -60,9 +53,15 @@ public interface MoneyService {
     void delete(String id);
 
     /**
+     * create new money and save it to system
+     * @param createMoneyDTO the entity to be created
+     * @return the persisted entity.
+     */
+    MoneyDTO createMoney(CreateMoneyDTO createMoneyDTO);
+    /**
      * search money daftar
      * @param moniesSearchModel model holds all search model fields
      * @return MoniesViewDTOContainer
      */
-    MoniesViewDTOContainer moniesViewSearchPaginate(MoniesSearchModel moniesSearchModel);
+    // MoniesViewDTOContainer moniesViewSearchPaginate(MoniesSearchModel moniesSearchModel);
 }
