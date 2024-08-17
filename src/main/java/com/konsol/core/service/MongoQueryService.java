@@ -10,11 +10,14 @@ import com.konsol.core.service.mapper.MoneyMapper;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
+import com.mongodb.client.model.Aggregates;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.bson.BsonDocument;
+import org.bson.BsonValue;
 import org.bson.Document;
 import org.bson.types.Decimal128;
 import org.bson.types.ObjectId;
@@ -543,13 +546,13 @@ import org.bson.Document;
         MongoCollection<Document> collection = mongoTemplate.getCollection("monies");
         //.withCodecRegistry(pojoCodecRegistry);
 
-        List<Document> staticOrList = new ArrayList<>(List.of(new Document("item.$id", "")));
+        List<Document> staticOrList = new ArrayList<>();
 
         if (moniesSearchModel.getBankId() != null) {
             staticOrList.add(new Document("bank.$id", new ObjectId(moniesSearchModel.getBankId())));
         }
         if (moniesSearchModel.getAccountId() != null) {
-            staticOrList.add(new Document("account.$id", new ObjectId(moniesSearchModel.getAccountId())));
+            staticOrList.add(new Document("account._id", new ObjectId(moniesSearchModel.getAccountId())));
         }
         if (moniesSearchModel.getPk() != null) {
             staticOrList.add(new Document("pk", moniesSearchModel.getPk()));
@@ -565,7 +568,13 @@ import org.bson.Document;
             );
         }
 
-        List<Document> mainANDList = new ArrayList<>(List.of(new Document("$or", staticOrList)));
+        List<Document> mainANDList = new ArrayList<>();
+
+        if (!staticOrList.isEmpty()) {
+            mainANDList = new ArrayList<>(List.of(new Document("$or", staticOrList)));
+        } else {
+            mainANDList = new ArrayList<>();
+        }
 
         // KIND
         if (moniesSearchModel.getKind() != null) {
@@ -584,15 +593,24 @@ import org.bson.Document;
 
         //TODO important info here for pagination using mongo java service api
 
-        AggregateIterable<Document> result = collection.aggregate(
-            Arrays.asList(
-                new Document("$match", new Document("$and", mainANDList)),
-                new Document("$skip", (moniesSearchModel.getPage()) * moniesSearchModel.getSize()),
-                new Document("$limit", moniesSearchModel.getSize())
-                //new Document("$sort", new Document("created_date", -1L))
-            )
-        );
+        List<Document> resultList;
 
+        if (!mainANDList.isEmpty()) {
+            resultList =
+                Arrays.asList(
+                    new Document("$match", new Document("$and", mainANDList)),
+                    new Document("$skip", (moniesSearchModel.getPage()) * moniesSearchModel.getSize()),
+                    new Document("$limit", moniesSearchModel.getSize())
+                );
+        } else {
+            resultList =
+                Arrays.asList(
+                    new Document("$skip", (moniesSearchModel.getPage()) * moniesSearchModel.getSize()),
+                    new Document("$limit", moniesSearchModel.getSize())
+                );
+        }
+
+        AggregateIterable<Document> result = collection.aggregate(resultList);
         MoniesViewDTOContainer moniesViewDTOContainer = new MoniesViewDTOContainer();
 
         MongoCursor<Document> iterator = result.iterator();
@@ -602,7 +620,17 @@ import org.bson.Document;
             String id = next.getObjectId("_id").toString();
             ids.add(id);
         }
-        moniesViewDTOContainer.result(moneyRepository.findAllByIdIn(ids).stream().map(moneyMapper::toDto).collect(Collectors.toList()));
+        Sort sort;
+        if (moniesSearchModel.getSortOrder().equals(MoniesSearchModel.SortOrderEnum.DESC)) {
+            sort = Sort.by(Sort.Direction.DESC, moniesSearchModel.getSortField());
+        } else {
+            sort = Sort.by(Sort.Direction.ASC, moniesSearchModel.getSortField());
+        }
+
+        moniesViewDTOContainer.total((int) moneyRepository.count());
+        moniesViewDTOContainer.result(
+            moneyRepository.findAllByIdIn(ids, sort).stream().map(moneyMapper::toDto).collect(Collectors.toList())
+        );
 
         return moniesViewDTOContainer;
     }

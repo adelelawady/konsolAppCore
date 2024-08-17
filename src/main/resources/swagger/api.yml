@@ -745,8 +745,6 @@ paths:
     parameters: []
   /monies/view:
     post:
-      tags:
-        - invoice-resource
       operationId: MoniesViewSearchPaginate
       requestBody:
         content:
@@ -764,6 +762,8 @@ paths:
       description: invoice view dto search and pagination and sort request
       summary: 'Search Monies [ pagination , time , plaintext , sort ] { view model dto }'
       parameters: []
+      tags:
+        - money-resource
     parameters: []
   /items:
     get:
@@ -2749,13 +2749,16 @@ components:
           default: 0
         size:
           type: integer
-          default: 10
+          default: 100
         sortField:
           type: string
-          default: null
+          default: createdDate
         sortOrder:
           type: string
-          default: null
+          default: DESC
+          enum:
+            - DESC
+            - ASC
         kind:
           type: string
           description: text to seach for
@@ -2783,6 +2786,7 @@ components:
           type: string
           x-stoplight:
             id: 7v24ok939m287
+          default: null
     ItemViewDTOContainer:
       title: ItemViewDTOContainer
       x-stoplight:
@@ -2834,6 +2838,11 @@ components:
           type: integer
         totalMoneyOut:
           type: number
+        total:
+          type: integer
+          x-stoplight:
+            id: kzupbqzgmizzz
+          default: 0
     StoreNameDTO:
       title: StoreNameDTO
       x-stoplight:

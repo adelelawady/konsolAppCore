@@ -49,7 +49,7 @@ public class Money extends AbstractAuditingEntity<String> implements Serializabl
     @Field("item")
     private Item item;
 
-    @DBRef
+    //@DBRef
     @Field("account")
     private AccountUser account;
 
