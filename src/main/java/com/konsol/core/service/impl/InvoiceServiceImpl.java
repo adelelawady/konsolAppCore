@@ -67,8 +67,6 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     private final MongoTemplate mongoTemplate;
 
-    private SystemConfiguration systemConfiguration;
-
     private final SystemResource systemResource;
 
     public InvoiceServiceImpl(
@@ -97,7 +95,6 @@ public class InvoiceServiceImpl implements InvoiceService {
         this.purchaseService = purchaseService;
         this.mongoTemplate = mongoTemplate;
         this.systemResource = systemResource;
-        systemConfiguration = systemResource.getSystemConfigurations();
     }
 
     @Override
@@ -208,7 +205,7 @@ public class InvoiceServiceImpl implements InvoiceService {
          * item
          */
         if (!itemOp.isPresent()) {
-            throw new ItemNotFoundException(null, null);
+            throw new ItemNotFoundException(null);
         }
         invoiceItem.setItem(itemOp.get());
 
@@ -381,15 +378,18 @@ public class InvoiceServiceImpl implements InvoiceService {
          * invoice
          */
         if (!invoiceOp.isPresent()) {
-            throw new InvoiceNotFoundException(null, null);
+            throw new InvoiceNotFoundException(null);
         }
 
         boolean isPriceCalc = invoiceOp.get().getKind().equals(InvoiceKind.SALE);
         boolean isCostCalc = invoiceOp.get().getKind().equals(InvoiceKind.PURCHASE);
 
-        boolean checkQty =
-            invoiceOp.get().getKind().equals(InvoiceKind.SALE) &&
-            systemConfiguration.getSysOptions().getSettings().getSalesInvoiceOptions().getCheckItemQty();
+        boolean checkQty = invoiceOp.get().getKind().equals(InvoiceKind.SALE) && true;
+
+        /**
+         * TODO getCheckItemQty
+         */
+        // systemConfiguration.getSysOptions().getSettings().getSalesInvoiceOptions().getCheckItemQty();
 
         InvoiceItem invFound = null;
         if (createInvoiceItemDTO.getUnitId() != null) {
@@ -420,7 +420,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                     ((createInvoiceItemDTO.getQty().multiply(invFound.getUnitPieces())).add(totalInvoiceItemitemQtyInInvoice))
                 )
             ) {
-                throw new ItemQtyException("مشكلة ف كمية الصنف", "لا يوجد ما يكفي من الصنف ف المخازن", null);
+                throw new ItemQtyException("مشكلة ف كمية الصنف", "لا يوجد ما يكفي من الصنف ف المخازن");
             }
 
             /**
@@ -443,7 +443,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         if (
             checkQty && !storeService.checkItemQtyAvailable(createInvoiceItemDTO.getItemId(), createInvoiceItemDTO.getQty().add(qtyPieces))
         ) {
-            throw new ItemQtyException("مشكلة ف كمية الصنف", "لا يوجد ما يكفي من الصنف ف المخازن", null);
+            throw new ItemQtyException("مشكلة ف كمية الصنف", "لا يوجد ما يكفي من الصنف ف المخازن");
         }
 
         /**
@@ -515,7 +515,7 @@ public class InvoiceServiceImpl implements InvoiceService {
          * invoice
          */
         if (!invoiceOp.isPresent()) {
-            throw new InvoiceNotFoundException(null, null);
+            throw new InvoiceNotFoundException(null);
         }
 
         Invoice invoice = invoiceOp.get();
@@ -577,15 +577,19 @@ public class InvoiceServiceImpl implements InvoiceService {
          * invoice
          */
         if (!invoiceOp.isPresent()) {
-            throw new InvoiceNotFoundException(null, null);
+            throw new InvoiceNotFoundException(null);
         }
 
         InvoicePrintDTO invoicePrintDTO = new InvoicePrintDTO();
         invoicePrintDTO.setInvoice(getMapper().toDto(invoiceOp.get()));
 
-        SystemConfiguration systemConfiguration = systemResource.getSystemConfigurations();
+        // SystemConfiguration systemConfiguration = systemResource.getSystemConfigurations();
 
-        invoicePrintDTO.globalInfo(systemConfiguration.getSysOptions().getContactInfo());
+        // invoicePrintDTO.globalInfo(systemConfiguration.getSysOptions().getContactInfo());
+
+        /**
+         * TODO Options globalInfo
+         */
 
         return invoicePrintDTO;
     }
@@ -596,14 +600,20 @@ public class InvoiceServiceImpl implements InvoiceService {
             return invoice;
         }
 
-        boolean updateItemQtyAfterSave = systemConfiguration
-            .getSysOptions()
-            .getSettings()
-            .getSalesInvoiceOptions()
-            .getUpdateItemQtyAfterSave();
+        boolean updateItemQtyAfterSave = true;
+
+        //systemConfiguration
+        //.getSysOptions()
+        //.getSettings()
+        //.getSalesInvoiceOptions()
+        //.getUpdateItemQtyAfterSave();
+
+        /**
+         * TODO Options getUpdateItemQtyAfterSave
+         */
 
         if (invoice.getInvoiceItems() == null || invoice.getInvoiceItems().isEmpty()) {
-            throw new InvoiceException("مشكلة فاتورة ", "لايوجد اصناف ف الفاتورة", null);
+            throw new InvoiceException("مشكلة فاتورة ", "لايوجد اصناف ف الفاتورة");
         }
 
         invoice.setActive(true);
@@ -659,11 +669,14 @@ public class InvoiceServiceImpl implements InvoiceService {
             }
         }
 
-        Thread thread = new Thread(() -> {
+        /**
+         * TODO Options Update sysytem configurations
+         */
+        /* Thread thread = new Thread(() -> {
             systemConfiguration = systemResource.getSystemConfigurations();
         });
         thread.start();
-
+        */
         return invoiceRepository.save(invoice);
     }
 
@@ -675,7 +688,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     public Invoice saveInvoice(String invoiceId) {
         Optional<Invoice> invoiceOptional = invoiceRepository.findById(invoiceId);
         if (!invoiceOptional.isPresent()) {
-            throw new InvoiceNotFoundException("الفاتودة غير موجودة", null);
+            throw new InvoiceNotFoundException("الفاتودة غير موجودة");
         }
         return this.saveInvoice(invoiceOptional.get());
     }
@@ -913,7 +926,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     public List<InvoiceItemDTO> getInvoiceItems(String id) {
         Optional<Invoice> invoiceItem = findOneDomain(id);
         if (!invoiceItem.isPresent()) {
-            throw new InvoiceNotFoundException(null, null);
+            throw new InvoiceNotFoundException(null);
         }
         return invoiceItem.get().getInvoiceItems().stream().map(invoiceItemMapper::toDto).collect(Collectors.toList());
     }

@@ -2892,6 +2892,63 @@ components:
         showTimer:
           type: boolean
           default: true
+    ApplicationConfigurationModel:
+      title: ApplicationConfigurationModel
+      x-stoplight:
+        id: c621r5iucgzx4
+      type: object
+      description: Main UI Application options and settings
+      properties:
+        ServerOptions:
+          type: object
+          x-stoplight:
+            id: h6tk1lyhz47r3
+          properties:
+            AutoStartServer:
+              type: boolean
+              x-stoplight:
+                id: x9uhal9yol9kc
+              default: true
+            AutoStartDataBase:
+              type: boolean
+              x-stoplight:
+                id: gtaeqq5ab5k79
+              default: true
+            ServerStartTimeOut:
+              type: integer
+              x-stoplight:
+                id: pgvn0vilwjh32
+              default: 5000
+            DataBaseStartTimeOut:
+              type: integer
+              x-stoplight:
+                id: 5wjkfybp35wjs
+              default: 5000
+            JavaFileLocation:
+              type: string
+              x-stoplight:
+                id: 0i2faakagxvmp
+              default: java.exe
+            serverFileLocation:
+              type: string
+              x-stoplight:
+                id: xje7a9gipye1r
+              default: server/server.jar
+            AutoKillOldServices:
+              type: boolean
+              x-stoplight:
+                id: obpp5h1nosv96
+              default: true
+            MongoFileLocation:
+              type: string
+              x-stoplight:
+                id: 8ybdgczplsdx4
+              default: mongo.exe
+            MongoDbPath:
+              type: string
+              x-stoplight:
+                id: kmjswb6kz2vuc
+              default: db
     InvoicePrintDTO:
       title: InvoicePrintDTO
       x-stoplight:

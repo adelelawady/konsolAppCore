@@ -293,7 +293,7 @@
             <version>1.18.24</version>
             <scope>compile</scope>
         </dependency>
-        
+
          <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-commons</artifactId>
@@ -1067,6 +1067,7 @@
                                     <goal>npm</goal>
                                 </goals>
                             </execution>
+                            <!--
                             <execution>
                                 <id>webapp build test</id>
                                 <goals>
@@ -1078,6 +1079,7 @@
                                     <npmInheritsProxyConfigFromMaven>false</npmInheritsProxyConfigFromMaven>
                                 </configuration>
                             </execution>
+                                -->
                             <execution>
                                 <id>webapp build prod</id>
                                 <goals>

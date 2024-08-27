@@ -1,6 +1,5 @@
 package com.konsol.core.service.mapper;
 
-import com.konsol.core.domain.SystemConfiguration;
 import com.konsol.core.service.api.dto.SysOptions;
 import java.util.ArrayList;
 import java.util.List;

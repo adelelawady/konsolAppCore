@@ -121,7 +121,7 @@ public class MoneyServiceImpl implements MoneyService {
          */
 
         if (createMoneyDTO.getKind().getValue().isEmpty()) {
-            throw new MoneyException("Create Money Exception", "Money Kind Not Found", null);
+            throw new MoneyException("Create Money Exception", "Money Kind Not Found");
         }
 
         /**
@@ -131,7 +131,7 @@ public class MoneyServiceImpl implements MoneyService {
             (createMoneyDTO.getAccountId() == null || createMoneyDTO.getAccountId().isEmpty()) &&
             (createMoneyDTO.getBankId() == null || createMoneyDTO.getBankId().isEmpty())
         ) {
-            throw new MoneyException("Create Money Exception", "account or bank must be exist", null);
+            throw new MoneyException("Create Money Exception", "account or bank must be exist");
         }
 
         /**
@@ -162,7 +162,7 @@ public class MoneyServiceImpl implements MoneyService {
             if (optionalAccountUser.isPresent()) {
                 money.setAccount(optionalAccountUser.get());
             } else {
-                throw new MoneyException("Create Money Exception", "Account Not Found", null);
+                throw new MoneyException("Create Money Exception", "Account Not Found");
             }
         }
 
@@ -171,7 +171,7 @@ public class MoneyServiceImpl implements MoneyService {
             if (bankOptional.isPresent()) {
                 money.setBank(bankOptional.get());
             } else {
-                throw new MoneyException("Create Money Exception", "Bank Not Found", null);
+                throw new MoneyException("Create Money Exception", "Bank Not Found");
             }
         }
 

@@ -42,6 +42,8 @@ spring:
     password:
   thymeleaf:
     cache: true
+  application:
+    version: 1.0.0
 
 # ===================================================================
 # To enable TLS in production, generate a certificate using:
@@ -114,4 +116,3 @@ jhipster:
 # https://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
-# application:

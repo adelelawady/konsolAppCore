@@ -157,14 +157,14 @@ public class ItemServiceImpl implements ItemService {
             /**
              * throw must have basic unit
              */
-            throw new ItemUnitException("مشكلة في وحدة الصنف", "يجب ان يحتوي الصنف علي وحدة اساسية", null);
+            throw new ItemUnitException("مشكلة في وحدة الصنف", "يجب ان يحتوي الصنف علي وحدة اساسية");
         }
 
         if (hasMultiBasicUnit) {
             /**
              * throw must have only one basic unit
              */
-            throw new ItemUnitException("مشكلة في وحدة الصنف", "يجب ان يحتوي الصنف علي وحدة اساسية واحدة فقط", null);
+            throw new ItemUnitException("مشكلة في وحدة الصنف", "يجب ان يحتوي الصنف علي وحدة اساسية واحدة فقط");
         }
     }
 
@@ -479,7 +479,7 @@ public class ItemServiceImpl implements ItemService {
         Optional<Item> itemFound = itemRepository.findById(id);
 
         if (!itemFound.isPresent()) {
-            throw new ItemNotFoundException(null, null);
+            throw new ItemNotFoundException(null);
         }
         return itemFound.get().getItemUnits().stream().map(itemUnitMapper::toDto).collect(Collectors.toList());
     }

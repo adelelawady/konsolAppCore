@@ -1,12 +1,7 @@
 package com.konsol.core.web.rest.api;
 
-import com.konsol.core.domain.SystemConfiguration;
-import com.konsol.core.repository.SystemConfigurationRepository;
 import com.konsol.core.service.api.dto.*;
-import com.konsol.core.service.mapper.SystemConfigurationMapper;
 import com.konsol.core.web.api.SysApiDelegate;
-import java.util.List;
-import java.util.Optional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -16,30 +11,30 @@ import org.springframework.stereotype.Service;
 @Service
 public class SystemResource implements SysApiDelegate {
 
-    private final SystemConfigurationRepository systemConfigurationRepository;
+    //    private final SystemConfigurationRepository systemConfigurationRepository;
 
-    private final SystemConfigurationMapper systemConfigurationMapper;
+    //  private final SystemConfigurationMapper systemConfigurationMapper;
 
     public SystemResource(
-        SystemConfigurationRepository systemConfigurationRepository,
-        SystemConfigurationMapper systemConfigurationMapper
+        // SystemConfigurationRepository systemConfigurationRepository,
+        // SystemConfigurationMapper systemConfigurationMapper
     ) {
-        this.systemConfigurationRepository = systemConfigurationRepository;
-        this.systemConfigurationMapper = systemConfigurationMapper;
+        // this.systemConfigurationRepository = systemConfigurationRepository;
+        // this.systemConfigurationMapper = systemConfigurationMapper;
     }
 
     @Override
     public ResponseEntity<SysOptions> updateGlobalSystemOptions(SysOptions sysOptions) {
-        SystemConfiguration systemConfiguration = getSystemConfigurations();
-        systemConfiguration.setSysOptions(sysOptions);
-        return ResponseEntity.ok(systemConfigurationRepository.save(systemConfiguration).getSysOptions());
+        //  SystemConfiguration systemConfiguration = getSystemConfigurations();
+        //  systemConfiguration.setSysOptions(sysOptions);
+        return ResponseEntity.ok(null);
     }
 
     @Override
     public ResponseEntity<SysOptions> getGlobalSystemOptions() {
-        return ResponseEntity.ok(getSystemConfigurations().getSysOptions());
+        return ResponseEntity.ok(null);
     }
-
+    /*
     public SystemConfiguration getSystemConfigurations() {
         // List<SystemConfiguration> systemConfigurations = systemConfigurationRepository.findAll();
         // if (systemConfigurations.isEmpty()) {
@@ -52,10 +47,12 @@ public class SystemResource implements SysApiDelegate {
         globalSettings.setItemsOptions(new GlobalSettingsItemsOptions());
         sysOptions.setSettings(globalSettings);
         systemConfigurationsUpdate.setSysOptions(sysOptions);
-        return systemConfigurationRepository.save(systemConfigurationsUpdate);
+        return null;
         // } else {
         //     Optional<SystemConfiguration> systemConfigurationOptional = systemConfigurations.stream().findFirst();
         //     return systemConfigurationOptional.orElseGet(null);
         // }
     }
+    */
+
 }

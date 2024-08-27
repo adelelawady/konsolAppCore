@@ -96,6 +96,7 @@ mongock:
 spring:
   application:
     name: KonsolCore
+    version: 1.0.0
   profiles:
     # The commented value for `active` can be replaced with valid Spring profiles to load.
     # Otherwise, it will be filled in by maven when building the JAR file
@@ -190,5 +191,3 @@ jhipster:
 # More documentation is available at:
 # https://www.jhipster.tech/common-application-properties/
 # ===================================================================
-
-# application:

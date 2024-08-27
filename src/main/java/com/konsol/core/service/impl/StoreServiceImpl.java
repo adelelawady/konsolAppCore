@@ -189,7 +189,7 @@ public class StoreServiceImpl implements StoreService {
 
         Optional<Item> item = itemService.findOneById(ItemId);
         if (!item.isPresent()) {
-            throw new ItemNotFoundException(String.format("الصنف {0} غير متاح لتعديل سجلات المخازن", ItemId), null);
+            throw new ItemNotFoundException(String.format("الصنف {0} غير متاح لتعديل سجلات المخازن", ItemId));
         }
 
         Item item1 = item.get();
@@ -241,11 +241,11 @@ public class StoreServiceImpl implements StoreService {
     public void subtractItemQtyFromStores(String ItemId, BigDecimal qty) {
         Optional<Item> item = itemService.findOneById(ItemId);
         if (item.isEmpty()) {
-            throw new ItemNotFoundException(String.format("الصنف {0} غير متاح لتعديل سجلات المخازن", ItemId), null);
+            throw new ItemNotFoundException(String.format("الصنف {0} غير متاح لتعديل سجلات المخازن", ItemId));
         }
 
         if (!checkItemQtyAvailable(ItemId, qty)) {
-            throw new ItemQtyException("مشكلة ف كمية الصنف", "لا يوجد ما يكفي من الصنف ف المخازن", null);
+            throw new ItemQtyException("مشكلة ف كمية الصنف", "لا يوجد ما يكفي من الصنف ف المخازن");
         }
 
         for (StoreItemDTO storeItemDTO : this.getAllStoresItemsForItem(ItemId)) {
@@ -271,7 +271,7 @@ public class StoreServiceImpl implements StoreService {
     public void addItemQtyToStores(String ItemId, BigDecimal qty, String storeId) {
         Optional<Item> item = itemService.findOneById(ItemId);
         if (!item.isPresent()) {
-            throw new ItemNotFoundException(String.format("الصنف {0} غير متاح لتعديل سجلات المخازن", ItemId), null);
+            throw new ItemNotFoundException(String.format("الصنف {0} غير متاح لتعديل سجلات المخازن", ItemId));
         }
 
         if (storeId != null) {
@@ -321,7 +321,7 @@ public class StoreServiceImpl implements StoreService {
 
         Optional<Item> item = itemService.findOneById(storeItemIdOnlyDTO.getItemId());
         if (!item.isPresent()) {
-            throw new ItemNotFoundException(String.format("الصنف {0} غير متاح لتعديل سجلات المخازن", storeItemIdOnlyDTO.getItemId()), null);
+            throw new ItemNotFoundException(String.format("الصنف {0} غير متاح لتعديل سجلات المخازن", storeItemIdOnlyDTO.getItemId()));
         }
 
         /**
@@ -330,7 +330,7 @@ public class StoreServiceImpl implements StoreService {
         Optional<Store> store = this.storeRepository.findById(storeItemIdOnlyDTO.getStoreId());
 
         if (!store.isPresent()) {
-            throw new StoreNotFoundException(String.format("المخزن {0} غير متاح لتعديل سجلاته", storeItemIdOnlyDTO.getStoreId()), null);
+            throw new StoreNotFoundException(String.format("المخزن {0} غير متاح لتعديل سجلاته", storeItemIdOnlyDTO.getStoreId()));
         }
         /**
          * get and check store item
