@@ -188,19 +188,10 @@ public class MoneyServiceImpl implements MoneyService {
                 switch (createMoneyDTO.getKind()) {
                     case PAYMENT:
                         {
-                            /**
-                             * todo something money
-                             * Make account changes
-                             * Make Bank Changes
-                             */
                             accountUserService.addAccountBalance(accountUser.getId(), money.getMoneyIn());
                         }
                     case RECEIPT:
                         {
-                            /**
-                             * Make account changes
-                             * Make Bank Changes
-                             */
                             accountUserService.subtractAccountBalance(accountUser.getId(), money.getMoneyOut());
                         }
                 }

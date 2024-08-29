@@ -387,7 +387,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         boolean checkQty = invoiceOp.get().getKind().equals(InvoiceKind.SALE) && true;
 
         /**
-         * TODO getCheckItemQty
+         * TODO Options getCheckItemQty
          */
         // systemConfiguration.getSysOptions().getSettings().getSalesInvoiceOptions().getCheckItemQty();
 

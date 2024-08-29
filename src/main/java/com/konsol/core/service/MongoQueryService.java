@@ -591,8 +591,6 @@ import org.bson.Document;
             );
         }
 
-        //TODO important info here for pagination using mongo java service api
-
         List<Document> resultList;
 
         if (!mainANDList.isEmpty()) {
