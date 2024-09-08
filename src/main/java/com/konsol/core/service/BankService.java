@@ -50,4 +50,11 @@ public interface BankService {
      * @param id the id of the entity.
      */
     void delete(String id);
+
+    /**
+     * Get the first bank ordered by id.
+     *
+     * @return the entity.
+     */
+    Optional<Bank> findFirstByOrderById();
 }

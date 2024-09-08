@@ -41,6 +41,13 @@ public class AccountUserServiceImpl implements AccountUserService {
         this.mongoQueryService = mongoQueryService;
     }
 
+    /**
+     * Saves the given AccountUserDTO by converting it to an entity, saving it to the repository,
+     * and then converting the saved entity back to a DTO.
+     *
+     * @param accountUserDTO The AccountUserDTO to be saved
+     * @return The saved AccountUserDTO
+     */
     @Override
     public AccountUserDTO save(AccountUserDTO accountUserDTO) {
         log.debug("Request to save AccountUser : {}", accountUserDTO);
@@ -49,11 +56,23 @@ public class AccountUserServiceImpl implements AccountUserService {
         return accountUserMapper.toDto(accountUser);
     }
 
+    /**
+     * Saves the given AccountUser entity.
+     *
+     * @param accountUser The AccountUser entity to be saved
+     * @return The saved AccountUser entity
+     */
     @Override
     public AccountUser save(AccountUser accountUser) {
         return accountUserRepository.save(accountUser);
     }
 
+    /**
+     * Creates a new account user based on the provided data.
+     *
+     * @param createAccountUserDTO The data to create the account user
+     * @return The created account user DTO
+     */
     @Override
     public AccountUserDTO create(CreateAccountUserDTO createAccountUserDTO) {
         log.debug("Request to save AccountUser : {}", createAccountUserDTO);
@@ -64,6 +83,12 @@ public class AccountUserServiceImpl implements AccountUserService {
         return accountUserMapper.toDto(accountUser);
     }
 
+    /**
+     * Updates an AccountUser entity partially based on the provided AccountUserDTO.
+     *
+     * @param accountUserDTO The AccountUserDTO containing the updated information.
+     * @return An Optional containing the updated AccountUserDTO if found and updated, otherwise empty.
+     */
     @Override
     public Optional<AccountUserDTO> update(AccountUserDTO accountUserDTO) {
         log.debug("Request to partially update AccountUser : {}", accountUserDTO);

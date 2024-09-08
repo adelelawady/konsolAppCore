@@ -133,6 +133,7 @@ public class InvoiceResource implements InvoicesApiDelegate {
 
     @Override
     public ResponseEntity<List<InvoiceDTO>> getAllInvoices(Integer page, Integer size, List<String> sort, Boolean eagerload) {
+        log.info("Get all invoices");
         return ResponseEntity.ok(invoiceService.findAll(PageRequest.of(0, 1000)).getContent());
     }
 

@@ -51,6 +51,15 @@ public class MailService {
         this.templateEngine = templateEngine;
     }
 
+    /**
+     * Asynchronously sends an email to the specified recipient with the given subject and content.
+     *
+     * @param to The email address of the recipient
+     * @param subject The subject of the email
+     * @param content The content of the email
+     * @param isMultipart Indicates whether the email is multipart
+     * @param isHtml Indicates whether the email content is HTML
+     */
     @Async
     public void sendEmail(String to, String subject, String content, boolean isMultipart, boolean isHtml) {
         log.debug(
@@ -77,6 +86,13 @@ public class MailService {
         }
     }
 
+    /**
+     * Asynchronously sends an email to the specified user using a template.
+     *
+     * @param user The user to send the email to
+     * @param templateName The name of the email template to use
+     * @param titleKey The key for the email title in the message source
+     */
     @Async
     public void sendEmailFromTemplate(User user, String templateName, String titleKey) {
         if (user.getEmail() == null) {

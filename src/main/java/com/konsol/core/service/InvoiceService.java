@@ -116,17 +116,63 @@ public interface InvoiceService {
      */
     void regenerateInvoiceItemsPk(String invoiceId);
 
+    /**
+     * calculates all invoice items discount
+     * @param invoice selected invoice to calculate
+     * @return Invoice saved
+     */
+    //Invoice calcInvoiceDiscount(Invoice invoice, boolean save);
+
+    /**
+     * Calculates the discounted invoice based on the provided invoice details.
+     *
+     * @param invoice The original invoice to calculate the discount for
+     * @return The invoice with the discount applied
+     */
     Invoice calcInvoiceDiscount(Invoice invoice);
 
     Invoice addInvoiceAddititon(Invoice invoice);
 
+    /**
+     * get invoice's Invoice items list
+     * @param id invoice id
+     * @return list of invoice invoiceitems
+     */
+    List<InvoiceItemDTO> getInvoiceItems(String id);
+
+    /**
+     * Retrieves the printable invoice object based on the provided invoice ID.
+     *
+     * @param id The ID of the invoice to retrieve
+     * @return The printable invoice object
+     * @throws InvoiceNotFoundException if the invoice with the given ID is not found
+     */
     InvoicePrintDTO getPrintInvoiceObject(String id);
 
     /**
      * invoice items
      */
 
+    /**
+     * @apiNote uses {calcInvoiceItem}
+     * updates invoice item
+     * @param invoiceItem selected invoice item
+     * @param unitId selected unit id
+     * @param userQty user quantity
+     * @param userPrice user price
+     * @return InvoiceItem saved
+     */
     InvoiceItem setInvoiceItemUnit(InvoiceItem invoiceItem, String unitId, BigDecimal userQty, BigDecimal userPrice);
+
+    /**
+     * @apiNote uses {calcInvoiceItem}
+     * @param kind selected invoice kind
+     * @param ItemId selected item id
+     * @param unitId selected unit id
+     * @param userQty user quantity
+     * @param userPrice
+     * @return
+     */
 
     InvoiceItem initializeNewInvoiceItem(InvoiceKind kind, String ItemId, String unitId, BigDecimal userQty, BigDecimal userPrice);
 
@@ -158,11 +204,4 @@ public interface InvoiceService {
     void removeTempInvoices();
 
     InvoiceViewDTOContainer invoicesViewSearch(InvoicesSearchModel invoicesSearchModel);
-
-    /**
-     * get invoice's Invoice items list
-     * @param id invoice id
-     * @return list of invoice invoiceitems
-     */
-    List<InvoiceItemDTO> getInvoiceItems(String id);
 }

@@ -1,5 +1,6 @@
 package com.konsol.core.service;
 
+import com.konsol.core.domain.Store;
 import com.konsol.core.service.api.dto.StoreDTO;
 import com.konsol.core.service.api.dto.StoreItemDTO;
 import com.konsol.core.service.api.dto.StoreItemIdOnlyDTO;
@@ -57,6 +58,14 @@ public interface StoreService {
     Optional<StoreDTO> findOne(String id);
 
     /**
+     * Get the "id" store.
+     *
+     * @param id the id of the entity.
+     * @return the entity.
+     */
+    Optional<Store> findOneDomain(String id);
+
+    /**
      * Delete the "id" store.
      *
      * @param id the id of the entity.
@@ -110,4 +119,11 @@ public interface StoreService {
     void subtractItemQtyFromStores(String ItemId, BigDecimal qty);
 
     void addItemQtyToStores(String ItemId, BigDecimal qty, String storeId);
+
+    /**
+     * Get the first store ordered by id.
+     *
+     * @return the entity.
+     */
+    Optional<Store> findFirstByOrderById();
 }

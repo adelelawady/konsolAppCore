@@ -75,4 +75,9 @@ public class BankServiceImpl implements BankService {
         log.debug("Request to delete Bank : {}", id);
         bankRepository.deleteById(id);
     }
+
+    @Override
+    public Optional<Bank> findFirstByOrderById() {
+        return bankRepository.findFirstByOrderById();
+    }
 }

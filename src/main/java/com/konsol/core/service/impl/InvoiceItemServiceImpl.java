@@ -37,6 +37,12 @@ public class InvoiceItemServiceImpl implements InvoiceItemService {
         return invoiceItemMapper.toDto(invoiceItem);
     }
 
+    /**
+     * Updates an InvoiceItem entity based on the provided InvoiceItemDTO.
+     *
+     * @param invoiceItemDTO The DTO containing the updated information for the InvoiceItem
+     * @return The updated InvoiceItemDTO after saving the changes
+     */
     @Override
     public InvoiceItemDTO update(InvoiceItemDTO invoiceItemDTO) {
         log.debug("Request to update InvoiceItem : {}", invoiceItemDTO);
@@ -45,6 +51,12 @@ public class InvoiceItemServiceImpl implements InvoiceItemService {
         return invoiceItemMapper.toDto(invoiceItem);
     }
 
+    /**
+     * Partially updates an InvoiceItem based on the provided InvoiceItemDTO.
+     *
+     * @param invoiceItemDTO The DTO containing the updated information for the InvoiceItem
+     * @return An Optional containing the updated InvoiceItemDTO if found and updated, otherwise empty
+     */
     @Override
     public Optional<InvoiceItemDTO> partialUpdate(InvoiceItemDTO invoiceItemDTO) {
         log.debug("Request to partially update InvoiceItem : {}", invoiceItemDTO);
@@ -60,18 +72,35 @@ public class InvoiceItemServiceImpl implements InvoiceItemService {
             .map(invoiceItemMapper::toDto);
     }
 
+    /**
+     * Retrieve all invoice items with pagination.
+     *
+     * @param pageable Pagination information
+     * @return A page of InvoiceItemDTO objects
+     */
     @Override
     public Page<InvoiceItemDTO> findAll(Pageable pageable) {
         log.debug("Request to get all InvoiceItems");
         return invoiceItemRepository.findAll(pageable).map(invoiceItemMapper::toDto);
     }
 
+    /**
+     * Retrieves an InvoiceItemDTO by its ID.
+     *
+     * @param id The ID of the InvoiceItem to retrieve
+     * @return An Optional containing the InvoiceItemDTO if found, otherwise empty
+     */
     @Override
     public Optional<InvoiceItemDTO> findOne(String id) {
         log.debug("Request to get InvoiceItem : {}", id);
         return invoiceItemRepository.findById(id).map(invoiceItemMapper::toDto);
     }
 
+    /**
+     * Deletes an InvoiceItem by its ID.
+     *
+     * @param id The ID of the InvoiceItem to delete
+     */
     @Override
     public void delete(String id) {
         log.debug("Request to delete InvoiceItem : {}", id);

@@ -111,6 +111,11 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
+    public Optional<Store> findOneDomain(String id) {
+        return storeRepository.findById(id);
+    }
+
+    @Override
     public void delete(String id) {
         log.debug("Request to delete Store : {}", id);
         storeRepository.deleteById(id);
@@ -304,6 +309,11 @@ public class StoreServiceImpl implements StoreService {
             this.setStoreItem(storeItemMapper.toStoreItemIdOnlyDTO(storeItemDTO));
             break;
         }
+    }
+
+    @Override
+    public Optional<Store> findFirstByOrderById() {
+        return storeRepository.findFirstByOrderById();
     }
 
     /**

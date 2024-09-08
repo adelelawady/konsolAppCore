@@ -1553,47 +1553,42 @@ paths:
         '200':
           description: OK
     parameters: []
-  /sys/options:
+  /sys/settings:
     get:
       summary: Get System Options
       tags:
         - GLOBAL
+        - server_settings
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SysOptions'
-      operationId: getGlobalSystemOptions
+                $ref: '#/components/schemas/ServerSettings'
+      operationId: getServerSettings
       description: 'get main system invoices , handlers ,  pos global options file '
     patch:
       summary: Update Global Application options
-      operationId: updateGlobalSystemOptions
+      operationId: updateServerSettings
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SysOptions'
+                $ref: '#/components/schemas/ServerSettings'
       parameters: []
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SysOptions'
+              $ref: '#/components/schemas/ServerSettings'
       description: Update Global Application options
       tags:
         - GLOBAL
-    put:
-      summary: ''
-      operationId: put-sys-options
-      responses:
-        '200':
-          description: OK
-      tags:
-        - GLOBAL
+        - server_settings
+    parameters: []
 components:
   schemas:
     ItemDTO:
@@ -3139,4 +3134,37 @@ components:
           default: 30
         showCurrency:
           type: boolean
+          default: true
+    ServerSettings:
+      title: ServerSettings
+      x-stoplight:
+        id: c57j8t25xgkyp
+      type: object
+      properties:
+        id:
+          type: string
+        MAIN_SELECTED_STORE_ID:
+          type: string
+          x-stoplight:
+            id: jojbl025jj1wb
+          default: default
+        MAIN_SELECTED_BANK_ID:
+          type: string
+          x-stoplight:
+            id: otne28m01ul8p
+          default: default
+        SALES_CHECK_ITEM_QTY:
+          type: boolean
+          x-stoplight:
+            id: l5hesnrihtlft
+          default: true
+        SALES_UPDATE_ITEM_QTY_AFTER_SAVE:
+          type: boolean
+          x-stoplight:
+            id: jubor8k789qix
+          default: true
+        PURCHASE_UPDATE_ITEM_QTY_AFTER_SAVE:
+          type: boolean
+          x-stoplight:
+            id: gldsozrb9xp7h
           default: true

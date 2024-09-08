@@ -9,7 +9,6 @@ import com.konsol.core.service.*;
 import com.konsol.core.service.api.dto.*;
 import com.konsol.core.service.mapper.InvoiceItemMapper;
 import com.konsol.core.service.mapper.InvoiceMapper;
-import com.konsol.core.web.rest.api.SystemResource;
 import com.konsol.core.web.rest.api.errors.InvoiceException;
 import com.konsol.core.web.rest.api.errors.InvoiceNotFoundException;
 import com.konsol.core.web.rest.api.errors.ItemNotFoundException;
@@ -67,7 +66,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     private final MongoTemplate mongoTemplate;
 
-    private final SystemResource systemResource;
+    private final SettingService settingService;
 
     public InvoiceServiceImpl(
         InvoiceRepository invoiceRepository,
@@ -81,7 +80,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         SaleService saleService,
         PurchaseService purchaseService,
         MongoTemplate mongoTemplate,
-        SystemResource systemResource
+        SettingService settingService
     ) {
         this.invoiceRepository = invoiceRepository;
         this.invoiceMapper = invoiceMapper;
@@ -94,9 +93,15 @@ public class InvoiceServiceImpl implements InvoiceService {
         this.saleService = saleService;
         this.purchaseService = purchaseService;
         this.mongoTemplate = mongoTemplate;
-        this.systemResource = systemResource;
+        this.settingService = settingService;
     }
 
+    /**
+     * Updates an invoice partially based on the provided InvoiceUpdateDTO.
+     *
+     * @param invoiceUpdateDTO The DTO containing the updated information for the invoice
+     * @return The updated invoice entity
+     */
     @Override
     public Invoice updateInvoice(InvoiceUpdateDTO invoiceUpdateDTO) {
         log.debug("Request to partially update Invoice : {}", invoiceUpdateDTO);
@@ -163,6 +168,12 @@ public class InvoiceServiceImpl implements InvoiceService {
         return this.invoiceMapper;
     }
 
+    /**
+     * Initializes a new invoice with the specified kind.
+     *
+     * @param kind The kind of the invoice
+     * @return The DTO representation of the newly initialized invoice
+     */
     @Override
     public InvoiceDTO initializeNewInvoice(InvoiceKind kind) {
         Invoice invoice = new Invoice();
@@ -177,9 +188,13 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     /**
-     * @param invoiceItem
-     * @param unitId
-     * @return
+     * Sets the unit details for the given invoice item based on the provided parameters.
+     *
+     * @param invoiceItem The invoice item to set the unit for
+     * @param unitId The ID of the unit to set
+     * @param userQty The quantity of the unit
+     * @param userPrice The price of the unit
+     * @return The updated invoice item with the unit details set
      */
     @Override
     public InvoiceItem setInvoiceItemUnit(InvoiceItem invoiceItem, String unitId, BigDecimal userQty, BigDecimal userPrice) {
@@ -197,6 +212,17 @@ public class InvoiceServiceImpl implements InvoiceService {
         return setInvoiceItemNullUnit(invoiceItem);
     }
 
+    /**
+     * Initializes a new invoice item based on the provided parameters.
+     *
+     * @param kind The kind of invoice item
+     * @param ItemId The ID of the item
+     * @param unitId The ID of the unit
+     * @param userQty The quantity of the item
+     * @param userPrice The price of the item
+     * @return The newly initialized invoice item
+     * @throws ItemNotFoundException if the item with the provided ID is not found
+     */
     @Override
     public InvoiceItem initializeNewInvoiceItem(InvoiceKind kind, String ItemId, String unitId, BigDecimal userQty, BigDecimal userPrice) {
         Optional<Item> itemOp = itemService.findOneById(ItemId);
@@ -232,6 +258,12 @@ public class InvoiceServiceImpl implements InvoiceService {
         return this.invoiceItemRepository.save(invoiceItem);
     }
 
+    /**
+     * Calculates the invoice item based on the type of invoice (sale or purchase).
+     *
+     * @param invoiceItem The invoice item to calculate
+     * @return The calculated invoice item
+     */
     @Override
     public InvoiceItem calcInvoiceInvoiceItem(InvoiceItem invoiceItem) {
         Optional<Invoice> invoiceOp = invoiceRepository.findById(invoiceItem.getInvoiceId());
@@ -252,6 +284,13 @@ public class InvoiceServiceImpl implements InvoiceService {
         return invoiceItemRepository.save(invoiceItem);
     }
 
+    /**
+     * Creates a new invoice item based on the provided invoice and item details.
+     *
+     * @param invoice The invoice to which the item belongs
+     * @param createInvoiceItemDTO The DTO containing details of the item to be created
+     * @return The newly created invoice item
+     */
     @Override
     public InvoiceItem createInvoiceItem(Invoice invoice, CreateInvoiceItemDTO createInvoiceItemDTO) {
         /**
@@ -286,6 +325,14 @@ public class InvoiceServiceImpl implements InvoiceService {
         return savedInvoiceitem;
     }
 
+    /**
+     * Calculates the quantity of items in or out in the invoice items based on the provided parameters.
+     *
+     * @param invoiceId The ID of the invoice
+     * @param itemId The ID of the item
+     * @param out A boolean indicating whether to calculate the quantity out (true) or in (false)
+     * @return The calculated quantity as a BigDecimal
+     */
     @Override
     public BigDecimal calcItemQtyOutInInvoiceItems(String invoiceId, String itemId, boolean out) {
         /**
@@ -368,6 +415,13 @@ public class InvoiceServiceImpl implements InvoiceService {
         }
     }
 
+    /**
+     * Adds an invoice item to the specified invoice.
+     *
+     * @param invoiceId The ID of the invoice to add the item to
+     * @param createInvoiceItemDTO The DTO containing information about the item to add
+     * @return The updated InvoiceDTO after adding the item
+     */
     @Override
     public InvoiceDTO addInvoiceItem(String invoiceId, CreateInvoiceItemDTO createInvoiceItemDTO) {
         Optional<Invoice> invoiceOp = invoiceRepository.findById(invoiceId);
@@ -377,19 +431,16 @@ public class InvoiceServiceImpl implements InvoiceService {
         /**
          * invoice
          */
-        if (!invoiceOp.isPresent()) {
+        if (invoiceOp.isEmpty()) {
             throw new InvoiceNotFoundException(null);
         }
+
+        Settings settings = settingService.getSettings();
 
         boolean isPriceCalc = invoiceOp.get().getKind().equals(InvoiceKind.SALE);
         boolean isCostCalc = invoiceOp.get().getKind().equals(InvoiceKind.PURCHASE);
 
-        boolean checkQty = invoiceOp.get().getKind().equals(InvoiceKind.SALE) && true;
-
-        /**
-         * TODO Options getCheckItemQty
-         */
-        // systemConfiguration.getSysOptions().getSettings().getSalesInvoiceOptions().getCheckItemQty();
+        boolean checkQty = isPriceCalc && settings.isSALES_CHECK_ITEM_QTY();
 
         InvoiceItem invFound = null;
         if (createInvoiceItemDTO.getUnitId() != null) {
@@ -471,6 +522,13 @@ public class InvoiceServiceImpl implements InvoiceService {
         }
     }
 
+    /**
+     * Calculates the invoice details and optionally saves the invoice to the repository.
+     *
+     * @param invoice The invoice object to calculate details for
+     * @param save A boolean flag indicating whether to save the invoice to the repository
+     * @return The updated invoice object with calculated details, or the original invoice if not saved
+     */
     @Override
     public Invoice calcInvoice(Invoice invoice, boolean save) {
         //return null;
@@ -530,6 +588,12 @@ public class InvoiceServiceImpl implements InvoiceService {
             });
     }
 
+    /**
+     * Calculates the discounted invoice based on the provided invoice details.
+     *
+     * @param invoice The original invoice to calculate the discount for
+     * @return The invoice with the discount applied
+     */
     @Override
     public Invoice calcInvoiceDiscount(Invoice invoice) {
         if (!(invoice.getDiscountPer() == null || (invoice.getDiscountPer() == 0))) {
@@ -561,6 +625,12 @@ public class InvoiceServiceImpl implements InvoiceService {
         return invoice;
     }
 
+    /**
+     * Adds additional charges to the invoice if the additions are greater than zero.
+     *
+     * @param invoice The invoice to which additions are to be added
+     * @return The updated invoice with additional charges added, or the original invoice if no additions
+     */
     @Override
     public Invoice addInvoiceAddititon(Invoice invoice) {
         if (invoice.getAdditions() != null && invoice.getAdditions().compareTo(new BigDecimal(0)) == 1) {
@@ -569,6 +639,13 @@ public class InvoiceServiceImpl implements InvoiceService {
         return invoice;
     }
 
+    /**
+     * Retrieves the printable invoice object based on the provided invoice ID.
+     *
+     * @param id The ID of the invoice to retrieve
+     * @return The printable invoice object
+     * @throws InvoiceNotFoundException if the invoice with the given ID is not found
+     */
     @Override
     public InvoicePrintDTO getPrintInvoiceObject(String id) {
         Optional<Invoice> invoiceOp = invoiceRepository.findById(id);
@@ -583,24 +660,28 @@ public class InvoiceServiceImpl implements InvoiceService {
         InvoicePrintDTO invoicePrintDTO = new InvoicePrintDTO();
         invoicePrintDTO.setInvoice(getMapper().toDto(invoiceOp.get()));
 
-        // SystemConfiguration systemConfiguration = systemResource.getSystemConfigurations();
-
-        // invoicePrintDTO.globalInfo(systemConfiguration.getSysOptions().getContactInfo());
-
         /**
-         * TODO Options globalInfo
+         * TODO X Options globalInfo
          */
 
         return invoicePrintDTO;
     }
 
+    /**
+     * Saves the invoice after checking if it is active and updating item quantities based on settings.
+     *
+     * @param invoice The invoice to be saved
+     * @return The saved invoice
+     */
     @Override
     public Invoice saveInvoice(Invoice invoice) {
         if (invoice.isActive()) {
             return invoice;
         }
+        Settings settings = settingService.getSettings();
+        boolean saleUpdateItemQtyAfterSave = settings.isSALES_UPDATE_ITEM_QTY_AFTER_SAVE();
 
-        boolean updateItemQtyAfterSave = true;
+        boolean purchaseUpdateItemQtyAfterSave = settings.isPURCHASE_UPDATE_ITEM_QTY_AFTER_SAVE();
 
         //systemConfiguration
         //.getSysOptions()
@@ -641,10 +722,10 @@ public class InvoiceServiceImpl implements InvoiceService {
          * item's QTY
          */
 
-        if (updateItemQtyAfterSave) {
-            switch (invoice.getKind()) {
-                case SALE:
-                    {
+        switch (invoice.getKind()) {
+            case SALE:
+                {
+                    if (saleUpdateItemQtyAfterSave) {
                         // TODO selected store to subtract from
                         invoice
                             .getInvoiceItems()
@@ -652,37 +733,33 @@ public class InvoiceServiceImpl implements InvoiceService {
                             .forEach(invoiceItem -> {
                                 storeService.subtractItemQtyFromStores(invoiceItem.getItem().getId(), invoiceItem.getQtyOut());
                             });
-                        break;
                     }
-                case PURCHASE:
-                    {
-                        // TODO selected store to add to
-
+                    break;
+                }
+            case PURCHASE:
+                {
+                    // TODO selected store to add to
+                    if (purchaseUpdateItemQtyAfterSave) {
                         invoice
                             .getInvoiceItems()
                             .stream()
                             .forEach(invoiceItem -> {
                                 storeService.addItemQtyToStores(invoiceItem.getItem().getId(), invoiceItem.getQtyIn(), null);
                             });
-                        break;
                     }
-            }
+                    break;
+                }
         }
 
-        /**
-         * TODO Options Update sysytem configurations
-         */
-        /* Thread thread = new Thread(() -> {
-            systemConfiguration = systemResource.getSystemConfigurations();
-        });
-        thread.start();
-        */
         return invoiceRepository.save(invoice);
     }
 
     /**
-     * @param invoiceId
-     * @return
+     * Saves an invoice with the given invoice ID.
+     *
+     * @param invoiceId The ID of the invoice to save
+     * @return The saved invoice
+     * @throws InvoiceNotFoundException if the invoice with the given ID is not found
      */
     @Override
     public Invoice saveInvoice(String invoiceId) {
@@ -693,6 +770,13 @@ public class InvoiceServiceImpl implements InvoiceService {
         return this.saveInvoice(invoiceOptional.get());
     }
 
+    /**
+     * Finds an invoice item by the given invoice ID and item ID.
+     *
+     * @param invoiceId The ID of the invoice
+     * @param itemId The ID of the item
+     * @return The invoice item if found, null otherwise
+     */
     @Override
     public InvoiceItem findInvoiceItemByItemId(String invoiceId, String itemId) {
         MongoCollection<Document> collection = mongoTemplate.getCollection("invoice_items");
@@ -712,6 +796,13 @@ public class InvoiceServiceImpl implements InvoiceService {
         }
     }
 
+    /**
+     * Finds all invoice items for the given invoice and item.
+     *
+     * @param invoiceId The ID of the invoice
+     * @param itemId The ID of the item
+     * @return A list of invoice items
+     */
     @Override
     public List<InvoiceItem> findInvoiceItemsByItemId(String invoiceId, String itemId) {
         MongoCollection<Document> collection = mongoTemplate.getCollection("invoice_items");
@@ -734,6 +825,15 @@ public class InvoiceServiceImpl implements InvoiceService {
             .collect(Collectors.toList());
     }
 
+    /**
+     * Finds an invoice item by the given invoice ID, item ID, and money.
+     *
+     * @param invoiceId The ID of the invoice
+     * @param itemId The ID of the item
+     * @param money The money value
+     * @param isPrice A boolean indicating whether the money value is a price or a cost
+     * @return The invoice item if found, null otherwise
+     */
     @Override
     public InvoiceItem findInvoiceItemByItemIdAndMoney(String invoiceId, String itemId, BigDecimal money, boolean isPrice) {
         MongoCollection<Document> collection = mongoTemplate.getCollection("invoice_items");
@@ -762,6 +862,14 @@ public class InvoiceServiceImpl implements InvoiceService {
         }
     }
 
+    /**
+     * Finds an invoice item by the given invoice ID, item ID, and unit ID.
+     *
+     * @param invoiceId The ID of the invoice
+     * @param itemId The ID of the item
+     * @param unitId The ID of the unit
+     * @return The invoice item if found, null otherwise
+     */
     @Override
     public InvoiceItem findInvoiceItemByItemIdAndUnitId(String invoiceId, String itemId, String unitId) {
         MongoCollection<Document> collection = mongoTemplate.getCollection("invoice_items");
@@ -787,6 +895,16 @@ public class InvoiceServiceImpl implements InvoiceService {
         }
     }
 
+    /**
+     * Finds an invoice item by the given invoice ID, item ID, unit ID, and money value.
+     *
+     * @param invoiceId The ID of the invoice
+     * @param itemId The ID of the item
+     * @param unitId The ID of the unit
+     * @param money The money value
+     * @param isPrice A boolean indicating whether the money value is a price or a cost
+     * @return The invoice item if found, null otherwise
+     */
     @Override
     public InvoiceItem findInvoiceItemByItemIdAndUnitIdAndMoney(
         String invoiceId,
@@ -845,6 +963,14 @@ public class InvoiceServiceImpl implements InvoiceService {
         }
     }
 
+    /**
+     * Adds qty to invoice item
+     *
+     * @param invoice  selected invoice
+     * @param invoiceItemId selected invoice item id
+     * @param qty qty to add
+     * @return saved or modified {@link InvoiceItem} object
+     */
     @Override
     public InvoiceItem AddQtyToInvoiceItem(Invoice invoice, String invoiceItemId, BigDecimal qty) {
         Optional<InvoiceItem> invoiceItem = invoiceItemRepository.findById(invoiceItemId);
@@ -885,6 +1011,13 @@ public class InvoiceServiceImpl implements InvoiceService {
         return invoiceItem;
     }
 
+    /**
+     * Updates an invoice item partially based on the provided InvoiceItemUpdateDTO.
+     *
+     * @param id The ID of the invoice item to update
+     * @param invoiceItemUpdateDTO The DTO containing the updated information for the invoice item
+     * @return The updated invoice item entity
+     */
     @Override
     public InvoiceItemViewDTO updateInvoiceItem(String id, InvoiceItemUpdateDTO invoiceItemUpdateDTO) {
         return invoiceItemRepository
@@ -900,6 +1033,9 @@ public class InvoiceServiceImpl implements InvoiceService {
             .orElseGet(null);
     }
 
+    /**
+     * Removes all temp and not activated invoices that are older than 3 days.
+     */
     @Override
     @Scheduled(cron = "0 0 1 * * ?")
     public void removeTempInvoices() {
@@ -911,6 +1047,12 @@ public class InvoiceServiceImpl implements InvoiceService {
             });
     }
 
+    /**
+     * Searches for the Invoice corresponding to the query parameters.
+     *
+     * @param invoicesSearchModel the search model containing query parameters
+     * @return a container of InvoiceViewDTO objects matching the query parameters
+     */
     @Override
     public InvoiceViewDTOContainer invoicesViewSearch(InvoicesSearchModel invoicesSearchModel) {
         return this.mongoQueryService.searchInvoicesQUERY(invoicesSearchModel);

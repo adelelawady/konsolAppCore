@@ -2,6 +2,7 @@ package com.konsol.core.domain;
 
 import java.io.Serializable;
 import javax.validation.constraints.NotNull;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -10,41 +11,24 @@ public class Settings implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @Id
+    private String id;
+
     /**
      * MainOptions
      */
-    @NotNull
-    @Field("MAIN_REPORT_FILE_DIR")
-    private String MAIN_REPORT_FILE_DIR = "reports"; // UI
 
     @NotNull
     @Field("MAIN_SELECTED_STORE_ID")
     private String MAIN_SELECTED_STORE_ID = "default";
 
     @NotNull
-    @Field("MAIN_PRINTER_NAME")
-    private String MAIN_PRINTER_NAME = "default"; // UI
-
-    @NotNull
-    @Field("MAIN_CULTURE_NAME")
-    private String MAIN_CULTURE_NAME = "ar-EG"; // UI
+    @Field("MAIN_SELECTED_BANK_ID")
+    private String MAIN_SELECTED_BANK_ID = "default";
 
     /**
      * salesInvoiceOptions
      */
-    @NotNull
-    @Field("SALES_INVOICE_REPORT")
-    private String SALES_INVOICE_REPORT = "Default"; // UI
-
-    @Field("SALES_AUTO_PRINT_AFTER_SAVE")
-    private boolean SALES_AUTO_PRINT_AFTER_SAVE = true; // UI
-
-    @Field("SALES_PRINT_PREVIEW")
-    private boolean SALES_PRINT_PREVIEW = true; // UI
-
-    @NotNull
-    @Field("SALES_SELECTED_PRINTER_NAME")
-    private String SALES_SELECTED_PRINTER_NAME = "Default"; // UI
 
     @Field("SALES_CHECK_ITEM_QTY")
     private boolean SALES_CHECK_ITEM_QTY = true; // BE
@@ -52,34 +36,61 @@ public class Settings implements Serializable {
     @Field("SALES_UPDATE_ITEM_QTY_AFTER_SAVE")
     private boolean SALES_UPDATE_ITEM_QTY_AFTER_SAVE = true; // BE
 
-    @NotNull
-    @Field("SALES_REPORT_PAGE_NAME")
-    private String SALES_REPORT_PAGE_NAME = "sale"; // UI
-
     /**
      * purchaseInvoiceOptions
      */
-    @NotNull
-    @Field("PURCHASE_INVOICE_REPORT")
-    private String PURCHASE_INVOICE_REPORT = "Default"; // UI
-
-    @Field("PURCHASE_AUTO_PRINT_AFTER_SAVE")
-    private boolean PURCHASE_AUTO_PRINT_AFTER_SAVE = true; // UI
-
-    @Field("PURCHASE_PRINT_PREVIEW")
-    private boolean PURCHASE_PRINT_PREVIEW = true; // UI
-
-    @NotNull
-    @Field("PURCHASE_SELECTED_PRINTER_NAME")
-    private String PURCHASE_SELECTED_PRINTER_NAME = "Default"; // UI
-
-    @Field("PURCHASE_CHECK_ITEM_QTY")
-    private boolean PURCHASE_CHECK_ITEM_QTY = true; // BE
 
     @Field("PURCHASE_UPDATE_ITEM_QTY_AFTER_SAVE")
     private boolean PURCHASE_UPDATE_ITEM_QTY_AFTER_SAVE = true; // BE
 
-    @NotNull
-    @Field("PURCHASE_REPORT_PAGE_NAME")
-    private String PURCHASE_REPORT_PAGE_NAME = "pur"; // UI
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    /**
+     * getters and setter
+     */
+    public String getMAIN_SELECTED_STORE_ID() {
+        return MAIN_SELECTED_STORE_ID;
+    }
+
+    public void setMAIN_SELECTED_STORE_ID(String MAIN_SELECTED_STORE_ID) {
+        this.MAIN_SELECTED_STORE_ID = MAIN_SELECTED_STORE_ID;
+    }
+
+    public String getMAIN_SELECTED_BANK_ID() {
+        return MAIN_SELECTED_BANK_ID;
+    }
+
+    public void setMAIN_SELECTED_BANK_ID(String MAIN_SELECTED_BANK_ID) {
+        this.MAIN_SELECTED_BANK_ID = MAIN_SELECTED_BANK_ID;
+    }
+
+    public boolean isSALES_CHECK_ITEM_QTY() {
+        return SALES_CHECK_ITEM_QTY;
+    }
+
+    public void setSALES_CHECK_ITEM_QTY(boolean SALES_CHECK_ITEM_QTY) {
+        this.SALES_CHECK_ITEM_QTY = SALES_CHECK_ITEM_QTY;
+    }
+
+    public boolean isSALES_UPDATE_ITEM_QTY_AFTER_SAVE() {
+        return SALES_UPDATE_ITEM_QTY_AFTER_SAVE;
+    }
+
+    public void setSALES_UPDATE_ITEM_QTY_AFTER_SAVE(boolean SALES_UPDATE_ITEM_QTY_AFTER_SAVE) {
+        this.SALES_UPDATE_ITEM_QTY_AFTER_SAVE = SALES_UPDATE_ITEM_QTY_AFTER_SAVE;
+    }
+
+    public boolean isPURCHASE_UPDATE_ITEM_QTY_AFTER_SAVE() {
+        return PURCHASE_UPDATE_ITEM_QTY_AFTER_SAVE;
+    }
+
+    public void setPURCHASE_UPDATE_ITEM_QTY_AFTER_SAVE(boolean PURCHASE_UPDATE_ITEM_QTY_AFTER_SAVE) {
+        this.PURCHASE_UPDATE_ITEM_QTY_AFTER_SAVE = PURCHASE_UPDATE_ITEM_QTY_AFTER_SAVE;
+    }
 }

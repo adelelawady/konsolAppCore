@@ -1,5 +1,6 @@
 package com.konsol.core.repository;
 
+import com.konsol.core.domain.Settings;
 import com.konsol.core.domain.Store;
 import java.util.List;
 import java.util.Optional;
@@ -24,4 +25,6 @@ public interface StoreRepository extends MongoRepository<Store, String> {
     Optional<Store> findOneWithEagerRelationships(String id);
 
     List<Store> findAllByIdNotIn(List<String> ids);
+
+    Optional<Store> findFirstByOrderById();
 }

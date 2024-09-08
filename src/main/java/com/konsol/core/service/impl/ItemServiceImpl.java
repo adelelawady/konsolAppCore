@@ -95,6 +95,12 @@ public class ItemServiceImpl implements ItemService {
         return itemMapper.toDto(itemRepository.save(item));
     }
 
+    /**
+     * Creates a new item based on the provided ItemDTO.
+     *
+     * @param itemDTO The data transfer object containing information about the item to be created
+     * @return The data transfer object representing the created item
+     */
     @Override
     public ItemDTO create(ItemDTO itemDTO) {
         log.debug("Request to create Item : {}", itemDTO);
@@ -132,6 +138,15 @@ public class ItemServiceImpl implements ItemService {
         return itemMapper.toDto(item);
     }
 
+    /**
+     * Validates the item units of a given ItemDTO.
+     * If the item units are null or empty, no validation is performed.
+     * If the item has no basic unit, an ItemUnitException is thrown with a message in Arabic.
+     * If the item has more than one basic unit, an ItemUnitException is thrown with a different message in Arabic.
+     *
+     * @param itemDTO The ItemDTO object to validate its item units
+     * @throws ItemUnitException if the item has no basic unit or has more than one basic unit
+     */
     @Override
     public void validateNewItemUnits(ItemDTO itemDTO) {
         if (itemDTO.getItemUnits() == null || itemDTO.getItemUnits().isEmpty()) {
@@ -168,6 +183,12 @@ public class ItemServiceImpl implements ItemService {
         }
     }
 
+    /**
+     * Updates an item with the information provided in the ItemDTO.
+     *
+     * @param itemDTO The ItemDTO containing the updated information.
+     * @return The updated ItemDTO if the item exists, otherwise null.
+     */
     @Override
     public ItemDTO update(ItemDTO itemDTO) {
         Optional<Item> itemToUpdate = itemRepository.findById(itemDTO.getId());
@@ -182,6 +203,17 @@ public class ItemServiceImpl implements ItemService {
         return itemMapper.toDto(item);
     }
 
+    /**
+     * Saves the item units associated with the given ItemDTO.
+     *
+     * This method retrieves the item by its ID from the item repository, then maps over it to update its item units.
+     * If the item units in the provided ItemDTO are null or empty, it initializes a new HashSet for the item's units.
+     * For each ItemUnitDTO in the ItemDTO's item units, it saves the item unit using the item unit service, sets the item ID,
+     * saves the item unit again, and adds it to the item's unit collection.
+     * Finally, the updated item is saved back to the repository.
+     *
+     * @param itemDTO The ItemDTO containing the item and its associated item units to be saved
+     */
     public void SaveItemUnits(ItemDTO itemDTO) {
         itemRepository
             .findById(itemDTO.getId())
@@ -220,6 +252,12 @@ public class ItemServiceImpl implements ItemService {
             .map(itemRepository::save);
     }
 
+    /**
+     * Partially updates an item based on the provided ItemDTO.
+     *
+     * @param itemDTO The ItemDTO containing the updated information.
+     * @return An Optional containing the updated ItemDTO if found, otherwise empty.
+     */
     @Override
     public Optional<ItemDTO> partialUpdate(ItemDTO itemDTO) {
         log.debug("Request to partially update Item : {}", itemDTO);
@@ -248,6 +286,12 @@ public class ItemServiceImpl implements ItemService {
         return itemRepository.findAll(pageable).map(itemMapper::toDto);
     }
 
+    /**
+     * Retrieves a paginated list of ItemViewDTOs based on the provided PaginationSearchModel.
+     *
+     * @param paginationSearchModel The model containing pagination information
+     * @return A container holding the list of ItemViewDTOs and the total count of items
+     */
     @Override
     public ItemViewDTOContainer findAllItemsViewDTO(PaginationSearchModel paginationSearchModel) {
         Query query = new Query();
@@ -376,6 +420,11 @@ public class ItemServiceImpl implements ItemService {
         }
     }
 
+    /**
+     * Retrieves all unique item categories from the MongoDB collection "items".
+     *
+     * @return A list of CategoryItem objects representing the unique item categories.
+     */
     @Override
     public List<CategoryItem> getAllItemCategories() {
         List<CategoryItem> categoryList = new ArrayList<>();
@@ -496,6 +545,12 @@ public class ItemServiceImpl implements ItemService {
         return items.stream().findFirst().map(itemMapper::toDto);
     }
 
+    /**
+     * Checks if the given string can be parsed to an integer.
+     *
+     * @param s the string to check
+     * @return true if the string can be parsed to an integer, false otherwise
+     */
     public static boolean isInteger(String s) {
         try {
             Integer.parseInt(s);
