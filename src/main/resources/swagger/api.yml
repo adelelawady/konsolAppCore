@@ -1899,14 +1899,14 @@ components:
       required:
         - name
     BankDTO:
-      required:
-        - name
       type: object
       properties:
         id:
           type: string
         name:
           type: string
+      required:
+        - name
     MoneyDTO:
       type: object
       properties:
@@ -2047,6 +2047,10 @@ components:
         created_date:
           type: string
           format: date-time
+        deferred:
+          type: boolean
+          x-stoplight:
+            id: 7skmkczs1v9fp
     InvoiceViewDTO:
       type: object
       x-examples:
@@ -2192,6 +2196,10 @@ components:
           format: date-time
         invoiceItemsCount:
           type: string
+        deferred:
+          type: boolean
+          x-stoplight:
+            id: w655ialp3egre
     InvoiceViewSimpleDTO:
       type: object
       properties:
@@ -2261,8 +2269,16 @@ components:
           $ref: '#/components/schemas/ItemSimpleDTO'
         account:
           $ref: '#/components/schemas/AccountUserDTO'
+        deferred:
+          type: boolean
+          x-stoplight:
+            id: esn8m7uagipey
     InvoiceUpdateDTO:
       type: object
+      description: |-
+        A model that contains all the elements that can be modified 
+        in the invoice by requesting the modification
+      title: Invoice update DTO
       properties:
         id:
           type: string
@@ -2294,10 +2310,14 @@ components:
         created_date:
           type: string
           format: date-time
-      description: |-
-        A model that contains all the elements that can be modified 
-        in the invoice by requesting the modification
-      title: Invoice update DTO
+        storeId:
+          type: string
+          x-stoplight:
+            id: 48kcjll1tq5dt
+        deferred:
+          type: boolean
+          x-stoplight:
+            id: mv94k3lxb22ol
     InvoiceItemDTO:
       type: object
       properties:
