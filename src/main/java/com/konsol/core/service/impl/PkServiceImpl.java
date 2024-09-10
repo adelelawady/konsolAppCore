@@ -90,11 +90,7 @@ public class PkServiceImpl implements PkService {
     @Override
     public Pk getPkEntity(PkKind entityKind) {
         Optional<Pk> foundPkOp = this.pkRepository.findOneByKind(entityKind);
-        if (foundPkOp.isPresent()) {
-            return foundPkOp.get();
-        } else {
-            return createNewPkForEntity(entityKind);
-        }
+        return foundPkOp.orElseGet(() -> createNewPkForEntity(entityKind));
     }
 
     private Pk createNewPkForEntity(PkKind entityKind) {

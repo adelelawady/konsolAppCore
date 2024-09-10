@@ -205,7 +205,6 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public boolean checkItemQtyAvailable(String ItemId, BigDecimal qty) {
         return getItemQty(ItemId).compareTo(qty) >= 0;
-        //  return itemService.findOneById(ItemId).orElseGet(null).getQty().compareTo(qty)<1;
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.konsol.core.service;
 import com.konsol.core.domain.Invoice;
 import com.konsol.core.domain.InvoiceItem;
 import com.konsol.core.domain.enumeration.InvoiceKind;
+import com.konsol.core.security.AuthoritiesConstants;
 import com.konsol.core.service.api.dto.*;
 import com.konsol.core.service.mapper.InvoiceMapper;
 import com.konsol.core.service.mapper.ItemMapper;
@@ -12,6 +13,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
  * Service Interface for managing {@link com.konsol.core.domain.Invoice}.
