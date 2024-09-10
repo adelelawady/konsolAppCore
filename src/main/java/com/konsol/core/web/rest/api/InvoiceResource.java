@@ -59,11 +59,7 @@ public class InvoiceResource implements InvoicesApiDelegate {
     public ResponseEntity<InvoiceViewSimpleDTO> updateInvoice(String id, InvoiceUpdateDTO invoiceUpdateDTO) {
         log.debug("REST request to partial update Invoice partially : {}, {}", id, invoiceUpdateDTO);
         if (invoiceUpdateDTO.getId() == null) {
-            if (id == null) {
-                throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
-            } else {
-                invoiceUpdateDTO.id(id);
-            }
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         if (!Objects.equals(id, invoiceUpdateDTO.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");

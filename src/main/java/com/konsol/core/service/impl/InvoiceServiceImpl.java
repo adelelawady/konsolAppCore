@@ -53,10 +53,6 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     private final StoreService storeService;
 
-    private final BankService bankService;
-
-    private final AccountUserService accountUserService;
-
     protected final InvoiceItemRepository invoiceItemRepository;
 
     private final MongoQueryService mongoQueryService;
@@ -78,8 +74,6 @@ public class InvoiceServiceImpl implements InvoiceService {
         PkService pkService,
         ItemService itemService,
         StoreService storeService,
-        BankService bankService,
-        AccountUserService accountUserService,
         InvoiceItemRepository invoiceItemRepository,
         MongoQueryService mongoQueryService,
         InvoiceItemMapper invoiceItemMapper,
@@ -93,8 +87,6 @@ public class InvoiceServiceImpl implements InvoiceService {
         this.pkService = pkService;
         this.itemService = itemService;
         this.storeService = storeService;
-        this.bankService = bankService;
-        this.accountUserService = accountUserService;
         this.invoiceItemRepository = invoiceItemRepository;
         this.mongoQueryService = mongoQueryService;
         this.invoiceItemMapper = invoiceItemMapper;
@@ -113,71 +105,6 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public Invoice updateInvoice(InvoiceUpdateDTO invoiceUpdateDTO) {
         log.debug("Request to partially update Invoice : {}", invoiceUpdateDTO);
-
-        if (
-            invoiceUpdateDTO.getAccountId() != null &&
-            !invoiceUpdateDTO.getAccountId().isEmpty() &&
-            !invoiceUpdateDTO.getAccountId().equals("null")
-        ) {
-            accountUserService
-                .findOneDomain(invoiceUpdateDTO.getAccountId())
-                .ifPresentOrElse(
-                    account ->
-                        invoiceRepository
-                            .findById(invoiceUpdateDTO.getId())
-                            .ifPresentOrElse(
-                                existingInvoice -> invoiceRepository.save(existingInvoice.account(account)),
-                                () -> {
-                                    throw new InvoiceNotFoundException(invoiceUpdateDTO.getId());
-                                }
-                            ),
-                    () -> {
-                        throw new InvoiceException("account not found", "account Could not be added to invoice");
-                    }
-                );
-        } else if (invoiceUpdateDTO.getAccountId() != null && invoiceUpdateDTO.getAccountId().equals("null")) {
-            invoiceRepository
-                .findById(invoiceUpdateDTO.getId())
-                .ifPresentOrElse(existingInvoice -> invoiceRepository.save(existingInvoice.account(null)), () -> {});
-        }
-
-        if (invoiceUpdateDTO.getBankId() != null && !invoiceUpdateDTO.getBankId().isEmpty()) {
-            bankService
-                .findOneDomain(invoiceUpdateDTO.getBankId())
-                .ifPresentOrElse(
-                    bank ->
-                        invoiceRepository
-                            .findById(invoiceUpdateDTO.getId())
-                            .ifPresentOrElse(
-                                existingInvoice -> invoiceRepository.save(existingInvoice.bank(bank)),
-                                () -> {
-                                    throw new InvoiceNotFoundException(invoiceUpdateDTO.getId());
-                                }
-                            ),
-                    () -> {
-                        throw new InvoiceException("store not found", "store Could not be added to invoice");
-                    }
-                );
-        }
-
-        if (invoiceUpdateDTO.getStoreId() != null && !invoiceUpdateDTO.getStoreId().isEmpty()) {
-            storeService
-                .findOneDomain(invoiceUpdateDTO.getStoreId())
-                .ifPresentOrElse(
-                    store ->
-                        invoiceRepository
-                            .findById(invoiceUpdateDTO.getId())
-                            .ifPresentOrElse(
-                                existingInvoice -> invoiceRepository.save(existingInvoice.store(store)),
-                                () -> {
-                                    throw new InvoiceNotFoundException(invoiceUpdateDTO.getId());
-                                }
-                            ),
-                    () -> {
-                        throw new InvoiceException("store not found", "store Could not be added to invoice");
-                    }
-                );
-        }
 
         /**
          * ignore invoice items
@@ -553,10 +480,6 @@ public class InvoiceServiceImpl implements InvoiceService {
             AddQtyToInvoiceItem(invoiceOp.get(), invFound.getId(), createInvoiceItemDTO.getQty());
             regenerateInvoiceItemsPk(invoiceId);
             return findOne(invoiceId).orElseGet(null);
-        } else {
-            if (checkQty && !storeService.checkItemQtyAvailable(createInvoiceItemDTO.getItemId(), createInvoiceItemDTO.getQty())) {
-                throw new ItemQtyException("مشكلة ف كمية الصنف", "لا يوجد ما يكفي من الصنف ف المخازن");
-            }
         }
 
         BigDecimal qtyPieces = new BigDecimal(1);
@@ -565,13 +488,13 @@ public class InvoiceServiceImpl implements InvoiceService {
             if (itemUnitOp.isPresent()) {
                 qtyPieces = itemUnitOp.get().getPieces();
             }
-            /**unit**/
-            if (
-                checkQty &&
-                !storeService.checkItemQtyAvailable(createInvoiceItemDTO.getItemId(), createInvoiceItemDTO.getQty().add(qtyPieces))
-            ) {
-                throw new ItemQtyException("مشكلة ف كمية الصنف", "لا يوجد ما يكفي من الصنف ف المخازن");
-            }
+        }
+
+        /**unit**/
+        if (
+            checkQty && !storeService.checkItemQtyAvailable(createInvoiceItemDTO.getItemId(), createInvoiceItemDTO.getQty().add(qtyPieces))
+        ) {
+            throw new ItemQtyException("مشكلة ف كمية الصنف", "لا يوجد ما يكفي من الصنف ف المخازن");
         }
 
         /**
@@ -649,7 +572,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         /**
          * invoice
          */
-        if (invoiceOp.isEmpty()) {
+        if (!invoiceOp.isPresent()) {
             throw new InvoiceNotFoundException(null);
         }
 
@@ -657,6 +580,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         AtomicInteger c = new AtomicInteger();
         invoice
             .getInvoiceItems()
+            .stream()
             .forEach(invoiceItem -> {
                 invoiceItem.setPk(c.getAndIncrement() + "");
 
@@ -672,49 +596,32 @@ public class InvoiceServiceImpl implements InvoiceService {
      */
     @Override
     public Invoice calcInvoiceDiscount(Invoice invoice) {
-        // Check if a discount amount is set and greater than 0
-        if (invoice.getDiscount() != null && invoice.getDiscount().compareTo(BigDecimal.ZERO) > 0) {
-            // Calculate the discount percentage
-            BigDecimal discountPer = invoice
-                .getDiscount()
-                .divide(invoice.getTotalPrice(), 4, RoundingMode.CEILING)
-                .multiply(BigDecimal.valueOf(100));
+        if (!(invoice.getDiscountPer() == null || (invoice.getDiscountPer() == 0))) {
+            BigDecimal discount =
+                (BigDecimal.valueOf(invoice.getDiscountPer()).divide(BigDecimal.valueOf(100), 4, RoundingMode.CEILING)).multiply(
+                        invoice.getTotalPrice()
+                    );
 
-            // If the discount amount is less than the total price, apply it
-            if (invoice.getDiscount().compareTo(invoice.getTotalPrice()) < 0) {
-                invoice.discountPer(discountPer.intValue());
-                invoice.netPrice(invoice.getTotalPrice().subtract(invoice.getDiscount()));
-            } else {
-                // If the discount is too large, reset it
-                invoice.discountPer(0);
-                invoice.discount(BigDecimal.ZERO);
-                invoice.netPrice(invoice.getTotalPrice());
-            }
-            return invoice;
-        }
-
-        // Check if discount percentage is set and greater than 0
-        if (invoice.getDiscountPer() != null && invoice.getDiscountPer() > 0) {
-            // Calculate the discount amount
-            BigDecimal discount = BigDecimal
-                .valueOf(invoice.getDiscountPer())
-                .divide(BigDecimal.valueOf(100), 4, RoundingMode.CEILING)
-                .multiply(invoice.getTotalPrice());
-
-            // If the discount is less than the total price, apply it
             if (discount.compareTo(invoice.getTotalPrice()) < 0) {
                 invoice.discount(discount);
                 invoice.netPrice(invoice.getTotalPrice().subtract(discount));
             } else {
-                // If the discount is too large, reset it
                 invoice.discountPer(0);
-                invoice.discount(BigDecimal.ZERO);
+                invoice.discount(new BigDecimal(0));
                 invoice.netPrice(invoice.getTotalPrice());
             }
             return invoice;
         }
 
-        // No discount, return the invoice as is
+        if (!(invoice.getDiscount() == null || (invoice.getDiscount().compareTo(new BigDecimal(0))) == 0)) {
+            BigDecimal discountPer =
+                (invoice.getDiscount().divide(invoice.getTotalPrice(), 4, RoundingMode.CEILING)).multiply(BigDecimal.valueOf(100));
+            if (invoice.getDiscount().compareTo(invoice.getTotalPrice()) == -1) {
+                return invoice.discountPer(discountPer.intValue()).netPrice(invoice.getTotalPrice().subtract(invoice.getDiscount()));
+            } else {
+                return invoice.discountPer(0).discount(new BigDecimal(0)).netPrice(invoice.getTotalPrice());
+            }
+        }
         return invoice;
     }
 
@@ -771,14 +678,16 @@ public class InvoiceServiceImpl implements InvoiceService {
         if (invoice.isActive()) {
             return invoice;
         }
-
-        if (invoice.isDeferred() && invoice.getAccount() == null) {
-            throw new InvoiceException("مشكلة فاتورة ", "يجب ان يكون هناك حساب ف الفاتورة المؤجلة");
-        }
         Settings settings = settingService.getSettings();
         boolean saleUpdateItemQtyAfterSave = settings.isSALES_UPDATE_ITEM_QTY_AFTER_SAVE();
 
         boolean purchaseUpdateItemQtyAfterSave = settings.isPURCHASE_UPDATE_ITEM_QTY_AFTER_SAVE();
+
+        //systemConfiguration
+        //.getSysOptions()
+        //.getSettings()
+        //.getSalesInvoiceOptions()
+        //.getUpdateItemQtyAfterSave();
 
         /**
          * TODO Options getUpdateItemQtyAfterSave
@@ -798,6 +707,18 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoice.setPk(invoicePk.getValue().toString());
 
         /**
+         * TODO handle bank on invoice saving
+         */
+
+        /**
+         * TODO handle Store on invoice saving
+         */
+
+        /**
+         * TODO handle account on invoice saving
+         */
+
+        /**
          * item's QTY
          */
 
@@ -808,6 +729,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                         // TODO selected store to subtract from
                         invoice
                             .getInvoiceItems()
+                            .stream()
                             .forEach(invoiceItem -> {
                                 storeService.subtractItemQtyFromStores(invoiceItem.getItem().getId(), invoiceItem.getQtyOut());
                             });
@@ -820,6 +742,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                     if (purchaseUpdateItemQtyAfterSave) {
                         invoice
                             .getInvoiceItems()
+                            .stream()
                             .forEach(invoiceItem -> {
                                 storeService.addItemQtyToStores(invoiceItem.getItem().getId(), invoiceItem.getQtyIn(), null);
                             });
@@ -841,7 +764,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public Invoice saveInvoice(String invoiceId) {
         Optional<Invoice> invoiceOptional = invoiceRepository.findById(invoiceId);
-        if (invoiceOptional.isEmpty()) {
+        if (!invoiceOptional.isPresent()) {
             throw new InvoiceNotFoundException("الفاتودة غير موجودة");
         }
         return this.saveInvoice(invoiceOptional.get());
@@ -1144,7 +1067,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public List<InvoiceItemDTO> getInvoiceItems(String id) {
         Optional<Invoice> invoiceItem = findOneDomain(id);
-        if (invoiceItem.isEmpty()) {
+        if (!invoiceItem.isPresent()) {
             throw new InvoiceNotFoundException(null);
         }
         return invoiceItem.get().getInvoiceItems().stream().map(invoiceItemMapper::toDto).collect(Collectors.toList());
