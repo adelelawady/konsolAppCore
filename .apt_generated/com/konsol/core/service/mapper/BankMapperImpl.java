@@ -17,41 +17,41 @@ public class BankMapperImpl implements BankMapper {
 
     @Override
     public Bank toEntity(BankDTO dto) {
-        if ( dto == null ) {
+        if (dto == null) {
             return null;
         }
 
         Bank bank = new Bank();
 
-        bank.setId( dto.getId() );
-        bank.setName( dto.getName() );
+        bank.setId(dto.getId());
+        bank.setName(dto.getName());
 
         return bank;
     }
 
     @Override
     public BankDTO toDto(Bank entity) {
-        if ( entity == null ) {
+        if (entity == null) {
             return null;
         }
 
         BankDTO bankDTO = new BankDTO();
 
-        bankDTO.setId( entity.getId() );
-        bankDTO.setName( entity.getName() );
+        bankDTO.setId(entity.getId());
+        bankDTO.setName(entity.getName());
 
         return bankDTO;
     }
 
     @Override
     public List<Bank> toEntity(List<BankDTO> dtoList) {
-        if ( dtoList == null ) {
+        if (dtoList == null) {
             return null;
         }
 
-        List<Bank> list = new ArrayList<Bank>( dtoList.size() );
-        for ( BankDTO bankDTO : dtoList ) {
-            list.add( toEntity( bankDTO ) );
+        List<Bank> list = new ArrayList<Bank>(dtoList.size());
+        for (BankDTO bankDTO : dtoList) {
+            list.add(toEntity(bankDTO));
         }
 
         return list;
@@ -59,13 +59,13 @@ public class BankMapperImpl implements BankMapper {
 
     @Override
     public List<BankDTO> toDto(List<Bank> entityList) {
-        if ( entityList == null ) {
+        if (entityList == null) {
             return null;
         }
 
-        List<BankDTO> list = new ArrayList<BankDTO>( entityList.size() );
-        for ( Bank bank : entityList ) {
-            list.add( toDto( bank ) );
+        List<BankDTO> list = new ArrayList<BankDTO>(entityList.size());
+        for (Bank bank : entityList) {
+            list.add(toDto(bank));
         }
 
         return list;
@@ -73,15 +73,15 @@ public class BankMapperImpl implements BankMapper {
 
     @Override
     public void partialUpdate(Bank entity, BankDTO dto) {
-        if ( dto == null ) {
+        if (dto == null) {
             return;
         }
 
-        if ( dto.getId() != null ) {
-            entity.setId( dto.getId() );
+        if (dto.getId() != null) {
+            entity.setId(dto.getId());
         }
-        if ( dto.getName() != null ) {
-            entity.setName( dto.getName() );
+        if (dto.getName() != null) {
+            entity.setName(dto.getName());
         }
     }
 }

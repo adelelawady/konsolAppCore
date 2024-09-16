@@ -18,13 +18,13 @@ public class StoreMapperImpl implements StoreMapper {
 
     @Override
     public List<Store> toEntity(List<StoreDTO> dtoList) {
-        if ( dtoList == null ) {
+        if (dtoList == null) {
             return null;
         }
 
-        List<Store> list = new ArrayList<Store>( dtoList.size() );
-        for ( StoreDTO storeDTO : dtoList ) {
-            list.add( toEntity( storeDTO ) );
+        List<Store> list = new ArrayList<Store>(dtoList.size());
+        for (StoreDTO storeDTO : dtoList) {
+            list.add(toEntity(storeDTO));
         }
 
         return list;
@@ -32,13 +32,13 @@ public class StoreMapperImpl implements StoreMapper {
 
     @Override
     public List<StoreDTO> toDto(List<Store> entityList) {
-        if ( entityList == null ) {
+        if (entityList == null) {
             return null;
         }
 
-        List<StoreDTO> list = new ArrayList<StoreDTO>( entityList.size() );
-        for ( Store store : entityList ) {
-            list.add( toDto( store ) );
+        List<StoreDTO> list = new ArrayList<StoreDTO>(entityList.size());
+        for (Store store : entityList) {
+            list.add(toDto(store));
         }
 
         return list;
@@ -46,56 +46,56 @@ public class StoreMapperImpl implements StoreMapper {
 
     @Override
     public void partialUpdate(Store entity, StoreDTO dto) {
-        if ( dto == null ) {
+        if (dto == null) {
             return;
         }
 
-        if ( dto.getId() != null ) {
-            entity.setId( dto.getId() );
+        if (dto.getId() != null) {
+            entity.setId(dto.getId());
         }
-        if ( dto.getName() != null ) {
-            entity.setName( dto.getName() );
+        if (dto.getName() != null) {
+            entity.setName(dto.getName());
         }
     }
 
     @Override
     public StoreDTO toDto(Store s) {
-        if ( s == null ) {
+        if (s == null) {
             return null;
         }
 
         StoreDTO storeDTO = new StoreDTO();
 
-        storeDTO.setId( s.getId() );
-        storeDTO.setName( s.getName() );
+        storeDTO.setId(s.getId());
+        storeDTO.setName(s.getName());
 
         return storeDTO;
     }
 
     @Override
     public Store toEntity(StoreDTO storeDTO) {
-        if ( storeDTO == null ) {
+        if (storeDTO == null) {
             return null;
         }
 
         Store store = new Store();
 
-        store.setId( storeDTO.getId() );
-        store.setName( storeDTO.getName() );
+        store.setId(storeDTO.getId());
+        store.setName(storeDTO.getName());
 
         return store;
     }
 
     @Override
     public StoreNameDTO toStoreNameDTO(Store store) {
-        if ( store == null ) {
+        if (store == null) {
             return null;
         }
 
         StoreNameDTO storeNameDTO = new StoreNameDTO();
 
-        storeNameDTO.setId( store.getId() );
-        storeNameDTO.setName( store.getName() );
+        storeNameDTO.setId(store.getId());
+        storeNameDTO.setName(store.getName());
 
         return storeNameDTO;
     }

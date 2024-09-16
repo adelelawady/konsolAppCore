@@ -1630,6 +1630,11 @@ components:
         createdDate:
           type: string
           format: date-time
+        checkQty:
+          type: boolean
+          x-stoplight:
+            id: tpadizn2r7ikw
+          default: false
       required:
         - name
     ItemSimpleDTO:
@@ -1701,6 +1706,11 @@ components:
         lastModifiedDate:
           type: string
           format: date-time
+        checkQty:
+          type: boolean
+          x-stoplight:
+            id: aps5qtjk2ycmq
+          default: false
       required:
         - name
     ItemUnitDTO:
@@ -1868,6 +1878,10 @@ components:
           type: integer
           x-stoplight:
             id: i1yxmpssqaim9
+        id:
+          type: string
+          x-stoplight:
+            id: yqnhnhx21456f
     CreateAccountUserDTO:
       type: object
       properties:
@@ -2783,12 +2797,10 @@ components:
           default: null
         dateFrom:
           type: string
-          format: date-time
           description: date form to seach for or null
           default: null
         dateTo:
           type: string
-          format: date-time
           description: date to to seach for or null
           default: null
         accountId:

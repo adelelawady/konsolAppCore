@@ -52,6 +52,9 @@ public class Item extends AbstractAuditingEntity<String> implements Serializable
     @Field("cost")
     private BigDecimal cost;
 
+    @Field("checkQty")
+    private boolean checkQty = true; //QuantityCheckRequired
+
     @DBRef
     @Field("itemUnits")
     //@JsonIgnoreProperties(value = { "items" }, allowSetters = true)
@@ -216,5 +219,13 @@ public class Item extends AbstractAuditingEntity<String> implements Serializable
             ", qty=" + getQty() +
             ", cost=" + getCost() +
             "}";
+    }
+
+    public boolean isCheckQty() {
+        return checkQty;
+    }
+
+    public void setCheckQty(boolean checkQty) {
+        this.checkQty = checkQty;
     }
 }

@@ -17,43 +17,43 @@ public class PkMapperImpl implements PkMapper {
 
     @Override
     public Pk toEntity(PkDTO dto) {
-        if ( dto == null ) {
+        if (dto == null) {
             return null;
         }
 
         Pk pk = new Pk();
 
-        pk.setId( dto.getId() );
-        pk.setKind( dto.getKind() );
-        pk.setValue( dto.getValue() );
+        pk.setId(dto.getId());
+        pk.setKind(dto.getKind());
+        pk.setValue(dto.getValue());
 
         return pk;
     }
 
     @Override
     public PkDTO toDto(Pk entity) {
-        if ( entity == null ) {
+        if (entity == null) {
             return null;
         }
 
         PkDTO pkDTO = new PkDTO();
 
-        pkDTO.setId( entity.getId() );
-        pkDTO.setKind( entity.getKind() );
-        pkDTO.setValue( entity.getValue() );
+        pkDTO.setId(entity.getId());
+        pkDTO.setKind(entity.getKind());
+        pkDTO.setValue(entity.getValue());
 
         return pkDTO;
     }
 
     @Override
     public List<Pk> toEntity(List<PkDTO> dtoList) {
-        if ( dtoList == null ) {
+        if (dtoList == null) {
             return null;
         }
 
-        List<Pk> list = new ArrayList<Pk>( dtoList.size() );
-        for ( PkDTO pkDTO : dtoList ) {
-            list.add( toEntity( pkDTO ) );
+        List<Pk> list = new ArrayList<Pk>(dtoList.size());
+        for (PkDTO pkDTO : dtoList) {
+            list.add(toEntity(pkDTO));
         }
 
         return list;
@@ -61,13 +61,13 @@ public class PkMapperImpl implements PkMapper {
 
     @Override
     public List<PkDTO> toDto(List<Pk> entityList) {
-        if ( entityList == null ) {
+        if (entityList == null) {
             return null;
         }
 
-        List<PkDTO> list = new ArrayList<PkDTO>( entityList.size() );
-        for ( Pk pk : entityList ) {
-            list.add( toDto( pk ) );
+        List<PkDTO> list = new ArrayList<PkDTO>(entityList.size());
+        for (Pk pk : entityList) {
+            list.add(toDto(pk));
         }
 
         return list;
@@ -75,18 +75,18 @@ public class PkMapperImpl implements PkMapper {
 
     @Override
     public void partialUpdate(Pk entity, PkDTO dto) {
-        if ( dto == null ) {
+        if (dto == null) {
             return;
         }
 
-        if ( dto.getId() != null ) {
-            entity.setId( dto.getId() );
+        if (dto.getId() != null) {
+            entity.setId(dto.getId());
         }
-        if ( dto.getKind() != null ) {
-            entity.setKind( dto.getKind() );
+        if (dto.getKind() != null) {
+            entity.setKind(dto.getKind());
         }
-        if ( dto.getValue() != null ) {
-            entity.setValue( dto.getValue() );
+        if (dto.getValue() != null) {
+            entity.setValue(dto.getValue());
         }
     }
 }

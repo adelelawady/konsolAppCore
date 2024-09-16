@@ -10,14 +10,13 @@ import com.konsol.core.service.mapper.MoneyMapper;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
-import com.mongodb.client.model.Aggregates;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.bson.BsonDocument;
-import org.bson.BsonValue;
 import org.bson.Document;
 import org.bson.types.Decimal128;
 import org.bson.types.ObjectId;
@@ -26,6 +25,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.DateOperators;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
@@ -544,7 +544,6 @@ import org.bson.Document;
 
     public MoniesViewDTOContainer moniesViewSearchPaginate(MoniesSearchModel moniesSearchModel) {
         MongoCollection<Document> collection = mongoTemplate.getCollection("monies");
-        //.withCodecRegistry(pojoCodecRegistry);
 
         List<Document> staticOrList = new ArrayList<>();
 
@@ -583,10 +582,13 @@ import org.bson.Document;
 
         // DATE
         if (moniesSearchModel.getDateFrom() != null && moniesSearchModel.getDateTo() != null) {
+            OffsetDateTime from = OffsetDateTime.parse(moniesSearchModel.getDateFrom());
+            OffsetDateTime to = OffsetDateTime.parse(moniesSearchModel.getDateTo());
+
             mainANDList.add(
                 new Document(
                     "created_date",
-                    new Document("$gte", moniesSearchModel.getDateFrom()).append("$lt", moniesSearchModel.getDateTo())
+                    new Document("$gte", new Date(from.toInstant().toEpochMilli())).append("$lt", new Date(to.toInstant().toEpochMilli()))
                 )
             );
         }
@@ -678,6 +680,10 @@ import org.bson.Document;
      */
     public AccountUserContainer accountUserSearchPaginate(AccountUserSearchModel accountUserSearchModel) {
         List<Document> arrays = new ArrayList<>();
+
+        if (accountUserSearchModel.getId() != null) {
+            arrays.add(new Document("_id", new ObjectId(accountUserSearchModel.getId())));
+        }
 
         if (accountUserSearchModel.getKind() != null) {
             arrays.add(new Document("kind", new Document("$regex", accountUserSearchModel.getKind().toString()).append("$options", "i")));

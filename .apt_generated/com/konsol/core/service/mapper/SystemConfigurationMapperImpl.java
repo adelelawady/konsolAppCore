@@ -16,7 +16,7 @@ public class SystemConfigurationMapperImpl implements SystemConfigurationMapper 
 
     @Override
     public SysOptions toEntity(SystemConfiguration dto) {
-        if ( dto == null ) {
+        if (dto == null) {
             return null;
         }
 
@@ -27,7 +27,7 @@ public class SystemConfigurationMapperImpl implements SystemConfigurationMapper 
 
     @Override
     public SystemConfiguration toDto(SysOptions entity) {
-        if ( entity == null ) {
+        if (entity == null) {
             return null;
         }
 
@@ -38,13 +38,13 @@ public class SystemConfigurationMapperImpl implements SystemConfigurationMapper 
 
     @Override
     public List<SysOptions> toEntity(List<SystemConfiguration> dtoList) {
-        if ( dtoList == null ) {
+        if (dtoList == null) {
             return null;
         }
 
-        List<SysOptions> list = new ArrayList<SysOptions>( dtoList.size() );
-        for ( SystemConfiguration systemConfiguration : dtoList ) {
-            list.add( toEntity( systemConfiguration ) );
+        List<SysOptions> list = new ArrayList<SysOptions>(dtoList.size());
+        for (SystemConfiguration systemConfiguration : dtoList) {
+            list.add(toEntity(systemConfiguration));
         }
 
         return list;
@@ -52,13 +52,13 @@ public class SystemConfigurationMapperImpl implements SystemConfigurationMapper 
 
     @Override
     public List<SystemConfiguration> toDto(List<SysOptions> entityList) {
-        if ( entityList == null ) {
+        if (entityList == null) {
             return null;
         }
 
-        List<SystemConfiguration> list = new ArrayList<SystemConfiguration>( entityList.size() );
-        for ( SysOptions sysOptions : entityList ) {
-            list.add( toDto( sysOptions ) );
+        List<SystemConfiguration> list = new ArrayList<SystemConfiguration>(entityList.size());
+        for (SysOptions sysOptions : entityList) {
+            list.add(toDto(sysOptions));
         }
 
         return list;
@@ -66,7 +66,7 @@ public class SystemConfigurationMapperImpl implements SystemConfigurationMapper 
 
     @Override
     public void partialUpdate(SysOptions entity, SystemConfiguration dto) {
-        if ( dto == null ) {
+        if (dto == null) {
             return;
         }
     }

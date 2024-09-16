@@ -17,51 +17,51 @@ public class ItemUnitMapperImpl implements ItemUnitMapper {
 
     @Override
     public ItemUnit toEntity(ItemUnitDTO dto) {
-        if ( dto == null ) {
+        if (dto == null) {
             return null;
         }
 
         ItemUnit itemUnit = new ItemUnit();
 
-        itemUnit.setId( dto.getId() );
-        itemUnit.setName( dto.getName() );
-        itemUnit.setCost( dto.getCost() );
-        if ( dto.getBasic() != null ) {
-            itemUnit.setBasic( dto.getBasic() );
+        itemUnit.setId(dto.getId());
+        itemUnit.setName(dto.getName());
+        itemUnit.setCost(dto.getCost());
+        if (dto.getBasic() != null) {
+            itemUnit.setBasic(dto.getBasic());
         }
-        itemUnit.setPieces( dto.getPieces() );
-        itemUnit.setPrice( dto.getPrice() );
+        itemUnit.setPieces(dto.getPieces());
+        itemUnit.setPrice(dto.getPrice());
 
         return itemUnit;
     }
 
     @Override
     public ItemUnitDTO toDto(ItemUnit entity) {
-        if ( entity == null ) {
+        if (entity == null) {
             return null;
         }
 
         ItemUnitDTO itemUnitDTO = new ItemUnitDTO();
 
-        itemUnitDTO.setId( entity.getId() );
-        itemUnitDTO.setName( entity.getName() );
-        itemUnitDTO.setPieces( entity.getPieces() );
-        itemUnitDTO.setPrice( entity.getPrice() );
-        itemUnitDTO.setBasic( entity.isBasic() );
-        itemUnitDTO.setCost( entity.getCost() );
+        itemUnitDTO.setId(entity.getId());
+        itemUnitDTO.setName(entity.getName());
+        itemUnitDTO.setPieces(entity.getPieces());
+        itemUnitDTO.setPrice(entity.getPrice());
+        itemUnitDTO.setBasic(entity.isBasic());
+        itemUnitDTO.setCost(entity.getCost());
 
         return itemUnitDTO;
     }
 
     @Override
     public List<ItemUnit> toEntity(List<ItemUnitDTO> dtoList) {
-        if ( dtoList == null ) {
+        if (dtoList == null) {
             return null;
         }
 
-        List<ItemUnit> list = new ArrayList<ItemUnit>( dtoList.size() );
-        for ( ItemUnitDTO itemUnitDTO : dtoList ) {
-            list.add( toEntity( itemUnitDTO ) );
+        List<ItemUnit> list = new ArrayList<ItemUnit>(dtoList.size());
+        for (ItemUnitDTO itemUnitDTO : dtoList) {
+            list.add(toEntity(itemUnitDTO));
         }
 
         return list;
@@ -69,13 +69,13 @@ public class ItemUnitMapperImpl implements ItemUnitMapper {
 
     @Override
     public List<ItemUnitDTO> toDto(List<ItemUnit> entityList) {
-        if ( entityList == null ) {
+        if (entityList == null) {
             return null;
         }
 
-        List<ItemUnitDTO> list = new ArrayList<ItemUnitDTO>( entityList.size() );
-        for ( ItemUnit itemUnit : entityList ) {
-            list.add( toDto( itemUnit ) );
+        List<ItemUnitDTO> list = new ArrayList<ItemUnitDTO>(entityList.size());
+        for (ItemUnit itemUnit : entityList) {
+            list.add(toDto(itemUnit));
         }
 
         return list;
@@ -83,27 +83,27 @@ public class ItemUnitMapperImpl implements ItemUnitMapper {
 
     @Override
     public void partialUpdate(ItemUnit entity, ItemUnitDTO dto) {
-        if ( dto == null ) {
+        if (dto == null) {
             return;
         }
 
-        if ( dto.getId() != null ) {
-            entity.setId( dto.getId() );
+        if (dto.getId() != null) {
+            entity.setId(dto.getId());
         }
-        if ( dto.getName() != null ) {
-            entity.setName( dto.getName() );
+        if (dto.getName() != null) {
+            entity.setName(dto.getName());
         }
-        if ( dto.getCost() != null ) {
-            entity.setCost( dto.getCost() );
+        if (dto.getCost() != null) {
+            entity.setCost(dto.getCost());
         }
-        if ( dto.getBasic() != null ) {
-            entity.setBasic( dto.getBasic() );
+        if (dto.getBasic() != null) {
+            entity.setBasic(dto.getBasic());
         }
-        if ( dto.getPieces() != null ) {
-            entity.setPieces( dto.getPieces() );
+        if (dto.getPieces() != null) {
+            entity.setPieces(dto.getPieces());
         }
-        if ( dto.getPrice() != null ) {
-            entity.setPrice( dto.getPrice() );
+        if (dto.getPrice() != null) {
+            entity.setPrice(dto.getPrice());
         }
     }
 }

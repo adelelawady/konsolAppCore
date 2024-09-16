@@ -193,7 +193,7 @@ public class StoreServiceImpl implements StoreService {
          */
 
         Optional<Item> item = itemService.findOneById(ItemId);
-        if (!item.isPresent()) {
+        if (item.isEmpty()) {
             throw new ItemNotFoundException(String.format("الصنف {0} غير متاح لتعديل سجلات المخازن", ItemId));
         }
 
@@ -204,7 +204,15 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public boolean checkItemQtyAvailable(String ItemId, BigDecimal qty) {
+        Optional<Item> isCheckQty = itemService.findOneById(ItemId);
+        if (isQuantityCheckRequired(isCheckQty)) {
+            return true;
+        }
         return getItemQty(ItemId).compareTo(qty) >= 0;
+    }
+
+    private boolean isQuantityCheckRequired(Optional<Item> optionalItem) {
+        return optionalItem.isPresent() && !optionalItem.get().isCheckQty();
     }
 
     @Override
