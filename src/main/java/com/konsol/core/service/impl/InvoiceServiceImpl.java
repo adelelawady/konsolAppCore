@@ -746,16 +746,12 @@ public class InvoiceServiceImpl implements InvoiceService {
         /**
          * invoice
          */
-        if (!invoiceOp.isPresent()) {
+        if (invoiceOp.isEmpty()) {
             throw new InvoiceNotFoundException(null);
         }
 
         InvoicePrintDTO invoicePrintDTO = new InvoicePrintDTO();
         invoicePrintDTO.setInvoice(getMapper().toDto(invoiceOp.get()));
-
-        /**
-         * TODO X Options globalInfo
-         */
 
         return invoicePrintDTO;
     }
@@ -801,11 +797,18 @@ public class InvoiceServiceImpl implements InvoiceService {
          * item's QTY
          */
 
+        if (settings.getMAIN_SELECTED_BANK_ID() != null && !settings.getMAIN_SELECTED_BANK_ID().isEmpty()) {
+            bankService.findOneDomain(settings.getMAIN_SELECTED_BANK_ID()).ifPresent(invoice::setBank);
+        }
+
+        if (settings.getMAIN_SELECTED_STORE_ID() != null && !settings.getMAIN_SELECTED_STORE_ID().isEmpty()) {
+            storeService.findOneDomain(settings.getMAIN_SELECTED_STORE_ID()).ifPresent(invoice::setStore);
+        }
+
         switch (invoice.getKind()) {
             case SALE:
                 {
                     if (saleUpdateItemQtyAfterSave) {
-                        // TODO selected store to subtract from
                         invoice
                             .getInvoiceItems()
                             .forEach(invoiceItem -> {

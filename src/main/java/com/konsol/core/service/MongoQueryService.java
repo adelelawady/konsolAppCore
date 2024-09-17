@@ -146,11 +146,24 @@ public class MongoQueryService {
         /**
          * date
          */
-        if ((invoicesSearchModel.getDateFrom() != null)) {
-            andCriteria
-                .and("created_date")
-                .gte(Date.from(invoicesSearchModel.getDateFrom().toInstant()))
-                .lt(Date.from(invoicesSearchModel.getDateTo().toInstant()));
+
+        if (invoicesSearchModel.getDateFrom() != null && invoicesSearchModel.getDateTo() != null) {
+            OffsetDateTime from = OffsetDateTime.parse(invoicesSearchModel.getDateFrom());
+            OffsetDateTime to = OffsetDateTime.parse(invoicesSearchModel.getDateTo());
+
+            andCriteria.and("created_date").gte(new Date(from.toInstant().toEpochMilli())).lt(new Date(to.toInstant().toEpochMilli()));
+        }
+
+        if (invoicesSearchModel.getAccountId() != null && !invoicesSearchModel.getAccountId().isEmpty()) {
+            andCriteria.and("account._id").is(invoicesSearchModel.getAccountId());
+        }
+
+        if (invoicesSearchModel.getBankId() != null && !invoicesSearchModel.getBankId().isEmpty()) {
+            andCriteria.and("bank._id").is(invoicesSearchModel.getBankId());
+        }
+
+        if (invoicesSearchModel.getStoreId() != null && !invoicesSearchModel.getStoreId().isEmpty()) {
+            andCriteria.and("store._id").is(invoicesSearchModel.getStoreId());
         }
 
         countQuery.addCriteria(andCriteria);
@@ -158,11 +171,11 @@ public class MongoQueryService {
         InvoiceViewDTOContainer invoiceViewDTOContainer = new InvoiceViewDTOContainer();
 
         List<Invoice> invoicesFound = mongoTemplate.find(query, Invoice.class);
-        Long ResultCount = mongoTemplate.count(countQuery, Invoice.class);
+        long ResultCount = mongoTemplate.count(countQuery, Invoice.class);
 
         invoiceViewDTOContainer.setResult(invoicesFound.stream().map(invoiceMapper::toInvoiceViewSimpleDTO).collect(Collectors.toList()));
 
-        invoiceViewDTOContainer.setTotal(ResultCount.intValue());
+        invoiceViewDTOContainer.setTotal((int) ResultCount);
 
         return calcInvoicesSearchQuery(invoiceViewDTOContainer);
     }

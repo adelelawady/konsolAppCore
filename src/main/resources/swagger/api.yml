@@ -2749,16 +2749,26 @@ components:
           type: string
         dateFrom:
           type: string
-          format: date-time
         dateTo:
           type: string
-          format: date-time
         kind:
           type: string
           enum:
             - ALL
             - SALE
             - PURCHASE
+        accountId:
+          type: string
+          x-stoplight:
+            id: 7a479sd0ae9l8
+        storeId:
+          type: string
+          x-stoplight:
+            id: b8mkyfcn9d5cd
+        bankId:
+          type: string
+          x-stoplight:
+            id: 88g0mc2wo6zkx
     MoniesSearchModel:
       title: MoniesSearchModel
       x-stoplight:
