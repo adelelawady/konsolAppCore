@@ -89,6 +89,13 @@ public interface InvoiceService {
     InvoiceDTO initializeNewInvoice(InvoiceKind kind);
 
     /**
+     * creates new empty invoice item as temp not included till it's active and saved invoice
+     * @param kind kind of new created invoice
+     * @return invoice saved , mapped to InvoiceDTO
+     */
+    InvoiceDTO createInvoice(InvoiceKind kind);
+
+    /**
      * add item to invoice
      * @param id id of invoice
      * @param createInvoiceItemDTO dto contains new item price , unit , and qty

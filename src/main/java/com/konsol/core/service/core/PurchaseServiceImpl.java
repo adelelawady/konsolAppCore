@@ -1,9 +1,7 @@
-package com.konsol.core.service.core.impl;
+package com.konsol.core.service.core;
 
 import com.konsol.core.domain.InvoiceItem;
-import com.konsol.core.repository.InvoiceItemRepository;
-import com.konsol.core.service.PurchaseService;
-import com.konsol.core.service.SaleService;
+import com.konsol.core.service.core.Interface.PurchaseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -16,11 +14,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     private final Logger log = LoggerFactory.getLogger(PurchaseServiceImpl.class);
 
-    private final InvoiceItemRepository invoiceItemRepository;
-
-    public PurchaseServiceImpl(InvoiceItemRepository invoiceItemRepository) {
-        this.invoiceItemRepository = invoiceItemRepository;
-    }
+    public PurchaseServiceImpl() {}
 
     /**
      * calculate Invoice Item for selected invoice

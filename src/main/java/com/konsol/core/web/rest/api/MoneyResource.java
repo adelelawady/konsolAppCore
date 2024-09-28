@@ -2,11 +2,11 @@ package com.konsol.core.web.rest.api;
 
 import com.konsol.core.repository.MoneyRepository;
 import com.konsol.core.service.MoneyService;
-import com.konsol.core.service.MongoQueryService;
 import com.konsol.core.service.api.dto.CreateMoneyDTO;
 import com.konsol.core.service.api.dto.MoneyDTO;
 import com.konsol.core.service.api.dto.MoniesSearchModel;
 import com.konsol.core.service.api.dto.MoniesViewDTOContainer;
+import com.konsol.core.service.core.query.MongoQueryService;
 import com.konsol.core.web.api.MoniesApiDelegate;
 import com.konsol.core.web.rest.errors.BadRequestAlertException;
 import java.net.URI;

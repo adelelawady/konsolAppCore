@@ -1,14 +1,8 @@
-package com.konsol.core.service;
+package com.konsol.core.service.core.Interface;
 
-import com.konsol.core.domain.Invoice;
 import com.konsol.core.domain.InvoiceItem;
-import com.konsol.core.domain.enumeration.InvoiceKind;
-import com.konsol.core.service.api.dto.CreateInvoiceItemDTO;
-import com.konsol.core.service.api.dto.InvoiceDTO;
-import com.konsol.core.service.api.dto.InvoiceItemDTO;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import org.springframework.context.annotation.Primary;
 
 /**
  * Service Interface for managing Sales {@link com.konsol.core.domain.Invoice}.

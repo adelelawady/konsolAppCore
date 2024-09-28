@@ -7,6 +7,9 @@ import com.konsol.core.repository.InvoiceItemRepository;
 import com.konsol.core.repository.InvoiceRepository;
 import com.konsol.core.service.*;
 import com.konsol.core.service.api.dto.*;
+import com.konsol.core.service.core.Interface.PurchaseService;
+import com.konsol.core.service.core.Interface.SaleService;
+import com.konsol.core.service.core.query.MongoQueryService;
 import com.konsol.core.service.mapper.InvoiceItemMapper;
 import com.konsol.core.service.mapper.InvoiceMapper;
 import com.konsol.core.web.rest.api.errors.InvoiceException;
@@ -197,10 +200,6 @@ public class InvoiceServiceImpl implements InvoiceService {
         return invoiceRepository.findAll(pageable).map(invoiceMapper::toDto);
     }
 
-    public Page<InvoiceDTO> findAllWithEagerRelationships(Pageable pageable) {
-        return invoiceRepository.findAllWithEagerRelationships(pageable).map(invoiceMapper::toDto);
-    }
-
     @Override
     public Optional<InvoiceDTO> findOne(String id) {
         log.debug("Request to get Invoice : {}", id);
@@ -250,7 +249,6 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public InvoiceDTO initializeNewInvoice(InvoiceKind kind) {
         Invoice invoice = new Invoice();
-        invoice.setTemp(true);
         invoice.setActive(false);
         invoice.setPk(null);
         invoice.setKind(kind);
@@ -258,6 +256,24 @@ public class InvoiceServiceImpl implements InvoiceService {
         Pk pk = pkService.getPkEntity(PkKind.INVOICE);
         resultInvoice.setPk(pk.getValue().add(new BigDecimal(1)).intValue() + "");
         return invoiceMapper.toDto(resultInvoice);
+    }
+
+    /**
+     * @param kind kind of new created invoice
+     * @return
+     */
+    @Override
+    public InvoiceDTO createInvoice(InvoiceKind kind) {
+        String invoiceId = initializeNewInvoice(kind).getId();
+        Optional<Invoice> invoiceOptional = findOneDomain(invoiceId);
+        if (invoiceOptional.isPresent()) {
+            return null;
+        } else {
+            Invoice invoiceFound = invoiceOptional.get();
+            invoiceFound.setActive(true);
+            invoiceFound = invoiceRepository.save(invoiceFound);
+            return invoiceMapper.toDto(invoiceFound);
+        }
     }
 
     /**
@@ -499,8 +515,6 @@ public class InvoiceServiceImpl implements InvoiceService {
     public InvoiceDTO addInvoiceItem(String invoiceId, CreateInvoiceItemDTO createInvoiceItemDTO) {
         Optional<Invoice> invoiceOp = invoiceRepository.findById(invoiceId);
 
-        // Optional<Item> itemOp = itemService.findOneById(createInvoiceItemDTO.getItemId());
-
         /**
          * invoice
          */
@@ -536,12 +550,12 @@ public class InvoiceServiceImpl implements InvoiceService {
         }
 
         if (invFound != null) {
-            BigDecimal totalInvoiceItemitemQtyInInvoice = calcItemQtyOutInInvoiceItems(invoiceId, createInvoiceItemDTO.getItemId(), true);
+            BigDecimal totalInvoiceItem_ItemQtyInInvoice = calcItemQtyOutInInvoiceItems(invoiceId, createInvoiceItemDTO.getItemId(), true);
             if (
                 checkQty &&
                 !storeService.checkItemQtyAvailable(
                     createInvoiceItemDTO.getItemId(),
-                    ((createInvoiceItemDTO.getQty().multiply(invFound.getUnitPieces())).add(totalInvoiceItemitemQtyInInvoice))
+                    ((createInvoiceItemDTO.getQty().multiply(invFound.getUnitPieces())).add(totalInvoiceItem_ItemQtyInInvoice))
                 )
             ) {
                 throw new ItemQtyException("مشكلة ف كمية الصنف", "لا يوجد ما يكفي من الصنف ف المخازن");
@@ -635,8 +649,6 @@ public class InvoiceServiceImpl implements InvoiceService {
             invoice.setNetPrice(new BigDecimal(0));
             invoice.setNetCost(new BigDecimal(0));
             invoice.setNetResult(new BigDecimal(0));
-            //invoice.setDiscount(new BigDecimal(0));
-            //invoice.setDiscountPer(0);
         }
 
         return save ? invoiceRepository.save(invoice) : invoice;
@@ -672,24 +684,44 @@ public class InvoiceServiceImpl implements InvoiceService {
      */
     @Override
     public Invoice calcInvoiceDiscount(Invoice invoice) {
+        BigDecimal totalAmount;
+        BigDecimal netAmount;
+
+        // Determine if it's a sale or purchase, and set the correct fields
+        if (invoice.getKind().equals(InvoiceKind.SALE)) {
+            totalAmount = invoice.getTotalPrice();
+            netAmount = invoice.getNetPrice();
+        } else if (invoice.getKind().equals(InvoiceKind.PURCHASE)) {
+            totalAmount = invoice.getTotalCost();
+            netAmount = invoice.getNetCost();
+        } else {
+            // If kind is not sale or purchase, return the invoice as is
+            return invoice;
+        }
+
         // Check if a discount amount is set and greater than 0
         if (invoice.getDiscount() != null && invoice.getDiscount().compareTo(BigDecimal.ZERO) > 0) {
             // Calculate the discount percentage
-            BigDecimal discountPer = invoice
-                .getDiscount()
-                .divide(invoice.getTotalPrice(), 4, RoundingMode.CEILING)
-                .multiply(BigDecimal.valueOf(100));
+            BigDecimal discountPer = invoice.getDiscount().divide(totalAmount, 4, RoundingMode.CEILING).multiply(BigDecimal.valueOf(100));
 
-            // If the discount amount is less than the total price, apply it
-            if (invoice.getDiscount().compareTo(invoice.getTotalPrice()) < 0) {
+            // If the discount amount is less than the total amount, apply it
+            if (invoice.getDiscount().compareTo(totalAmount) < 0) {
                 invoice.discountPer(discountPer.intValue());
-                invoice.netPrice(invoice.getTotalPrice().subtract(invoice.getDiscount()));
+                netAmount = totalAmount.subtract(invoice.getDiscount());
             } else {
                 // If the discount is too large, reset it
                 invoice.discountPer(0);
                 invoice.discount(BigDecimal.ZERO);
-                invoice.netPrice(invoice.getTotalPrice());
+                netAmount = totalAmount;
             }
+
+            // Set the net amount based on the kind
+            if (invoice.getKind().equals(InvoiceKind.SALE)) {
+                invoice.netPrice(netAmount);
+            } else {
+                invoice.netCost(netAmount);
+            }
+
             return invoice;
         }
 
@@ -699,18 +731,26 @@ public class InvoiceServiceImpl implements InvoiceService {
             BigDecimal discount = BigDecimal
                 .valueOf(invoice.getDiscountPer())
                 .divide(BigDecimal.valueOf(100), 4, RoundingMode.CEILING)
-                .multiply(invoice.getTotalPrice());
+                .multiply(totalAmount);
 
-            // If the discount is less than the total price, apply it
-            if (discount.compareTo(invoice.getTotalPrice()) < 0) {
+            // If the discount is less than the total amount, apply it
+            if (discount.compareTo(totalAmount) < 0) {
                 invoice.discount(discount);
-                invoice.netPrice(invoice.getTotalPrice().subtract(discount));
+                netAmount = totalAmount.subtract(discount);
             } else {
                 // If the discount is too large, reset it
                 invoice.discountPer(0);
                 invoice.discount(BigDecimal.ZERO);
-                invoice.netPrice(invoice.getTotalPrice());
+                netAmount = totalAmount;
             }
+
+            // Set the net amount based on the kind
+            if (invoice.getKind().equals(InvoiceKind.SALE)) {
+                invoice.netPrice(netAmount);
+            } else {
+                invoice.netCost(netAmount);
+            }
+
             return invoice;
         }
 
@@ -785,7 +825,6 @@ public class InvoiceServiceImpl implements InvoiceService {
         }
 
         invoice.setActive(true);
-        invoice.setTemp(false);
 
         /**
          * TODO error invoice PK dublicated value not inserted
@@ -1121,7 +1160,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     public void removeTempInvoices() {
         log.info("Removing all temp and not activated invoices", new Date().getTime());
         invoiceRepository
-            .findAllByActiveIsFalseAndTempIsTrueAndCreatedDateBefore(Instant.now().minus(3, ChronoUnit.DAYS))
+            .findAllByActiveIsFalseAndCreatedDateBefore(Instant.now().minus(3, ChronoUnit.DAYS))
             .forEach(tempNotActiveInvoice -> {
                 this.delete(tempNotActiveInvoice.getId());
             });

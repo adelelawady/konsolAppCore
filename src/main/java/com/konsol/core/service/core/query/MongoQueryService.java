@@ -1,4 +1,4 @@
-package com.konsol.core.service;
+package com.konsol.core.service.core.query;
 
 import com.konsol.core.domain.Invoice;
 import com.konsol.core.repository.AccountUserRepository;
@@ -11,7 +11,6 @@ import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -20,12 +19,10 @@ import java.util.stream.Collectors;
 import org.bson.Document;
 import org.bson.types.Decimal128;
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.DateOperators;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
@@ -36,27 +33,32 @@ import org.springframework.stereotype.Service;
 @Service
 public class MongoQueryService {
 
-    @Autowired
     public final MongoTemplate mongoTemplate;
 
-    @Autowired
     private final InvoiceMapper invoiceMapper;
 
-    @Autowired
-    private MoneyMapper moneyMapper;
+    private final MoneyMapper moneyMapper;
 
-    @Autowired
-    private MoneyRepository moneyRepository;
+    private final MoneyRepository moneyRepository;
 
-    @Autowired
-    private AccountUserRepository accountUserRepository;
+    private final AccountUserRepository accountUserRepository;
 
-    @Autowired
-    private AccountUserMapper accountUserMapper;
+    private final AccountUserMapper accountUserMapper;
 
-    public MongoQueryService(MongoTemplate mongoTemplate, InvoiceMapper invoiceMapper) {
+    public MongoQueryService(
+        MongoTemplate mongoTemplate,
+        InvoiceMapper invoiceMapper,
+        MoneyMapper moneyMapper,
+        MoneyRepository moneyRepository,
+        AccountUserRepository accountUserRepository,
+        AccountUserMapper accountUserMapper
+    ) {
         this.mongoTemplate = mongoTemplate;
         this.invoiceMapper = invoiceMapper;
+        this.moneyMapper = moneyMapper;
+        this.moneyRepository = moneyRepository;
+        this.accountUserRepository = accountUserRepository;
+        this.accountUserMapper = accountUserMapper;
     }
 
     // getAllItemsQuery
@@ -134,7 +136,6 @@ public class MongoQueryService {
         Criteria andCriteria = new Criteria()
             .andOperator(
                 Criteria.where("active").is(true),
-                // Criteria.where("temp").is(false),
                 (
                     (invoicesSearchModel.getKind() != null && (!invoicesSearchModel.getKind().toString().equals("ALL")))
                         ? Criteria.where("kind").is(invoicesSearchModel.getKind())

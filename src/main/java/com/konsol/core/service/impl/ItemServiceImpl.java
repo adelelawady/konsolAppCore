@@ -299,6 +299,7 @@ public class ItemServiceImpl implements ItemService {
         /**
          * pagination
          */
+
         if (paginationSearchModel.getPage() != null && paginationSearchModel.getSize() != null && paginationSearchModel.getSize() > 0) {
             Pageable pageable = PageRequest.of(paginationSearchModel.getPage(), paginationSearchModel.getSize());
             query.with(pageable);
@@ -543,23 +544,5 @@ public class ItemServiceImpl implements ItemService {
         }
 
         return items.stream().findFirst().map(itemMapper::toDto);
-    }
-
-    /**
-     * Checks if the given string can be parsed to an integer.
-     *
-     * @param s the string to check
-     * @return true if the string can be parsed to an integer, false otherwise
-     */
-    public static boolean isInteger(String s) {
-        try {
-            Integer.parseInt(s);
-        } catch (NumberFormatException e) {
-            return false;
-        } catch (NullPointerException e) {
-            return false;
-        }
-        // only got here if we didn't return false
-        return true;
     }
 }

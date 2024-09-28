@@ -1,10 +1,7 @@
-package com.konsol.core.service;
+package com.konsol.core.service.core.Interface;
 
 import com.konsol.core.domain.Invoice;
 import com.konsol.core.domain.InvoiceItem;
-import java.math.BigDecimal;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
 
 /**
  * Service Interface for managing Sales {@link Invoice}.

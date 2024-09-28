@@ -1,14 +1,9 @@
-package com.konsol.core.service.core.impl;
+package com.konsol.core.service.core;
 
-import com.konsol.core.domain.Invoice;
 import com.konsol.core.domain.InvoiceItem;
-import com.konsol.core.repository.InvoiceItemRepository;
-import com.konsol.core.service.SaleService;
-import java.math.BigDecimal;
+import com.konsol.core.service.core.Interface.SaleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 /**
@@ -19,11 +14,7 @@ public class SaleServiceImpl implements SaleService {
 
     private final Logger log = LoggerFactory.getLogger(SaleServiceImpl.class);
 
-    private final InvoiceItemRepository invoiceItemRepository;
-
-    public SaleServiceImpl(InvoiceItemRepository invoiceItemRepository) {
-        this.invoiceItemRepository = invoiceItemRepository;
-    }
+    public SaleServiceImpl() {}
 
     /**
      * calculate Invoice Item for selected invoice

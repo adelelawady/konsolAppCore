@@ -39,9 +39,6 @@ public class Invoice extends AbstractAuditingEntity<String> implements Serializa
     @Field("active")
     private boolean active = false;
 
-    @Field("temp")
-    private boolean temp = true;
-
     @Field("deferred")
     private boolean deferred = false; //مؤجل
 
@@ -155,14 +152,6 @@ public class Invoice extends AbstractAuditingEntity<String> implements Serializa
 
     public BigDecimal getTotalCost() {
         return this.totalCost;
-    }
-
-    public boolean isTemp() {
-        return temp;
-    }
-
-    public void setTemp(boolean temp) {
-        this.temp = temp;
     }
 
     public Invoice totalCost(BigDecimal totalCost) {

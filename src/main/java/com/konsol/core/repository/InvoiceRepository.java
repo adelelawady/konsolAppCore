@@ -24,5 +24,5 @@ public interface InvoiceRepository extends MongoRepository<Invoice, String> {
     @Query("{'id': ?0}")
     Optional<Invoice> findOneWithEagerRelationships(String id);
 
-    List<Invoice> findAllByActiveIsFalseAndTempIsTrueAndCreatedDateBefore(Instant dateTime);
+    List<Invoice> findAllByActiveIsFalseAndCreatedDateBefore(Instant dateTime);
 }
