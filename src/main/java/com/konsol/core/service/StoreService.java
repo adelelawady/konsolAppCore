@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 
 /**
  * Service Interface for managing {@link com.konsol.core.domain.Store}.
@@ -112,7 +111,7 @@ public interface StoreService {
      */
     void UpdateItemQty(String ItemId);
 
-    boolean checkItemQtyAvailable(String ItemId, BigDecimal qty);
+    boolean checkNotItemQtyAvailable(String ItemId, BigDecimal qty);
 
     BigDecimal getItemQty(String ItemId);
 

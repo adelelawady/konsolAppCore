@@ -1,4 +1,4 @@
-package com.konsol.core.service.impl;
+package com.konsol.core.service.impl.invoice;
 
 import com.konsol.core.domain.*;
 import com.konsol.core.domain.enumeration.InvoiceKind;
@@ -182,9 +182,6 @@ public class InvoiceServiceImpl implements InvoiceService {
                 );
         }
 
-        /**
-         * ignore invoice items
-         */
         return invoiceRepository
             .findById(invoiceUpdateDTO.getId())
             .map(existingInvoice -> {
@@ -266,7 +263,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     public InvoiceDTO createInvoice(InvoiceKind kind) {
         String invoiceId = initializeNewInvoice(kind).getId();
         Optional<Invoice> invoiceOptional = findOneDomain(invoiceId);
-        if (invoiceOptional.isPresent()) {
+        if (invoiceOptional.isEmpty()) {
             return null;
         } else {
             Invoice invoiceFound = invoiceOptional.get();
@@ -319,7 +316,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         /**
          * item
          */
-        if (!itemOp.isPresent()) {
+        if (itemOp.isEmpty()) {
             throw new ItemNotFoundException(null);
         }
         invoiceItem.setItem(itemOp.get());
@@ -553,7 +550,7 @@ public class InvoiceServiceImpl implements InvoiceService {
             BigDecimal totalInvoiceItem_ItemQtyInInvoice = calcItemQtyOutInInvoiceItems(invoiceId, createInvoiceItemDTO.getItemId(), true);
             if (
                 checkQty &&
-                !storeService.checkItemQtyAvailable(
+                storeService.checkNotItemQtyAvailable(
                     createInvoiceItemDTO.getItemId(),
                     ((createInvoiceItemDTO.getQty().multiply(invFound.getUnitPieces())).add(totalInvoiceItem_ItemQtyInInvoice))
                 )
@@ -568,7 +565,7 @@ public class InvoiceServiceImpl implements InvoiceService {
             regenerateInvoiceItemsPk(invoiceId);
             return findOne(invoiceId).orElseGet(null);
         } else {
-            if (checkQty && !storeService.checkItemQtyAvailable(createInvoiceItemDTO.getItemId(), createInvoiceItemDTO.getQty())) {
+            if (checkQty && storeService.checkNotItemQtyAvailable(createInvoiceItemDTO.getItemId(), createInvoiceItemDTO.getQty())) {
                 throw new ItemQtyException("مشكلة ف كمية الصنف", "لا يوجد ما يكفي من الصنف ف المخازن");
             }
         }
@@ -582,7 +579,7 @@ public class InvoiceServiceImpl implements InvoiceService {
             /**unit**/
             if (
                 checkQty &&
-                !storeService.checkItemQtyAvailable(createInvoiceItemDTO.getItemId(), createInvoiceItemDTO.getQty().add(qtyPieces))
+                storeService.checkNotItemQtyAvailable(createInvoiceItemDTO.getItemId(), createInvoiceItemDTO.getQty().add(qtyPieces))
             ) {
                 throw new ItemQtyException("مشكلة ف كمية الصنف", "لا يوجد ما يكفي من الصنف ف المخازن");
             }

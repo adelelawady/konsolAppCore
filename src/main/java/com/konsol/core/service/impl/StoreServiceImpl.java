@@ -15,26 +15,18 @@ import com.konsol.core.web.rest.api.errors.ItemNotFoundException;
 import com.konsol.core.web.rest.api.errors.ItemQtyException;
 import com.konsol.core.web.rest.api.errors.StoreNotFoundException;
 import com.mongodb.client.*;
-import com.mongodb.client.FindIterable;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.*;
 import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import org.bson.Document;
-import org.bson.Document;
-import org.bson.conversions.Bson;
-import org.bson.types.ObjectId;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.AggregationResults;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
 /**
@@ -203,12 +195,12 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public boolean checkItemQtyAvailable(String ItemId, BigDecimal qty) {
+    public boolean checkNotItemQtyAvailable(String ItemId, BigDecimal qty) {
         Optional<Item> isCheckQty = itemService.findOneById(ItemId);
         if (isQuantityCheckRequired(isCheckQty)) {
-            return true;
+            return false;
         }
-        return getItemQty(ItemId).compareTo(qty) >= 0;
+        return getItemQty(ItemId).compareTo(qty) < 0;
     }
 
     private boolean isQuantityCheckRequired(Optional<Item> optionalItem) {
@@ -256,7 +248,7 @@ public class StoreServiceImpl implements StoreService {
             throw new ItemNotFoundException(String.format("الصنف {0} غير متاح لتعديل سجلات المخازن", ItemId));
         }
 
-        if (!checkItemQtyAvailable(ItemId, qty)) {
+        if (checkNotItemQtyAvailable(ItemId, qty)) {
             throw new ItemQtyException("مشكلة ف كمية الصنف", "لا يوجد ما يكفي من الصنف ف المخازن");
         }
 
