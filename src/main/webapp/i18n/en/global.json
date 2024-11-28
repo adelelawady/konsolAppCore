@@ -1,5 +1,17 @@
 {
   "global": {
+    "itemSearch": {
+      "placeholder": "Search products...",
+      "noResults": "No results found",
+      "noBarcode": "No barcode",
+      "generalCategory": "General",
+      "columns": {
+        "name": "Product Name",
+        "quantity": "Quantity",
+        "price": "Price",
+        "category": "Category"
+      }
+    },
     "title": "KonsolCore",
     "browsehappy": "You are using an <strong>outdated</strong> browser. Please <a href=\"http://browsehappy.com/?locale=en\">upgrade your browser</a> to improve your experience.",
     "menu": {

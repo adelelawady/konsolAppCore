@@ -20,10 +20,10 @@
       <input
         type="text"
         class="form-control form-control-lg border-start-0 ps-0"
-        [placeholder]="'البحث عن المنتجات...'"
+        [placeholder]="'global.itemSearch.placeholder' | translate"
         [(ngModel)]="searchTerm"
         (input)="onSearchInput($event)"
-        (focusin)="showResults = true"
+        (focusin)="onSearchFocus()"
         (focusout)="onFocusOut($event)"
       />
       <div class="spinner-overlay" *ngIf="isLoading">
@@ -36,10 +36,10 @@
     <div class="search-results">
       <div class="results-header" *ngIf="searchResults.length > 0">
         <div class="row g-0 text-muted border-bottom py-2">
-          <div class="col-5">اسم المنتج</div>
-          <div class="col-2 text-center">الكمية</div>
-          <div class="col-3 text-center">السعر</div>
-          <div class="col-2 text-center">الفئة</div>
+          <div class="col-5" jhiTranslate="global.itemSearch.columns.name">اسم المنتج</div>
+          <div class="col-2 text-center" jhiTranslate="global.itemSearch.columns.quantity">الكمية</div>
+          <div class="col-3 text-center" jhiTranslate="global.itemSearch.columns.price">السعر</div>
+          <div class="col-2 text-center" jhiTranslate="global.itemSearch.columns.category">الفئة</div>
         </div>
       </div>
 
@@ -54,7 +54,9 @@
           <div class="row g-0 align-items-center py-2">
             <div class="col-5">
               <div class="item-name">{{ item.name }}</div>
-              <div class="item-code text-muted small">{{ item.barcode || 'بدون باركود' }}</div>
+              <div class="item-code text-muted small">
+                {{ item.barcode || ('global.itemSearch.noBarcode' | translate) }}
+              </div>
             </div>
             <div class="col-2 text-center">
               <span class="badge" [ngClass]="{ 'bg-success': (item.qty || 0) > 0, 'bg-warning': !(item.qty || 0) }">
@@ -86,7 +88,7 @@
               <path d="M15 10l.01 0" />
               <path d="M9.5 15.25a3.5 3.5 0 0 1 5 0" />
             </svg>
-            <div>لا توجد نتائج</div>
+            <div jhiTranslate="global.itemSearch.noResults">لا توجد نتائج</div>
           </div>
         </div>
       </div>

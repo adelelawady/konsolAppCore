@@ -3,6 +3,7 @@ import { ItemResourceService } from 'app/core/konsolApi/api/itemResource.service
 import { ItemViewDTO } from 'app/core/konsolApi/model/itemViewDTO';
 import { PaginationSearchModel } from 'app/core/konsolApi/model/paginationSearchModel';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+import { SharedModule } from '../../shared.module';
 
 @Component({
   selector: 'jhi-items-search-box',
@@ -32,18 +33,43 @@ export class ItemsSearchBoxComponent implements OnInit {
     this.searchSubject.next(term);
   }
 
-  searchItems(term: string): void {
-    if (!term.trim()) {
-      this.searchResults = [];
-      this.showResults = false;
-      return;
+  onSearchFocus(): void {
+    this.showResults = true;
+    if (!this.searchResults.length) {
+      this.loadInitialItems();
     }
+  }
 
+  loadInitialItems(): void {
+    this.isLoading = true;
+    const searchModel: PaginationSearchModel = {
+      page: 0,
+      size: 20,
+      sortField: 'name',
+      sortOrder: 'ASC',
+    };
+
+    this.itemService.itemsViewSearchPaginate(searchModel).subscribe({
+      next: response => {
+        if (response && response.result) {
+          this.searchResults = response.result;
+          this.showResults = true;
+        }
+        this.isLoading = false;
+      },
+      error: () => {
+        this.isLoading = false;
+        this.searchResults = [];
+      },
+    });
+  }
+
+  searchItems(term: string): void {
     this.isLoading = true;
     const searchModel: PaginationSearchModel = {
       searchText: term,
       page: 0,
-      size: 10,
+      size: 20,
       sortField: 'name',
       sortOrder: 'ASC',
     };
