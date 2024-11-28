@@ -11,15 +11,132 @@ Navbar
 }
 
 .profile-image {
-  height: 1.75em;
-  width: 1.75em;
+  height: 1.75rem;
+  width: 1.75rem;
 }
 
 .navbar {
-  padding: 0.2rem 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--tblr-border-color);
+  background: var(--tblr-navbar-bg);
 
-  a.nav-link {
-    font-weight: 400;
+  .container-xl {
+    padding: 0 1.5rem;
+  }
+
+  .navbar-brand-wrapper {
+    .navbar-brand {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--tblr-primary);
+      text-decoration: none;
+      padding: 0;
+
+      .logo-img {
+        height: 32px;
+        width: 32px;
+        display: inline-block;
+        vertical-align: middle;
+        background: url('../../../content/images/logo-jhipster.png') no-repeat center center;
+        background-size: contain;
+      }
+
+      .navbar-title {
+        font-size: 1.25rem;
+      }
+    }
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    margin: 0 0.25rem;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
+  .nav-link {
+    color: var(--tblr-body-color);
+    font-weight: 500;
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--tblr-border-radius);
+    white-space: nowrap;
+
+    &:hover {
+      color: var(--tblr-primary);
+    }
+
+    &.active {
+      color: var(--tblr-primary);
+      background: var(--tblr-primary-subtle);
+    }
+
+    &.dropdown-toggle {
+      padding-right: 1rem;
+    }
+  }
+
+  .dropdown-menu {
+    margin-top: 0.5rem;
+    border-color: var(--tblr-border-color);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+
+    .dropdown-item {
+      padding: 0.5rem 1rem;
+
+      &:hover {
+        background: var(--tblr-primary-subtle);
+        color: var(--tblr-primary);
+      }
+
+      &.active {
+        background: var(--tblr-primary-subtle);
+        color: var(--tblr-primary);
+      }
+
+      fa-icon {
+        width: 1rem;
+        text-align: center;
+      }
+    }
+  }
+
+  .profile-image {
+    height: 2rem;
+    width: 2rem;
+  }
+
+  // Mobile optimizations
+  @media (max-width: 768px) {
+    .navbar-collapse {
+      padding: 1rem 0;
+
+      .navbar-nav {
+        padding-top: 1rem;
+        border-top: 1px solid var(--tblr-border-color);
+      }
+
+      .nav-item {
+        margin: 0;
+      }
+    }
+
+    .nav-link {
+      padding: 0.5rem 0;
+    }
+
+    .dropdown-menu {
+      border: none;
+      box-shadow: none;
+      padding: 0;
+      margin: 0;
+
+      .dropdown-item {
+        padding: 0.5rem 1rem;
+      }
+    }
   }
 }
 

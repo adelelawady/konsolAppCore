@@ -1,13 +1,34 @@
-<jhi-page-ribbon></jhi-page-ribbon>
+<div class="page">
+  <!-- Navbar -->
+  <header class="">
+    <div style="width: -webkit-fill-available" class="">
+      <router-outlet name="navbar"></router-outlet>
+    </div>
+  </header>
 
-<div>
-  <router-outlet name="navbar"></router-outlet>
-</div>
+  <div class="page-wrapper">
+    <!-- Page header -->
+    <div class="page-header d-print-none">
+      <div class="container-xl">
+        <div class="row g-2 align-items-center">
+          <div class="col">
+            <!-- Page title will go here if needed -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Page body -->
+    <div class="page-body">
+      <div class="container-xl">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
 
-<div class="container-fluid">
-  <div class="card jh-card">
-    <router-outlet></router-outlet>
+    <!-- Page footer -->
+    <footer class="footer">
+      <div class="container-xl">
+        <jhi-footer></jhi-footer>
+      </div>
+    </footer>
   </div>
-
-  <jhi-footer></jhi-footer>
 </div>

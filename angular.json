@@ -33,10 +33,30 @@
               "src/main/webapp/content",
               "src/main/webapp/favicon.ico",
               "src/main/webapp/manifest.webapp",
-              "src/main/webapp/robots.txt"
+              "src/main/webapp/robots.txt",
+              {
+                "glob": "**/*",
+                "input": "src/main/webapp/content/assets",
+                "output": "assets"
+              }
             ],
-            "styles": ["src/main/webapp/content/scss/vendor.scss", "src/main/webapp/content/scss/global.scss"],
-            "scripts": []
+            "styles": [
+              "src/main/webapp/content/scss/vendor.scss",
+              "src/main/webapp/content/scss/global.scss",
+              "src/main/webapp/content/assets/css/tabler.min.css",
+              "src/main/webapp/content/assets/css/tabler-flags.min.css",
+              "src/main/webapp/content/assets/css/tabler-payments.min.css",
+              "src/main/webapp/content/assets/css/tabler-vendors.min.css",
+              "src/main/webapp/content/assets/css/demo.min.css"
+            ],
+            "scripts": [
+              "src/main/webapp/content/assets/libs/apexcharts/dist/apexcharts.min.js",
+              "src/main/webapp/content/assets/libs/jsvectormap/dist/js/jsvectormap.min.js",
+              "src/main/webapp/content/assets/libs/jsvectormap/dist/maps/world.js",
+              "src/main/webapp/content/assets/libs/jsvectormap/dist/maps/world-merc.js",
+              "src/main/webapp/content/assets/js/tabler.min.js",
+              "src/main/webapp/content/assets/js/demo.min.js"
+            ]
           },
           "configurations": {
             "production": {

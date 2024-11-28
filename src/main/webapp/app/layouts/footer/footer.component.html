@@ -1,3 +1,27 @@
-<div class="footer">
-  <p jhiTranslate="footer">This is your footer</p>
+<div class="footer-content">
+  <div class="row text-center align-items-center flex-row-reverse">
+    <div class="col-lg-auto ms-lg-auto">
+      <ul class="list-inline list-inline-dots mb-0">
+        <li class="list-inline-item">
+          <a href="javascript:void(0)" class="link-secondary">Documentation</a>
+        </li>
+        <li class="list-inline-item">
+          <a href="javascript:void(0)" class="link-secondary">License</a>
+        </li>
+        <li class="list-inline-item">
+          <a href="javascript:void(0)" class="link-secondary">Support</a>
+        </li>
+      </ul>
+    </div>
+    <div class="col-12 col-lg-auto mt-3 mt-lg-0">
+      <ul class="list-inline list-inline-dots mb-0">
+        <li class="list-inline-item">
+          Copyright © {{ currentYear }} <a href="." class="link-secondary">KonsolCore</a>. All rights reserved.
+        </li>
+        <li class="list-inline-item">
+          <span jhiTranslate="global.version">Version</span> {{ version }}
+        </li>
+      </ul>
+    </div>
+  </div>
 </div>

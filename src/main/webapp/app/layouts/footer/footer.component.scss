@@ -1,0 +1,25 @@
+.footer-content {
+  padding: 1rem 0;
+
+  .list-inline-dots {
+    .list-inline-item:not(:last-child) {
+      margin-right: 0;
+
+      &:after {
+        content: '·';
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
+        color: var(--tblr-secondary);
+      }
+    }
+  }
+
+  .link-secondary {
+    color: var(--tblr-secondary);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--tblr-primary);
+    }
+  }
+}
