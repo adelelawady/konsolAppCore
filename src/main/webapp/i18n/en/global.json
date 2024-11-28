@@ -40,7 +40,10 @@
         "database": "Database",
         "jhipster-needle-menu-add-admin-element": "JHipster will add additional menu entries here (do not translate!)"
       },
-      "language": "Language"
+      "language": "Language",
+      "docs": "Documentation",
+      "license": "License",
+      "support": "Support"
     },
     "form": {
       "username.label": "Username",
@@ -95,7 +98,8 @@
     "ribbon": {
       "dev": "Development"
     },
-    "item-count": "Showing {{first}} - {{second}} of {{total}} items."
+    "item-count": "Showing {{first}} - {{second}} of {{total}} items.",
+    "version": "Version"
   },
   "entity": {
     "action": {

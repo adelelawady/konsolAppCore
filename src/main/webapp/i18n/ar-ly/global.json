@@ -40,7 +40,10 @@
         "database": "قاعدة البيانات",
         "jhipster-needle-menu-add-admin-element": "JHipster will add additional menu entries here (do not translate!)"
       },
-      "language": "اللغة"
+      "language": "اللغة",
+      "docs": "الوثائق",
+      "license": "الترخيص",
+      "support": "الدعم"
     },
     "form": {
       "username.label": "اسم المستخدم",
@@ -95,7 +98,8 @@
     "ribbon": {
       "dev": "تطوير"
     },
-    "item-count": "يعرض {{first}} - {{second}} من {{total}} البيانات."
+    "item-count": "يعرض {{first}} - {{second}} من {{total}} البيانات.",
+    "version": "الإصدار"
   },
   "entity": {
     "action": {
