@@ -99,7 +99,55 @@
       "dev": "Development"
     },
     "item-count": "Showing {{first}} - {{second}} of {{total}} items.",
-    "version": "Version"
+    "version": "Version",
+    "navigation": {
+      "mainPages": "Main Pages",
+      "mainPagesSubtitle": "Basic system pages",
+      "subPages": "Sub Pages",
+      "subPagesSubtitle": "Additional functionality pages",
+      "pages": {
+        "invoices": {
+          "title": "Invoices",
+          "description": "Manage invoices and billing"
+        },
+        "categories": {
+          "title": "Categories",
+          "description": "Manage product categories"
+        },
+        "accounts": {
+          "title": "Accounts",
+          "description": "Financial accounts management"
+        },
+        "inventory": {
+          "title": "Inventory",
+          "description": "Inventory management"
+        },
+        "purchase": {
+          "title": "Purchase",
+          "description": "Purchase management"
+        },
+        "sales": {
+          "title": "Sales",
+          "description": "Sales management"
+        },
+        "newCategory": {
+          "title": "New Category",
+          "description": "Add new category"
+        },
+        "moneyMovement": {
+          "title": "Money Movement",
+          "description": "Money movement tracking"
+        },
+        "exchange": {
+          "title": "Exchange",
+          "description": "Exchange operations"
+        },
+        "receipt": {
+          "title": "Receipt",
+          "description": "Receipt management"
+        }
+      }
+    }
   },
   "entity": {
     "action": {

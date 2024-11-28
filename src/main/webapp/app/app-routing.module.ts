@@ -7,6 +7,7 @@ import { navbarRoute } from './layouts/navbar/navbar.route';
 import { Authority } from 'app/config/authority.constants';
 
 import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
+import { PagesModule } from './pages/pages.module';
 
 @NgModule({
   imports: [
@@ -30,7 +31,7 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access.service'
         },
         {
           path: '',
-          loadChildren: () => import(`./entities/entity-routing.module`).then(m => m.EntityRoutingModule),
+          loadChildren: () => import('./pages/pages.module').then(m => m.PagesModule),
         },
         navbarRoute,
         ...errorRoute,
