@@ -1,12 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { AccountService } from 'app/core/auth/account.service';
+import { Account } from 'app/core/auth/account.model';
 
 @Component({
   selector: 'jhi-navigation',
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.scss'],
 })
-export class NavigationComponent {
+export class NavigationComponent implements OnInit, OnDestroy {
+  account: Account | null = null;
+  private readonly destroy$ = new Subject<void>();
+
   mainMenuItems = [
     {
       title: 'الفواتير',
@@ -93,7 +101,25 @@ export class NavigationComponent {
     },
   ];
 
-  constructor(private sanitizer: DomSanitizer) {}
+  constructor(private accountService: AccountService, private router: Router, private sanitizer: DomSanitizer) {}
+
+  ngOnInit(): void {
+    // Check authentication state
+    this.accountService
+      .getAuthenticationState()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(account => {
+        this.account = account;
+        if (!account) {
+          this.router.navigate(['/']);
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
   private getSvgIcon(name: string): SafeHtml {
     const icons: { [key: string]: string } = {

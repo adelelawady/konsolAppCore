@@ -20,6 +20,7 @@ const routes: Routes = [
   {
     path: '',
     component: NavigationComponent,
+    canActivate: [UserRouteAccessService],
   },
   {
     path: 'invoices',

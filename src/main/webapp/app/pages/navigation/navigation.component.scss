@@ -114,3 +114,35 @@
   align-items: center;
   justify-content: center;
 }
+
+.empty {
+  text-align: center;
+  padding: 4rem 2rem;
+
+  .empty-header {
+    font-size: 9rem;
+    font-weight: bold;
+    line-height: 1;
+    margin-bottom: 2rem;
+    color: var(--tblr-gray-300);
+  }
+
+  .empty-title {
+    font-size: 1.75rem;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+  }
+
+  .empty-subtitle {
+    font-size: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .empty-action {
+    .btn {
+      .icon {
+        margin-right: 0.5rem;
+      }
+    }
+  }
+}
