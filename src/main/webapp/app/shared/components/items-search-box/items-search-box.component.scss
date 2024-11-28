@@ -1,0 +1,135 @@
+.items-search-box {
+  position: relative;
+  width: 100%;
+
+  .search-input-container {
+    position: relative;
+
+    .input-group {
+      .input-group-text {
+        color: var(--tblr-gray-500);
+        border-color: var(--tblr-border-color);
+      }
+
+      .form-control {
+        border-color: var(--tblr-border-color);
+
+        &:focus {
+          box-shadow: none;
+          border-color: var(--tblr-primary);
+
+          + .input-group-text {
+            border-color: var(--tblr-primary);
+          }
+        }
+      }
+    }
+
+    .spinner-overlay {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 2;
+    }
+  }
+
+  .search-results-container {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: white;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    max-height: 400px;
+    overflow: hidden;
+
+    .search-results {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+
+      .results-header {
+        background-color: var(--tblr-gray-100);
+        padding: 0 1rem;
+        font-weight: 500;
+        font-size: 0.875rem;
+      }
+
+      .results-body {
+        overflow-y: auto;
+        flex: 1;
+
+        .result-item {
+          display: block;
+          width: 100%;
+          border: none;
+          background: none;
+          padding: 0.25rem 1rem;
+          text-align: start;
+          transition: background-color 0.2s;
+          border-bottom: 1px solid var(--tblr-border-color);
+
+          &:hover {
+            background-color: var(--tblr-gray-100);
+          }
+
+          &.out-of-stock {
+            background-color: var(--tblr-gray-50);
+
+            .item-name {
+              color: var(--tblr-gray-500);
+            }
+          }
+
+          .item-name {
+            font-weight: 500;
+            margin-bottom: 0.125rem;
+          }
+
+          .item-code {
+            font-size: 0.75rem;
+          }
+
+          .badge {
+            font-size: 0.875rem;
+            padding: 0.25rem 0.5rem;
+          }
+
+          .category-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            background-color: var(--tblr-gray-100);
+            border-radius: 4px;
+            font-size: 0.75rem;
+            color: var(--tblr-gray-700);
+          }
+        }
+
+        .no-results {
+          color: var(--tblr-gray-500);
+
+          .icon {
+            width: 48px;
+            height: 48px;
+            stroke-width: 1;
+          }
+        }
+      }
+    }
+  }
+}
+
+// RTL Support
+[dir='rtl'] {
+  .items-search-box {
+    .search-input-container {
+      .spinner-overlay {
+        right: auto;
+        left: 1rem;
+      }
+    }
+  }
+}

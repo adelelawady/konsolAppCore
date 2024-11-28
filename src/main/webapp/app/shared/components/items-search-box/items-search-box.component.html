@@ -1,0 +1,95 @@
+<div class="items-search-box">
+  <div class="search-input-container">
+    <div class="input-group">
+      <span class="input-group-text bg-transparent border-end-0">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="icon"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          stroke-width="2"
+          stroke="currentColor"
+          fill="none"
+        >
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+          <path d="M21 21l-6 -6" />
+        </svg>
+      </span>
+      <input
+        type="text"
+        class="form-control form-control-lg border-start-0 ps-0"
+        [placeholder]="'البحث عن المنتجات...'"
+        [(ngModel)]="searchTerm"
+        (input)="onSearchInput($event)"
+        (focusin)="showResults = true"
+        (focusout)="onFocusOut($event)"
+      />
+      <div class="spinner-overlay" *ngIf="isLoading">
+        <div class="spinner-border spinner-border-sm text-primary"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="search-results-container" *ngIf="showResults">
+    <div class="search-results">
+      <div class="results-header" *ngIf="searchResults.length > 0">
+        <div class="row g-0 text-muted border-bottom py-2">
+          <div class="col-5">اسم المنتج</div>
+          <div class="col-2 text-center">الكمية</div>
+          <div class="col-3 text-center">السعر</div>
+          <div class="col-2 text-center">الفئة</div>
+        </div>
+      </div>
+
+      <div class="results-body">
+        <button
+          type="button"
+          class="result-item"
+          *ngFor="let item of searchResults"
+          (click)="selectItem(item)"
+          [class.out-of-stock]="!(item.qty || 0)"
+        >
+          <div class="row g-0 align-items-center py-2">
+            <div class="col-5">
+              <div class="item-name">{{ item.name }}</div>
+              <div class="item-code text-muted small">{{ item.barcode || 'بدون باركود' }}</div>
+            </div>
+            <div class="col-2 text-center">
+              <span class="badge" [ngClass]="{ 'bg-success': (item.qty || 0) > 0, 'bg-warning': !(item.qty || 0) }">
+                {{ item.qty || 0 }}
+              </span>
+            </div>
+            <div class="col-3 text-center">{{ item.price1 || '0.00' }} د.ل</div>
+            <div class="col-2 text-center">
+              <span class="category-badge">{{ item.category || 'عام' }}</span>
+            </div>
+          </div>
+        </button>
+
+        <div class="no-results text-center p-4" *ngIf="searchResults.length === 0">
+          <div class="text-muted">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="icon icon-lg mb-2"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+              stroke="currentColor"
+              fill="none"
+            >
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+              <path d="M9 10l.01 0" />
+              <path d="M15 10l.01 0" />
+              <path d="M9.5 15.25a3.5 3.5 0 0 1 5 0" />
+            </svg>
+            <div>لا توجد نتائج</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
