@@ -14,6 +14,7 @@ import { SortDirective } from './sort/sort.directive';
 import { ItemCountComponent } from './pagination/item-count.component';
 import { FilterComponent } from './filter/filter.component';
 import { ItemsSearchBoxComponent } from './components/items-search-box/items-search-box.component';
+import { AppCurrencyPipe } from './pipes/app-currency.pipe';
 
 @NgModule({
   imports: [SharedLibsModule],
@@ -31,6 +32,7 @@ import { ItemsSearchBoxComponent } from './components/items-search-box/items-sea
     ItemCountComponent,
     FilterComponent,
     ItemsSearchBoxComponent,
+    AppCurrencyPipe,
   ],
   exports: [
     SharedLibsModule,
@@ -47,6 +49,7 @@ import { ItemsSearchBoxComponent } from './components/items-search-box/items-sea
     ItemCountComponent,
     FilterComponent,
     ItemsSearchBoxComponent,
+    AppCurrencyPipe,
   ],
 })
 export class SharedModule {}

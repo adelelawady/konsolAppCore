@@ -27,6 +27,7 @@ import { PageRibbonComponent } from './layouts/profiles/page-ribbon.component';
 import { ActiveMenuDirective } from './layouts/navbar/active-menu.directive';
 import { ErrorComponent } from './layouts/error/error.component';
 import { ApiModule } from './core/konsolApi/api.module';
+import { CurrencyConfigService } from './core/config/currency-config.service';
 
 @NgModule({
   imports: [
@@ -48,15 +49,22 @@ import { ApiModule } from './core/konsolApi/api.module';
     { provide: NgbDateAdapter, useClass: NgbDateDayjsAdapter },
     FindLanguageFromKeyPipe,
     httpInterceptorProviders,
+    CurrencyConfigService,
   ],
   declarations: [MainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, ActiveMenuDirective, FooterComponent],
   bootstrap: [MainComponent],
 })
 export class AppModule {
-  constructor(applicationConfigService: ApplicationConfigService, iconLibrary: FaIconLibrary, dpConfig: NgbDatepickerConfig) {
+  constructor(
+    applicationConfigService: ApplicationConfigService,
+    iconLibrary: FaIconLibrary,
+    dpConfig: NgbDatepickerConfig,
+    currencyConfig: CurrencyConfigService
+  ) {
     applicationConfigService.setEndpointPrefix(SERVER_API_URL);
     registerLocaleData(locale);
     iconLibrary.addIcons(...fontAwesomeIcons);
     dpConfig.minDate = { year: dayjs().subtract(100, 'year').year(), month: 1, day: 1 };
+    currencyConfig.setCurrency('$');
   }
 }

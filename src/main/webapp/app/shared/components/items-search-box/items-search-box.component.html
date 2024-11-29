@@ -1,5 +1,5 @@
 <div class="items-search-box">
-  <div class="search-input-container">
+  <div class="search-input-container" [class.has-selection]="showSelectedItem">
     <div class="input-group">
       <span class="input-group-text bg-transparent border-end-0">
         <svg
@@ -17,15 +17,40 @@
           <path d="M21 21l-6 -6" />
         </svg>
       </span>
-      <input
-        type="text"
-        class="form-control form-control-lg border-start-0 ps-0"
-        [placeholder]="'global.itemSearch.placeholder' | translate"
-        [(ngModel)]="searchTerm"
-        (input)="onSearchInput($event)"
-        (focusin)="onSearchFocus()"
-        (focusout)="onFocusOut($event)"
-      />
+      <ng-container *ngIf="!showSelectedItem; else selectedItemTemplate">
+        <input
+          #searchInput
+          type="text"
+          class="form-control form-control-lg border-start-0 ps-0"
+          [placeholder]="'global.itemSearch.placeholder' | translate"
+          [(ngModel)]="searchTerm"
+          (input)="onSearchInput($event)"
+          (focusin)="onSearchFocus()"
+          (focusout)="onFocusOut($event)"
+        />
+      </ng-container>
+      <ng-template #selectedItemTemplate>
+        <div class="selected-item-display form-control form-control-lg border-start-0 ps-0" (click)="onSelectedItemClick()">
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="selected-item-info">
+              <div class="item-name">{{ selectedItem?.name }}</div>
+              <div class="item-details text-muted small">
+                {{ selectedItem?.barcode || ('global.itemSearch.noBarcode' | translate) }}
+                | {{ selectedItem?.price1 | appCurrency: currentCurrency }}
+              </div>
+            </div>
+            <div class="selected-item-actions">
+              <button type="button" class="btn btn-icon btn-sm btn-ghost-danger" (click)="clearSelection()">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M18 6l-12 12" />
+                  <path d="M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </ng-template>
       <div class="spinner-overlay" *ngIf="isLoading">
         <div class="spinner-border spinner-border-sm text-primary"></div>
       </div>
@@ -47,8 +72,9 @@
         <button
           type="button"
           class="result-item"
-          *ngFor="let item of searchResults"
+          *ngFor="let item of searchResults; let i = index"
           (click)="selectItem(item)"
+          [class.selected]="i === selectedIndex"
           [class.out-of-stock]="!(item.qty || 0)"
         >
           <div class="row g-0 align-items-center py-2">
@@ -59,11 +85,21 @@
               </div>
             </div>
             <div class="col-2 text-center">
-              <span class="badge" [ngClass]="{ 'bg-success': (item.qty || 0) > 0, 'bg-warning': !(item.qty || 0) }">
-                {{ item.qty || 0 }}
-              </span>
+              <div
+                class="qty-badge"
+                [ngClass]="{
+                  'qty-in-stock': (item.qty || 0) > 10,
+                  'qty-low-stock': (item.qty || 0) <= 10 && (item.qty || 0) > 0,
+                  'qty-out-of-stock': !(item.qty || 0)
+                }"
+              >
+                <span class="qty-value">{{ item.qty || 0 }}</span>
+                <span class="qty-label">{{ 'global.itemSearch.inStock' | translate }}</span>
+              </div>
             </div>
-            <div class="col-3 text-center">{{ item.price1 || '0.00' }} د.ل</div>
+            <div class="col-3 text-center">
+              {{ item.price1 | appCurrency: currentCurrency }}
+            </div>
             <div class="col-2 text-center">
               <span class="category-badge">{{ item.category || 'عام' }}</span>
             </div>
