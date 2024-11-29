@@ -12,6 +12,15 @@
     text-align: center;
     vertical-align: middle;
   }
+
+  .form-control-sm {
+    padding: 0.25rem;
+    min-height: 30px;
+  }
+
+  tr.table-active {
+    background-color: rgba(var(--tblr-primary-rgb), 0.05);
+  }
 }
 
 .form-check-input {
@@ -223,6 +232,10 @@
       margin-right: 0;
     }
   }
+
+  .btn-list {
+    gap: 0.25rem;
+  }
 }
 
 // Utility Classes
@@ -346,6 +359,59 @@
     .input-icon-addon {
       width: 2.5rem;
       justify-content: center;
+    }
+  }
+}
+
+// Add to existing styles
+.page-header {
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--tblr-border-color);
+  background: #fff;
+  margin-top: -1rem;
+
+  .page-pretitle {
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.25rem;
+  }
+
+  .page-title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--tblr-primary);
+
+    .ti {
+      opacity: 0.8;
+    }
+  }
+}
+
+[dir='rtl'] {
+  .me-2 {
+    margin-left: 0.5rem !important;
+    margin-right: 0 !important;
+  }
+
+  .ms-auto {
+    margin-right: auto !important;
+    margin-left: 0 !important;
+  }
+}
+
+.btn-list {
+  display: flex;
+  gap: 0.5rem;
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+
+    .ti {
+      margin-inline-end: 0.5rem;
     }
   }
 }

@@ -6,6 +6,7 @@ import { CreateInvoiceItemDTO } from 'app/core/konsolApi/model/createInvoiceItem
 import { BankDTO } from 'app/core/konsolApi/model/bankDTO';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ItemsSearchBoxComponent } from 'app/shared/components/items-search-box/items-search-box.component';
+import { InvoiceItemDTO } from 'app/core/konsolApi/model/invoiceItemDTO';
 
 interface ErrorResponse {
   type: string;
@@ -26,6 +27,7 @@ export class SalesComponent implements OnInit {
   @ViewChild('addButton') addButton!: ElementRef;
   @ViewChild('qtyInput') qtyInput!: ElementRef;
   @ViewChild('priceInput') priceInput!: ElementRef;
+  @ViewChild('discountInput') discountInput!: ElementRef;
 
   currentQuantity = 0;
   currentPrice = 0;
@@ -36,6 +38,8 @@ export class SalesComponent implements OnInit {
   selectedAccountId: string | null = null;
   errorMessage: string | null = null;
   showError = false;
+  private discountTimeout: any;
+  editingItem: { id: string; qty: number; price: number; discount: number } | null = null;
 
   constructor(private invoiceService: InvoiceResourceService) {}
 
@@ -154,11 +158,42 @@ export class SalesComponent implements OnInit {
     }
   }
 
-  onDiscountChange(discount: number): void {
+  onDiscountChange(value: number): void {
+    // Clear any existing timeout
+    if (this.discountTimeout) {
+      clearTimeout(this.discountTimeout);
+    }
+
+    // Set a new timeout to update the discount
+    this.discountTimeout = setTimeout(() => {
+      if (this.currentInvoice?.id) {
+        this.loading = true;
+        this.invoiceService.updateInvoice({ discount: value }, this.currentInvoice.id).subscribe({
+          next: () => {
+            this.reloadInvoice();
+          },
+          error: error => {
+            console.error('Error updating discount:', error);
+            this.loading = false;
+          },
+        });
+      }
+    }, 500); // Wait for 500ms after the user stops typing
+  }
+
+  updateDiscount(): void {
+    // Clear any existing timeout
+    if (this.discountTimeout) {
+      clearTimeout(this.discountTimeout);
+      this.discountTimeout = null;
+    }
+
+    // Force update on blur
+    const value = Number(this.discountInput.nativeElement.value);
     if (this.currentInvoice?.id) {
       this.loading = true;
-      this.invoiceService.updateInvoice({ discount }, this.currentInvoice.id).subscribe({
-        next: result => {
+      this.invoiceService.updateInvoice({ discount: value }, this.currentInvoice.id).subscribe({
+        next: () => {
           this.reloadInvoice();
         },
         error: error => {
@@ -198,7 +233,9 @@ export class SalesComponent implements OnInit {
       this.invoiceService.saveInvoice(this.currentInvoice.id).subscribe({
         next: result => {
           // Handle successful save
+
           this.loading = false;
+          this.itemSearchBox.loadInitialItems();
           this.initializeNewInvoice(); // Start new invoice after saving
         },
         error: error => {
@@ -225,5 +262,55 @@ export class SalesComponent implements OnInit {
   getTotalQuantity(): number {
     if (!this.currentInvoice?.invoiceItems) return 0;
     return this.currentInvoice.invoiceItems.reduce((total: any, item: any) => total + (item.qtyIn || 0), 0);
+  }
+
+  ngOnDestroy(): void {
+    if (this.discountTimeout) {
+      clearTimeout(this.discountTimeout);
+    }
+  }
+
+  startEditingItem(item: InvoiceItemDTO): void {
+    this.editingItem = {
+      id: item.id || '',
+      qty: item.userQty || 0,
+      price: item.price || 0,
+      discount: item.discount || 0,
+    };
+  }
+
+  cancelEditingItem(): void {
+    this.editingItem = null;
+  }
+
+  saveEditingItem(): void {
+    if (this.editingItem && this.currentInvoice?.id) {
+      this.loading = true;
+      this.invoiceService
+        .updateInvoiceItem(this.editingItem.id, {
+          qty: this.editingItem.qty,
+          unitPrice: this.editingItem.price,
+          price: this.editingItem.price,
+          discount: this.editingItem.discount,
+        })
+        .subscribe({
+          next: () => {
+            this.editingItem = null;
+            this.reloadInvoice();
+          },
+          error: (error: HttpErrorResponse) => {
+            console.error('Error updating item:', error);
+            const errorResponse = error.error as ErrorResponse;
+            this.errorMessage = errorResponse.detail || 'حدث خطأ أثناء تحديث المنتج';
+            this.showError = true;
+            this.loading = false;
+
+            setTimeout(() => {
+              this.showError = false;
+              this.errorMessage = null;
+            }, 5000);
+          },
+        });
+    }
   }
 }
