@@ -4,6 +4,16 @@ import { InvoiceResourceService } from 'app/core/konsolApi/api/invoiceResource.s
 import { InvoiceDTO } from 'app/core/konsolApi/model/invoiceDTO';
 import { CreateInvoiceItemDTO } from 'app/core/konsolApi/model/createInvoiceItemDTO';
 import { BankDTO } from 'app/core/konsolApi/model/bankDTO';
+import { HttpErrorResponse } from '@angular/common/http';
+
+interface ErrorResponse {
+  type: string;
+  title: string;
+  status: number;
+  detail: string;
+  path: string;
+  message: string;
+}
 
 @Component({
   selector: 'jhi-sales',
@@ -22,6 +32,8 @@ export class SalesComponent implements OnInit {
   loading = false;
   selectedBankId: string | null = null;
   selectedAccountId: string | null = null;
+  errorMessage: string | null = null;
+  showError = false;
 
   constructor(private invoiceService: InvoiceResourceService) {}
 
@@ -63,10 +75,22 @@ export class SalesComponent implements OnInit {
           this.currentInvoice = updatedInvoice;
           this.resetInputs();
           this.loading = false;
+          this.showError = false;
+          this.errorMessage = null;
         },
-        error: error => {
+        error: (error: HttpErrorResponse) => {
           console.error('Error adding invoice item:', error);
           this.loading = false;
+
+          const errorResponse = error.error as ErrorResponse;
+          this.errorMessage = errorResponse.detail || 'حدث خطأ أثناء إضافة المنتج';
+          this.showError = true;
+
+          // Auto hide error after 5 seconds
+          setTimeout(() => {
+            this.showError = false;
+            this.errorMessage = null;
+          }, 5000);
         },
       });
     }

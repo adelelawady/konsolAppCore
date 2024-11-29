@@ -1,4 +1,16 @@
 <div class="container-fluid p-3">
+  <div class="position-fixed top-0 end-0 p-3" style="z-index: 1050">
+    <div class="toast show bg-danger text-white" *ngIf="showError" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header bg-danger text-white">
+        <i class="ti ti-alert-circle me-2"></i>
+        <strong class="me-auto">تنبيه</strong>
+        <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="showError = false"></button>
+      </div>
+      <div class="toast-body">
+        {{ errorMessage }}
+      </div>
+    </div>
+  </div>
   <div class="row g-3">
     <div class="col-lg-9">
       <div class="card">
@@ -135,18 +147,6 @@
               <div class="text-muted small">رقم الفاتورة</div>
               <div class="font-weight-medium">{{ currentInvoice?.pk || '-' }}</div>
             </div>
-          </div>
-
-          <!-- Action Buttons -->
-          <div class="d-flex gap-2 mb-3">
-            <button class="btn btn-outline-primary w-100">
-              <i class="ti ti-refresh me-1"></i>
-              تعديل
-            </button>
-            <button class="btn btn-outline-danger w-100">
-              <i class="ti ti-trash me-1"></i>
-              حذف
-            </button>
           </div>
 
           <!-- Store Selection 
