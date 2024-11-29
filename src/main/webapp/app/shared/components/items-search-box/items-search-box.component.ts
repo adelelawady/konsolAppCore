@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, OnDestroy, Output, ViewChild, ElementRef } from '@angular/core';
+import { Component, EventEmitter, OnInit, OnDestroy, Output, ViewChild, ElementRef, Input } from '@angular/core';
 import { ItemResourceService } from 'app/core/konsolApi/api/itemResource.service';
 import { ItemViewDTO } from 'app/core/konsolApi/model/itemViewDTO';
 import { PaginationSearchModel } from 'app/core/konsolApi/model/paginationSearchModel';
@@ -14,6 +14,9 @@ import { CurrencyConfigService } from 'app/core/config/currency-config.service';
 export class ItemsSearchBoxComponent implements OnInit, OnDestroy {
   @Output() itemSelected = new EventEmitter<ItemViewDTO>();
   @Output() onItemHighlighted = new EventEmitter<ItemViewDTO>();
+  @Input() placeholder = 'بحث...';
+  @Input() clickMode = false;
+
   @ViewChild('searchInput') searchInput?: ElementRef<HTMLInputElement>;
 
   searchTerm = '';

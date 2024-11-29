@@ -164,7 +164,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
 
   onItemSelected(item: ItemViewDTO): void {
     if (item) {
-      const newItem: SaleItem = {
+      const newItem = {
         id: this.saleItems.length + 1,
         name: item.name,
         unit: '-',

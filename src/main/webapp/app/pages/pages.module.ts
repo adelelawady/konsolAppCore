@@ -17,6 +17,8 @@ import { MoneyMovementComponent } from './accounts/money-movement/money-movement
 import { ExchangeComponent } from './accounts/exchange/exchange.component';
 import { ReceiptComponent } from './accounts/receipt/receipt.component';
 import { NavigationComponent } from './navigation/navigation.component';
+import { ItemsSearchBoxComponent } from '../shared/components/items-search-box/items-search-box.component';
+import { SalesModule } from './sales/sales.module';
 
 @NgModule({
   declarations: [
@@ -25,14 +27,13 @@ import { NavigationComponent } from './navigation/navigation.component';
     AccountsComponent,
     InventoryComponent,
     PurchaseComponent,
-    SalesComponent,
     NewCategoryComponent,
     MoneyMovementComponent,
     ExchangeComponent,
     ReceiptComponent,
     NavigationComponent,
   ],
-  imports: [CommonModule, SharedModule, RouterModule, PagesRoutingModule],
+  imports: [CommonModule, SharedModule, RouterModule, PagesRoutingModule, SalesModule],
   exports: [NavigationComponent],
 })
 export class PagesModule {}
