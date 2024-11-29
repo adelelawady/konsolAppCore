@@ -18,35 +18,29 @@ interface SaleItem {
   styleUrls: ['./sales.component.scss'],
 })
 export class SalesComponent implements OnInit {
-  // Current Item Details
+  // Properties
+  invoiceNumber = 6;
+  invoiceDiscount = 0;
   currentQuantity = 0;
   currentPrice = 0;
   currentTotal = 0;
-
-  // Invoice Items
   saleItems: SaleItem[] = [];
-
-  // Summary Totals
   totalQuantity = 0;
   totalAmount = 0;
   totalDiscount = 0;
   netTotal = 0;
-
-  // Selections
-  selectedCategory: string = '';
-  selectedBank: string = 'Bank_1';
-  selectedStore: string = 'Store_1';
-  singleAccount: boolean = false;
-  selectedCustomer: string = '';
-
-  // UI States
-  clickMode: boolean = false;
-  loading: boolean = false;
+  selectedCategory = '';
+  selectedBank = '';
+  selectedStore = '';
+  singleAccount = false;
+  selectedCustomer = '';
+  clickMode = false;
+  loading = false;
   currentDate = new Date();
   userName = 'admin';
 
   constructor() {
-    // Sample data
+    // Initialize with sample data
     this.saleItems = [
       {
         id: 1,
@@ -58,7 +52,6 @@ export class SalesComponent implements OnInit {
         discount: 0,
         netPrice: 999.0,
       },
-      // Add more sample items...
     ];
   }
 
@@ -66,8 +59,10 @@ export class SalesComponent implements OnInit {
     this.calculateTotals();
   }
 
-  addItem(): void {
-    // TODO: Implement add item logic
+  // Item Management Methods
+  editItem(index: number): void {
+    // Implement edit functionality
+    console.log('Editing item at index:', index);
   }
 
   removeItem(index: number): void {
@@ -75,23 +70,37 @@ export class SalesComponent implements OnInit {
     this.calculateTotals();
   }
 
+  incrementQuantity(index: number): void {
+    this.saleItems[index].quantity++;
+    this.updateQuantity(index, this.saleItems[index].quantity);
+  }
+
+  decrementQuantity(index: number): void {
+    if (this.saleItems[index].quantity > 1) {
+      this.saleItems[index].quantity--;
+      this.updateQuantity(index, this.saleItems[index].quantity);
+    }
+  }
+
+  // Update Methods
   updateQuantity(index: number, quantity: number): void {
     this.saleItems[index].quantity = quantity;
-    this.calculateItemTotal(index);
+    this.updateItemTotal(index);
   }
 
   updateDiscount(index: number, discount: number): void {
     this.saleItems[index].discount = discount;
-    this.calculateItemTotal(index);
+    this.updateItemTotal(index);
   }
 
-  calculateItemTotal(index: number): void {
+  updateItemTotal(index: number): void {
     const item = this.saleItems[index];
     item.totalPrice = item.quantity * item.unitPrice;
     item.netPrice = item.totalPrice - item.discount;
     this.calculateTotals();
   }
 
+  // Calculation Methods
   calculateTotals(): void {
     this.totalQuantity = 0;
     this.totalAmount = 0;
@@ -102,16 +111,29 @@ export class SalesComponent implements OnInit {
       this.totalQuantity += item.quantity;
       this.totalAmount += item.totalPrice;
       this.totalDiscount += item.discount;
-      this.netTotal += item.netPrice;
     });
+
+    // Add invoice discount to total discount
+    this.totalDiscount += this.invoiceDiscount;
+    this.netTotal = this.totalAmount - this.totalDiscount;
 
     // Update current values
     this.currentQuantity = this.totalQuantity;
     this.currentTotal = this.netTotal;
   }
 
+  updateTotals(): void {
+    this.calculateTotals();
+  }
+
+  // Action Methods
   saveInvoice(): void {
-    // TODO: Implement save logic
+    // Implement save invoice logic
+    console.log('Saving invoice...');
+    console.log('Items:', this.saleItems);
+    console.log('Total Amount:', this.totalAmount);
+    console.log('Total Discount:', this.totalDiscount);
+    console.log('Net Total:', this.netTotal);
   }
 
   toggleClickMode(): void {

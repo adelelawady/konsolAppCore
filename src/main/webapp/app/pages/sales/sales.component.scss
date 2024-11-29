@@ -5,6 +5,7 @@
     background-color: var(--tblr-light);
     font-weight: 600;
     text-align: center;
+    white-space: nowrap;
   }
 
   td {
@@ -283,5 +284,49 @@
         text-align: center;
       }
     }
+  }
+}
+
+.input-group {
+  .form-control {
+    &:focus {
+      z-index: 0;
+    }
+  }
+}
+
+.btn-icon {
+  padding: 0.25rem;
+  width: 2rem;
+  height: 2rem;
+
+  .icon {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+}
+
+// RTL specific adjustments
+[dir='rtl'] {
+  .me-1 {
+    margin-left: 0.25rem !important;
+    margin-right: 0 !important;
+  }
+
+  .me-3 {
+    margin-left: 1rem !important;
+    margin-right: 0 !important;
+  }
+
+  .ms-auto {
+    margin-right: auto !important;
+    margin-left: 0 !important;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 992px) {
+  .search-container {
+    margin-bottom: 1rem;
   }
 }
