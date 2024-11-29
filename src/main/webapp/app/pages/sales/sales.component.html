@@ -1,4 +1,4 @@
-<div class="container-fluid p-3">
+<div class="container">
   <div class="position-fixed top-0 end-0 p-3" style="z-index: 1050">
     <div class="toast show bg-danger text-white" *ngIf="showError" role="alert" aria-live="assertive" aria-atomic="true">
       <div class="toast-header bg-danger text-white">
@@ -29,8 +29,9 @@
           <!-- Search Section -->
           <div class="p-3 bg-light border-bottom">
             <div class="row g-3">
-              <div class="col-md-12">
+              <div class="col-md-6">
                 <jhi-items-search-box
+                  #itemSearchBox
                   [placeholder]="'بحث عن منتج...'"
                   [clickMode]="true"
                   (itemSelected)="onItemSelected($event)"
@@ -38,6 +39,57 @@
                   class="w-100"
                 >
                 </jhi-items-search-box>
+              </div>
+              <div class="col-md-6">
+                <div class="d-flex gap-2">
+                  <!-- Quantity Input -->
+                  <div class="input-group">
+                    <span class="input-group-text">الكمية</span>
+                    <input
+                      type="number"
+                      class="form-control text-center"
+                      [(ngModel)]="currentQuantity"
+                      [disabled]="!selectedItem || loading"
+                      min="1.000"
+                      step="1.000"
+                      (keydown)="onQuantityKeyDown($event)"
+                      #qtyInput
+                    />
+                  </div>
+
+                  <!-- Price Input -->
+                  <div class="input-group">
+                    <span class="input-group-text">السعر</span>
+                    <input
+                      type="number"
+                      class="form-control text-center"
+                      [(ngModel)]="currentPrice"
+                      [disabled]="!selectedItem || loading"
+                      min="1.00"
+                      step="1.00"
+                      (keydown)="onPriceKeyDown($event)"
+                      #priceInput
+                    />
+                    <span class="input-group-text">ر.س</span>
+                  </div>
+
+                  <!-- Add Button -->
+                  <button
+                    class="btn btn-primary"
+                    [disabled]="!selectedItem || loading || currentQuantity <= 0 || currentPrice < 0"
+                    (click)="addCurrentItem()"
+                    #addButton
+                  >
+                    <i class="ti ti-plus"></i>
+                    إضافة
+                  </button>
+                </div>
+
+                <!-- Selected Item Info -->
+                <div class="mt-2 small text-muted" *ngIf="selectedItem">
+                  <span class="me-2">المنتج: {{ selectedItem.name }}</span>
+                  <span>السعر الافتراضي: {{ selectedItem.price1 | appCurrency: 'ر.س' }}</span>
+                </div>
               </div>
             </div>
           </div>
@@ -67,7 +119,7 @@
               </thead>
               <tbody>
                 <tr *ngFor="let item of currentInvoice?.invoiceItems || []; let i = index" class="align-middle text-center">
-                  <td>{{ i + 1 }}</td>
+                  <td>{{ item.pk }}</td>
                   <td class="text-start">{{ item.item?.name || '-' }}</td>
                   <td>{{ item.unit || '-' }}</td>
                   <td>{{ item.price || 0 | appCurrency }}</td>
@@ -126,16 +178,16 @@
         <div class="card-body">
           <!-- User Info -->
           <div class="d-flex align-items-center mb-3 pb-3 border-bottom">
-            <span class="avatar avatar-lg me-3">
-              <img src="/assets/images/placeholder.svg" alt="User Avatar" />
+            <span class="avatar avatar-lg rounded-circle me-3 bg-primary-subtle">
+              <i class="ti ti-user text-primary" style="font-size: 1.5rem"></i>
             </span>
             <div class="flex-fill">
-              <div class="font-weight-medium">{{ currentInvoice?.created_by || 'USER' }}</div>
-              <div class="text-muted small">{{ currentInvoice?.created_date | date: 'HH:mm dd/MM/yyyy' }}</div>
+              <div class="font-weight-medium">{{ currentInvoice?.createdBy || 'USER' }}</div>
+              <div class="text-muted small">{{ currentInvoice?.createdDate | date: 'HH:mm dd/MM/yyyy' }}</div>
             </div>
             <div class="ms-auto text-end">
               <div class="text-muted small">رقم الفاتورة</div>
-              <div class="font-weight-medium">{{ currentInvoice?.pk || 'NA' }}</div>
+              <div class="font-weight-medium">{{ currentInvoice?.pk || '-' }}</div>
             </div>
           </div>
 

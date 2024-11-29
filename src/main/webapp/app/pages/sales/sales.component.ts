@@ -5,6 +5,7 @@ import { InvoiceDTO } from 'app/core/konsolApi/model/invoiceDTO';
 import { CreateInvoiceItemDTO } from 'app/core/konsolApi/model/createInvoiceItemDTO';
 import { BankDTO } from 'app/core/konsolApi/model/bankDTO';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ItemsSearchBoxComponent } from 'app/shared/components/items-search-box/items-search-box.component';
 
 interface ErrorResponse {
   type: string;
@@ -21,6 +22,7 @@ interface ErrorResponse {
   styleUrls: ['./sales.component.scss'],
 })
 export class SalesComponent implements OnInit {
+  @ViewChild('itemSearchBox') itemSearchBox!: ItemsSearchBoxComponent;
   @ViewChild('addButton') addButton!: ElementRef;
   @ViewChild('qtyInput') qtyInput!: ElementRef;
   @ViewChild('priceInput') priceInput!: ElementRef;
@@ -58,13 +60,22 @@ export class SalesComponent implements OnInit {
   }
 
   onItemSelected(item: ItemViewDTO): void {
-    if (item && this.currentInvoice?.id) {
+    if (item) {
       this.selectedItem = item;
       this.currentQuantity = 1;
       this.currentPrice = Number(item.price1) || 0;
 
+      setTimeout(() => {
+        this.qtyInput?.nativeElement.focus();
+        this.qtyInput?.nativeElement.select();
+      });
+    }
+  }
+
+  addCurrentItem(): void {
+    if (this.selectedItem && this.currentInvoice?.id) {
       const invoiceItem: CreateInvoiceItemDTO = {
-        itemId: item.id || '',
+        itemId: this.selectedItem.id || '',
         qty: this.currentQuantity,
         price: this.currentPrice,
       };
@@ -72,15 +83,16 @@ export class SalesComponent implements OnInit {
       this.loading = true;
       this.invoiceService.addInvoiceItem(this.currentInvoice.id, invoiceItem).subscribe({
         next: updatedInvoice => {
-          if (this.currentInvoice) {
-            this.currentInvoice.invoiceItems = updatedInvoice.invoiceItems;
-          } else {
-            // this.currentInvoice = updatedInvoice;
-          }
+          this.currentInvoice = updatedInvoice;
           this.resetInputs();
           this.loading = false;
           this.showError = false;
           this.errorMessage = null;
+
+          this.itemSearchBox.clearSelection();
+          setTimeout(() => {
+            this.itemSearchBox.searchInput?.nativeElement.focus();
+          });
         },
         error: (error: HttpErrorResponse) => {
           console.error('Error adding invoice item:', error);
@@ -90,13 +102,25 @@ export class SalesComponent implements OnInit {
           this.errorMessage = errorResponse.detail || 'حدث خطأ أثناء إضافة المنتج';
           this.showError = true;
 
-          // Auto hide error after 5 seconds
           setTimeout(() => {
             this.showError = false;
             this.errorMessage = null;
           }, 5000);
         },
       });
+    }
+  }
+
+  onQuantityKeyDown(event: KeyboardEvent): void {
+    if (event.key === 'Enter') {
+      this.priceInput?.nativeElement.focus();
+      this.priceInput?.nativeElement.select();
+    }
+  }
+
+  onPriceKeyDown(event: KeyboardEvent): void {
+    if (event.key === 'Enter') {
+      this.addCurrentItem();
     }
   }
 
