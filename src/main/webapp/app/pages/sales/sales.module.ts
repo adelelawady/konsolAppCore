@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { SharedModule } from 'app/shared/shared.module';
 import { SalesComponent } from './sales.component';
 import { RouterModule } from '@angular/router';
+import { AppCurrencyPipe } from 'app/shared/pipes/app-currency.pipe';
 
 @NgModule({
   declarations: [SalesComponent],

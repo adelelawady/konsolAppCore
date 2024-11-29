@@ -28,7 +28,7 @@ export class SalesComponent implements OnInit {
   currentQuantity = 0;
   currentPrice = 0;
   selectedItem: ItemViewDTO | null = null;
-  currentInvoice: InvoiceDTO | null = null;
+  currentInvoice: any | null = null;
   loading = false;
   selectedBankId: string | null = null;
   selectedAccountId: string | null = null;
@@ -72,7 +72,11 @@ export class SalesComponent implements OnInit {
       this.loading = true;
       this.invoiceService.addInvoiceItem(this.currentInvoice.id, invoiceItem).subscribe({
         next: updatedInvoice => {
-          this.currentInvoice = updatedInvoice;
+          if (this.currentInvoice) {
+            this.currentInvoice.invoiceItems = updatedInvoice.invoiceItems;
+          } else {
+            // this.currentInvoice = updatedInvoice;
+          }
           this.resetInputs();
           this.loading = false;
           this.showError = false;
@@ -196,6 +200,6 @@ export class SalesComponent implements OnInit {
 
   getTotalQuantity(): number {
     if (!this.currentInvoice?.invoiceItems) return 0;
-    return this.currentInvoice.invoiceItems.reduce((total, item) => total + (item.qtyIn || 0), 0);
+    return this.currentInvoice.invoiceItems.reduce((total: any, item: any) => total + (item.qtyIn || 0), 0);
   }
 }
