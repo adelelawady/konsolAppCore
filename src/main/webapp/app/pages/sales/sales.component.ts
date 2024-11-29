@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { ItemViewDTO } from 'app/core/konsolApi/model/itemViewDTO';
+import { TableColumn } from 'app/shared/components/data-table/data-table.component';
 
 interface SaleItem {
   id: number;
@@ -17,7 +18,9 @@ interface SaleItem {
   templateUrl: './sales.component.html',
   styleUrls: ['./sales.component.scss'],
 })
-export class SalesComponent implements OnInit {
+export class SalesComponent implements OnInit, AfterViewInit {
+  @ViewChild('tableContainer') tableContainer!: ElementRef;
+
   // Properties
   invoiceNumber = 6;
   invoiceDiscount = 0;
@@ -39,6 +42,23 @@ export class SalesComponent implements OnInit {
   currentDate = new Date();
   userName = 'admin';
 
+  private resizingColumn: HTMLElement | null = null;
+  private startX: number = 0;
+  private startWidth: number = 0;
+
+  // Add table configuration
+  tableColumns: TableColumn[] = [
+    { field: 'id', header: '#', type: 'number', width: '60px' },
+    { field: 'name', header: 'المنتج', type: 'text' },
+    { field: 'unit', header: 'وحدة', type: 'text', width: '100px' },
+    { field: 'unitPrice', header: 'سعر الوحدة', type: 'number', editable: true, width: '120px' },
+    { field: 'quantity', header: 'كمية', type: 'number', editable: true, width: '100px' },
+    { field: 'totalPrice', header: 'اجمالي', type: 'currency', width: '120px' },
+    { field: 'discount', header: 'خصم', type: 'number', editable: true, width: '100px' },
+    { field: 'netPrice', header: 'صافي', type: 'currency', width: '120px' },
+    { field: 'actions', header: 'اجراءات', type: 'actions', width: '100px' },
+  ];
+
   constructor() {
     // Initialize with sample data
     this.saleItems = [
@@ -58,6 +78,8 @@ export class SalesComponent implements OnInit {
   ngOnInit(): void {
     this.calculateTotals();
   }
+
+  ngAfterViewInit() {}
 
   // Item Management Methods
   editItem(index: number): void {
@@ -155,6 +177,32 @@ export class SalesComponent implements OnInit {
 
       this.saleItems.push(newItem);
       this.calculateTotals();
+    }
+  }
+
+  // Add table event handlers
+  onTableEdit(row: any): void {
+    this.editItem(row.id - 1);
+  }
+
+  onTableDelete(row: any): void {
+    this.removeItem(row.id - 1);
+  }
+
+  onTableValueChange(event: { row: any; field: string; value: any }): void {
+    const index = this.saleItems.findIndex(item => item.id === event.row.id);
+    if (index === -1) return;
+
+    switch (event.field) {
+      case 'unitPrice':
+        this.updateItemTotal(index);
+        break;
+      case 'quantity':
+        this.updateQuantity(index, event.value);
+        break;
+      case 'discount':
+        this.updateDiscount(index, event.value);
+        break;
     }
   }
 }

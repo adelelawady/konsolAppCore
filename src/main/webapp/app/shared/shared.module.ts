@@ -15,6 +15,7 @@ import { ItemCountComponent } from './pagination/item-count.component';
 import { FilterComponent } from './filter/filter.component';
 import { ItemsSearchBoxComponent } from './components/items-search-box/items-search-box.component';
 import { AppCurrencyPipe } from './pipes/app-currency.pipe';
+import { DataTableComponent } from './components/data-table/data-table.component';
 
 @NgModule({
   imports: [SharedLibsModule],
@@ -33,6 +34,7 @@ import { AppCurrencyPipe } from './pipes/app-currency.pipe';
     FilterComponent,
     ItemsSearchBoxComponent,
     AppCurrencyPipe,
+    DataTableComponent,
   ],
   exports: [
     SharedLibsModule,
@@ -50,6 +52,7 @@ import { AppCurrencyPipe } from './pipes/app-currency.pipe';
     FilterComponent,
     ItemsSearchBoxComponent,
     AppCurrencyPipe,
+    DataTableComponent,
   ],
 })
 export class SharedModule {}
