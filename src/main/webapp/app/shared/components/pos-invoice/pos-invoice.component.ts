@@ -241,11 +241,10 @@ export class PosInvoiceComponent implements OnInit {
       this.loading = true;
       this.invoiceService.saveInvoice(this.currentInvoice.id).subscribe({
         next: result => {
-          // Handle successful save
-
           this.loading = false;
           this.itemSearchBox.loadInitialItems();
-          this.initializeNewInvoice(); // Start new invoice after saving
+          this.selectedAccountId = null;
+          this.initializeNewInvoice();
         },
         error: error => {
           console.error('Error saving invoice:', error);
@@ -327,7 +326,7 @@ export class PosInvoiceComponent implements OnInit {
   onBankSelected(bank: BankDTO): void {
     this.selectedBank = bank;
     if (this.currentInvoice) {
-      this.currentInvoice.bankId = bank.id; // Assuming bankId is a property in InvoiceDTO
+      this.currentInvoice.bank = bank; // Assuming bankId is a property in InvoiceDTO
       this.invoiceService.updateInvoice({ bankId: bank.id }, this.currentInvoice.id).subscribe({
         next: () => {
           this.reloadInvoice();
@@ -344,7 +343,16 @@ export class PosInvoiceComponent implements OnInit {
   onStoreSelected(store: StoreDTO): void {
     this.selectedStore = store;
     if (this.currentInvoice) {
-      this.currentInvoice.storeId = store.id; // Assuming storeId is a property in InvoiceDTO
+      this.currentInvoice.store = store; // Assuming storeId is a property in InvoiceDTO
+      this.invoiceService.updateInvoice({ storeId: store.id }, this.currentInvoice.id).subscribe({
+        next: () => {
+          this.reloadInvoice();
+        },
+        error: error => {
+          console.error('Error updating store:', error);
+          this.loading = false;
+        },
+      });
     }
   }
 
@@ -374,6 +382,21 @@ export class PosInvoiceComponent implements OnInit {
         },
         error: error => {
           console.error('Error updating additions type:', error);
+          this.loading = false;
+        },
+      });
+    }
+  }
+
+  onAccountSelected(account: any): void {
+    if (this.currentInvoice) {
+      this.loading = true;
+      this.invoiceService.updateInvoice({ accountId: account.id }, this.currentInvoice.id).subscribe({
+        next: () => {
+          this.reloadInvoice();
+        },
+        error: error => {
+          console.error('Error updating account:', error);
           this.loading = false;
         },
       });

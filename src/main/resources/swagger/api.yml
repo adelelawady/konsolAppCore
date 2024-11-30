@@ -2065,6 +2065,8 @@ components:
           type: boolean
           x-stoplight:
             id: 7skmkczs1v9fp
+        store:
+          $ref: '#/components/schemas/StoreDTO'
     InvoiceViewDTO:
       type: object
       x-examples:
