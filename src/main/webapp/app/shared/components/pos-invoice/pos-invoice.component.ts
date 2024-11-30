@@ -4,6 +4,8 @@ import { InvoiceResourceService } from 'app/core/konsolApi/api/invoiceResource.s
 import { InvoiceDTO } from 'app/core/konsolApi/model/invoiceDTO';
 import { CreateInvoiceItemDTO } from 'app/core/konsolApi/model/createInvoiceItemDTO';
 import { BankDTO } from 'app/core/konsolApi/model/bankDTO';
+import { StoreDTO } from 'app/core/konsolApi/model/storeDTO';
+
 import { HttpErrorResponse } from '@angular/common/http';
 import { ItemsSearchBoxComponent } from 'app/shared/components/items-search-box/items-search-box.component';
 import { InvoiceItemDTO } from 'app/core/konsolApi/model/invoiceItemDTO';
@@ -36,6 +38,10 @@ export class PosInvoiceComponent implements OnInit {
   selectedAccountId: string | null = null;
   errorMessage: string | null = null;
   showError = false;
+
+  // New properties for selected bank and store
+  selectedBank: BankDTO | null = null;
+  selectedStore: StoreDTO | null = null;
   private discountTimeout: any;
   editingItem: { id: string; qty: number; price: number; discount: number } | null = null;
 
@@ -309,6 +315,22 @@ export class PosInvoiceComponent implements OnInit {
             }, 5000);
           },
         });
+    }
+  }
+
+  // Handle bank selection
+  onBankSelected(bank: BankDTO): void {
+    this.selectedBank = bank;
+    if (this.currentInvoice) {
+      this.currentInvoice.bankId = bank.id; // Assuming bankId is a property in InvoiceDTO
+    }
+  }
+
+  // Handle store selection
+  onStoreSelected(store: StoreDTO): void {
+    this.selectedStore = store;
+    if (this.currentInvoice) {
+      this.currentInvoice.storeId = store.id; // Assuming storeId is a property in InvoiceDTO
     }
   }
 }

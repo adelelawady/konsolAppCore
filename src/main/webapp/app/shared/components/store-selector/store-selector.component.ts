@@ -37,6 +37,8 @@ export class StoreSelectorComponent implements OnInit {
   }
 
   onStoreChange(): void {
-    this.storeSelected.emit(this.selectedStore);
+    if (this.selectedStore) {
+      this.storeSelected.emit(this.selectedStore);
+    }
   }
 }

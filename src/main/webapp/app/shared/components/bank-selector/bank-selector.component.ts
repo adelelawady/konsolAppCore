@@ -37,6 +37,8 @@ export class BankSelectorComponent implements OnInit {
   }
 
   onBankChange(): void {
-    this.bankSelected.emit(this.selectedBank);
+    if (this.selectedBank) {
+      this.bankSelected.emit(this.selectedBank);
+    }
   }
 }

@@ -17,6 +17,8 @@ import { ItemsSearchBoxComponent } from './components/items-search-box/items-sea
 import { AppCurrencyPipe } from './pipes/app-currency.pipe';
 import { DataTableComponent } from './components/data-table/data-table.component';
 import { PosInvoiceComponent } from './components/pos-invoice/pos-invoice.component';
+import { StoreSelectorComponent } from './components/store-selector/store-selector.component';
+import { BankSelectorComponent } from './components/bank-selector/bank-selector.component';
 
 @NgModule({
   imports: [SharedLibsModule],
@@ -37,6 +39,8 @@ import { PosInvoiceComponent } from './components/pos-invoice/pos-invoice.compon
     AppCurrencyPipe,
     DataTableComponent,
     PosInvoiceComponent,
+    StoreSelectorComponent,
+    BankSelectorComponent,
   ],
   exports: [
     SharedLibsModule,
@@ -56,6 +60,8 @@ import { PosInvoiceComponent } from './components/pos-invoice/pos-invoice.compon
     AppCurrencyPipe,
     DataTableComponent,
     PosInvoiceComponent,
+    StoreSelectorComponent,
+    BankSelectorComponent,
   ],
 })
 export class SharedModule {}

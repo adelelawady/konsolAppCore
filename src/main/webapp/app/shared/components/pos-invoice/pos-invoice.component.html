@@ -245,34 +245,17 @@
             </div>
           </div>
 
-          <!-- Store Selection 
-            <div class="mb-3">
-              <label class="form-label">{{ 'global.posInvoice.storeSelection.label' | translate }}</label>
-              <select class="form-select" 
-                      [(ngModel)]="selectedBankId"
-                      (ngModelChange)="onBankChange($event)"
-                      [disabled]="loading">
-                <option [ngValue]="null">{{ 'global.posInvoice.storeSelection.placeholder' | translate }}</option>
-                <option *ngFor="let bank of banks" [value]="bank.id">
-                  {{ bank.name }}
-                </option>
-              </select>
-            </div>
-  
-          
-            <div class="mb-3">
-              <label class="form-label">{{ 'global.posInvoice.accountSelection.label' | translate }}</label>
-              <select class="form-select" 
-                      [(ngModel)]="selectedAccountId"
-                      (ngModelChange)="onAccountChange($event)"
-                      [disabled]="loading">
-                <option [ngValue]="null">{{ 'global.posInvoice.accountSelection.placeholder' | translate }}</option>
-                <option *ngFor="let account of accounts" [value]="account.id">
-                  {{ account.name }}
-                </option>
-              </select>
-            </div>
-  -->
+          Store Selection
+          <div class="mb-3">
+            <label class="form-label">{{ 'global.posInvoice.storeSelection.label' | translate }}</label>
+            <app-store-selector (storeSelected)="onStoreSelected($event)"></app-store-selector>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">{{ 'global.posInvoice.bankSelection.label' | translate }}</label>
+            <!-- Add the Bank Selector Component -->
+            <app-bank-selector (bankSelected)="onBankSelected($event)"></app-bank-selector>
+          </div>
           <!-- Invoice Discount -->
           <div class="mb-3">
             <label class="form-label">{{ 'global.posInvoice.discount.label' | translate }}</label>
