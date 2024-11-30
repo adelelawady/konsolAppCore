@@ -202,9 +202,17 @@
       "noPhone": "لا يوجد رقم هاتف",
       "loading": "جارٍ البحث عن الحسابات...",
       "createNew": "إنشاء حساب جديد",
+      "selectedAccount": "الحساب المحدد",
       "columns": {
         "name": "اسم الحساب",
-        "phone": "الهاتف"
+        "phone": "الهاتف",
+        "balance": "الرصيد"
+      },
+      "noAccountsFound": "لم يتم العثور على حسابات",
+      "searchResults": "نتائج البحث",
+      "createNewAccount": {
+        "title": "إنشاء حساب جديد",
+        "button": "إنشاء حساب جديد"
       }
     },
     "footer": "هنا يضع الفووتر"

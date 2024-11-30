@@ -249,9 +249,17 @@
       "noPhone": "No phone number",
       "loading": "Searching accounts...",
       "createNew": "Create new account",
+      "selectedAccount": "Selected Account",
       "columns": {
         "name": "Account Name",
-        "phone": "Phone"
+        "phone": "Phone",
+        "balance": "Balance"
+      },
+      "noAccountsFound": "No accounts found",
+      "searchResults": "Search Results",
+      "createNewAccount": {
+        "title": "Create New Account",
+        "button": "Create New Account"
       }
     }
   },
