@@ -39,6 +39,7 @@
                 >
                 </jhi-items-search-box>
               </div>
+
               <div class="col-md-6">
                 <div class="d-flex gap-2">
                   <!-- Quantity Input -->
@@ -89,6 +90,9 @@
                   <span class="me-2">{{ 'global.posInvoice.product' | translate }}: {{ selectedItem.name }}</span>
                   <span>{{ 'global.posInvoice.defaultPrice' | translate }}: {{ selectedItem.price1 | currency: 'USD':'symbol' }}</span>
                 </div>
+              </div>
+              <div class="col-md-12">
+                <jhi-account-selector></jhi-account-selector>
               </div>
             </div>
           </div>

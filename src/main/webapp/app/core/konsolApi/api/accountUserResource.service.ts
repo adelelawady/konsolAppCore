@@ -23,14 +23,21 @@ import { CreateAccountUserDTO } from '../model/createAccountUserDTO';
 
 import { BASE_PATH, COLLECTION_FORMATS } from '../variables';
 import { Configuration } from '../configuration';
+import { ApplicationConfigService } from 'app/core/config/application-config.service';
 
 @Injectable()
 export class AccountUserResourceService {
   protected basePath = 'http://localhost:8080/api';
   public defaultHeaders = new HttpHeaders();
   public configuration = new Configuration();
+  private resourceUrl: string;
 
-  constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string, @Optional() configuration: Configuration) {
+  constructor(
+    protected httpClient: HttpClient,
+    @Optional() @Inject(BASE_PATH) basePath: string,
+    @Optional() configuration: Configuration,
+    private applicationConfigService: ApplicationConfigService
+  ) {
     if (basePath) {
       this.basePath = basePath;
     }
@@ -38,6 +45,7 @@ export class AccountUserResourceService {
       this.configuration = configuration;
       this.basePath = basePath || configuration.basePath || this.basePath;
     }
+    this.resourceUrl = this.applicationConfigService.getEndpointFor('api/account-users');
   }
 
   /**
@@ -339,6 +347,12 @@ export class AccountUserResourceService {
       headers: headers,
       observe: observe,
       reportProgress: reportProgress,
+    });
+  }
+
+  search(params: { term: string }): Observable<AccountUserContainer[]> {
+    return this.httpClient.get<AccountUserContainer[]>(`${this.resourceUrl}/search`, {
+      params: { term: params.term },
     });
   }
 }

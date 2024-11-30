@@ -232,6 +232,26 @@
         "placeholder": "Choose a store",
         "loading": "Loading...",
         "error": "Error loading stores"
+      },
+      "accountSelector": {
+        "label": "Select Account",
+        "placeholder": "Search for account...",
+        "loading": "Loading...",
+        "error": "Error loading accounts",
+        "noResults": "No accounts found",
+        "createNew": "Create new account",
+        "noPhone": "No phone number"
+      }
+    },
+    "accountSearch": {
+      "placeholder": "Search for account...",
+      "noResults": "No accounts found",
+      "noPhone": "No phone number",
+      "loading": "Searching accounts...",
+      "createNew": "Create new account",
+      "columns": {
+        "name": "Account Name",
+        "phone": "Phone"
       }
     }
   },

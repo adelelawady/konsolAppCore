@@ -19,8 +19,7 @@ import { DataTableComponent } from './components/data-table/data-table.component
 import { PosInvoiceComponent } from './components/pos-invoice/pos-invoice.component';
 import { StoreSelectorComponent } from './components/store-selector/store-selector.component';
 import { BankSelectorComponent } from './components/bank-selector/bank-selector.component';
-import { PagesModule } from '../pages/pages.module';
-import { NavigationComponent } from '../pages/navigation/navigation.component';
+import { AccountSelectorComponent } from './components/account-selector/account-selector.component';
 
 @NgModule({
   imports: [SharedLibsModule],
@@ -43,6 +42,7 @@ import { NavigationComponent } from '../pages/navigation/navigation.component';
     PosInvoiceComponent,
     StoreSelectorComponent,
     BankSelectorComponent,
+    AccountSelectorComponent,
   ],
   exports: [
     SharedLibsModule,
@@ -64,6 +64,7 @@ import { NavigationComponent } from '../pages/navigation/navigation.component';
     PosInvoiceComponent,
     StoreSelectorComponent,
     BankSelectorComponent,
+    AccountSelectorComponent,
   ],
 })
 export class SharedModule {}
