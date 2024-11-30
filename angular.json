@@ -46,7 +46,8 @@
               "src/main/webapp/content/assets/css/tabler.min.css",
               "src/main/webapp/content/assets/css/tabler-payments.min.css",
               "src/main/webapp/content/assets/css/tabler-vendors.min.css",
-              "src/main/webapp/content/assets/css/demo.min.css"
+              "src/main/webapp/content/assets/css/demo.min.css",
+              "node_modules/ngx-toastr/toastr.css"
             ],
             "scripts": [
               "src/main/webapp/content/assets/libs/apexcharts/dist/apexcharts.min.js",

@@ -74,6 +74,7 @@
     "packaging": "jar"
   },
   "dependencies": {
+    "@angular/animations": "^14.2.0",
     "@angular/common": "14.2.0",
     "@angular/compiler": "14.2.0",
     "@angular/core": "14.2.0",
@@ -95,6 +96,7 @@
     "cpy-cli": "^4.2.0",
     "dayjs": "1.11.5",
     "ngx-infinite-scroll": "14.0.0",
+    "ngx-toastr": "^13.2.1",
     "ngx-webstorage": "10.0.1",
     "rxjs": "7.5.6",
     "tslib": "2.4.0",

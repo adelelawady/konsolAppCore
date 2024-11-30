@@ -1,0 +1,12 @@
+@import 'ngx-toastr/toastr';
+@import 'ngx-toastr/toastr-bs4-alert';
+
+.toast-container {
+  .ngx-toastr {
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+
+    &:hover {
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+    }
+  }
+}
