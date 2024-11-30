@@ -274,21 +274,51 @@
               {{ 'global.posInvoice.discount.text' | translate }}: {{ currentInvoice.discount | appCurrency }}
             </small>
           </div>
-
+          <!-- Additions Section -->
+          <div class="mb-3">
+            <label class="form-label">{{ 'global.posInvoice.additions.label' | translate }}</label>
+            <div class="input-group">
+              <input
+                type="number"
+                class="form-control"
+                [(ngModel)]="additions"
+                (ngModelChange)="onAdditionsChange($event)"
+                [disabled]="loading"
+                min="0"
+                step="1.00"
+              />
+              <span class="input-group-text">{{ 'global.posInvoice.additions.type' | translate }}</span>
+              <input
+                type="text"
+                class="form-control"
+                [(ngModel)]="additionsType"
+                (ngModelChange)="onAdditionsTypeChange($event)"
+                [disabled]="loading"
+                placeholder="{{ 'global.posInvoice.additions.placeholder' | translate }}"
+              />
+            </div>
+            <small class="text-muted" *ngIf="additions">
+              {{ 'global.posInvoice.additions.text' | translate }}: {{ additions | number: '1.2-2' }} ر.س
+            </small>
+          </div>
           <!-- Totals Summary -->
           <div class="card bg-primary-subtle mb-3">
             <div class="card-body">
               <div class="d-flex justify-content-between mb-2">
                 <span class="text-muted">{{ 'global.posInvoice.totals.beforeDiscount' | translate }}</span>
-                <span class="font-weight-medium">{{ currentInvoice?.totalPrice | number: '1.2-2' }} ر.س</span>
+                <span class="font-weight-medium">{{ currentInvoice?.totalPrice | currency: 'USD':'symbol' }}</span>
               </div>
               <div class="d-flex justify-content-between mb-2">
                 <span class="text-muted">{{ 'global.posInvoice.totals.discount' | translate }}</span>
-                <span class="text-danger">{{ currentInvoice?.discount | number: '1.2-2' }} ر.س</span>
+                <span class="text-danger">{{ currentInvoice?.discount | currency: 'USD':'symbol' }}</span>
+              </div>
+              <div class="d-flex justify-content-between mb-2">
+                <span class="text-muted">{{ 'global.posInvoice.additions.label' | translate }}</span>
+                <span class="text-muted">{{ additions | currency: 'USD':'symbol' }}</span>
               </div>
               <div class="d-flex justify-content-between">
                 <span class="font-weight-bold">{{ 'global.posInvoice.totals.total' | translate }}</span>
-                <span class="font-weight-bold text-primary h4 mb-0">{{ currentInvoice?.netPrice | number: '1.2-2' }} ر.س</span>
+                <span class="font-weight-bold text-primary h4 mb-0">{{ currentInvoice?.netPrice | currency: 'USD':'symbol' }}</span>
               </div>
             </div>
           </div>

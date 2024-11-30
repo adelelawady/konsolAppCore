@@ -45,6 +45,10 @@ export class PosInvoiceComponent implements OnInit {
   private discountTimeout: any;
   editingItem: { id: string; qty: number; price: number; discount: number } | null = null;
 
+  additions: number = 0;
+  additionsType: string = '';
+  showAdditions: boolean = false;
+
   constructor(private invoiceService: InvoiceResourceService) {}
 
   ngOnInit(): void {
@@ -323,6 +327,15 @@ export class PosInvoiceComponent implements OnInit {
     this.selectedBank = bank;
     if (this.currentInvoice) {
       this.currentInvoice.bankId = bank.id; // Assuming bankId is a property in InvoiceDTO
+      this.invoiceService.updateInvoice({ bankId: bank.id }, this.currentInvoice.id).subscribe({
+        next: () => {
+          this.reloadInvoice();
+        },
+        error: error => {
+          console.error('Error updating bank:', error);
+          this.loading = false;
+        },
+      });
     }
   }
 
@@ -331,6 +344,47 @@ export class PosInvoiceComponent implements OnInit {
     this.selectedStore = store;
     if (this.currentInvoice) {
       this.currentInvoice.storeId = store.id; // Assuming storeId is a property in InvoiceDTO
+      this.invoiceService.updateInvoice({ storeId: store.id }, this.currentInvoice.id).subscribe({
+        next: () => {
+          this.reloadInvoice();
+        },
+        error: error => {
+          console.error('Error updating Store:', error);
+          this.loading = false;
+        },
+      });
+    }
+  }
+
+  onAdditionsChange(value: number): void {
+    this.additions = value;
+    if (this.currentInvoice) {
+      this.currentInvoice.additions = value;
+      this.invoiceService.updateInvoice({ additions: value }, this.currentInvoice.id).subscribe({
+        next: () => {
+          this.reloadInvoice();
+        },
+        error: error => {
+          console.error('Error updating additions:', error);
+          this.loading = false;
+        },
+      });
+    }
+  }
+
+  onAdditionsTypeChange(value: string): void {
+    this.additionsType = value;
+    if (this.currentInvoice) {
+      this.currentInvoice.additionsType = value;
+      this.invoiceService.updateInvoice({ additionsType: value }, this.currentInvoice.id).subscribe({
+        next: () => {
+          this.reloadInvoice();
+        },
+        error: error => {
+          console.error('Error updating additions:', error);
+          this.loading = false;
+        },
+      });
     }
   }
 }

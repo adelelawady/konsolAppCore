@@ -165,7 +165,13 @@
         "discount": "الخصم",
         "total": "الإجمالي النهائي"
       },
-      "save": "حفظ الفاتورة"
+      "save": "حفظ الفاتورة",
+      "additions": {
+        "label": "إضافات",
+        "type": "الإضافات",
+        "placeholder": "أدخل نوع الإضافات",
+        "text": "إجمالي الإضافات"
+      }
     },
     "components": {
       "bankSelector": {
