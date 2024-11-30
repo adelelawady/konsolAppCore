@@ -33,12 +33,39 @@
         <div class="selected-account-display form-control form-control-lg border-start-0 ps-0" (click)="onSelectedAccountClick()">
           <div class="d-flex justify-content-between align-items-center">
             <div class="selected-account-info">
-              <div class="account-name">{{ selectedAccount?.name }}</div>
-              <div class="account-details text-muted small">
-                {{ selectedAccount?.phone || ('global.accountSearch.noPhone' | translate) }}
+              <div class="d-flex align-items-center gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="icon text-primary"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  stroke-width="2"
+                  stroke="currentColor"
+                  fill="none"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+                  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+                </svg>
+                <div>
+                  <div class="account-name fw-bold">{{ selectedAccount?.name }}</div>
+                  <div class="account-details text-muted small">
+                    <span class="me-2">
+                      <i class="icon icon-sm me-1" data-feather="phone"></i>
+                      {{ selectedAccount?.phone || ('global.accountSearch.noPhone' | translate) }}
+                    </span>
+                    <span *ngIf="selectedAccount?.balance" class="badge" [ngClass]="getBalanceBadgeClass()">
+                      {{ selectedAccount?.balance | currency: 'SAR':'symbol':'1.2-2' }}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="selected-account-actions">
+            <div class="selected-account-actions d-flex align-items-center">
+              <span class="badge bg-primary-subtle text-primary me-2" jhiTranslate="global.accountSearch.selectedAccount"
+                >الحساب المحدد</span
+              >
               <button type="button" class="btn btn-icon btn-sm btn-ghost-danger" (click)="clearSelection()">
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2">
                   <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -57,20 +84,34 @@
   </div>
 
   <!-- Popup for search results -->
-  <div class="search-results-popup" *ngIf="showResults">
+  <div class="search-results-popup shadow-sm" *ngIf="showResults">
     <div class="search-results">
       <div class="results-header" *ngIf="searchResults.length > 0">
-        <div class="row g-0 text-muted border-bottom py-2">
-          <div class="col-6" jhiTranslate="global.accountSearch.columns.name">اسم الحساب</div>
-          <div class="col-6 text-center" jhiTranslate="global.accountSearch.columns.phone">الهاتف</div>
+        <div class="row g-0 text-muted border-bottom py-2 px-3">
+          <div class="col-5" jhiTranslate="global.accountSearch.columns.name">اسم الحساب</div>
+          <div class="col-4" jhiTranslate="global.accountSearch.columns.phone">الهاتف</div>
+          <div class="col-3 text-end" jhiTranslate="global.accountSearch.columns.balance">الرصيد</div>
         </div>
       </div>
 
       <div class="results-body">
-        <div class="result-item" *ngFor="let account of searchResults" (click)="selectAccount(account)">
-          <div class="row g-0 py-2 border-bottom hover-bg">
-            <div class="col-6">{{ account.name }}</div>
-            <div class="col-6 text-center">{{ account.phone || ('global.accountSearch.noPhone' | translate) }}</div>
+        <div
+          class="result-item"
+          *ngFor="let account of searchResults"
+          (click)="selectAccount(account)"
+          [class.active]="account.id === selectedAccount?.id"
+        >
+          <div class="row g-0 py-2 px-3 border-bottom hover-bg">
+            <div class="col-5">
+              <div class="fw-medium">{{ account.name }}</div>
+              <small class="text-muted" *ngIf="account.code">{{ account.code }}</small>
+            </div>
+            <div class="col-4">{{ account.phone || ('global.accountSearch.noPhone' | translate) }}</div>
+            <div class="col-3 text-end">
+              <span class="badge" [ngClass]="getBalanceBadgeClass(account.balance)">
+                {{ account.balance | currency: 'SAR':'symbol':'1.2-2' }}
+              </span>
+            </div>
           </div>
         </div>
 

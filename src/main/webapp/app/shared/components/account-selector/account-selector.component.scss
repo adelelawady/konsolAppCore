@@ -1,6 +1,19 @@
 .account-selector {
   position: relative;
 
+  .search-input-container {
+    &.has-selection {
+      .selected-account-display {
+        cursor: pointer;
+        transition: background-color 0.2s;
+
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.02);
+        }
+      }
+    }
+  }
+
   .search-results-popup {
     position: absolute;
     top: 100%;
@@ -9,17 +22,27 @@
     background: white;
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     margin-top: 4px;
     z-index: 1000;
-    max-height: 300px;
+    max-height: 400px;
     overflow-y: auto;
   }
 
   .result-item {
     cursor: pointer;
 
+    &.active {
+      background-color: rgba(var(--bs-primary-rgb), 0.05);
+
+      .hover-bg {
+        background-color: rgba(var(--bs-primary-rgb), 0.05);
+      }
+    }
+
     .hover-bg {
+      transition: background-color 0.2s;
+
       &:hover {
         background-color: rgba(0, 0, 0, 0.05);
       }
@@ -31,5 +54,29 @@
     right: 10px;
     top: 50%;
     transform: translateY(-50%);
+  }
+
+  .badge {
+    font-size: 0.85em;
+    padding: 0.35em 0.65em;
+  }
+
+  .selected-account-display {
+    .selected-account-info {
+      .account-name {
+        line-height: 1.2;
+      }
+
+      .account-details {
+        line-height: 1.2;
+      }
+    }
+
+    .selected-account-actions {
+      .badge {
+        font-size: 0.75rem;
+        padding: 0.5em 0.75em;
+      }
+    }
   }
 }

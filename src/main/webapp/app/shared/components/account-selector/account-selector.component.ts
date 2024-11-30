@@ -121,4 +121,11 @@ export class AccountSelectorComponent implements OnInit {
       this.searchInput?.nativeElement?.focus();
     });
   }
+
+  getBalanceBadgeClass(balance?: number): string {
+    if (!balance) return 'bg-secondary-subtle text-secondary';
+    if (balance > 0) return 'bg-success-subtle text-success';
+    if (balance < 0) return 'bg-danger-subtle text-danger';
+    return 'bg-secondary-subtle text-secondary';
+  }
 }
