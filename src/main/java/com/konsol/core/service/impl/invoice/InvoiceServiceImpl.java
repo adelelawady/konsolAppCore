@@ -200,7 +200,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public Optional<InvoiceDTO> findOne(String id) {
         log.debug("Request to get Invoice : {}", id);
-        return invoiceRepository.findOneWithEagerRelationships(id).map(invoiceMapper::toDto);
+        return invoiceRepository.findById(id).map(invoiceMapper::toDto);
     }
 
     /**

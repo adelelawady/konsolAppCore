@@ -87,7 +87,7 @@
                 <!-- Selected Item Info -->
                 <div class="mt-2 small text-muted" *ngIf="selectedItem">
                   <span class="me-2">{{ 'global.posInvoice.product' | translate }}: {{ selectedItem.name }}</span>
-                  <span>{{ 'global.posInvoice.defaultPrice' | translate }}: {{ selectedItem.price1 | appCurrency: 'ر.س' }}</span>
+                  <span>{{ 'global.posInvoice.defaultPrice' | translate }}: {{ selectedItem.price1 | currency: 'USD':'symbol' }}</span>
                 </div>
               </div>
             </div>
@@ -291,14 +291,15 @@
               <input
                 type="text"
                 class="form-control"
-                [(ngModel)]="additionsType"
-                (ngModelChange)="onAdditionsTypeChange($event)"
+                [ngModel]="additionsType"
+                (ngModelChange)="additionsType = $event"
+                (blur)="onAdditionsTypeChange(additionsType)"
                 [disabled]="loading"
                 placeholder="{{ 'global.posInvoice.additions.placeholder' | translate }}"
               />
             </div>
             <small class="text-muted" *ngIf="additions">
-              {{ 'global.posInvoice.additions.text' | translate }}: {{ additions | number: '1.2-2' }} ر.س
+              {{ 'global.posInvoice.additions.text' | translate }}: {{ additions | number: '1.2-2' }} $
             </small>
           </div>
           <!-- Totals Summary -->

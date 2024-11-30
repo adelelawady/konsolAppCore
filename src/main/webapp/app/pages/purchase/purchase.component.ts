@@ -6,6 +6,4 @@ import { PosInvoiceComponent } from '../../shared/components/pos-invoice/pos-inv
   templateUrl: './purchase.component.html',
   styleUrls: ['./purchase.component.scss'],
 })
-export class PurchaseComponent extends PosInvoiceComponent {
-  // Component logic here
-}
+export class PurchaseComponent {}

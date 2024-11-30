@@ -161,17 +161,17 @@
         "percentage": "نسبة الخصم"
       },
       "totals": {
-        "beforeDiscount": "الإجمالي قبل الخصم",
+        "beforeDiscount": "إجمالي قبل الخصم",
         "discount": "الخصم",
         "total": "الإجمالي النهائي"
       },
-      "save": "حفظ الفاتورة",
       "additions": {
-        "label": "إضافات",
-        "type": "الإضافات",
+        "label": "الإضافات",
+        "type": "نوع الإضافات",
         "placeholder": "أدخل نوع الإضافات",
         "text": "إجمالي الإضافات"
-      }
+      },
+      "save": "حفظ الفاتورة"
     },
     "components": {
       "bankSelector": {

@@ -212,13 +212,13 @@
         "discount": "Discount",
         "total": "Final Total"
       },
-      "save": "Save Invoice",
       "additions": {
         "label": "Additions",
-        "type": "Additions",
+        "type": "Additions Type",
         "placeholder": "Enter Additions Type",
         "text": "Total Additions"
-      }
+      },
+      "save": "Save Invoice"
     },
     "components": {
       "bankSelector": {

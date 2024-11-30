@@ -1,11 +1,10 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { ItemViewDTO } from 'app/core/konsolApi/model/itemViewDTO';
 import { InvoiceResourceService } from 'app/core/konsolApi/api/invoiceResource.service';
 import { InvoiceDTO } from 'app/core/konsolApi/model/invoiceDTO';
 import { CreateInvoiceItemDTO } from 'app/core/konsolApi/model/createInvoiceItemDTO';
 import { BankDTO } from 'app/core/konsolApi/model/bankDTO';
 import { StoreDTO } from 'app/core/konsolApi/model/storeDTO';
-
 import { HttpErrorResponse } from '@angular/common/http';
 import { ItemsSearchBoxComponent } from 'app/shared/components/items-search-box/items-search-box.component';
 import { InvoiceItemDTO } from 'app/core/konsolApi/model/invoiceItemDTO';
@@ -23,6 +22,7 @@ interface ErrorResponse {
   styleUrls: ['./pos-invoice.component.scss'],
 })
 export class PosInvoiceComponent implements OnInit {
+  @Input() invoiceType: 'SALE' | 'PURCHASE' = 'SALE';
   @ViewChild('itemSearchBox') itemSearchBox!: ItemsSearchBoxComponent;
   @ViewChild('addButton') addButton!: ElementRef;
   @ViewChild('qtyInput') qtyInput!: ElementRef;
@@ -38,16 +38,13 @@ export class PosInvoiceComponent implements OnInit {
   selectedAccountId: string | null = null;
   errorMessage: string | null = null;
   showError = false;
-
+  additions: number = 0;
+  additionsType: string = '';
   // New properties for selected bank and store
   selectedBank: BankDTO | null = null;
   selectedStore: StoreDTO | null = null;
   private discountTimeout: any;
   editingItem: { id: string; qty: number; price: number; discount: number } | null = null;
-
-  additions: number = 0;
-  additionsType: string = '';
-  showAdditions: boolean = false;
 
   constructor(private invoiceService: InvoiceResourceService) {}
 
@@ -56,8 +53,9 @@ export class PosInvoiceComponent implements OnInit {
   }
 
   initializeNewInvoice(): void {
+    console.log(`Initializing new invoice of type: ${this.invoiceType}`);
     this.loading = true;
-    this.invoiceService.initializeNewInvoice('SALE').subscribe({
+    this.invoiceService.initializeNewInvoice(this.invoiceType).subscribe({
       next: invoice => {
         this.currentInvoice = invoice;
         this.selectedBankId = invoice.bank?.id || null;
@@ -344,15 +342,6 @@ export class PosInvoiceComponent implements OnInit {
     this.selectedStore = store;
     if (this.currentInvoice) {
       this.currentInvoice.storeId = store.id; // Assuming storeId is a property in InvoiceDTO
-      this.invoiceService.updateInvoice({ storeId: store.id }, this.currentInvoice.id).subscribe({
-        next: () => {
-          this.reloadInvoice();
-        },
-        error: error => {
-          console.error('Error updating Store:', error);
-          this.loading = false;
-        },
-      });
     }
   }
 
@@ -381,7 +370,7 @@ export class PosInvoiceComponent implements OnInit {
           this.reloadInvoice();
         },
         error: error => {
-          console.error('Error updating additions:', error);
+          console.error('Error updating additions type:', error);
           this.loading = false;
         },
       });

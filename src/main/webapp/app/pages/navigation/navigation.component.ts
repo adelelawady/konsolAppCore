@@ -1,13 +1,16 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { AccountService } from 'app/core/auth/account.service';
 import { Account } from 'app/core/auth/account.model';
+import { SharedModule } from '../../shared/shared.module';
 
 @Component({
   selector: 'jhi-navigation',
+  standalone: true,
+  imports: [SharedModule, RouterModule],
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.scss'],
 })

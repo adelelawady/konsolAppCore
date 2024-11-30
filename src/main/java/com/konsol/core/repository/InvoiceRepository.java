@@ -15,14 +15,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface InvoiceRepository extends MongoRepository<Invoice, String> {
-    @Query("{}")
-    Page<Invoice> findAllWithEagerRelationships(Pageable pageable);
-
-    @Query("{}")
-    List<Invoice> findAllWithEagerRelationships();
-
-    @Query("{'id': ?0}")
-    Optional<Invoice> findOneWithEagerRelationships(String id);
-
     List<Invoice> findAllByActiveIsFalseAndCreatedDateBefore(Instant dateTime);
 }

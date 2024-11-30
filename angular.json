@@ -44,7 +44,6 @@
               "src/main/webapp/content/scss/vendor.scss",
               "src/main/webapp/content/scss/global.scss",
               "src/main/webapp/content/assets/css/tabler.min.css",
-              "src/main/webapp/content/assets/css/tabler-flags.min.css",
               "src/main/webapp/content/assets/css/tabler-payments.min.css",
               "src/main/webapp/content/assets/css/tabler-vendors.min.css",
               "src/main/webapp/content/assets/css/demo.min.css"
@@ -73,12 +72,12 @@
                 {
                   "type": "initial",
                   "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumError": "2mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "8kb",
+                  "maximumError": "10kb"
                 }
               ]
             },

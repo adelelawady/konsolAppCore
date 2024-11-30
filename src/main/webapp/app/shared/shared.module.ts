@@ -19,6 +19,8 @@ import { DataTableComponent } from './components/data-table/data-table.component
 import { PosInvoiceComponent } from './components/pos-invoice/pos-invoice.component';
 import { StoreSelectorComponent } from './components/store-selector/store-selector.component';
 import { BankSelectorComponent } from './components/bank-selector/bank-selector.component';
+import { PagesModule } from '../pages/pages.module';
+import { NavigationComponent } from '../pages/navigation/navigation.component';
 
 @NgModule({
   imports: [SharedLibsModule],
