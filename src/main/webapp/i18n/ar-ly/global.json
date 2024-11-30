@@ -256,20 +256,39 @@
     }
   },
   "error": {
-    "internalServerError": "حدث خطأ في الخادم",
-    "server.not.reachable": "الخادم لا يمكن الوصول إليه",
+    "title": "خطأ",
+    "general": "حدث خطأ",
+    "http": {
+      "403": "ليس لديك صلاحية للقيام بهذا الإجراء",
+      "401": "غير مصرح لك",
+      "404": "لم يتم العثور على المورد المطلوب",
+      "400": "طلب غير صالح",
+      "500": "خطأ في الخادم"
+    },
+    "internalServerError": "خطأ داخلي في الخادم",
+    "server.not.reachable": "لا يمكن الوصول إلى الخادم",
     "url.not.found": "غير موجود",
-    "NotNull": "الحقل {{ fieldName }} لا يمكن ان يكون فارغ",
-    "Size": "الحقل {{ fieldName }} لا يلبي  متطلبات الحد الأدنى / الحد الأقصى!",
-    "userexists": "اسم الدخول سبق استخدامه!",
-    "emailexists": "البريد الالكتروني قيد الاستخدام بالفعل!",
+    "NotNull": "الحقل {{ fieldName }} لا يمكن أن يكون فارغاً",
+    "Size": "الحقل {{ fieldName }} لا يلبي متطلبات الحد الأدنى/الأقصى!",
+    "userexists": "اسم المستخدم مستخدم بالفعل!",
+    "emailexists": "البريد الإلكتروني مستخدم بالفعل!",
     "idexists": "{{ entityName }} جديد لا يمكن أن يكون له معرف بالفعل",
-    "idnull": "Invalid ID",
-    "idinvalid": "Invalid Id",
-    "idnotfound": "ID cannot be found",
+    "idnull": "معرف غير صالح",
+    "idinvalid": "معرف غير صالح",
+    "idnotfound": "لم يتم العثور على المعرف",
     "file": {
-      "could.not.extract": "Could not extract file",
-      "not.image": "File was expected to be an image but was found to be \"{{ fileType }}\""
+      "could.not.extract": "لا يمكن استخراج الملف",
+      "not.image": "كان من المتوقع أن يكون الملف صورة ولكن تم العثور على \"{{ fileType }}\""
+    },
+    "validation": {
+      "required": "هذا الحقل مطلوب",
+      "invalidFormat": "تنسيق غير صالح",
+      "minLength": "الحد الأدنى للطول هو {{ min }} أحرف",
+      "maxLength": "الحد الأقصى للطول هو {{ max }} أحرف"
+    },
+    "permissions": {
+      "insufficient": "صلاحيات غير كافية",
+      "notAuthorized": "غير مصرح لك بتنفيذ هذا الإجراء"
     }
   }
 }

@@ -303,6 +303,15 @@
     }
   },
   "error": {
+    "title": "Error",
+    "general": "An error occurred",
+    "http": {
+      "403": "You don't have permission to perform this action",
+      "401": "You are not authorized",
+      "404": "The requested resource was not found",
+      "400": "Invalid request",
+      "500": "Internal server error"
+    },
     "internalServerError": "Internal server error",
     "server.not.reachable": "Server not reachable",
     "url.not.found": "Not found",
@@ -317,6 +326,16 @@
     "file": {
       "could.not.extract": "Could not extract file",
       "not.image": "File was expected to be an image but was found to be \"{{ fileType }}\""
+    },
+    "validation": {
+      "required": "This field is required",
+      "invalidFormat": "Invalid format",
+      "minLength": "Minimum length is {{ min }} characters",
+      "maxLength": "Maximum length is {{ max }} characters"
+    },
+    "permissions": {
+      "insufficient": "Insufficient permissions",
+      "notAuthorized": "Not authorized to perform this action"
     }
   },
   "footer": "This is your footer"
