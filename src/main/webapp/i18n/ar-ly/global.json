@@ -113,7 +113,34 @@
       "dev": "تطوير"
     },
     "item-count": "يعرض {{first}} - {{second}} من {{total}} البيانات.",
-    "version": "الإصدار"
+    "version": "الإصدار",
+    "posInvoice": {
+      "title": "نظام نقاط البيع",
+      "refresh": "تحديث",
+      "search": "بحث عن منتج...",
+      "quantity": "الكمية",
+      "price": "السعر",
+      "add": "إضافة",
+      "defaultPrice": "السعر الافتراضي",
+      "loading": "جاري التحميل...",
+      "table": {
+        "number": "#",
+        "product": "المنتج",
+        "quantity": "الكمية",
+        "price": "السعر",
+        "total": "الإجمالي",
+        "actions": "الإجراءات"
+      },
+      "alert": {
+        "title": "تنبيه",
+        "close": "إغلاق"
+      },
+      "discount": {
+        "label": "خصم على الفاتورة",
+        "amount": "قيمة الخصم",
+        "percentage": "نسبة الخصم"
+      }
+    }
   },
   "entity": {
     "action": {

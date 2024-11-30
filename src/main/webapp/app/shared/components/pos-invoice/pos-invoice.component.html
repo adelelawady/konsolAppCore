@@ -3,7 +3,7 @@
     <div class="toast show bg-danger text-white" *ngIf="showError" role="alert" aria-live="assertive" aria-atomic="true">
       <div class="toast-header bg-danger text-white">
         <i class="ti ti-alert-circle me-2"></i>
-        <strong class="me-auto">تنبيه</strong>
+        <strong class="me-auto">{{ 'global.posInvoice.error.title' | translate }}</strong>
         <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="showError = false"></button>
       </div>
       <div class="toast-body">
@@ -16,11 +16,11 @@
       <div class="card">
         <div class="card-header">
           <div class="d-flex justify-content-between align-items-center">
-            <h3 class="card-title m-0">نظام نقاط البيع</h3>
+            <h3 class="card-title m-0">{{ 'global.posInvoice.title' | translate }}</h3>
             <div class="card-actions">
               <button class="btn btn-outline-primary" (click)="reloadInvoice()" [disabled]="loading">
                 <i class="ti ti-refresh me-1"></i>
-                تحديث
+                {{ 'global.posInvoice.refresh' | translate }}
               </button>
             </div>
           </div>
@@ -32,7 +32,7 @@
               <div class="col-md-6">
                 <jhi-items-search-box
                   #itemSearchBox
-                  [placeholder]="'بحث عن منتج...'"
+                  [placeholder]="'global.posInvoice.search' | translate"
                   [clickMode]="true"
                   (itemSelected)="onItemSelected($event)"
                   class="w-100"
@@ -43,7 +43,7 @@
                 <div class="d-flex gap-2">
                   <!-- Quantity Input -->
                   <div class="input-group">
-                    <span class="input-group-text">الكمية</span>
+                    <span class="input-group-text">{{ 'global.posInvoice.quantity' | translate }}</span>
                     <input
                       type="number"
                       class="form-control text-center"
@@ -58,7 +58,7 @@
 
                   <!-- Price Input -->
                   <div class="input-group">
-                    <span class="input-group-text">السعر</span>
+                    <span class="input-group-text">{{ 'global.posInvoice.price' | translate }}</span>
                     <input
                       type="number"
                       class="form-control text-center"
@@ -80,14 +80,14 @@
                     #addButton
                   >
                     <i class="ti ti-plus"></i>
-                    إضافة
+                    {{ 'global.posInvoice.add' | translate }}
                   </button>
                 </div>
 
                 <!-- Selected Item Info -->
                 <div class="mt-2 small text-muted" *ngIf="selectedItem">
-                  <span class="me-2">المنتج: {{ selectedItem.name }}</span>
-                  <span>السعر الافتراضي: {{ selectedItem.price1 | appCurrency: 'ر.س' }}</span>
+                  <span class="me-2">{{ 'global.posInvoice.product' | translate }}: {{ selectedItem.name }}</span>
+                  <span>{{ 'global.posInvoice.defaultPrice' | translate }}: {{ selectedItem.price1 | appCurrency: 'ر.س' }}</span>
                 </div>
               </div>
             </div>
@@ -96,7 +96,7 @@
           <!-- Loading Indicator -->
           <div *ngIf="loading" class="text-center p-3">
             <div class="spinner-border text-primary" role="status">
-              <span class="visually-hidden">جاري التحميل...</span>
+              <span class="visually-hidden">{{ 'global.posInvoice.loading' | translate }}</span>
             </div>
           </div>
 
@@ -105,15 +105,15 @@
             <table class="table table-vcenter table-hover">
               <thead>
                 <tr class="text-center">
-                  <th>#</th>
-                  <th>المنتج</th>
-                  <th>وحدة</th>
-                  <th>سعر الوحدة</th>
-                  <th>كمية</th>
-                  <th>اجمالي</th>
-                  <th>خصم</th>
-                  <th>صافي</th>
-                  <th>اجراءات</th>
+                  <th>{{ 'global.posInvoice.table.number' | translate }}</th>
+                  <th>{{ 'global.posInvoice.table.product' | translate }}</th>
+                  <th>{{ 'global.posInvoice.table.unit' | translate }}</th>
+                  <th>{{ 'global.posInvoice.table.price' | translate }}</th>
+                  <th>{{ 'global.posInvoice.table.quantity' | translate }}</th>
+                  <th>{{ 'global.posInvoice.table.total' | translate }}</th>
+                  <th>{{ 'global.posInvoice.table.discount' | translate }}</th>
+                  <th>{{ 'global.posInvoice.table.netPrice' | translate }}</th>
+                  <th>{{ 'global.posInvoice.table.actions' | translate }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -203,8 +203,8 @@
                       <div class="empty-icon">
                         <i class="ti ti-shopping-cart text-muted" style="font-size: 2rem"></i>
                       </div>
-                      <p class="empty-title">لا توجد منتجات</p>
-                      <p class="empty-subtitle text-muted">قم بإضافة منتجات إلى السلة للبدء</p>
+                      <p class="empty-title">{{ 'global.posInvoice.empty.title' | translate }}</p>
+                      <p class="empty-subtitle text-muted">{{ 'global.posInvoice.empty.subtitle' | translate }}</p>
                     </div>
                   </td>
                 </tr>
@@ -212,7 +212,7 @@
               <!-- Table Footer with Totals -->
               <tfoot *ngIf="currentInvoice?.invoiceItems?.length" class="bg-light">
                 <tr class="text-center fw-bold">
-                  <td colspan="4" class="text-start">الإجمالي</td>
+                  <td colspan="4" class="text-start">{{ 'global.posInvoice.table.total' | translate }}</td>
                   <td>{{ getTotalQuantity() | number: '1.3-3' }}</td>
                   <td>{{ currentInvoice?.totalPrice || 0 | appCurrency }}</td>
                   <td>{{ currentInvoice?.discount || 0 | appCurrency }}</td>
@@ -240,19 +240,19 @@
               <div class="text-muted small">{{ currentInvoice?.created_date | date: 'HH:mm dd/MM/yyyy' }}</div>
             </div>
             <div class="ms-auto text-end">
-              <div class="text-muted small">رقم الفاتورة</div>
+              <div class="text-muted small">{{ 'global.posInvoice.invoiceNumber' | translate }}</div>
               <div class="font-weight-medium">{{ currentInvoice?.pk || '-' }}</div>
             </div>
           </div>
 
           <!-- Store Selection 
             <div class="mb-3">
-              <label class="form-label">المخزن</label>
+              <label class="form-label">{{ 'global.posInvoice.storeSelection.label' | translate }}</label>
               <select class="form-select" 
                       [(ngModel)]="selectedBankId"
                       (ngModelChange)="onBankChange($event)"
                       [disabled]="loading">
-                <option [ngValue]="null">اختر المخزن</option>
+                <option [ngValue]="null">{{ 'global.posInvoice.storeSelection.placeholder' | translate }}</option>
                 <option *ngFor="let bank of banks" [value]="bank.id">
                   {{ bank.name }}
                 </option>
@@ -261,12 +261,12 @@
   
           
             <div class="mb-3">
-              <label class="form-label">الحساب</label>
+              <label class="form-label">{{ 'global.posInvoice.accountSelection.label' | translate }}</label>
               <select class="form-select" 
                       [(ngModel)]="selectedAccountId"
                       (ngModelChange)="onAccountChange($event)"
                       [disabled]="loading">
-                <option [ngValue]="null">اختر الحساب</option>
+                <option [ngValue]="null">{{ 'global.posInvoice.accountSelection.placeholder' | translate }}</option>
                 <option *ngFor="let account of accounts" [value]="account.id">
                   {{ account.name }}
                 </option>
@@ -275,7 +275,7 @@
   -->
           <!-- Invoice Discount -->
           <div class="mb-3">
-            <label class="form-label">خصم على الفاتورة</label>
+            <label class="form-label">{{ 'global.posInvoice.discount.label' | translate }}</label>
             <div class="input-group">
               <input
                 type="number"
@@ -290,22 +290,24 @@
               />
               <span class="input-group-text">$</span>
             </div>
-            <small class="text-muted" *ngIf="currentInvoice?.discount"> الخصم: {{ currentInvoice.discount | appCurrency }} </small>
+            <small class="text-muted" *ngIf="currentInvoice?.discount">
+              {{ 'global.posInvoice.discount.text' | translate }}: {{ currentInvoice.discount | appCurrency }}
+            </small>
           </div>
 
           <!-- Totals Summary -->
           <div class="card bg-primary-subtle mb-3">
             <div class="card-body">
               <div class="d-flex justify-content-between mb-2">
-                <span class="text-muted">الإجمالي قبل الخصم:</span>
+                <span class="text-muted">{{ 'global.posInvoice.totals.beforeDiscount' | translate }}</span>
                 <span class="font-weight-medium">{{ currentInvoice?.totalPrice | number: '1.2-2' }} ر.س</span>
               </div>
               <div class="d-flex justify-content-between mb-2">
-                <span class="text-muted">الخصم:</span>
+                <span class="text-muted">{{ 'global.posInvoice.totals.discount' | translate }}</span>
                 <span class="text-danger">{{ currentInvoice?.discount | number: '1.2-2' }} ر.س</span>
               </div>
               <div class="d-flex justify-content-between">
-                <span class="font-weight-bold">الإجمالي النهائي:</span>
+                <span class="font-weight-bold">{{ 'global.posInvoice.totals.total' | translate }}</span>
                 <span class="font-weight-bold text-primary h4 mb-0">{{ currentInvoice?.netPrice | number: '1.2-2' }} ر.س</span>
               </div>
             </div>
@@ -314,7 +316,7 @@
           <!-- Save Button -->
           <button class="btn btn-primary w-100" (click)="saveInvoice()">
             <i class="ti ti-device-floppy me-1"></i>
-            حفظ الفاتورة
+            {{ 'global.posInvoice.save' | translate }}
           </button>
         </div>
       </div>

@@ -160,6 +160,33 @@
           "description": "Receipt management"
         }
       }
+    },
+    "posInvoice": {
+      "title": "Point of Sale System",
+      "refresh": "Refresh",
+      "search": "Search for product...",
+      "quantity": "Quantity",
+      "price": "Price",
+      "add": "Add",
+      "defaultPrice": "Default Price",
+      "loading": "Loading...",
+      "table": {
+        "number": "#",
+        "product": "Product",
+        "quantity": "Quantity",
+        "price": "Price",
+        "total": "Total",
+        "actions": "Actions"
+      },
+      "alert": {
+        "title": "Alert",
+        "close": "Close"
+      },
+      "discount": {
+        "label": "Invoice Discount",
+        "amount": "Discount Amount",
+        "percentage": "Discount Percentage"
+      }
     }
   },
   "entity": {

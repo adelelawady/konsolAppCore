@@ -1,0 +1,9 @@
+<div class="form-group">
+  <label for="bankSelect">اختر البنك</label>
+  <select id="bankSelect" class="form-control" [(ngModel)]="selectedBank" (change)="onBankChange()">
+    <option value="" disabled selected>اختر بنكًا</option>
+    <option *ngFor="let bank of banks" [ngValue]="bank">{{ bank.name }}</option>
+  </select>
+  <div *ngIf="loading" class="text-muted">جارٍ التحميل...</div>
+  <div *ngIf="errorMessage" class="text-danger">{{ errorMessage }}</div>
+</div>
