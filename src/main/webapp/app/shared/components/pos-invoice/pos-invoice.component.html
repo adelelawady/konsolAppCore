@@ -245,14 +245,11 @@
             </div>
           </div>
 
-          Store Selection
           <div class="mb-3">
-            <label class="form-label">{{ 'global.posInvoice.storeSelection.label' | translate }}</label>
             <app-store-selector (storeSelected)="onStoreSelected($event)"></app-store-selector>
           </div>
 
           <div class="mb-3">
-            <label class="form-label">{{ 'global.posInvoice.bankSelection.label' | translate }}</label>
             <!-- Add the Bank Selector Component -->
             <app-bank-selector (bankSelected)="onBankSelected($event)"></app-bank-selector>
           </div>

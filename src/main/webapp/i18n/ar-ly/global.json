@@ -147,6 +147,9 @@
         "label": "المخزن",
         "placeholder": "اختر المخزن"
       },
+      "bankSelection": {
+        "label": "البنك"
+      },
       "accountSelection": {
         "label": "الحساب",
         "placeholder": "اختر الحساب"
@@ -163,6 +166,20 @@
         "total": "الإجمالي النهائي"
       },
       "save": "حفظ الفاتورة"
+    },
+    "components": {
+      "bankSelector": {
+        "label": "اختر البنك",
+        "placeholder": "اختر بنكًا",
+        "loading": "جارٍ التحميل...",
+        "error": "خطأ في تحميل البنوك"
+      },
+      "storeSelector": {
+        "label": "اختر المتجر",
+        "placeholder": "اختر متجرًا",
+        "loading": "جارٍ التحميل...",
+        "error": "خطأ في تحميل المتاجر"
+      }
     },
     "footer": "هنا يضع الفووتر"
   },

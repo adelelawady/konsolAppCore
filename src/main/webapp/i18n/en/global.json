@@ -194,6 +194,9 @@
         "label": "Store",
         "placeholder": "Select Store"
       },
+      "bankSelection": {
+        "label": "Bank"
+      },
       "accountSelection": {
         "label": "Account",
         "placeholder": "Select Account"
@@ -210,6 +213,20 @@
         "total": "Final Total"
       },
       "save": "Save Invoice"
+    },
+    "components": {
+      "bankSelector": {
+        "label": "Select Bank",
+        "placeholder": "Choose a bank",
+        "loading": "Loading...",
+        "error": "Error loading banks"
+      },
+      "storeSelector": {
+        "label": "Select Store",
+        "placeholder": "Choose a store",
+        "loading": "Loading...",
+        "error": "Error loading stores"
+      }
     }
   },
   "entity": {

@@ -1,9 +1,9 @@
 <div class="form-group">
-  <label for="storeSelect">اختر المتجر</label>
+  <label for="storeSelect">{{ 'global.components.storeSelector.label' | translate }}</label>
   <select id="storeSelect" class="form-control" [(ngModel)]="selectedStore" (change)="onStoreChange()">
-    <option value="" disabled selected>اختر متجرًا</option>
+    <option value="" disabled selected>{{ 'global.components.storeSelector.placeholder' | translate }}</option>
     <option *ngFor="let store of stores" [ngValue]="store">{{ store.name }}</option>
   </select>
-  <div *ngIf="loading" class="text-muted">جارٍ التحميل...</div>
+  <div *ngIf="loading" class="text-muted">{{ 'global.components.storeSelector.loading' | translate }}</div>
   <div *ngIf="errorMessage" class="text-danger">{{ errorMessage }}</div>
 </div>
