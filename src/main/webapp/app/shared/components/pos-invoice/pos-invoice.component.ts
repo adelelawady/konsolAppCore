@@ -40,6 +40,8 @@ export class PosInvoiceComponent implements OnInit {
   showError = false;
   additions: number = 0;
   additionsType: string = '';
+
+  invoicePk: string = '-';
   // New properties for selected bank and store
   selectedBank: BankDTO | null = null;
   selectedStore: StoreDTO | null = null;
@@ -58,6 +60,7 @@ export class PosInvoiceComponent implements OnInit {
     this.invoiceService.initializeNewInvoice(this.invoiceType).subscribe({
       next: invoice => {
         this.currentInvoice = invoice;
+        this.invoicePk = String(invoice.pk);
         this.selectedBankId = invoice.bank?.id || null;
         this.selectedAccountId = invoice.account?.id || null;
         this.loading = false;

@@ -1139,6 +1139,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         return invoiceItemRepository
             .findById(id)
             .map(existingInvoiceItem -> {
+                existingInvoiceItem.setUserQty(invoiceItemUpdateDTO.getQty());
                 invoiceItemMapper.partialUpdate(existingInvoiceItem, invoiceItemUpdateDTO);
                 calcInvoiceInvoiceItem(existingInvoiceItem);
                 calcInvoice(findOneDomain(existingInvoiceItem.getInvoiceId()).get(), true);
