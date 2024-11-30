@@ -168,25 +168,48 @@
       "quantity": "Quantity",
       "price": "Price",
       "add": "Add",
+      "product": "Product",
       "defaultPrice": "Default Price",
       "loading": "Loading...",
+      "error": {
+        "title": "Alert"
+      },
       "table": {
         "number": "#",
         "product": "Product",
+        "unit": "Unit",
+        "price": "Unit Price",
         "quantity": "Quantity",
-        "price": "Price",
         "total": "Total",
+        "discount": "Discount",
+        "netPrice": "Net Price",
         "actions": "Actions"
       },
-      "alert": {
-        "title": "Alert",
-        "close": "Close"
+      "empty": {
+        "title": "No Products",
+        "subtitle": "Add products to cart to get started"
+      },
+      "invoiceNumber": "Invoice Number",
+      "storeSelection": {
+        "label": "Store",
+        "placeholder": "Select Store"
+      },
+      "accountSelection": {
+        "label": "Account",
+        "placeholder": "Select Account"
       },
       "discount": {
         "label": "Invoice Discount",
+        "text": "Discount",
         "amount": "Discount Amount",
         "percentage": "Discount Percentage"
-      }
+      },
+      "totals": {
+        "beforeDiscount": "Total Before Discount",
+        "discount": "Discount",
+        "total": "Final Total"
+      },
+      "save": "Save Invoice"
     }
   },
   "entity": {

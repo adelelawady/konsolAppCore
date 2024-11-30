@@ -121,26 +121,50 @@
       "quantity": "الكمية",
       "price": "السعر",
       "add": "إضافة",
+      "product": "المنتج",
       "defaultPrice": "السعر الافتراضي",
       "loading": "جاري التحميل...",
+      "error": {
+        "title": "تنبيه"
+      },
       "table": {
         "number": "#",
         "product": "المنتج",
+        "unit": "وحدة",
+        "price": "سعر الوحدة",
         "quantity": "الكمية",
-        "price": "السعر",
         "total": "الإجمالي",
-        "actions": "الإجراءات"
+        "discount": "خصم",
+        "netPrice": "صافي",
+        "actions": "إجراءات"
       },
-      "alert": {
-        "title": "تنبيه",
-        "close": "إغلاق"
+      "empty": {
+        "title": "لا توجد منتجات",
+        "subtitle": "قم بإضافة منتجات إلى السلة للبدء"
+      },
+      "invoiceNumber": "رقم الفاتورة",
+      "storeSelection": {
+        "label": "المخزن",
+        "placeholder": "اختر المخزن"
+      },
+      "accountSelection": {
+        "label": "الحساب",
+        "placeholder": "اختر الحساب"
       },
       "discount": {
         "label": "خصم على الفاتورة",
+        "text": "الخصم",
         "amount": "قيمة الخصم",
         "percentage": "نسبة الخصم"
-      }
-    }
+      },
+      "totals": {
+        "beforeDiscount": "الإجمالي قبل الخصم",
+        "discount": "الخصم",
+        "total": "الإجمالي النهائي"
+      },
+      "save": "حفظ الفاتورة"
+    },
+    "footer": "هنا يضع الفووتر"
   },
   "entity": {
     "action": {
@@ -196,6 +220,5 @@
       "could.not.extract": "Could not extract file",
       "not.image": "File was expected to be an image but was found to be \"{{ fileType }}\""
     }
-  },
-  "footer": "هنا يضع الفووتر"
+  }
 }
