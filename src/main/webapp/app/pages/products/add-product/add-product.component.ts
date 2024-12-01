@@ -12,28 +12,40 @@ import { ItemViewDTO } from 'app/core/konsolApi/model/itemViewDTO';
 })
 export class AddProductComponent implements OnInit {
   @Input() show = false;
-  @Input() item?: ItemViewDTO;
+  @Input() set item(value: ItemViewDTO | undefined) {
+    if (value) {
+      this._item = { ...value };
+      this.isEditMode = !!value.id;
+    } else {
+      this._item = this.getDefaultItem();
+      this.isEditMode = false;
+    }
+  }
+  get item(): ItemViewDTO {
+    return this._item;
+  }
+
   @Output() showChange = new EventEmitter<boolean>();
   @Output() saved = new EventEmitter<void>();
 
+  private _item: ItemViewDTO = this.getDefaultItem();
   loading = false;
   isEditMode = false;
 
   constructor(private itemService: ItemResourceService, private toastr: ToastrService, private translateService: TranslateService) {}
 
-  ngOnInit(): void {
-    this.isEditMode = !!this.item?.id;
-    if (!this.item) {
-      this.item = {
-        name: '',
-        barcode: '',
-        category: '',
-        price1: 0,
-        cost: 0,
-        qty: 0,
-        checkQty: false,
-      } as any;
-    }
+  ngOnInit(): void {}
+
+  private getDefaultItem(): ItemViewDTO {
+    return {
+      name: '',
+      barcode: '',
+      category: '',
+      price1: '0',
+      cost: 0,
+      qty: 0,
+      checkQty: false,
+    };
   }
 
   close(): void {
@@ -42,10 +54,11 @@ export class AddProductComponent implements OnInit {
   }
 
   saveItem(): void {
-    if (!this.item || this.loading) return;
+    if (this.loading) return;
 
     this.loading = true;
-    const operation = this.item.id ? this.itemService.updateItem(this.item, this.item.id) : this.itemService.createItem(this.item);
+    const operation =
+      this.isEditMode && this.item.id ? this.itemService.updateItem(this.item, this.item.id) : this.itemService.createItem(this.item);
 
     operation
       .pipe(
@@ -56,8 +69,8 @@ export class AddProductComponent implements OnInit {
       .subscribe({
         next: () => {
           this.toastr.success(
-            this.translateService.instant(this.isEditMode ? 'products.update.success' : 'products.create.success'),
-            this.translateService.instant('success.title')
+            this.translateService.instant(this.isEditMode ? 'products.messages.updateSuccess' : 'products.messages.createSuccess'),
+            this.translateService.instant('global.messages.success')
           );
           this.saved.emit();
           this.close();
@@ -65,8 +78,8 @@ export class AddProductComponent implements OnInit {
         error: (error: any) => {
           console.error('Error saving item:', error);
           this.toastr.error(
-            this.translateService.instant(this.isEditMode ? 'products.update.error' : 'products.create.error'),
-            this.translateService.instant('error.title')
+            this.translateService.instant(this.isEditMode ? 'products.messages.updateError' : 'products.messages.createError'),
+            this.translateService.instant('global.messages.error')
           );
         },
       });

@@ -1,0 +1,51 @@
+{
+  "products": {
+    "title": "المنتجات",
+    "details": {
+      "title": "تفاصيل المنتج"
+    },
+    "modal": {
+      "add": "إضافة منتج",
+      "edit": "تعديل المنتج",
+      "sections": {
+        "basic": "المعلومات الأساسية",
+        "pricing": "معلومات التسعير",
+        "inventory": "معلومات المخزون"
+      },
+      "actions": {
+        "save": "حفظ",
+        "update": "تحديث",
+        "cancel": "إلغاء"
+      }
+    },
+    "fields": {
+      "name": "الاسم",
+      "barcode": "الباركود",
+      "category": "الفئة",
+      "price": "السعر",
+      "cost": "التكلفة",
+      "quantity": "الكمية",
+      "checkQuantity": "التحقق من الكمية"
+    },
+    "validation": {
+      "nameRequired": "الاسم مطلوب",
+      "priceRequired": "السعر مطلوب"
+    },
+    "actions": {
+      "add": "إضافة منتج",
+      "edit": "تعديل",
+      "delete": "حذف"
+    },
+    "search": {
+      "placeholder": "البحث عن المنتجات..."
+    },
+    "messages": {
+      "createSuccess": "تم إنشاء المنتج بنجاح",
+      "createError": "خطأ في إنشاء المنتج",
+      "updateSuccess": "تم تحديث المنتج بنجاح",
+      "updateError": "خطأ في تحديث المنتج",
+      "deleteSuccess": "تم حذف المنتج بنجاح",
+      "deleteError": "خطأ في حذف المنتج"
+    }
+  }
+}

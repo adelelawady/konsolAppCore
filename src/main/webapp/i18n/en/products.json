@@ -1,0 +1,51 @@
+{
+  "products": {
+    "title": "Products",
+    "details": {
+      "title": "Product Details"
+    },
+    "modal": {
+      "add": "Add Product",
+      "edit": "Edit Product",
+      "sections": {
+        "basic": "Basic Information",
+        "pricing": "Pricing Information",
+        "inventory": "Inventory Information"
+      },
+      "actions": {
+        "save": "Save",
+        "update": "Update",
+        "cancel": "Cancel"
+      }
+    },
+    "fields": {
+      "name": "Name",
+      "barcode": "Barcode",
+      "category": "Category",
+      "price": "Price",
+      "cost": "Cost",
+      "quantity": "Quantity",
+      "checkQuantity": "Check Quantity"
+    },
+    "validation": {
+      "nameRequired": "Name is required",
+      "priceRequired": "Price is required"
+    },
+    "actions": {
+      "add": "Add Product",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "search": {
+      "placeholder": "Search products..."
+    },
+    "messages": {
+      "createSuccess": "Product created successfully",
+      "createError": "Error creating product",
+      "updateSuccess": "Product updated successfully",
+      "updateError": "Error updating product",
+      "deleteSuccess": "Product deleted successfully",
+      "deleteError": "Error deleting product"
+    }
+  }
+}
