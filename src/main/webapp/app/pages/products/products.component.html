@@ -93,49 +93,36 @@
                       <i class="bi bi-box-seam fs-4 me-2 text-primary"></i>
                       <h5 class="mb-0">{{ selectedItem.name }}</h5>
                     </div>
-                    <div class="btn-group">
-                      <button class="btn btn-sm btn-primary" (click)="onEdit(selectedItem)">
-                        <i class="bi bi-pencil-square me-1"></i>
-                        {{ 'products.actions.edit' | translate }}
-                      </button>
-                      <button class="btn btn-sm btn-danger" (click)="onDelete(selectedItem)">
-                        <i class="bi bi-trash3 me-1"></i>
-                        {{ 'products.actions.delete' | translate }}
-                      </button>
-                      <button type="button" class="btn btn-sm btn-light" (click)="clearSelectedItem()">
-                        <i class="bi bi-x-lg"></i>
-                      </button>
-                    </div>
                   </div>
                 </div>
                 <div class="card-body">
                   <div class="row g-3">
                     <div class="col-md-12">
                       <div class="list-group list-group-flush">
-                        <div class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                        <div class="list-group-item px-0 d-flex justify-content-between align-items-center pt-2">
                           <div class="d-flex align-items-center">
-                            <i class="bi bi-upc me-2 text-muted"></i>
+                            <i class="bi bi-upctext-muted"></i>
                             <span class="text-muted">{{ 'products.fields.barcode' | translate }}</span>
                           </div>
                           <strong>{{ selectedItem.barcode || '-' }}</strong>
                         </div>
-                        <div class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                        <div class="list-group-item px-0 d-flex justify-content-between align-items-center p-1">
                           <div class="d-flex align-items-center">
-                            <i class="bi bi-tag me-2 text-muted"></i>
+                            <i class="bi bi-tag text-muted"></i>
                             <span class="text-muted">{{ 'products.fields.category' | translate }}</span>
                           </div>
                           <strong>{{ selectedItem.category || '-' }}</strong>
                         </div>
-                        <div class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                        <div class="list-group-item px-0 d-flex justify-content-between align-items-center p-1">
                           <div class="d-flex align-items-center">
-                            <i class="bi bi-currency-dollar me-2 text-muted"></i>
+                            <i class="bi bi-currency-dollar text-muted"></i>
                             <span class="text-muted">{{ 'products.fields.price' | translate }}</span>
                           </div>
                           <strong class="text-success">{{ selectedItem.price1 | currency: 'EGP' }}</strong>
                         </div>
-                        <div class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                        <div class="list-group-item px-0 d-flex justify-content-between align-items-center p-1">
                           <div class="d-flex align-items-center">
-                            <i class="bi bi-cart me-2 text-muted"></i>
+                            <i class="bi bi-cart text-muted"></i>
                             <span class="text-muted">{{ 'products.fields.cost' | translate }}</span>
                           </div>
                           <strong>{{ selectedItem.cost | currency: 'EGP' }}</strong>
@@ -154,6 +141,26 @@
                             <span class="">{{ storeItem.qty | number: '1.0-2' }}</span>
                           </div>
                         </div>
+                      </div>
+                    </div>
+                    <div class="col-md-12">
+                      <div class="btn-group">
+                        <button class="btn btn-sm btn-primary" (click)="onEdit(selectedItem)">
+                          <i class="fa fa-pencil"></i>
+                          {{ 'products.actions.edit' | translate }}
+                        </button>
+                        <button class="btn btn-sm btn-danger" (click)="onDelete(selectedItem)">
+                          <i class="fa fa-trash"></i>
+                          {{ 'products.actions.delete' | translate }}
+                        </button>
+                        <button class="btn btn-sm btn-success" (click)="onDelete(selectedItem)">
+                          <i class="fa fa-print"></i>
+                          {{ 'products.actions.print' | translate }}
+                        </button>
+                        <button class="btn btn-sm btn-warning" (click)="onDelete(selectedItem)">
+                          <i class="fa fa-invoice"></i>
+                          عرض الفواتير
+                        </button>
                       </div>
                     </div>
                   </div>
