@@ -7,6 +7,7 @@ import { ItemResourceService } from 'app/core/konsolApi/api/itemResource.service
 import { StoreResourceService } from 'app/core/konsolApi/api/storeResource.service';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateService } from '@ngx-translate/core';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-add-product',
@@ -15,7 +16,10 @@ import { TranslateService } from '@ngx-translate/core';
 export class AddProductComponent {
   @Input() set item(value: ItemViewDTO | undefined) {
     if (value) {
-      this._item = { ...value };
+      this._item = {
+        ...value,
+        checkQty: !!value.checkQty,
+      };
       this.isEditMode = !!value.id;
       if (this.isEditMode) {
         this.loadStoreItems();
@@ -23,6 +27,8 @@ export class AddProductComponent {
     } else {
       this._item = this.getDefaultItem();
       this.isEditMode = false;
+      this.stores = [];
+      this.storeItems = {};
     }
     this.initForm();
   }
@@ -32,7 +38,7 @@ export class AddProductComponent {
 
   @Input() show = false;
   @Output() showChange = new EventEmitter<boolean>();
-  @Output() saved = new EventEmitter<void>();
+  @Output() saved = new EventEmitter<ItemViewDTO>();
 
   form!: FormGroup;
   isEditMode = false;
@@ -72,7 +78,7 @@ export class AddProductComponent {
       category: [this._item.category],
       price1: [this._item.price1, Validators.required],
       cost: [this._item.cost],
-      checkQty: [this._item.checkQty],
+      checkQty: [!!this._item.checkQty],
     });
   }
 
@@ -157,7 +163,7 @@ export class AddProductComponent {
         );
         this.loading = false;
         this.closeModal();
-        this.saved.emit();
+        this.saved.emit(response);
       },
       error: error => {
         console.error('Error saving item:', error);

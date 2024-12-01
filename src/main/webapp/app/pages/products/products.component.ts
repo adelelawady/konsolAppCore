@@ -18,7 +18,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 export class ProductsComponent implements OnInit {
   items: ItemViewDTO[] = [];
   loading = false;
-  selectedItem: ItemDTO | null = null;
+  selectedItem: ItemViewDTO | undefined;
   showEditModal = false;
   pageSize = 20;
   currentPage = 0;
@@ -151,19 +151,20 @@ export class ProductsComponent implements OnInit {
 
     if (confirm(this.translateService.instant('products.delete.confirm'))) {
       this.loading = true;
-      this.itemService
-        .deleteItem(item.id)
-        .pipe(finalize(() => (this.loading = false)))
-        .subscribe({
-          next: () => {
-            this.loadItems(this.currentPage, this.searchTerm);
-            this.toastr.success(this.translateService.instant('products.delete.success'), this.translateService.instant('success.title'));
-          },
-          error: error => {
-            console.error('Error deleting item:', error);
-            this.toastr.error(this.translateService.instant('products.delete.error'), this.translateService.instant('error.title'));
-          },
-        });
+      this.itemService.deleteItem(item.id).subscribe({
+        next: () => {
+          this.loading = false;
+          this.showEditModal = false;
+          this.loadItems(this.currentPage, this.searchTerm);
+          this.toastr.success(this.translateService.instant('products.delete.success'), this.translateService.instant('success.title'));
+          this.clearSelectedItem();
+        },
+        error: error => {
+          console.error('Error deleting item:', error);
+          this.toastr.error(this.translateService.instant('products.delete.error'), this.translateService.instant('error.title'));
+          this.loading = false;
+        },
+      });
     }
   }
 
@@ -216,8 +217,15 @@ export class ProductsComponent implements OnInit {
     this.showEditModal = true;
   }
 
-  onProductSaved(): void {
+  onProductSaved(updatedItem: ItemViewDTO): void {
+    // Update the selected item with the latest data
+    this.selectedItem = updatedItem;
+
+    // Refresh the table data
     this.loadItems(this.currentPage, this.searchTerm);
+
+    // Close the modal
+    this.showEditModal = false;
   }
 
   onValueChange(event: { row: any; field: string; value: any }): void {
@@ -245,7 +253,7 @@ export class ProductsComponent implements OnInit {
   }
 
   clearSelectedItem(): void {
-    this.selectedItem = null;
+    this.selectedItem = undefined;
   }
 
   printBarcode(): void {

@@ -197,6 +197,7 @@ public class ItemServiceImpl implements ItemService {
 
         log.debug("Request to update Item : {}", itemDTO);
         Item item = itemMapper.toEntity(itemDTO);
+        item.setQty(itemToUpdate.get().getQty());
         item.setItemUnits(itemToUpdate.get().getItemUnits());
         item = itemRepository.save(item);
         return itemMapper.toDto(item);
