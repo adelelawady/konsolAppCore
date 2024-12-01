@@ -17,7 +17,7 @@
       "sections": {
         "basic": "المعلومات الأساسية",
         "pricing": "معلومات التسعير",
-        "inventory": "معلومات المخزون"
+        "inventory": "كميات المخازن"
       },
       "actions": {
         "save": "حفظ",
@@ -32,7 +32,8 @@
       "price": "السعر",
       "cost": "التكلفة",
       "quantity": "الكمية",
-      "checkQuantity": "التحقق من الكمية"
+      "checkQuantity": "التحقق من الكمية",
+      "store": "المخزن"
     },
     "validation": {
       "nameRequired": "الاسم مطلوب",
@@ -54,7 +55,11 @@
       "updateSuccess": "تم تحديث المنتج بنجاح",
       "updateError": "خطأ في تحديث المنتج",
       "deleteSuccess": "تم حذف المنتج بنجاح",
-      "deleteError": "خطأ في حذف المنتج"
+      "deleteError": "خطأ في حذف المنتج",
+      "loadStoresError": "خطأ في تحميل المخازن",
+      "loadStoreItemsError": "خطأ في تحميل كميات المخازن",
+      "updateStoreSuccess": "تم تحديث كمية المخزن بنجاح",
+      "updateStoreError": "خطأ في تحديث كمية المخزن"
     }
   }
 }

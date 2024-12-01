@@ -17,7 +17,7 @@
       "sections": {
         "basic": "Basic Information",
         "pricing": "Pricing Information",
-        "inventory": "Inventory Information"
+        "inventory": "Store Quantities"
       },
       "actions": {
         "save": "Save",
@@ -32,7 +32,8 @@
       "price": "Price",
       "cost": "Cost",
       "quantity": "Quantity",
-      "checkQuantity": "Check Quantity"
+      "checkQuantity": "Check Quantity",
+      "store": "Store"
     },
     "validation": {
       "nameRequired": "Name is required",
@@ -54,7 +55,11 @@
       "updateSuccess": "Product updated successfully",
       "updateError": "Error updating product",
       "deleteSuccess": "Product deleted successfully",
-      "deleteError": "Error deleting product"
+      "deleteError": "Error deleting product",
+      "loadStoresError": "Error loading stores",
+      "loadStoreItemsError": "Error loading store quantities",
+      "updateStoreSuccess": "Store quantity updated successfully",
+      "updateStoreError": "Error updating store quantity"
     }
   }
 }
