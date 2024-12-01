@@ -159,11 +159,12 @@ public class ItemServiceImpl implements ItemService {
         boolean hasBasicUnit = false;
         boolean hasMultiBasicUnit = false;
         for (ItemUnitDTO itemUnitDTO : itemDTO.getItemUnits()) {
-            if (itemUnitDTO.getBasic() && !hasBasicUnit) {
+            if (itemUnitDTO.getBasic()) {
+                if (hasBasicUnit) {
+                    hasMultiBasicUnit = true;
+                    break;
+                }
                 hasBasicUnit = true;
-            } else if (itemUnitDTO.getBasic() && hasBasicUnit) {
-                hasMultiBasicUnit = true;
-                break;
             }
         }
 
@@ -194,13 +195,15 @@ public class ItemServiceImpl implements ItemService {
         if (!itemToUpdate.isPresent()) {
             return null;
         }
+        this.validateNewItemUnits(itemDTO);
 
         log.debug("Request to update Item : {}", itemDTO);
         Item item = itemMapper.toEntity(itemDTO);
         item.setQty(itemToUpdate.get().getQty());
-        item.setItemUnits(itemToUpdate.get().getItemUnits());
+        // item.setItemUnits(itemToUpdate.get().getItemUnits());
         item = itemRepository.save(item);
-        return itemMapper.toDto(item);
+        SaveItemUnits(itemDTO);
+        return itemMapper.toDto(itemRepository.findById(itemDTO.getId()).get());
     }
 
     /**

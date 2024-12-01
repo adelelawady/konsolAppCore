@@ -197,6 +197,7 @@ export class ProductsComponent implements OnInit {
       .subscribe({
         next: () => {
           this.loadItems(this.currentPage, this.searchTerm);
+
           this.toastr.success(
             this.translateService.instant(item.id ? 'products.update.success' : 'products.create.success'),
             this.translateService.instant('success.title')
@@ -239,6 +240,8 @@ export class ProductsComponent implements OnInit {
 
     // Close the modal
     this.showEditModal = false;
+
+    this.loadStoreItems(this.selectedItem.id);
   }
 
   onValueChange(event: { row: any; field: string; value: any }): void {

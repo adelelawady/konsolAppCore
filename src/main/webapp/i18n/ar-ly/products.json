@@ -5,7 +5,7 @@
       "title": "تفاصيل المنتج"
     },
     "print": {
-      "title": "خيارات الطباعة",
+      "title": "خيارات",
       "barcode": "طباعة الباركود",
       "list": "طباعة القائمة",
       "labels": "طباعة الملصقات",
@@ -13,16 +13,18 @@
     },
     "modal": {
       "add": "إضافة منتج",
-      "edit": "تعديل المنتج",
+      "edit": "تعديل منتج",
       "sections": {
         "basic": "المعلومات الأساسية",
         "pricing": "معلومات التسعير",
-        "inventory": "كميات المخازن"
+        "inventory": "كميات المخازن",
+        "units": "وحدات المنتج"
       },
       "actions": {
         "save": "حفظ",
         "update": "تحديث",
-        "cancel": "إلغاء"
+        "cancel": "إلغاء",
+        "addUnit": "إضافة وحدة"
       }
     },
     "fields": {
@@ -32,8 +34,11 @@
       "price": "السعر",
       "cost": "التكلفة",
       "quantity": "الكمية",
-      "checkQuantity": "التحقق من الكمية",
-      "store": "المخزن"
+      "checkQuantity": "فحص الكمية",
+      "store": "المخزن",
+      "unitName": "اسم الوحدة",
+      "pieces": "القطع",
+      "basic": "وحدة أساسية"
     },
     "validation": {
       "nameRequired": "الاسم مطلوب",
@@ -51,15 +56,18 @@
     },
     "messages": {
       "createSuccess": "تم إنشاء المنتج بنجاح",
-      "createError": "خطأ في إنشاء المنتج",
       "updateSuccess": "تم تحديث المنتج بنجاح",
+      "createError": "خطأ في إنشاء المنتج",
       "updateError": "خطأ في تحديث المنتج",
       "deleteSuccess": "تم حذف المنتج بنجاح",
       "deleteError": "خطأ في حذف المنتج",
       "loadStoresError": "خطأ في تحميل المخازن",
-      "loadStoreItemsError": "خطأ في تحميل كميات المخازن",
+      "loadStoreItemsError": "خطأ في تحميل كميات المخزن",
       "updateStoreSuccess": "تم تحديث كمية المخزن بنجاح",
-      "updateStoreError": "خطأ في تحديث كمية المخزن"
+      "updateStoreError": "خطأ في تحديث كمية المخزن",
+      "noStores": "لا توجد مخازن متاحة",
+      "loadUnitsError": "خطأ في تحميل الوحدات",
+      "saveUnitsError": "خطأ في حفظ الوحدات"
     }
   }
 }

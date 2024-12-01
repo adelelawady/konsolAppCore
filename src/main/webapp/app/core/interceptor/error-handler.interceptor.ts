@@ -33,7 +33,7 @@ export class ErrorHandlerInterceptor implements HttpInterceptor {
 
           this.toastr.error(errorMessage, errorTitle, {
             enableHtml: true,
-            closeButton: true,
+            closeButton: false,
             progressBar: true,
             timeOut: 5000,
             positionClass: 'toast-top-right',

@@ -5,7 +5,7 @@
       "title": "Product Details"
     },
     "print": {
-      "title": "Print Options",
+      "title": "Options",
       "barcode": "Print Barcode",
       "list": "Print List",
       "labels": "Print Labels",
@@ -17,12 +17,14 @@
       "sections": {
         "basic": "Basic Information",
         "pricing": "Pricing Information",
-        "inventory": "Store Quantities"
+        "inventory": "Store Quantities",
+        "units": "Item Units"
       },
       "actions": {
         "save": "Save",
         "update": "Update",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "addUnit": "Add Unit"
       }
     },
     "fields": {
@@ -33,7 +35,10 @@
       "cost": "Cost",
       "quantity": "Quantity",
       "checkQuantity": "Check Quantity",
-      "store": "Store"
+      "store": "Store",
+      "unitName": "Unit Name",
+      "pieces": "Pieces",
+      "basic": "Basic Unit"
     },
     "validation": {
       "nameRequired": "Name is required",
@@ -51,15 +56,18 @@
     },
     "messages": {
       "createSuccess": "Product created successfully",
-      "createError": "Error creating product",
       "updateSuccess": "Product updated successfully",
+      "createError": "Error creating product",
       "updateError": "Error updating product",
       "deleteSuccess": "Product deleted successfully",
       "deleteError": "Error deleting product",
       "loadStoresError": "Error loading stores",
-      "loadStoreItemsError": "Error loading store quantities",
+      "loadStoreItemsError": "Error loading store items",
       "updateStoreSuccess": "Store quantity updated successfully",
-      "updateStoreError": "Error updating store quantity"
+      "updateStoreError": "Error updating store quantity",
+      "noStores": "No stores available",
+      "loadUnitsError": "Error loading units",
+      "saveUnitsError": "Error saving units"
     }
   }
 }

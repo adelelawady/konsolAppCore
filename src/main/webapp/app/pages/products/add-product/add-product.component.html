@@ -67,14 +67,33 @@
               </div>
             </div>
 
-            <!-- Store Quantities -->
+            <!-- Store Quantities and Units -->
             <div class="col-12 mt-3" *ngIf="isEditMode">
               <div class="card">
                 <div class="card-header">
-                  <h4 class="card-title mb-0">{{ 'products.modal.sections.inventory' | translate }}</h4>
+                  <ul class="nav nav-tabs card-header-tabs">
+                    <li class="nav-item">
+                      <a
+                        class="nav-link"
+                        [class.active]="activeTab === 'quantities'"
+                        (click)="activeTab = 'quantities'"
+                        href="javascript:void(0)"
+                      >
+                        <i class="bi bi-boxes me-1"></i>
+                        {{ 'products.modal.sections.inventory' | translate }}
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" [class.active]="activeTab === 'units'" (click)="activeTab = 'units'" href="javascript:void(0)">
+                        <i class="bi bi-rulers me-1"></i>
+                        {{ 'products.modal.sections.units' | translate }}
+                      </a>
+                    </li>
+                  </ul>
                 </div>
                 <div class="card-body">
-                  <div class="table-responsive">
+                  <!-- Store Quantities Tab -->
+                  <div [class.d-none]="activeTab !== 'quantities'" class="table-responsive">
                     <table class="table table-vcenter">
                       <thead>
                         <tr>
@@ -95,24 +114,90 @@
                               min="0"
                             />
                           </td>
-                          <td class="text-muted">
-                            {{ store.id }}
-                          </td>
-                        </tr>
-                        <tr *ngIf="loading">
-                          <td colspan="3" class="text-center">
-                            <div class="spinner-border spinner-border-sm text-primary" role="status">
-                              <span class="visually-hidden">Loading...</span>
-                            </div>
-                          </td>
-                        </tr>
-                        <tr *ngIf="!loading && stores.length === 0">
-                          <td colspan="3" class="text-center text-muted">
-                            {{ 'products.messages.noStores' | translate }}
-                          </td>
                         </tr>
                       </tbody>
                     </table>
+                  </div>
+
+                  <!-- Item Units Tab -->
+                  <div [class.d-none]="activeTab !== 'units'">
+                    <div class="d-flex justify-content-end mb-3">
+                      <button type="button" class="btn btn-primary btn-sm" (click)="addItemUnit()">
+                        <i class="bi bi-plus-lg me-1"></i>
+                        {{ 'products.modal.actions.addUnit' | translate }}
+                      </button>
+                    </div>
+                    <div class="table-responsive">
+                      <table class="table table-vcenter">
+                        <thead>
+                          <tr>
+                            <th>{{ 'products.fields.unitName' | translate }}</th>
+                            <th>{{ 'products.fields.pieces' | translate }}</th>
+                            <th>{{ 'products.fields.price' | translate }}</th>
+                            <th>{{ 'products.fields.cost' | translate }}</th>
+                            <th>{{ 'products.fields.basic' | translate }}</th>
+                            <th class="w-1"></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let unit of itemUnits; let i = index">
+                            <td>
+                              <input type="text" class="form-control" [(ngModel)]="unit.name" [ngModelOptions]="{ standalone: true }" />
+                            </td>
+                            <td>
+                              <input
+                                type="number"
+                                class="form-control"
+                                [(ngModel)]="unit.pieces"
+                                [ngModelOptions]="{ standalone: true }"
+                                min="1"
+                              />
+                            </td>
+                            <td>
+                              <div class="input-group">
+                                <input
+                                  type="number"
+                                  class="form-control"
+                                  [(ngModel)]="unit.price"
+                                  [ngModelOptions]="{ standalone: true }"
+                                  min="0"
+                                />
+                                <span class="input-group-text">EGP</span>
+                              </div>
+                            </td>
+                            <td>
+                              <div class="input-group">
+                                <input
+                                  type="number"
+                                  class="form-control"
+                                  [(ngModel)]="unit.cost"
+                                  [ngModelOptions]="{ standalone: true }"
+                                  min="0"
+                                />
+                                <span class="input-group-text">EGP</span>
+                              </div>
+                            </td>
+                            <td>
+                              <div class="form-check form-switch">
+                                <input
+                                  class="form-check-input"
+                                  type="checkbox"
+                                  role="switch"
+                                  [(ngModel)]="unit.basic"
+                                  [ngModelOptions]="{ standalone: true }"
+                                />
+                              </div>
+                            </td>
+
+                            <td>
+                              <button type="button" class="btn btn-icon btn-sm btn-ghost-danger" (click)="removeItemUnit(i)">
+                                <fa-icon icon="times"></fa-icon>
+                              </button>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
               </div>

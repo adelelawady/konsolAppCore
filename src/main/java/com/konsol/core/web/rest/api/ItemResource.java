@@ -89,9 +89,15 @@ public class ItemResource implements ItemsApiDelegate {
         @Valid @RequestBody ItemDTO itemDTO
     ) {
         log.debug("REST request to update Item : {}, {}", id, itemDTO);
+
         if (itemDTO.getId() == null) {
-            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+            if (id == null) {
+                throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+            } else {
+                itemDTO.id(id);
+            }
         }
+
         if (!Objects.equals(id, itemDTO.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }

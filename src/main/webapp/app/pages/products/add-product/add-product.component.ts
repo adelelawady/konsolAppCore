@@ -1,19 +1,21 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ItemViewDTO } from 'app/core/konsolApi/model/itemViewDTO';
 import { StoreDTO } from 'app/core/konsolApi/model/storeDTO';
 import { StoreItemIdOnlyDTO } from 'app/core/konsolApi/model/storeItemIdOnlyDTO';
+import { ItemUnitDTO } from 'app/core/konsolApi/model/itemUnitDTO';
 import { ItemResourceService } from 'app/core/konsolApi/api/itemResource.service';
 import { StoreResourceService } from 'app/core/konsolApi/api/storeResource.service';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateService } from '@ngx-translate/core';
 import { finalize } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-add-product',
   templateUrl: './add-product.component.html',
 })
-export class AddProductComponent {
+export class AddProductComponent implements OnInit {
   @Input() set item(value: ItemViewDTO | undefined) {
     if (value) {
       this._item = {
@@ -23,16 +25,18 @@ export class AddProductComponent {
       this.isEditMode = !!value.id;
       if (this.isEditMode) {
         this.loadStoreItems();
+        this.loadItemUnits();
       }
     } else {
       this._item = this.getDefaultItem();
       this.isEditMode = false;
       this.stores = [];
       this.storeItems = {};
+      this.itemUnits = [];
     }
     this.initForm();
   }
-  get item(): ItemViewDTO {
+  get item(): any {
     return this._item;
   }
 
@@ -45,6 +49,8 @@ export class AddProductComponent {
   loading = false;
   stores: StoreDTO[] = [];
   storeItems: { [key: string]: number } = {};
+  itemUnits: ItemUnitDTO[] = [];
+  activeTab = 'quantities';
 
   private _item: ItemViewDTO = this.getDefaultItem();
 
@@ -53,10 +59,18 @@ export class AddProductComponent {
     private itemService: ItemResourceService,
     private storeService: StoreResourceService,
     private toastr: ToastrService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private httpClient: HttpClient
   ) {
     this.loadStores();
     this.initForm();
+  }
+
+  ngOnInit(): void {
+    this.isEditMode = !!this.item?.id;
+    if (this.isEditMode) {
+      this.form.patchValue(this.item!);
+    }
   }
 
   private getDefaultItem(): ItemViewDTO {
@@ -73,11 +87,12 @@ export class AddProductComponent {
 
   private initForm(): void {
     this.form = this.fb.group({
+      id: [null],
       name: [this._item.name, Validators.required],
       barcode: [this._item.barcode],
       category: [this._item.category],
-      price1: [this._item.price1, Validators.required],
-      cost: [this._item.cost],
+      price1: [this._item.price1, [Validators.required, Validators.min(0)]],
+      cost: [this._item.cost, [Validators.required, Validators.min(0)]],
       checkQty: [!!this._item.checkQty],
     });
   }
@@ -121,6 +136,50 @@ export class AddProductComponent {
     }
   }
 
+  private loadItemUnits(): void {
+    if (!this._item) return;
+    // this.itemUnits = this.item?.itemUnits || [];
+
+    this.itemService.getItemUnits(this.item?.id).subscribe({
+      next: units => {
+        this.itemUnits = units;
+      },
+      error: error => {
+        console.error('Error loading item units:', error);
+        this.toastr.error(this.translate.instant('products.messages.loadUnitsError'));
+      },
+    });
+  }
+
+  addItemUnit(): void {
+    const newUnit: ItemUnitDTO = {
+      name: '',
+      pieces: 1,
+      price: this.form.get('price1')?.value || 0,
+      cost: this.form.get('cost')?.value || 0,
+      basic: false,
+    };
+    this.itemUnits.push(newUnit);
+  }
+
+  removeItemUnit(index: number): void {
+    const unit = this.itemUnits[index];
+    if (unit.id) {
+      this.itemService.deleteUnitItemById(unit.id).subscribe({
+        next: () => {
+          this.itemUnits.splice(index, 1);
+          this.toastr.success(this.translate.instant('products.messages.deleteUnitSuccess'));
+        },
+        error: error => {
+          console.error('Error deleting item unit:', error);
+          this.toastr.error(this.translate.instant('products.messages.deleteUnitError'));
+        },
+      });
+    } else {
+      this.itemUnits.splice(index, 1);
+    }
+  }
+
   updateStoreQuantity(storeId: string, qty: number): void {
     if (!this._item.id) return;
 
@@ -148,8 +207,10 @@ export class AddProductComponent {
     }
 
     const itemData = {
+      id: this.isEditMode && this.item.id ? this.item.id : null,
       ...this._item,
       ...this.form.value,
+      itemUnits: this.itemUnits, // Include units directly in the item data
     };
 
     this.loading = true;
