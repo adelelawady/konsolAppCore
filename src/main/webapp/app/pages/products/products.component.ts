@@ -140,16 +140,7 @@ export class ProductsComponent implements OnInit {
   }
 
   onEdit(item: ItemViewDTO): void {
-    this.selectedItem = {
-      id: item.id,
-      name: item.name,
-      barcode: item.barcode,
-      price1: item.price1,
-      qty: item.qty,
-      cost: item.cost,
-      checkQty: item.checkQty,
-    };
-    this.showEditModal = true;
+    this.editItem(item);
   }
 
   onDelete(item: ItemViewDTO): void {
@@ -210,15 +201,22 @@ export class ProductsComponent implements OnInit {
   createNewItem(): void {
     this.selectedItem = {
       name: '',
+      barcode: '',
+      category: '',
       price1: '0',
-      qty: 0,
       cost: 0,
-      checkQty: true,
+      qty: 0,
+      checkQty: false,
     };
     this.showEditModal = true;
   }
 
-  refresh(): void {
+  editItem(item: ItemViewDTO): void {
+    this.selectedItem = { ...item };
+    this.showEditModal = true;
+  }
+
+  onProductSaved(): void {
     this.loadItems(this.currentPage, this.searchTerm);
   }
 

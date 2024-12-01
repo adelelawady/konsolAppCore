@@ -15,6 +15,7 @@ import { MoneyMovementComponent } from './accounts/money-movement/money-movement
 import { ExchangeComponent } from './accounts/exchange/exchange.component';
 import { ReceiptComponent } from './accounts/receipt/receipt.component';
 import { ProductsComponent } from './products/products.component';
+import { ProductsModule } from './products/products.module';
 
 @NgModule({
   declarations: [
@@ -26,9 +27,8 @@ import { ProductsComponent } from './products/products.component';
     MoneyMovementComponent,
     ExchangeComponent,
     ReceiptComponent,
-    ProductsComponent,
   ],
-  imports: [CommonModule, SharedModule, RouterModule, PagesRoutingModule],
+  imports: [CommonModule, SharedModule, RouterModule, PagesRoutingModule, ProductsModule],
   exports: [],
 })
 export class PagesModule {}

@@ -1,60 +1,104 @@
-<div class="container-xl">
-  <!-- Page Header -->
-  <div class="page-header mt-3">
-    <div class="row align-items-center">
-      <div class="col">
-        <h2 class="page-title" jhiTranslate="global.navigation.pages.categories.title">Products</h2>
-        <div class="text-muted mt-1" jhiTranslate="global.navigation.pages.categories.description">Manage products</div>
-      </div>
-      <div class="col-auto ms-auto">
-        <div class="btn-list">
-          <button class="btn btn-primary d-none d-sm-inline-block" (click)="createNewItem()">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="icon"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              stroke-width="2"
-              stroke="currentColor"
-              fill="none"
-            >
-              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-              <path d="M12 5l0 14" />
-              <path d="M5 12l14 0" />
-            </svg>
-            {{ 'products.create.button' | translate }}
-          </button>
+<div class="page-wrapper">
+  <!-- Page header -->
+  <div class="page-header d-print-none">
+    <div class="container-xl">
+      <div class="row g-2 align-items-center">
+        <div class="col">
+          <div class="d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">{{ 'products.title' | translate }}</h2>
+            <button class="btn btn-primary" (click)="createNewItem()">
+              <i class="bi bi-plus-lg me-1"></i>
+              {{ 'products.actions.add' | translate }}
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Data Table -->
-  <div class="card mt-3">
-    <div class="card-body">
-      <app-data-table
-        [data]="items"
-        [columns]="columns"
-        [totalItems]="totalItems"
-        [currentPage]="currentPage"
-        [pageSize]="pageSize"
-        [loading]="loading"
-        (pageChange)="onPageChange($event)"
-        (search)="onSearch($event)"
-        (valueChange)="onValueChange($event)"
-        (rowClick)="onRowClick($event)"
-        (rowSelect)="onRowSelect($event)"
-      >
-        <!-- Optional: Add a template for empty state -->
-        <ng-template #emptyState>
-          <div class="text-center py-4">
-            <div class="text-muted">
-              {{ (searchTerm ? 'products.search.noResults' : 'products.empty.message') | translate }}
+  <!-- Page body -->
+  <div class="page-body">
+    <div class="container-xl">
+      <div class="row">
+        <!-- Main content -->
+        <div class="col-lg-8 col-xl-9">
+          <div class="card">
+            <div class="card-body">
+              <!-- Search -->
+              <div class="mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  [placeholder]="'products.search.placeholder' | translate"
+                  [(ngModel)]="searchTerm"
+                  (ngModelChange)="onSearch($event)"
+                />
+              </div>
+
+              <!-- Table -->
+              <app-data-table
+                [data]="items"
+                [columns]="columns"
+                [loading]="loading"
+                [totalItems]="totalItems"
+                [currentPage]="currentPage"
+                (pageChange)="onPageChange($event)"
+                (rowClick)="onRowClick($event)"
+              ></app-data-table>
             </div>
           </div>
-        </ng-template>
-      </app-data-table>
+        </div>
+
+        <!-- Right sidebar -->
+        <div class="col-md-4" *ngIf="selectedItem">
+          <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <h5 class="mb-0">{{ 'products.details.title' | translate }}</h5>
+              <button class="btn-close" (click)="selectedItem = null"></button>
+            </div>
+            <div class="card-body">
+              <dl class="row">
+                <dt class="col-sm-4">{{ 'products.fields.name' | translate }}</dt>
+                <dd class="col-sm-8">{{ selectedItem.name }}</dd>
+
+                <dt class="col-sm-4">{{ 'products.fields.barcode' | translate }}</dt>
+                <dd class="col-sm-8">{{ selectedItem.barcode }}</dd>
+
+                <dt class="col-sm-4">{{ 'products.fields.category' | translate }}</dt>
+                <dd class="col-sm-8">{{ selectedItem.category }}</dd>
+
+                <dt class="col-sm-4">{{ 'products.fields.price' | translate }}</dt>
+                <dd class="col-sm-8">{{ selectedItem.price1 | currency: 'EGP' }}</dd>
+
+                <dt class="col-sm-4">{{ 'products.fields.cost' | translate }}</dt>
+                <dd class="col-sm-8">{{ selectedItem.cost | currency: 'EGP' }}</dd>
+
+                <dt class="col-sm-4">{{ 'products.fields.quantity' | translate }}</dt>
+                <dd class="col-sm-8">{{ selectedItem.qty }}</dd>
+
+                <dt class="col-sm-4">{{ 'products.fields.checkQuantity' | translate }}</dt>
+                <dd class="col-sm-8">
+                  <i [class]="selectedItem.checkQty ? 'bi bi-check-lg text-success' : 'bi bi-x-lg text-danger'"></i>
+                </dd>
+              </dl>
+
+              <div class="d-flex gap-2 mt-3">
+                <button class="btn btn-primary" (click)="onEdit(selectedItem)">
+                  <i class="bi bi-pencil me-1"></i>
+                  {{ 'products.actions.edit' | translate }}
+                </button>
+                <button class="btn btn-danger" (click)="onDelete(selectedItem)">
+                  <i class="bi bi-trash me-1"></i>
+                  {{ 'products.actions.delete' | translate }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
+
+  <!-- Add/Edit Product Modal -->
+  <app-add-product *ngIf="selectedItem" [(show)]="showEditModal" [item]="selectedItem" (saved)="onProductSaved()"></app-add-product>
 </div>
