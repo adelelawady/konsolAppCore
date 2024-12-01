@@ -53,7 +53,6 @@ export class PosInvoiceComponent implements OnInit {
   }
 
   initializeNewInvoice(): void {
-    console.log(`Initializing new invoice of type: ${this.invoiceType}`);
     this.loading = true;
     this.invoiceService.initializeNewInvoice(this.invoiceType).subscribe({
       next: invoice => {

@@ -124,8 +124,8 @@
           "description": "Manage invoices and billing"
         },
         "categories": {
-          "title": "Categories",
-          "description": "Manage product categories"
+          "title": "Products",
+          "description": "Manage products"
         },
         "accounts": {
           "title": "Accounts",

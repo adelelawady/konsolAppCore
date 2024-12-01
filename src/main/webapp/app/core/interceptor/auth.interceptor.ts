@@ -15,8 +15,6 @@ export class AuthInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const serverApiUrl = this.applicationConfigService.getEndpointFor('');
-    console.log('serverApiUrl', serverApiUrl);
-    console.log('request.url', request.url);
     // if ((!request.url || (request.url.startsWith('http') && !(serverApiUrl && request.url.startsWith(serverApiUrl))))) {
     //   return next.handle(request);
     // }
