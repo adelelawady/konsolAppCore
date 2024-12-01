@@ -17,14 +17,9 @@
           <div class="row align-items-center">
             <div class="col">
               <h2 class="h3 mb-2">
-                <a
-                  [routerLink]="[item.route]"
-                  class="text-reset"
-                  [jhiTranslate]="'global.navigation.pages.' + item.translationKey + '.title'"
-                  >{{ item.title }}</a
-                >
+                <a [routerLink]="[item.route]" class="text-reset" [jhiTranslate]="item.title">{{ item.title }}</a>
               </h2>
-              <div class="text-muted" [jhiTranslate]="'global.navigation.pages.' + item.translationKey + '.description'">
+              <div class="text-muted" [jhiTranslate]="item.description">
                 {{ item.description }}
               </div>
             </div>
@@ -59,14 +54,9 @@
           <div class="row align-items-center">
             <div class="col">
               <h3 class="h4 mb-2">
-                <a
-                  [routerLink]="[item.route]"
-                  class="text-reset"
-                  [jhiTranslate]="'global.navigation.pages.' + item.translationKey + '.title'"
-                  >{{ item.title }}</a
-                >
+                <a [routerLink]="[item.route]" class="text-reset" [jhiTranslate]="item.title">{{ item.title }}</a>
               </h3>
-              <div class="text-muted small" [jhiTranslate]="'global.navigation.pages.' + item.translationKey + '.description'">
+              <div class="text-muted small" [jhiTranslate]="item.description">
                 {{ item.description }}
               </div>
             </div>

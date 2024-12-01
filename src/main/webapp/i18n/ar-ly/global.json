@@ -216,7 +216,55 @@
         "button": "إنشاء حساب جديد"
       }
     },
-    "footer": "هنا يضع الفووتر"
+    "footer": "هنا يضع الفووتر",
+    "navigation": {
+      "mainPages": "الصفحات الرئيسية",
+      "mainPagesSubtitle": "صفحات النظام الأساسية",
+      "subPages": "الصفحات الفرعية",
+      "subPagesSubtitle": "صفحات وظائف إضافية",
+      "pages": {
+        "invoices": {
+          "title": "الفواتير",
+          "description": "إدارة الفواتير والفوترة"
+        },
+        "categories": {
+          "title": "المنتجات",
+          "description": "إدارة المنتجات"
+        },
+        "accounts": {
+          "title": "الحسابات",
+          "description": "إدارة الحسابات المالية"
+        },
+        "inventory": {
+          "title": "المخزون",
+          "description": "إدارة المخزون"
+        },
+        "purchase": {
+          "title": "المشتريات",
+          "description": "إدارة المشتريات"
+        },
+        "sales": {
+          "title": "المبيعات",
+          "description": "إدارة المبيعات"
+        },
+        "newCategory": {
+          "title": "تصنيف جديد",
+          "description": "إضافة تصنيف جديد"
+        },
+        "moneyMovement": {
+          "title": "حركة الأموال",
+          "description": "تتبع حركة الأموال"
+        },
+        "exchange": {
+          "title": "الصرف",
+          "description": "عمليات الصرف"
+        },
+        "receipt": {
+          "title": "القبض",
+          "description": "إدارة القبض"
+        }
+      }
+    }
   },
   "entity": {
     "action": {
