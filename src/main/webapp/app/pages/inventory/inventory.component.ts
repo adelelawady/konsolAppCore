@@ -60,6 +60,7 @@ export class InventoryComponent implements OnInit {
     this.loading = true;
     this.selectedStore = store;
 
+    /*
     // Here you would call your API to get store items
     // For now using a placeholder API call
     this.storeService.getStoreItems(store.id).subscribe({
@@ -75,6 +76,7 @@ export class InventoryComponent implements OnInit {
         this.loading = false;
       },
     });
+    */
   }
 
   onAddStore(): void {
