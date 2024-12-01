@@ -3,18 +3,17 @@ import { RouterModule, Routes } from '@angular/router';
 import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
 
 import { InvoicesComponent } from './invoices/invoices.component';
-import { CategoriesComponent } from './categories/categories.component';
 import { AccountsComponent } from './accounts/accounts.component';
 import { InventoryComponent } from './inventory/inventory.component';
 import { PurchaseComponent } from './purchase/purchase.component';
 import { SalesComponent } from './sales/sales.component';
 
 // Sub-pages
-import { NewCategoryComponent } from './categories/new-category/new-category.component';
 import { MoneyMovementComponent } from './accounts/money-movement/money-movement.component';
 import { ExchangeComponent } from './accounts/exchange/exchange.component';
 import { ReceiptComponent } from './accounts/receipt/receipt.component';
 import { NavigationComponent } from './navigation/navigation.component';
+import { ProductsComponent } from './products/products.component';
 
 const routes: Routes = [
   {
@@ -28,8 +27,8 @@ const routes: Routes = [
     canActivate: [UserRouteAccessService],
   },
   {
-    path: 'categories',
-    component: CategoriesComponent,
+    path: 'products',
+    component: ProductsComponent,
     canActivate: [UserRouteAccessService],
   },
   {
@@ -53,11 +52,7 @@ const routes: Routes = [
     canActivate: [UserRouteAccessService],
   },
   // Sub-routes
-  {
-    path: 'categories/new',
-    component: NewCategoryComponent,
-    canActivate: [UserRouteAccessService],
-  },
+
   {
     path: 'accounts/money-movement',
     component: MoneyMovementComponent,

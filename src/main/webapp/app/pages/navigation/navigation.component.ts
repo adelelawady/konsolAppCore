@@ -29,7 +29,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
     },
     {
       title: 'global.navigation.pages.categories.title',
-      route: '/categories',
+      route: '/products',
       icon: this.getSvgIcon('category'),
       color: 'indigo',
       translationKey: 'categories',
@@ -72,7 +72,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
   subMenuItems = [
     {
       title: 'global.navigation.pages.newCategory.title',
-      route: '/categories/new',
+      route: '/products/new',
       icon: this.getSvgIcon('plus'),
       color: 'blue',
       translationKey: 'newCategory',
