@@ -108,6 +108,9 @@
     "field": {
       "id": "ID"
     },
+    "fields": {
+      "pk": "ID"
+    },
     "ribbon": {
       "dev": "Development"
     },
@@ -262,6 +265,30 @@
         "title": "Create New Account",
         "button": "Create New Account"
       }
+    },
+    "dataTable": {
+      "search": "Search...",
+      "noData": "No data available",
+      "pagination": {
+        "showing": "Showing",
+        "to": "to",
+        "of": "of",
+        "itemsPerPage": "items per page",
+        "previous": "Previous",
+        "next": "Next"
+      },
+      "actions": {
+        "edit": "Edit",
+        "delete": "Delete"
+      }
+    },
+    "loading": "Loading...",
+    "error": {
+      "title": "Error",
+      "unknown": "An unknown error occurred"
+    },
+    "success": {
+      "title": "Success"
     }
   },
   "entity": {
@@ -339,5 +366,65 @@
       "notAuthorized": "Not authorized to perform this action"
     }
   },
-  "footer": "This is your footer"
+  "footer": "This is your footer",
+  "products": {
+    "title": "Products",
+    "fields": {
+      "pk": "ID",
+      "name": "Name",
+      "barcode": "Barcode",
+      "category": "Category",
+      "qty": "Quantity",
+      "price": "Price",
+      "cost": "Cost"
+    },
+    "actions": {
+      "create": "Create Product",
+      "edit": "Edit Product",
+      "delete": "Delete Product"
+    },
+    "create": {
+      "button": "Add New Product",
+      "title": "Create New Product",
+      "success": "Product created successfully",
+      "error": "Error creating product"
+    },
+    "update": {
+      "success": "Product updated successfully",
+      "error": "Error updating product"
+    },
+    "delete": {
+      "confirm": "Are you sure you want to delete this product?",
+      "success": "Product deleted successfully",
+      "error": "Error deleting product"
+    },
+    "search": {
+      "placeholder": "Search products...",
+      "noResults": "No products found",
+      "enterSearchTerm": "Enter search term to find products"
+    },
+    "load": {
+      "error": "Error loading products"
+    },
+    "refresh": {
+      "success": "Products refreshed successfully",
+      "error": "Error refreshing products"
+    }
+  },
+  "dataTable": {
+    "search": "Search...",
+    "noData": "No data available",
+    "actions": {
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "pagination": {
+      "showing": "Showing",
+      "to": "to",
+      "of": "of",
+      "itemsPerPage": "items per page",
+      "previous": "Previous",
+      "next": "Next"
+    }
+  }
 }

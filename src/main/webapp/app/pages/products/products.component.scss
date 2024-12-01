@@ -1,1 +1,30 @@
 // Products component styles
+
+.modal-blur {
+  backdrop-filter: blur(4px);
+  background-color: rgba(0, 0, 0, 0.3);
+
+  &.show {
+    display: block;
+  }
+}
+
+.btn-list {
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+}
+
+.form-label {
+  font-weight: 500;
+}
+
+.modal-footer {
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+}

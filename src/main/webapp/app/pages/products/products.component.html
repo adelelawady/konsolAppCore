@@ -1,9 +1,171 @@
 <div class="container-xl">
+  <!-- Page Header -->
   <div class="page-header mt-3">
     <div class="row align-items-center">
       <div class="col">
         <h2 class="page-title" jhiTranslate="global.navigation.pages.categories.title">Products</h2>
         <div class="text-muted mt-1" jhiTranslate="global.navigation.pages.categories.description">Manage products</div>
+      </div>
+      <div class="col-auto ms-auto">
+        <div class="btn-list">
+          <button class="btn btn-primary d-none d-sm-inline-block" (click)="createNewItem()">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="icon"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+              stroke="currentColor"
+              fill="none"
+            >
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <path d="M12 5l0 14" />
+              <path d="M5 12l14 0" />
+            </svg>
+            {{ 'products.create.button' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search Box -->
+  <div class="card mt-3">
+    <div class="card-body">
+      <div class="row align-items-center">
+        <div class="col">
+          <div class="input-icon">
+            <span class="input-icon-addon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="icon"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                stroke-width="2"
+                stroke="currentColor"
+                fill="none"
+              >
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+                <path d="M21 21l-6 -6" />
+              </svg>
+            </span>
+            <input
+              type="text"
+              class="form-control"
+              [placeholder]="'products.search.placeholder' | translate"
+              [(ngModel)]="searchTerm"
+              (ngModelChange)="onSearch($event)"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Data Table -->
+  <div class="card mt-3">
+    <div class="card-body">
+      <app-data-table
+        [columns]="columns"
+        [data]="items"
+        [loading]="loading"
+        [showSearch]="false"
+        [showPagination]="true"
+        [pageSize]="pageSize"
+        [totalItems]="totalItems"
+        [currentPage]="currentPage"
+        (edit)="onEdit($event)"
+        (delete)="onDelete($event)"
+        (pageChange)="onPageChange($event)"
+      >
+        <!-- Optional: Add a template for empty state -->
+        <ng-template #emptyState>
+          <div class="text-center py-4">
+            <div class="text-muted">
+              {{ (searchTerm ? 'products.search.noResults' : 'products.empty.message') | translate }}
+            </div>
+          </div>
+        </ng-template>
+      </app-data-table>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div class="modal modal-blur fade" [class.show]="showEditModal" [class.d-block]="showEditModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ (selectedItem?.id ? 'products.actions.edit' : 'products.create.title') | translate }}</h5>
+          <button type="button" class="btn-close" (click)="showEditModal = false"></button>
+        </div>
+        <div class="modal-body">
+          <form #itemForm="ngForm" (ngSubmit)="saveItem(selectedItem!)" *ngIf="selectedItem">
+            <div class="row mb-3">
+              <div class="col-sm-6">
+                <label class="form-label">{{ 'products.fields.name' | translate }}</label>
+                <input type="text" class="form-control" [(ngModel)]="selectedItem.name" name="name" required />
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label">{{ 'products.fields.barcode' | translate }}</label>
+                <input type="text" class="form-control" [(ngModel)]="selectedItem.barcode" name="barcode" />
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-sm-6">
+                <label class="form-label">{{ 'products.fields.category' | translate }}</label>
+                <input type="text" class="form-control" [(ngModel)]="selectedItem.category" name="category" />
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label">{{ 'products.fields.price' | translate }}</label>
+                <input type="number" class="form-control" [(ngModel)]="selectedItem.price1" name="price1" required />
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-sm-6">
+                <label class="form-label">{{ 'products.fields.cost' | translate }}</label>
+                <input type="number" class="form-control" [(ngModel)]="selectedItem.cost" name="cost" />
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label">{{ 'products.fields.quantity' | translate }}</label>
+                <input type="number" class="form-control" [(ngModel)]="selectedItem.qty" name="qty" />
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-check">
+                <input type="checkbox" class="form-check-input" [(ngModel)]="selectedItem.checkQty" name="checkQty" />
+                <span class="form-check-label">{{ 'products.fields.checkQuantity' | translate }}</span>
+              </label>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-link link-secondary" (click)="showEditModal = false">
+                {{ 'cancel' | translate }}
+              </button>
+              <button type="submit" class="btn btn-primary ms-auto" [disabled]="!itemForm.form.valid || loading">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="icon"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  stroke-width="2"
+                  stroke="currentColor"
+                  fill="none"
+                  *ngIf="!loading"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M5 12l5 5l10 -10" />
+                </svg>
+                <div class="spinner-border spinner-border-sm" role="status" *ngIf="loading">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+                {{ 'save' | translate }}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>

@@ -5,7 +5,13 @@
       <span class="input-icon-addon">
         <i class="ti ti-search"></i>
       </span>
-      <input type="text" class="form-control" placeholder="بحث..." [(ngModel)]="searchText" (ngModelChange)="onSearch($event)" />
+      <input
+        type="text"
+        class="form-control"
+        [placeholder]="'dataTable.search' | translate"
+        [(ngModel)]="searchText"
+        (ngModelChange)="onSearch($event)"
+      />
     </div>
   </div>
 
@@ -14,8 +20,9 @@
     <table class="table table-vcenter table-hover">
       <thead>
         <tr>
-          <th *ngFor="let col of columns" [ngStyle]="{ width: col.width }" [class.sortable]="col.sortable">
-            {{ col.header }}
+          <th *ngFor="let col of columns" [ngStyle]="{ width: col.width }" [class.sortable]="col.sortable" (click)="onSort(col)">
+            {{ col.header | translate }}
+            <i *ngIf="col.sortable" class="ti ti-arrows-sort ms-1"></i>
           </th>
         </tr>
       </thead>
@@ -27,10 +34,18 @@
               <!-- Actions Column -->
               <ng-container *ngSwitchCase="'actions'">
                 <div class="btn-list justify-content-center">
-                  <button class="btn btn-icon btn-sm btn-ghost-primary" (click)="onEdit(row)">
+                  <button
+                    class="btn btn-icon btn-sm btn-ghost-primary"
+                    (click)="onEditClick(row)"
+                    [title]="'dataTable.actions.edit' | translate"
+                  >
                     <i class="ti ti-edit"></i>
                   </button>
-                  <button class="btn btn-icon btn-sm btn-ghost-danger" (click)="onDelete(row)">
+                  <button
+                    class="btn btn-icon btn-sm btn-ghost-danger"
+                    (click)="onDeleteClick(row)"
+                    [title]="'dataTable.actions.delete' | translate"
+                  >
                     <i class="ti ti-trash"></i>
                   </button>
                 </div>
@@ -78,11 +93,33 @@
 
   <!-- Pagination -->
   <div class="d-flex justify-content-between align-items-center mt-3" *ngIf="showPagination">
-    <div class="text-muted">عرض {{ (currentPage - 1) * pageSize + 1 }} إلى من {{ filteredData.length }}</div>
-    <div>
-      <select class="form-select" [(ngModel)]="pageSize" (ngModelChange)="pageChange.emit($event)">
-        <option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }} لكل صفحة</option>
+    <div class="text-muted">
+      {{ 'dataTable.pagination.showing' | translate }} {{ currentPage * pageSize + 1 }} {{ 'dataTable.pagination.to' | translate }}
+      {{ Math.min((currentPage + 1) * pageSize, totalItems) }} {{ 'dataTable.pagination.of' | translate }} {{ totalItems }}
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <select class="form-select" [(ngModel)]="pageSize" (ngModelChange)="onPageSizeChange($event)">
+        <option *ngFor="let size of pageSizeOptions" [value]="size">
+          {{ size }} {{ 'dataTable.pagination.itemsPerPage' | translate }}
+        </option>
       </select>
+      <nav aria-label="Table navigation">
+        <ul class="pagination m-0">
+          <li class="page-item" [class.disabled]="currentPage === 0">
+            <a class="page-link" href="javascript:void(0)" (click)="onPageNumberChange(currentPage - 1)">
+              <i class="ti ti-chevron-right"></i>
+            </a>
+          </li>
+          <li class="page-item" *ngFor="let page of getPages()" [class.active]="page === currentPage">
+            <a class="page-link" href="javascript:void(0)" (click)="onPageNumberChange(page)">{{ page + 1 }}</a>
+          </li>
+          <li class="page-item" [class.disabled]="currentPage >= Math.ceil(totalItems / pageSize) - 1">
+            <a class="page-link" href="javascript:void(0)" (click)="onPageNumberChange(currentPage + 1)">
+              <i class="ti ti-chevron-left"></i>
+            </a>
+          </li>
+        </ul>
+      </nav>
     </div>
   </div>
 </div>
