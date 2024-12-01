@@ -74,6 +74,7 @@
             <div class="card-body">
               <ng-container *ngIf="selectedStore">
                 <app-data-table
+                  #dataTable
                   [data]="storeItems"
                   [columns]="columns"
                   [loading]="loading"
@@ -101,15 +102,22 @@
       <div class="modal-body">
         <form #addStoreForm="ngForm" (ngSubmit)="saveStore(addStoreForm.value)">
           <div class="mb-3">
-            <label class="form-label">{{ 'inventory.fields.storeName' | translate }}</label>
-            <input type="text" class="form-control" name="name" ngModel required />
+            <label class="form-label">{{ 'inventory.modals.addStore.nameLabel' | translate }}</label>
+            <input
+              type="text"
+              class="form-control"
+              name="name"
+              [placeholder]="'inventory.modals.addStore.namePlaceholder' | translate"
+              ngModel
+              required
+            />
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-link" (click)="showAddStoreModal = false">
-              {{ 'common.cancel' | translate }}
+              {{ 'inventory.buttons.cancel' | translate }}
             </button>
             <button type="submit" class="btn btn-primary" [disabled]="!addStoreForm.valid">
-              {{ 'common.save' | translate }}
+              {{ 'inventory.buttons.save' | translate }}
             </button>
           </div>
         </form>
@@ -129,11 +137,12 @@
       <div class="modal-body">
         <form #editStoreForm="ngForm" (ngSubmit)="onEditSubmit(editStoreForm)" *ngIf="editingStore">
           <div class="mb-3">
-            <label class="form-label">{{ 'inventory.fields.storeName' | translate }}</label>
+            <label class="form-label">{{ 'inventory.modals.editStore.nameLabel' | translate }}</label>
             <input
               type="text"
               class="form-control"
               name="name"
+              [placeholder]="'inventory.modals.editStore.namePlaceholder' | translate"
               [ngModel]="editingStore.name"
               (ngModelChange)="editingStore.name = $event"
               required
@@ -141,10 +150,10 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-link" (click)="closeEditModal()">
-              {{ 'common.cancel' | translate }}
+              {{ 'inventory.buttons.cancel' | translate }}
             </button>
             <button type="submit" class="btn btn-primary" [disabled]="!editStoreForm.valid">
-              {{ 'common.save' | translate }}
+              {{ 'inventory.buttons.save' | translate }}
             </button>
           </div>
         </form>
@@ -156,7 +165,7 @@
 <ng-template #loadingTpl>
   <div class="list-group-item text-center p-3">
     <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Loading...</span>
+      <span class="visually-hidden">{{ 'inventory.table.loading' | translate }}</span>
     </div>
   </div>
 </ng-template>
