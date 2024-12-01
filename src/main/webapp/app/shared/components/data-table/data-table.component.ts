@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -47,7 +47,7 @@ export class DataTableComponent implements OnInit, OnChanges {
   private searchSubject = new Subject<string>();
   Math = Math;
 
-  constructor(private translateService: TranslateService) {
+  constructor(private translateService: TranslateService, private cdr: ChangeDetectorRef) {
     this.searchSubject.pipe(debounceTime(300), distinctUntilChanged()).subscribe(term => {
       this.search.emit(term);
     });
@@ -201,5 +201,10 @@ export class DataTableComponent implements OnInit, OnChanges {
         return value.toString().toLowerCase().includes(searchTerm);
       });
     });
+  }
+
+  refresh() {
+    this.updateFilteredData();
+    this.cdr.detectChanges();
   }
 }

@@ -1,11 +1,12 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { AccountUserResourceService } from 'app/core/konsolApi/api/accountUserResource.service';
-import { AccountUserDTO } from 'app/core/konsolApi/model/accountUserDTO';
-import { AccountUserContainer } from 'app/core/konsolApi/model/accountUserContainer';
-import { AccountUserSearchModel } from 'app/core/konsolApi/model/accountUserSearchModel';
-import { TableColumn } from 'app/shared/components/data-table/table-column.model';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { AccountUserResourceService } from '../../core/konsolApi/api/accountUserResource.service';
+import { AccountUserDTO } from '../../core/konsolApi/model/accountUserDTO';
+import { AccountUserContainer } from '../../core/konsolApi/model/accountUserContainer';
+import { AccountUserSearchModel } from '../../core/konsolApi/model/accountUserSearchModel';
+import { TableColumn } from '../../shared/components/data-table/table-column.model';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateService } from '@ngx-translate/core';
+import { DataTableComponent } from '../../shared/components/data-table/data-table.component';
 
 @Component({
   selector: 'jhi-accounts',
@@ -13,6 +14,8 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./accounts.component.scss'],
 })
 export class AccountsComponent implements OnInit {
+  @ViewChild('dataTable') dataTable!: DataTableComponent;
+
   accounts: AccountUserDTO[] = [];
   loading = false;
   totalRecords = 0;
@@ -38,12 +41,7 @@ export class AccountsComponent implements OnInit {
     { field: 'actions', header: '', type: 'actions', width: '120px' },
   ];
 
-  constructor(
-    private accountUserService: AccountUserResourceService,
-    private toastr: ToastrService,
-    private translate: TranslateService,
-    private cdr: ChangeDetectorRef
-  ) {}
+  constructor(private accountUserService: AccountUserResourceService, private toastr: ToastrService, private translate: TranslateService) {}
 
   ngOnInit(): void {
     this.loadAccounts();
@@ -71,7 +69,9 @@ export class AccountsComponent implements OnInit {
         if (response && response.result) {
           this.accounts = [...response.result];
           this.totalRecords = response.total ?? 0;
-          this.cdr.detectChanges();
+          if (this.dataTable) {
+            this.dataTable.refresh();
+          }
         }
         this.loading = false;
       },
@@ -130,5 +130,10 @@ export class AccountsComponent implements OnInit {
 
   private showSuccess(key: string): void {
     this.toastr.success(this.translate.instant(`accounts.messages.${key}`));
+  }
+
+  onKindChange(kind: string | undefined) {
+    this.currentPage = 1; // Reset to first page
+    this.loadAccounts();
   }
 }
