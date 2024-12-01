@@ -8,10 +8,6 @@ import { InventoryComponent } from './inventory/inventory.component';
 import { PurchaseComponent } from './purchase/purchase.component';
 import { SalesComponent } from './sales/sales.component';
 
-// Sub-pages
-import { MoneyMovementComponent } from './accounts/money-movement/money-movement.component';
-import { ExchangeComponent } from './accounts/exchange/exchange.component';
-import { ReceiptComponent } from './accounts/receipt/receipt.component';
 import { NavigationComponent } from './navigation/navigation.component';
 import { ProductsComponent } from './products/products.component';
 
@@ -49,23 +45,6 @@ const routes: Routes = [
   {
     path: 'sales',
     component: SalesComponent,
-    canActivate: [UserRouteAccessService],
-  },
-  // Sub-routes
-
-  {
-    path: 'accounts/money-movement',
-    component: MoneyMovementComponent,
-    canActivate: [UserRouteAccessService],
-  },
-  {
-    path: 'accounts/exchange',
-    component: ExchangeComponent,
-    canActivate: [UserRouteAccessService],
-  },
-  {
-    path: 'accounts/receipt',
-    component: ReceiptComponent,
     canActivate: [UserRouteAccessService],
   },
 ];

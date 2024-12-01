@@ -144,7 +144,7 @@ export class ProductsComponent implements OnInit {
       });
   }
 
-  onPageChange(page: number): void {
+  onPageChange(page: any): void {
     this.currentPage = page;
     this.loadItems(page, this.searchTerm);
   }

@@ -7,8 +7,8 @@
           <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2">
             <h2 class="page-title mb-0">{{ 'products.title' | translate }}</h2>
             <div class="d-grid d-sm-block" style="min-width: 140px">
-              <button class="btn btn-primary" (click)="createNewItem()">
-                <i class="bi bi-plus-lg me-1"></i>
+              <button class="btn btn-primary d-flex align-items-center" (click)="createNewItem()">
+                <i class="bi bi-plus-circle me-2"></i>
                 {{ 'products.actions.add' | translate }}
               </button>
             </div>
@@ -39,27 +39,27 @@
                 (rowClick)="onRowClick($event)"
               >
                 <ng-template #actionsTemplate let-item="item">
-                  <div class="d-flex gap-1 justify-content-end">
+                  <div class="d-flex gap-2 justify-content-end">
                     <button
                       class="btn btn-icon btn-sm btn-ghost-primary"
                       (click)="onEdit(item); $event.stopPropagation()"
                       title="{{ 'products.actions.edit' | translate }}"
                     >
-                      <i class="bi bi-pencil"></i>
+                      <i class="bi bi-pencil-square"></i>
                     </button>
                     <button
                       class="btn btn-icon btn-sm btn-ghost-danger"
                       (click)="onDelete(item); $event.stopPropagation()"
                       title="{{ 'products.actions.delete' | translate }}"
                     >
-                      <i class="bi bi-trash"></i>
+                      <i class="bi bi-trash3"></i>
                     </button>
                     <button
                       class="btn btn-icon btn-sm btn-ghost-secondary"
                       (click)="onPrint(item); $event.stopPropagation()"
                       title="{{ 'products.actions.print' | translate }}"
                     >
-                      <i class="bi bi-printer"></i>
+                      <i class="bi bi-printer-fill"></i>
                     </button>
                   </div>
                 </ng-template>
@@ -77,8 +77,8 @@
             </div>
             <div class="card-body">
               <div class="d-grid gap-2">
-                <button class="btn btn-outline-primary" (click)="printBarcode()">
-                  <i class="bi bi-upc me-2"></i>
+                <button class="btn btn-outline-primary d-flex align-items-center justify-content-center gap-2" (click)="printBarcode()">
+                  <i class="bi bi-upc-scan"></i>
                   {{ 'products.print.barcode' | translate }}
                 </button>
               </div>
@@ -93,7 +93,7 @@
                   <div class="d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center">
                       <i class="bi bi-box-seam fs-4 me-2 text-primary"></i>
-                      <h5 class="mb-0">{{ selectedItem.name }}</h5>
+                      <h3 class="mb-0">{{ selectedItem.name }}</h3>
                     </div>
                   </div>
                 </div>
@@ -102,29 +102,29 @@
                     <div class="col-md-12">
                       <div class="list-group list-group-flush">
                         <div class="list-group-item px-0 d-flex justify-content-between align-items-center pt-2">
-                          <div class="d-flex align-items-center">
-                            <i class="bi bi-upctext-muted"></i>
+                          <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-upc-scan text-muted"></i>
                             <span class="text-muted">{{ 'products.fields.barcode' | translate }}</span>
                           </div>
                           <strong>{{ selectedItem.barcode || '-' }}</strong>
                         </div>
                         <div class="list-group-item px-0 d-flex justify-content-between align-items-center p-1">
-                          <div class="d-flex align-items-center">
-                            <i class="bi bi-tag text-muted"></i>
+                          <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-tags text-muted"></i>
                             <span class="text-muted">{{ 'products.fields.category' | translate }}</span>
                           </div>
                           <strong>{{ selectedItem.category || '-' }}</strong>
                         </div>
                         <div class="list-group-item px-0 d-flex justify-content-between align-items-center p-1">
-                          <div class="d-flex align-items-center">
-                            <i class="bi bi-currency-dollar text-muted"></i>
+                          <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-cash-stack text-muted"></i>
                             <span class="text-muted">{{ 'products.fields.price' | translate }}</span>
                           </div>
                           <strong class="text-success">{{ selectedItem.price1 | currency: 'EGP' }}</strong>
                         </div>
                         <div class="list-group-item px-0 d-flex justify-content-between align-items-center p-1">
-                          <div class="d-flex align-items-center">
-                            <i class="bi bi-cart text-muted"></i>
+                          <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-cart3 text-muted"></i>
                             <span class="text-muted">{{ 'products.fields.cost' | translate }}</span>
                           </div>
                           <strong>{{ selectedItem.cost | currency: 'EGP' }}</strong>
@@ -146,21 +146,21 @@
                       </div>
                     </div>
                     <div class="col-md-12">
-                      <div class="btn-group">
-                        <button class="btn btn-sm btn-primary" (click)="onEdit(selectedItem)">
-                          <i class="fa fa-pencil"></i>
+                      <div class="btn-group w-100">
+                        <button class="btn btn-sm btn-primary d-flex align-items-center gap-2" (click)="onEdit(selectedItem)">
+                          <i class="bi bi-pencil-square"></i>
                           {{ 'products.actions.edit' | translate }}
                         </button>
-                        <button class="btn btn-sm btn-danger" (click)="onDelete(selectedItem)">
-                          <i class="fa fa-trash"></i>
+                        <button class="btn btn-sm btn-danger d-flex align-items-center gap-2" (click)="onDelete(selectedItem)">
+                          <i class="bi bi-trash3"></i>
                           {{ 'products.actions.delete' | translate }}
                         </button>
-                        <button class="btn btn-sm btn-success">
-                          <i class="fa fa-print"></i>
+                        <button class="btn btn-sm btn-success d-flex align-items-center gap-2">
+                          <i class="bi bi-printer-fill"></i>
                           {{ 'products.actions.print' | translate }}
                         </button>
-                        <button class="btn btn-sm btn-warning">
-                          <i class="fa fa-invoice"></i>
+                        <button class="btn btn-sm btn-warning d-flex align-items-center gap-2">
+                          <i class="bi bi-receipt"></i>
                           عرض الفواتير
                         </button>
                       </div>
