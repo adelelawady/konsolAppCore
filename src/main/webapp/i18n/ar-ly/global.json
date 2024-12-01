@@ -332,6 +332,18 @@
     },
     "fields": {
       "pk": "الرقم"
+    },
+    "sidebar": {
+      "products": {
+        "title": "المنتجات",
+        "create": "إضافة منتج",
+        "edit": "تعديل المنتج",
+        "delete": "حذف المنتج",
+        "selectProduct": "اختر منتج",
+        "selectProductDesc": "اختر منتج من القائمة لعرض التفاصيل",
+        "noProducts": "لا توجد منتجات",
+        "noProductsDesc": "قم بإضافة منتج جديد للبدء"
+      }
     }
   },
   "dataTable": {

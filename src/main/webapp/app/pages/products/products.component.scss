@@ -28,3 +28,55 @@
     gap: 0.5rem;
   }
 }
+
+.card-sm {
+  .card-body {
+    padding: 1rem;
+  }
+
+  .subheader {
+    font-size: 0.625rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    line-height: 1.6;
+    color: #6e7582;
+  }
+
+  .h1 {
+    font-size: 1.5rem;
+    line-height: 1.2;
+    margin-bottom: 0;
+  }
+}
+
+.list-group-item {
+  .text-truncate {
+    max-width: 100%;
+  }
+
+  .col-auto {
+    padding-right: 1rem;
+  }
+
+  i {
+    font-size: 1.25rem;
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 2rem;
+
+  .icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+}
+
+@media (min-width: 992px) {
+  .sidebar-sticky {
+    position: sticky;
+    top: 1rem;
+  }
+}

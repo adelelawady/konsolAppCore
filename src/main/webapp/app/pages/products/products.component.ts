@@ -55,7 +55,6 @@ export class ProductsComponent implements OnInit {
       header: 'products.fields.qty',
       type: 'number',
       sortable: true,
-      editable: true,
     },
     {
       field: 'price1',
@@ -237,5 +236,17 @@ export class ProductsComponent implements OnInit {
     };
 
     this.saveItem(item);
+  }
+
+  onRowClick(item: ItemViewDTO): void {
+    this.selectedItem = item;
+  }
+
+  onRowSelect(item: ItemViewDTO): void {
+    this.selectedItem = item;
+  }
+
+  clearSelectedItem(): void {
+    this.selectedItem = null;
   }
 }

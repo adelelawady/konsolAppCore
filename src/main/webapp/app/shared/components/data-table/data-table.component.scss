@@ -16,6 +16,14 @@
     td {
       vertical-align: middle;
     }
+
+    tr.cursor-pointer {
+      cursor: pointer;
+
+      &:hover {
+        background-color: rgba(32, 107, 196, 0.03);
+      }
+    }
   }
 
   .form-control-sm {

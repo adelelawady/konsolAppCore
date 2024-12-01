@@ -35,6 +35,8 @@ export class DataTableComponent implements OnInit, OnChanges {
   @Output() sortChange = new EventEmitter<{ field: string; direction: string }>();
   @Output() search = new EventEmitter<string>();
   @Output() valueChange = new EventEmitter<{ row: any; field: string; value: any }>();
+  @Output() rowClick = new EventEmitter<any>();
+  @Output() rowSelect = new EventEmitter<any>();
 
   filteredData: any[] = [];
   searchText: string = '';
@@ -104,6 +106,14 @@ export class DataTableComponent implements OnInit, OnChanges {
     this.sortChange.emit({ field: column.field, direction: 'ASC' });
   }
 
+  onRowClick(row: any): void {
+    this.rowClick.emit(row);
+  }
+
+  onRowSelect(row: any): void {
+    this.rowSelect.emit(row);
+  }
+
   getPages(): number[] {
     const totalPages = Math.ceil(this.totalItems / this.pageSize);
     const currentPage = this.currentPage;
@@ -144,7 +154,7 @@ export class DataTableComponent implements OnInit, OnChanges {
       case 'currency':
         return new Intl.NumberFormat(this.translateService.currentLang, {
           style: 'currency',
-          currency: 'SAR',
+          currency: 'EGP',
         }).format(Number(value));
       case 'date':
         return new Date(value).toLocaleDateString('ar-SA');
