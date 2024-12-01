@@ -19,6 +19,7 @@
       "searchPlaceholder": "البحث بالاسم أو الهاتف أو العنوان..."
     },
     "kind": {
+      "all": "كل الأنواع",
       "CUSTOMER": "زبون",
       "SUPPLIER": "مورد",
       "SALEMAN": "مندوب"

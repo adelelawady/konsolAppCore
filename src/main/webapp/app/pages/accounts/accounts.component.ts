@@ -85,13 +85,9 @@ export class AccountsComponent implements OnInit {
     });
   }
 
-  onSearch(event?: any): void {
-    if (event && event !== '') {
-      this.searchText = event;
-    } else {
-      this.searchText = '';
-    }
-    this.currentPage = 0;
+  onSearch(searchText: string): void {
+    this.searchText = searchText;
+    this.currentPage = 0; // Reset to first page when searching
     this.loadAccounts();
   }
 
@@ -123,8 +119,13 @@ export class AccountsComponent implements OnInit {
   }
 
   onAdd(): void {
-    // TODO: Implement add logic
-    console.log('Add new account');
+    this.createAccount();
+  }
+
+  createAccount(): void {
+    // TODO: Implement create account logic
+    console.log('Create new account');
+    this.toastr.info(this.translate.instant('accounts.messages.featureComingSoon'));
   }
 
   private showError(key: string): void {
