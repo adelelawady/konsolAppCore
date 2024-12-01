@@ -247,4 +247,31 @@ export class ProductsComponent implements OnInit {
   clearSelectedItem(): void {
     this.selectedItem = null;
   }
+
+  printBarcode(): void {
+    // TODO: Implement barcode printing logic
+    console.log('Print barcode');
+  }
+
+  printList(): void {
+    // TODO: Implement list printing logic
+    console.log('Print list');
+  }
+
+  printLabels(): void {
+    // TODO: Implement labels printing logic
+    console.log('Print labels');
+  }
+
+  printInventory(): void {
+    // TODO: Implement inventory printing logic
+    console.log('Print inventory');
+  }
+
+  onPrint(item: ItemViewDTO): void {
+    // Prevent row selection when clicking print button
+    event?.stopPropagation();
+    // TODO: Implement single item printing logic
+    console.log('Print item:', item);
+  }
 }

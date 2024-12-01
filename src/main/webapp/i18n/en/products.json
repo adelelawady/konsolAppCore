@@ -4,6 +4,13 @@
     "details": {
       "title": "Product Details"
     },
+    "print": {
+      "title": "Print Options",
+      "barcode": "Print Barcode",
+      "list": "Print List",
+      "labels": "Print Labels",
+      "inventory": "Print Inventory"
+    },
     "modal": {
       "add": "Add Product",
       "edit": "Edit Product",
@@ -34,7 +41,9 @@
     "actions": {
       "add": "Add Product",
       "edit": "Edit",
-      "delete": "Delete"
+      "delete": "Delete",
+      "print": "Print",
+      "view": "View"
     },
     "search": {
       "placeholder": "Search products..."

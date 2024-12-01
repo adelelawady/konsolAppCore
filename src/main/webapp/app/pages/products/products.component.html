@@ -3,13 +3,15 @@
   <div class="page-header">
     <div class="container-xl">
       <div class="row g-2 align-items-center">
-        <div class="col">
-          <div class="d-flex justify-content-between align-items-center">
-            <h2 class="mb-0">{{ 'products.title' | translate }}</h2>
-            <button class="btn btn-primary" (click)="createNewItem()">
-              <i class="bi bi-plus-lg me-1"></i>
-              {{ 'products.actions.add' | translate }}
-            </button>
+        <div class="col-12">
+          <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2">
+            <h2 class="page-title mb-0">{{ 'products.title' | translate }}</h2>
+            <div class="d-grid d-sm-block" style="min-width: 140px">
+              <button class="btn btn-primary" (click)="createNewItem()">
+                <i class="bi bi-plus-lg me-1"></i>
+                {{ 'products.actions.add' | translate }}
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -21,20 +23,9 @@
     <div class="container-xl">
       <div class="row">
         <!-- Products List -->
-        <div [class]="'col-lg-9'">
+        <div class="col-lg-9">
           <div class="card">
             <div class="card-body">
-              <!-- Search -->
-              <div class="mb-3">
-                <input
-                  type="text"
-                  class="form-control"
-                  [placeholder]="'products.search.placeholder' | translate"
-                  [(ngModel)]="searchTerm"
-                  (ngModelChange)="onSearch($event)"
-                />
-              </div>
-
               <!-- Table -->
               <app-data-table
                 [data]="items"
@@ -44,19 +35,67 @@
                 [currentPage]="currentPage"
                 (pageChange)="onPageChange($event)"
                 (rowClick)="onRowClick($event)"
-              ></app-data-table>
+              >
+                <ng-template #actionsTemplate let-item="item">
+                  <div class="d-flex gap-1 justify-content-end">
+                    <button
+                      class="btn btn-icon btn-sm btn-ghost-primary"
+                      (click)="onEdit(item); $event.stopPropagation()"
+                      title="{{ 'products.actions.edit' | translate }}"
+                    >
+                      <i class="bi bi-pencil"></i>
+                    </button>
+                    <button
+                      class="btn btn-icon btn-sm btn-ghost-danger"
+                      (click)="onDelete(item); $event.stopPropagation()"
+                      title="{{ 'products.actions.delete' | translate }}"
+                    >
+                      <i class="bi bi-trash"></i>
+                    </button>
+                    <button
+                      class="btn btn-icon btn-sm btn-ghost-secondary"
+                      (click)="onPrint(item); $event.stopPropagation()"
+                      title="{{ 'products.actions.print' | translate }}"
+                    >
+                      <i class="bi bi-printer"></i>
+                    </button>
+                  </div>
+                </ng-template>
+              </app-data-table>
             </div>
           </div>
         </div>
 
         <!-- Right Sidebar -->
         <div class="col-lg-3">
-          <div class="card mb-2">
-            <div class="card-header d-flex justify-content-between align-items-center">
-              <h5 class="mb-0">test</h5>
+          <!-- Print Options Card -->
+          <div class="card mb-3">
+            <div class="card-header">
+              <h5 class="card-title mb-0">{{ 'products.print.title' | translate }}</h5>
+            </div>
+            <div class="card-body">
+              <div class="d-grid gap-2">
+                <button class="btn btn-outline-primary" (click)="printBarcode()">
+                  <i class="bi bi-upc me-2"></i>
+                  {{ 'products.print.barcode' | translate }}
+                </button>
+                <button class="btn btn-outline-primary" (click)="printList()">
+                  <i class="bi bi-list-ul me-2"></i>
+                  {{ 'products.print.list' | translate }}
+                </button>
+                <button class="btn btn-outline-primary" (click)="printLabels()">
+                  <i class="bi bi-tag me-2"></i>
+                  {{ 'products.print.labels' | translate }}
+                </button>
+                <button class="btn btn-outline-primary" (click)="printInventory()">
+                  <i class="bi bi-box me-2"></i>
+                  {{ 'products.print.inventory' | translate }}
+                </button>
+              </div>
             </div>
           </div>
 
+          <!-- Product Details Card -->
           <div class="card" *ngIf="selectedItem">
             <div class="card-header d-flex justify-content-between align-items-center">
               <h5 class="mb-0">{{ 'products.details.title' | translate }}</h5>
@@ -104,7 +143,7 @@
       </div>
     </div>
   </div>
-
-  <!-- Add/Edit Product Modal -->
-  <app-add-product *ngIf="selectedItem" [(show)]="showEditModal" [item]="selectedItem" (saved)="onProductSaved()"></app-add-product>
 </div>
+
+<!-- Add/Edit Product Modal -->
+<app-add-product *ngIf="selectedItem" [(show)]="showEditModal" [item]="selectedItem" (saved)="onProductSaved()"></app-add-product>
