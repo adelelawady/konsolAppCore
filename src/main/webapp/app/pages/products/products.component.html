@@ -5,10 +5,13 @@
       <div class="row g-2 align-items-center">
         <div class="col-12">
           <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2">
-            <h2 class="page-title mb-0">{{ 'products.title' | translate }}</h2>
+            <div class="d-flex align-items-center gap-2">
+              <i class="fas fa-box fs-3 text-primary"></i>
+              <h2 class="page-title mb-0">{{ 'products.title' | translate }}</h2>
+            </div>
             <div class="d-grid d-sm-block" style="min-width: 140px">
               <button class="btn btn-primary d-flex align-items-center" (click)="createNewItem()">
-                <i class="bi bi-plus-circle me-2"></i>
+                <i class="fa fa-plus"></i>
                 {{ 'products.actions.add' | translate }}
               </button>
             </div>
@@ -72,13 +75,16 @@
         <div class="col-lg-3">
           <!-- Print Options Card -->
           <div class="card mb-3">
-            <div class="card-header">
-              <h5 class="card-title mb-0">{{ 'products.print.title' | translate }}</h5>
+            <div class="card-header bg-light">
+              <div class="d-flex align-items-center gap-2">
+                <i class="fas fa-print fs-4 text-primary"></i>
+                <h5 class="card-title mb-0">{{ 'products.print.title' | translate }}</h5>
+              </div>
             </div>
             <div class="card-body">
               <div class="d-grid gap-2">
                 <button class="btn btn-outline-primary d-flex align-items-center justify-content-center gap-2" (click)="printBarcode()">
-                  <i class="bi bi-upc-scan"></i>
+                  <i class="fas fa-barcode"></i>
                   {{ 'products.print.barcode' | translate }}
                 </button>
               </div>
@@ -91,76 +97,84 @@
               <div class="card">
                 <div class="card-header bg-light">
                   <div class="d-flex justify-content-between align-items-center">
-                    <div class="d-flex align-items-center">
-                      <i class="bi bi-box-seam fs-4 me-2 text-primary"></i>
+                    <div class="d-flex align-items-center gap-2">
+                      <i class="fas fa-box fs-4 text-primary"></i>
                       <h3 class="mb-0">{{ selectedItem.name }}</h3>
                     </div>
+                    <span class="badge bg-success-subtle text-success">Active</span>
                   </div>
                 </div>
                 <div class="card-body">
                   <div class="row g-3">
                     <div class="col-md-12">
                       <div class="list-group list-group-flush">
-                        <div class="list-group-item px-0 d-flex justify-content-between align-items-center pt-2">
+                        <div class="list-group-item px-0 d-flex justify-content-between align-items-center pt-2 hover-bg-light">
                           <div class="d-flex align-items-center gap-2">
-                            <i class="bi bi-upc-scan text-muted"></i>
+                            <i class="fas fa-barcode text-primary"></i>
                             <span class="text-muted">{{ 'products.fields.barcode' | translate }}</span>
                           </div>
                           <strong>{{ selectedItem.barcode || '-' }}</strong>
                         </div>
-                        <div class="list-group-item px-0 d-flex justify-content-between align-items-center p-1">
+                        <div class="list-group-item px-0 d-flex justify-content-between align-items-center p-1 hover-bg-light">
                           <div class="d-flex align-items-center gap-2">
-                            <i class="bi bi-tags text-muted"></i>
+                            <i class="fas fa-tags text-primary"></i>
                             <span class="text-muted">{{ 'products.fields.category' | translate }}</span>
                           </div>
                           <strong>{{ selectedItem.category || '-' }}</strong>
                         </div>
-                        <div class="list-group-item px-0 d-flex justify-content-between align-items-center p-1">
+                        <div class="list-group-item px-0 d-flex justify-content-between align-items-center p-1 hover-bg-light">
                           <div class="d-flex align-items-center gap-2">
-                            <i class="bi bi-cash-stack text-muted"></i>
+                            <i class="fas fa-dollar-sign text-primary"></i>
                             <span class="text-muted">{{ 'products.fields.price' | translate }}</span>
                           </div>
                           <strong class="text-success">{{ selectedItem.price1 | currency: 'EGP' }}</strong>
                         </div>
-                        <div class="list-group-item px-0 d-flex justify-content-between align-items-center p-1">
+                        <div class="list-group-item px-0 d-flex justify-content-between align-items-center p-1 hover-bg-light">
                           <div class="d-flex align-items-center gap-2">
-                            <i class="bi bi-cart3 text-muted"></i>
+                            <i class="fas fa-shopping-cart text-primary"></i>
                             <span class="text-muted">{{ 'products.fields.cost' | translate }}</span>
                           </div>
                           <strong>{{ selectedItem.cost | currency: 'EGP' }}</strong>
                         </div>
                       </div>
                     </div>
+
+                    <!-- Inventory section -->
                     <div class="col-md-12">
                       <div class="d-flex align-items-center mb-3">
-                        <i class="bi bi-shop me-2 text-primary"></i>
+                        <i class="fas fa-store text-primary me-2"></i>
                         <h6 class="mb-0">{{ 'products.modal.sections.inventory' | translate }}</h6>
                       </div>
                       <div class="row g-2" *ngIf="storeItems && storeItems.length">
                         <div *ngFor="let storeItem of storeItems" class="col-12">
-                          <div class="d-flex justify-content-between align-items-center border rounded p-2 bg-light">
-                            <span class="text-muted">{{ storeItem.store?.name }}</span>
-                            <span class="">{{ storeItem.qty | number: '1.0-2' }}</span>
+                          <div class="d-flex justify-content-between align-items-center border rounded p-2 bg-light hover-shadow">
+                            <div class="d-flex align-items-center gap-2">
+                              <i class="fas fa-building text-muted"></i>
+                              <span class="text-muted">{{ storeItem.store?.name }}</span>
+                            </div>
+                            <span class="badge bg-info-subtle text-info">{{ storeItem.qty | number: '1.0-2' }}</span>
                           </div>
                         </div>
                       </div>
                     </div>
+
+                    <!-- Action buttons -->
                     <div class="col-md-12">
                       <div class="btn-group w-100">
                         <button class="btn btn-sm btn-primary d-flex align-items-center gap-2" (click)="onEdit(selectedItem)">
-                          <i class="bi bi-pencil-square"></i>
+                          <i class="fas fa-edit"></i>
                           {{ 'products.actions.edit' | translate }}
                         </button>
                         <button class="btn btn-sm btn-danger d-flex align-items-center gap-2" (click)="onDelete(selectedItem)">
-                          <i class="bi bi-trash3"></i>
+                          <i class="fas fa-trash-alt"></i>
                           {{ 'products.actions.delete' | translate }}
                         </button>
                         <button class="btn btn-sm btn-success d-flex align-items-center gap-2">
-                          <i class="bi bi-printer-fill"></i>
+                          <i class="fas fa-print"></i>
                           {{ 'products.actions.print' | translate }}
                         </button>
                         <button class="btn btn-sm btn-warning d-flex align-items-center gap-2">
-                          <i class="bi bi-receipt"></i>
+                          <i class="fas fa-receipt"></i>
                           عرض الفواتير
                         </button>
                       </div>
