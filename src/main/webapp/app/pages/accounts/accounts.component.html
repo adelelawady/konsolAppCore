@@ -21,6 +21,14 @@
     <div class="container-xl">
       <div class="card">
         <div class="card-body">
+          <div>
+            <select class="form-select" [(ngModel)]="selectedKind" (ngModelChange)="onSearch()">
+              <option [ngValue]="undefined">{{ 'accounts.filters.allTypes' | translate }}</option>
+              <option *ngFor="let kind of accountKinds" [value]="kind">
+                {{ 'accounts.kind.' + kind | translate }}
+              </option>
+            </select>
+          </div>
           <app-data-table
             [data]="accounts"
             [columns]="columns"

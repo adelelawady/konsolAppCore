@@ -14,6 +14,10 @@
       "balanceIn": "الرصيد الدائن",
       "balanceOut": "الرصيد المدين"
     },
+    "filters": {
+      "allTypes": "كل الأنواع",
+      "searchPlaceholder": "البحث بالاسم أو الهاتف أو العنوان..."
+    },
     "kind": {
       "CUSTOMER": "زبون",
       "SUPPLIER": "مورد",

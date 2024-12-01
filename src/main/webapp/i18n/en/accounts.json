@@ -14,6 +14,10 @@
       "balanceIn": "Balance In",
       "balanceOut": "Balance Out"
     },
+    "filters": {
+      "allTypes": "All Types",
+      "searchPlaceholder": "Search by name, phone, or address..."
+    },
     "kind": {
       "CUSTOMER": "Customer",
       "SUPPLIER": "Supplier",

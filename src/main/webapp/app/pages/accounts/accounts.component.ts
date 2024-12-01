@@ -1,11 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { AccountUserResourceService } from 'app/core/konsolApi/api/accountUserResource.service';
 import { AccountUserDTO } from 'app/core/konsolApi/model/accountUserDTO';
 import { AccountUserContainer } from 'app/core/konsolApi/model/accountUserContainer';
+import { AccountUserSearchModel } from 'app/core/konsolApi/model/accountUserSearchModel';
 import { TableColumn } from 'app/shared/components/data-table/table-column.model';
 import { ToastrService } from 'ngx-toastr';
-import { finalize } from 'rxjs';
-import { HttpResponse } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -20,6 +19,9 @@ export class AccountsComponent implements OnInit {
   currentPage = 0;
   pageSize = 10;
   searchText = '';
+  selectedKind?: AccountUserSearchModel['kind'];
+
+  accountKinds: AccountUserDTO['kind'][] = ['CUSTOMER', 'SUPPLIER', 'SALEMAN'];
 
   columns: TableColumn[] = [
     { field: 'name', header: 'accounts.fields.name', sortable: true },
@@ -36,7 +38,12 @@ export class AccountsComponent implements OnInit {
     { field: 'actions', header: '', type: 'actions', width: '120px' },
   ];
 
-  constructor(private accountUserService: AccountUserResourceService, private toastr: ToastrService, private translate: TranslateService) {}
+  constructor(
+    private accountUserService: AccountUserResourceService,
+    private toastr: ToastrService,
+    private translate: TranslateService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loadAccounts();
@@ -44,41 +51,53 @@ export class AccountsComponent implements OnInit {
 
   loadAccounts(event?: any): void {
     this.loading = true;
-    const searchModel = {
+    const searchModel: AccountUserSearchModel = {
       page: event?.page ?? this.currentPage,
       size: event?.size ?? this.pageSize,
-      sort: event?.sort ? [event.sort.field + ',' + event.sort.direction] : [],
-      query: this.searchText,
+      ...(this.searchText &&
+        this.searchText !== '' && {
+          name: this.searchText,
+          phone: this.searchText,
+          address: this.searchText,
+          address2: this.searchText,
+        }),
+      kind: this.selectedKind,
     };
+    console.log(searchModel);
 
-    this.accountUserService
-      .searchAccountUsers(searchModel)
-      .pipe(finalize(() => (this.loading = false)))
-      .subscribe({
-        next: (response: AccountUserContainer) => {
-          if (response && response.result) {
-            this.accounts = response.result;
-            this.totalRecords = response.total ?? 0;
-          }
-        },
-        error: () => {
-          this.showError('loadError');
-        },
-      });
+    this.accountUserService.searchAccountUsers(searchModel).subscribe({
+      next: (response: AccountUserContainer) => {
+        console.log(response);
+        if (response && response.result) {
+          this.accounts = [...response.result];
+          this.totalRecords = response.total ?? 0;
+          this.cdr.detectChanges();
+        }
+        this.loading = false;
+      },
+      error: () => {
+        this.showError('loadError');
+        this.loading = false;
+      },
+    });
   }
 
-  onSearch(term: any): void {
-    this.searchText = term;
+  onSearch(event?: any): void {
+    if (event && event !== '') {
+      this.searchText = event;
+    } else {
+      this.searchText = '';
+    }
     this.currentPage = 0;
     this.loadAccounts();
   }
 
-  onPageChange(page: any): void {
+  onPageChange(page: number): void {
     this.currentPage = page;
     this.loadAccounts({ page });
   }
 
-  onPageSizeChange(size: any): void {
+  onPageSizeChange(size: number): void {
     this.pageSize = size;
     this.currentPage = 0;
     this.loadAccounts({ size });
@@ -88,12 +107,12 @@ export class AccountsComponent implements OnInit {
     this.loadAccounts({ sort: event });
   }
 
-  onEdit(account: any): void {
+  onEdit(account: AccountUserDTO): void {
     // TODO: Implement edit logic
     console.log('Edit account:', account);
   }
 
-  onDelete(account: any): void {
+  onDelete(account: AccountUserDTO): void {
     if (confirm(this.translate.instant('accounts.messages.deleteConfirm'))) {
       // TODO: Implement delete logic
       console.log('Delete account:', account);
