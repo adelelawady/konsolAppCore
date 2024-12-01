@@ -74,6 +74,81 @@
   }
 }
 
+.store-quantity {
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    background-color: #f0f0f0;
+  }
+
+  .bi {
+    font-size: 1.1rem;
+  }
+
+  .badge {
+    font-size: 0.9rem;
+    padding: 0.5rem 0.8rem;
+  }
+}
+
+.card {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+  .card-header {
+    background-color: #fff;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+}
+
+.bg-light {
+  background-color: #f8f9fa !important;
+}
+
+.fw-medium {
+  font-weight: 500;
+}
+
+.badge {
+  font-weight: 500;
+}
+
+.text-success {
+  color: #28a745 !important;
+}
+
+.text-muted {
+  color: #6c757d !important;
+}
+
+dt {
+  color: #6c757d;
+  font-weight: 500;
+}
+
+dd {
+  margin-bottom: 0.5rem;
+}
+
+.border {
+  border-color: #dee2e6 !important;
+}
+
+.btn-outline-primary,
+.btn-outline-danger {
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.btn-sm {
+  padding: 0.25rem 0.5rem;
+
+  .bi {
+    font-size: 0.875rem;
+  }
+}
+
 @media (min-width: 992px) {
   .sidebar-sticky {
     position: sticky;

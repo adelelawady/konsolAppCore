@@ -84,46 +84,80 @@
           </div>
 
           <!-- Product Details Card -->
-          <div class="card" *ngIf="selectedItem">
-            <div class="card-header d-flex justify-content-between align-items-center">
-              <h5 class="mb-0">{{ 'products.details.title' | translate }}</h5>
-              <button class="btn-close" (click)="clearSelectedItem()"></button>
-            </div>
-            <div class="card-body">
-              <dl class="row">
-                <dt class="col-sm-4">{{ 'products.fields.name' | translate }}</dt>
-                <dd class="col-sm-8">{{ selectedItem.name }}</dd>
-
-                <dt class="col-sm-4">{{ 'products.fields.barcode' | translate }}</dt>
-                <dd class="col-sm-8">{{ selectedItem.barcode }}</dd>
-
-                <dt class="col-sm-4">{{ 'products.fields.category' | translate }}</dt>
-                <dd class="col-sm-8">{{ selectedItem.category }}</dd>
-
-                <dt class="col-sm-4">{{ 'products.fields.price' | translate }}</dt>
-                <dd class="col-sm-8">{{ selectedItem.price1 | currency: 'EGP' }}</dd>
-
-                <dt class="col-sm-4">{{ 'products.fields.cost' | translate }}</dt>
-                <dd class="col-sm-8">{{ selectedItem.cost | currency: 'EGP' }}</dd>
-
-                <dt class="col-sm-4">{{ 'products.fields.quantity' | translate }}</dt>
-                <dd class="col-sm-8">{{ selectedItem.qty }}</dd>
-
-                <dt class="col-sm-4">{{ 'products.fields.checkQuantity' | translate }}</dt>
-                <dd class="col-sm-8">
-                  <i [class]="selectedItem.checkQty ? 'bi bi-check-lg text-success' : 'bi bi-x-lg text-danger'"></i>
-                </dd>
-              </dl>
-
-              <div class="d-flex gap-2 mt-3">
-                <button class="btn btn-primary" (click)="onEdit(selectedItem)">
-                  <i class="bi bi-pencil me-1"></i>
-                  {{ 'products.actions.edit' | translate }}
-                </button>
-                <button class="btn btn-danger" (click)="onDelete(selectedItem)">
-                  <i class="bi bi-trash me-1"></i>
-                  {{ 'products.actions.delete' | translate }}
-                </button>
+          <div class="row mt-3" *ngIf="selectedItem">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header bg-light">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                      <i class="bi bi-box-seam fs-4 me-2 text-primary"></i>
+                      <h5 class="mb-0">{{ selectedItem.name }}</h5>
+                    </div>
+                    <div class="btn-group">
+                      <button class="btn btn-sm btn-primary" (click)="onEdit(selectedItem)">
+                        <i class="bi bi-pencil-square me-1"></i>
+                        {{ 'products.actions.edit' | translate }}
+                      </button>
+                      <button class="btn btn-sm btn-danger" (click)="onDelete(selectedItem)">
+                        <i class="bi bi-trash3 me-1"></i>
+                        {{ 'products.actions.delete' | translate }}
+                      </button>
+                      <button type="button" class="btn btn-sm btn-light" (click)="clearSelectedItem()">
+                        <i class="bi bi-x-lg"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="row g-3">
+                    <div class="col-md-12">
+                      <div class="list-group list-group-flush">
+                        <div class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                          <div class="d-flex align-items-center">
+                            <i class="bi bi-upc me-2 text-muted"></i>
+                            <span class="text-muted">{{ 'products.fields.barcode' | translate }}</span>
+                          </div>
+                          <strong>{{ selectedItem.barcode || '-' }}</strong>
+                        </div>
+                        <div class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                          <div class="d-flex align-items-center">
+                            <i class="bi bi-tag me-2 text-muted"></i>
+                            <span class="text-muted">{{ 'products.fields.category' | translate }}</span>
+                          </div>
+                          <strong>{{ selectedItem.category || '-' }}</strong>
+                        </div>
+                        <div class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                          <div class="d-flex align-items-center">
+                            <i class="bi bi-currency-dollar me-2 text-muted"></i>
+                            <span class="text-muted">{{ 'products.fields.price' | translate }}</span>
+                          </div>
+                          <strong class="text-success">{{ selectedItem.price1 | currency: 'EGP' }}</strong>
+                        </div>
+                        <div class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                          <div class="d-flex align-items-center">
+                            <i class="bi bi-cart me-2 text-muted"></i>
+                            <span class="text-muted">{{ 'products.fields.cost' | translate }}</span>
+                          </div>
+                          <strong>{{ selectedItem.cost | currency: 'EGP' }}</strong>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-12">
+                      <div class="d-flex align-items-center mb-3">
+                        <i class="bi bi-shop me-2 text-primary"></i>
+                        <h6 class="mb-0">{{ 'products.modal.sections.inventory' | translate }}</h6>
+                      </div>
+                      <div class="row g-2" *ngIf="storeItems && storeItems.length">
+                        <div *ngFor="let storeItem of storeItems" class="col-12">
+                          <div class="d-flex justify-content-between align-items-center border rounded p-2 bg-light">
+                            <span class="text-muted">{{ storeItem.store?.name }}</span>
+                            <span class="">{{ storeItem.qty | number: '1.0-2' }}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

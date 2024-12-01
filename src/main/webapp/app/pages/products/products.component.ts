@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ItemResourceService } from 'app/core/konsolApi/api/itemResource.service';
+import { StoreResourceService } from 'app/core/konsolApi/api/storeResource.service';
 import { ItemDTO } from 'app/core/konsolApi/model/itemDTO';
 import { ItemViewDTO } from 'app/core/konsolApi/model/itemViewDTO';
 import { ItemViewDTOContainer } from 'app/core/konsolApi/model/itemViewDTOContainer';
+import { StoreDTO } from 'app/core/konsolApi/model/storeDTO';
+import { StoreItemDTO } from 'app/core/konsolApi/model/storeItemDTO';
 import { TableColumn } from 'app/shared/components/data-table/data-table.component';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateService } from '@ngx-translate/core';
@@ -25,6 +28,7 @@ export class ProductsComponent implements OnInit {
   totalItems = 0;
   searchTerm = '';
   private searchSubject = new Subject<string>();
+  storeItems: StoreItemDTO[] = [];
 
   columns: TableColumn[] = [
     {
@@ -78,7 +82,12 @@ export class ProductsComponent implements OnInit {
     },
   ];
 
-  constructor(private itemService: ItemResourceService, private toastr: ToastrService, private translateService: TranslateService) {
+  constructor(
+    private itemService: ItemResourceService,
+    private storeService: StoreResourceService,
+    private toastr: ToastrService,
+    private translateService: TranslateService
+  ) {
     // Setup search debounce
     this.searchSubject.pipe(debounceTime(300), distinctUntilChanged()).subscribe(term => {
       if (term.trim()) {
@@ -140,7 +149,11 @@ export class ProductsComponent implements OnInit {
   }
 
   onEdit(item: ItemViewDTO): void {
-    this.editItem(item);
+    this.selectedItem = item;
+    if (item.id) {
+      this.loadStoreItems(item.id);
+    }
+    this.showEditModal = true;
   }
 
   onDelete(item: ItemViewDTO): void {
@@ -246,14 +259,21 @@ export class ProductsComponent implements OnInit {
 
   onRowClick(item: ItemViewDTO): void {
     this.selectedItem = item;
+    if (item.id) {
+      this.loadStoreItems(item.id);
+    }
   }
 
   onRowSelect(item: ItemViewDTO): void {
     this.selectedItem = item;
+    if (item.id) {
+      this.loadStoreItems(item.id);
+    }
   }
 
   clearSelectedItem(): void {
     this.selectedItem = undefined;
+    this.storeItems = [];
   }
 
   printBarcode(): void {
@@ -281,5 +301,24 @@ export class ProductsComponent implements OnInit {
     event?.stopPropagation();
     // TODO: Implement single item printing logic
     console.log('Print item:', item);
+  }
+
+  private loadStoreItems(itemId: any): void {
+    if (!itemId) return;
+
+    this.storeService.getAllStoresItemsInAllStoresForItem(itemId.toString()).subscribe({
+      next: (storeItems: StoreItemDTO[]) => {
+        this.storeItems = storeItems || [];
+      },
+      error: error => {
+        console.error('Error loading store items:', error);
+        this.toastr.error(this.translateService.instant('products.messages.loadStoreItemsError'));
+        this.storeItems = [];
+      },
+    });
+  }
+
+  getTotalQuantity(): number {
+    return this.storeItems.reduce((total, item) => total + (item.qty || 0), 0);
   }
 }
