@@ -1,13 +1,9 @@
 package com.konsol.core.service.mapper;
 
 import com.konsol.core.domain.Item;
-import com.konsol.core.domain.ItemUnit;
 import com.konsol.core.service.api.dto.ItemDTO;
 import com.konsol.core.service.api.dto.ItemSimpleDTO;
-import com.konsol.core.service.api.dto.ItemUnitDTO;
 import com.konsol.core.service.api.dto.ItemViewDTO;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.mapstruct.*;
 
 /**
@@ -29,4 +25,9 @@ public interface ItemMapper extends EntityMapper<ItemDTO, Item> {
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "createdDate", ignore = true)
     Item toEntity(ItemDTO itemDTO);
+
+    @Override
+    @Mapping(target = "itemUnits", ignore = true)
+    @Mapping(target = "qty", ignore = true)
+    void partialUpdate(@MappingTarget Item entity, ItemDTO dto);
 }

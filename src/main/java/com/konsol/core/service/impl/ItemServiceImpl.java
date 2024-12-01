@@ -17,7 +17,6 @@ import com.konsol.core.web.rest.api.errors.ItemUnitException;
 import com.mongodb.client.DistinctIterable;
 import com.mongodb.client.MongoCursor;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.bson.types.ObjectId;
@@ -271,8 +270,6 @@ public class ItemServiceImpl implements ItemService {
                 /**
                  * disable changing qty and itemUnits
                  */
-                itemDTO.setItemUnits(null);
-                itemDTO.setQty(existingItem.getQty());
                 itemMapper.partialUpdate(existingItem, itemDTO);
                 return existingItem;
             })
