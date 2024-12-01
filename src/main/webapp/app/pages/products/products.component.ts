@@ -150,7 +150,6 @@ export class ProductsComponent implements OnInit {
   }
 
   onPageSizeChange(size: any): void {
-    console.log(size);
     this.pageSize = size;
     this.currentPage = 0; // Reset to first page when changing page size
     this.loadItems(0, this.searchTerm);

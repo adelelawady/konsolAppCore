@@ -11,6 +11,7 @@ export interface TableColumn {
   sortable?: boolean;
   filterable?: boolean;
   editable?: boolean;
+  format?: string | ((value: any) => string);
 }
 
 @Component({
@@ -148,22 +149,35 @@ export class DataTableComponent implements OnInit, OnChanges {
     return pages;
   }
 
-  formatValue(value: any, column: TableColumn): string {
-    if (value == null) return '';
+  formatCellValue(value: any, column: TableColumn): string {
+    if (!value) return '';
+
+    if (column.format) {
+      if (typeof column.format === 'function') {
+        return column.format(value);
+      }
+      return column.format;
+    }
 
     switch (column.type) {
       case 'currency':
-        return new Intl.NumberFormat(this.translateService.currentLang, {
-          style: 'currency',
-          currency: 'EGP',
-        }).format(Number(value));
+        return this.formatCurrency(value);
       case 'date':
-        return new Date(value).toLocaleDateString('ar-SA');
-      case 'number':
-        return new Intl.NumberFormat(this.translateService.currentLang).format(Number(value));
+        return this.formatDate(value);
       default:
         return value.toString();
     }
+  }
+
+  private formatCurrency(value: number): string {
+    return new Intl.NumberFormat(this.translateService.currentLang, {
+      style: 'currency',
+      currency: 'LYD',
+    }).format(value);
+  }
+
+  private formatDate(value: string | Date): string {
+    return new Intl.DateTimeFormat(this.translateService.currentLang).format(new Date(value));
   }
 
   private updateFilteredData(): void {

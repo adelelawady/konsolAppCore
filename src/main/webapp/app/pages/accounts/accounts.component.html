@@ -1,0 +1,45 @@
+<div class="page-wrapper">
+  <div class="page-header d-print-none">
+    <div class="container-xl">
+      <div class="row g-2 align-items-center">
+        <div class="col">
+          <h2 class="page-title">{{ 'accounts.title' | translate }}</h2>
+          <div class="text-muted mt-1">{{ 'accounts.subtitle' | translate }}</div>
+        </div>
+        <div class="col-auto ms-auto d-print-none">
+          <div class="btn-list">
+            <button class="btn btn-primary d-none d-sm-inline-block" (click)="onAdd()">
+              <i class="ti ti-plus"></i>
+              {{ 'accounts.actions.create' | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="container-xl">
+      <div class="card">
+        <div class="card-body">
+          <app-data-table
+            [data]="accounts"
+            [columns]="columns"
+            [loading]="loading"
+            [totalItems]="totalRecords"
+            [currentPage]="currentPage"
+            [pageSize]="pageSize"
+            [showSearch]="true"
+            [showPagination]="true"
+            [emptyMessage]="'accounts.table.empty' | translate"
+            (search)="onSearch($event)"
+            (pageChange)="onPageChange($event)"
+            (pageSizeChange)="onPageSizeChange($event)"
+            (sortChange)="onSort($event)"
+            (edit)="onEdit($event)"
+            (delete)="onDelete($event)"
+          ></app-data-table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

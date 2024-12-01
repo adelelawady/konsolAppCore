@@ -1,0 +1,39 @@
+{
+  "accounts": {
+    "title": "Accounts Management",
+    "subtitle": "Manage your business accounts and contacts",
+    "table": {
+      "empty": "No accounts found",
+      "loading": "Loading accounts..."
+    },
+    "fields": {
+      "name": "Name",
+      "kind": "Type",
+      "phone": "Phone",
+      "address": "Address",
+      "balanceIn": "Balance In",
+      "balanceOut": "Balance Out"
+    },
+    "kind": {
+      "CUSTOMER": "Customer",
+      "SUPPLIER": "Supplier",
+      "SALEMAN": "Salesman"
+    },
+    "actions": {
+      "create": "New Account",
+      "edit": "Edit Account",
+      "delete": "Delete Account",
+      "search": "Search accounts..."
+    },
+    "messages": {
+      "loadError": "Failed to load accounts",
+      "deleteConfirm": "Are you sure you want to delete this account?",
+      "deleteSuccess": "Account deleted successfully",
+      "deleteError": "Failed to delete account",
+      "createSuccess": "Account created successfully",
+      "createError": "Failed to create account",
+      "updateSuccess": "Account updated successfully",
+      "updateError": "Failed to update account"
+    }
+  }
+}

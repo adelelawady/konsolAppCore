@@ -12,8 +12,7 @@
 import { AccountUserDTO } from './accountUserDTO';
 
 export interface AccountUserContainer {
-  id?: number;
-  name?: string;
-  phone?: string;
+  result: AccountUserDTO[];
+  total: number;
   // Add other properties as needed
 }

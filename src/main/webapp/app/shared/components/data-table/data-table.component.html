@@ -60,17 +60,17 @@
                   [ngModel]="row[col.field]"
                   (ngModelChange)="onValueChange(row, col.field, $event)"
                 />
-                <span *ngIf="!col.editable">{{ formatValue(row[col.field], col) }}</span>
+                <span *ngIf="!col.editable">{{ formatCellValue(row[col.field], col) }}</span>
               </ng-container>
 
               <!-- Currency -->
               <ng-container *ngSwitchCase="'currency'">
-                <span>{{ formatValue(row[col.field], col) }}</span>
+                <span>{{ formatCellValue(row[col.field], col) }}</span>
               </ng-container>
 
               <!-- Default Text -->
               <ng-container *ngSwitchDefault>
-                <span>{{ row[col.field] }}</span>
+                {{ formatCellValue(row[col.field], col) }}
               </ng-container>
             </ng-container>
           </td>

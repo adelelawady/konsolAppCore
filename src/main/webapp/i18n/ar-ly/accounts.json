@@ -1,0 +1,39 @@
+{
+  "accounts": {
+    "title": "إدارة الحسابات",
+    "subtitle": "إدارة حسابات وجهات اتصال عملك",
+    "table": {
+      "empty": "لم يتم العثور على حسابات",
+      "loading": "جاري تحميل الحسابات..."
+    },
+    "fields": {
+      "name": "الاسم",
+      "kind": "النوع",
+      "phone": "الهاتف",
+      "address": "العنوان",
+      "balanceIn": "الرصيد الدائن",
+      "balanceOut": "الرصيد المدين"
+    },
+    "kind": {
+      "CUSTOMER": "زبون",
+      "SUPPLIER": "مورد",
+      "SALEMAN": "مندوب"
+    },
+    "actions": {
+      "create": "حساب جديد",
+      "edit": "تعديل الحساب",
+      "delete": "حذف الحساب",
+      "search": "البحث في الحسابات..."
+    },
+    "messages": {
+      "loadError": "فشل في تحميل الحسابات",
+      "deleteConfirm": "هل أنت متأكد من حذف هذا الحساب؟",
+      "deleteSuccess": "تم حذف الحساب بنجاح",
+      "deleteError": "فشل في حذف الحساب",
+      "createSuccess": "تم إنشاء الحساب بنجاح",
+      "createError": "فشل في إنشاء الحساب",
+      "updateSuccess": "تم تحديث الحساب بنجاح",
+      "updateError": "فشل في تحديث الحساب"
+    }
+  }
+}
