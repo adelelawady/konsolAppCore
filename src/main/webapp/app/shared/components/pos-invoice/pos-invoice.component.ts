@@ -36,8 +36,6 @@ export class PosInvoiceComponent implements OnInit {
   loading = false;
   selectedBankId: string | null = null;
   selectedAccountId: string | null = null;
-  errorMessage: string | null = null;
-  showError = false;
   additions: number = 0;
   additionsType: string = '';
 
@@ -99,8 +97,6 @@ export class PosInvoiceComponent implements OnInit {
           this.currentInvoice = updatedInvoice;
           this.resetInputs();
           this.loading = false;
-          this.showError = false;
-          this.errorMessage = null;
 
           this.itemSearchBox.clearSelection();
           setTimeout(() => {
@@ -110,15 +106,6 @@ export class PosInvoiceComponent implements OnInit {
         error: (error: HttpErrorResponse) => {
           console.error('Error adding invoice item:', error);
           this.loading = false;
-
-          const errorResponse = error.error as ErrorResponse;
-          this.errorMessage = errorResponse.detail || 'حدث خطأ أثناء إضافة المنتج';
-          this.showError = true;
-
-          setTimeout(() => {
-            this.showError = false;
-            this.errorMessage = null;
-          }, 5000);
         },
       });
     }
@@ -309,14 +296,8 @@ export class PosInvoiceComponent implements OnInit {
           error: (error: HttpErrorResponse) => {
             console.error('Error updating item:', error);
             const errorResponse = error.error as ErrorResponse;
-            this.errorMessage = errorResponse.detail || 'حدث خطأ أثناء تحديث المنتج';
-            this.showError = true;
-            this.loading = false;
 
-            setTimeout(() => {
-              this.showError = false;
-              this.errorMessage = null;
-            }, 5000);
+            this.loading = false;
           },
         });
     }

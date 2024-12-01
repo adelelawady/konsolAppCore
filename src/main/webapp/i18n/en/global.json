@@ -168,6 +168,7 @@
       "quantity": "Quantity",
       "price": "Price",
       "add": "Add",
+      "clearSelection": "Clear",
       "product": "Product",
       "defaultPrice": "Default Price",
       "loading": "Loading...",

@@ -1,16 +1,4 @@
 <div class="">
-  <div class="position-fixed top-0 end-0 p-3" style="z-index: 1050">
-    <div class="toast show bg-danger text-white" *ngIf="showError" role="alert" aria-live="assertive" aria-atomic="true">
-      <div class="toast-header bg-danger text-white">
-        <i class="ti ti-alert-circle me-2"></i>
-        <strong class="me-auto">{{ 'global.posInvoice.error.title' | translate }}</strong>
-        <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="showError = false"></button>
-      </div>
-      <div class="toast-body">
-        {{ errorMessage }}
-      </div>
-    </div>
-  </div>
   <div class="row g-3">
     <div class="col-lg-9">
       <div class="card">

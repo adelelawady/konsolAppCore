@@ -121,6 +121,7 @@
       "quantity": "الكمية",
       "price": "السعر",
       "add": "إضافة",
+      "clearSelection": "مسح",
       "product": "المنتج",
       "defaultPrice": "السعر الافتراضي",
       "loading": "جاري التحميل...",

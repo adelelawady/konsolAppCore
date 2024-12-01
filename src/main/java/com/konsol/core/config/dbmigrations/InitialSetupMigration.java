@@ -30,6 +30,7 @@ public class InitialSetupMigration {
         userAuthority = template.save(userAuthority);
         Authority adminAuthority = createAdminAuthority();
         adminAuthority = template.save(adminAuthority);
+        createAllAuthorities(userAuthority, adminAuthority);
         addUsers(userAuthority, adminAuthority);
         createFirstBank();
         createFirstStore();
@@ -104,5 +105,71 @@ public class InitialSetupMigration {
         Store store = new Store();
         store.name("Store_1");
         return template.save(store);
+    }
+
+    private void createAllAuthorities(Authority userAuthority, Authority adminAuthority) {
+        template.save(userAuthority);
+        template.save(adminAuthority);
+
+        template.save(createAuthority(AuthoritiesConstants.CREATE_INVOICE));
+        template.save(createAuthority(AuthoritiesConstants.UPDATE_INVOICE));
+        template.save(createAuthority(AuthoritiesConstants.DELETE_INVOICE));
+        template.save(createAuthority(AuthoritiesConstants.VIEW_INVOICE));
+        template.save(createAuthority(AuthoritiesConstants.SAVE_INVOICE));
+        template.save(createAuthority(AuthoritiesConstants.PRINT_INVOICE));
+        template.save(createAuthority(AuthoritiesConstants.CANCEL_INVOICE));
+
+        template.save(createAuthority(AuthoritiesConstants.CREATE_STORE));
+        template.save(createAuthority(AuthoritiesConstants.UPDATE_STORE));
+        template.save(createAuthority(AuthoritiesConstants.DELETE_STORE));
+        template.save(createAuthority(AuthoritiesConstants.VIEW_STORE));
+
+        template.save(createAuthority(AuthoritiesConstants.CREATE_ACCOUNT));
+        template.save(createAuthority(AuthoritiesConstants.UPDATE_ACCOUNT));
+        template.save(createAuthority(AuthoritiesConstants.DELETE_ACCOUNT));
+        template.save(createAuthority(AuthoritiesConstants.VIEW_ACCOUNT));
+
+        template.save(createAuthority(AuthoritiesConstants.CREATE_ITEM));
+        template.save(createAuthority(AuthoritiesConstants.UPDATE_ITEM));
+        template.save(createAuthority(AuthoritiesConstants.DELETE_ITEM));
+        template.save(createAuthority(AuthoritiesConstants.VIEW_ITEM));
+
+        template.save(createAuthority(AuthoritiesConstants.CREATE_BANK));
+        template.save(createAuthority(AuthoritiesConstants.UPDATE_BANK));
+        template.save(createAuthority(AuthoritiesConstants.DELETE_BANK));
+        template.save(createAuthority(AuthoritiesConstants.VIEW_BANK));
+
+        template.save(createAuthority(AuthoritiesConstants.CREATE_PAYMENT));
+        template.save(createAuthority(AuthoritiesConstants.UPDATE_PAYMENT));
+        template.save(createAuthority(AuthoritiesConstants.DELETE_PAYMENT));
+        template.save(createAuthority(AuthoritiesConstants.VIEW_PAYMENT));
+
+        template.save(createAuthority(AuthoritiesConstants.CREATE_SALE));
+        template.save(createAuthority(AuthoritiesConstants.UPDATE_SALE));
+        template.save(createAuthority(AuthoritiesConstants.DELETE_SALE));
+        template.save(createAuthority(AuthoritiesConstants.VIEW_SALE));
+        template.save(createAuthority(AuthoritiesConstants.CANCEL_SALE));
+        template.save(createAuthority(AuthoritiesConstants.PRINT_SALE));
+
+        template.save(createAuthority(AuthoritiesConstants.CREATE_PURCHASE));
+        template.save(createAuthority(AuthoritiesConstants.UPDATE_PURCHASE));
+        template.save(createAuthority(AuthoritiesConstants.DELETE_PURCHASE));
+        template.save(createAuthority(AuthoritiesConstants.VIEW_PURCHASE));
+        template.save(createAuthority(AuthoritiesConstants.CANCEL_PURCHASE));
+        template.save(createAuthority(AuthoritiesConstants.PRINT_PURCHASE));
+
+        template.save(createAuthority(AuthoritiesConstants.VIEW_REPORTS));
+        template.save(createAuthority(AuthoritiesConstants.GENERATE_REPORT));
+        template.save(createAuthority(AuthoritiesConstants.EXPORT_REPORT));
+
+        template.save(createAuthority(AuthoritiesConstants.CREATE_USER));
+        template.save(createAuthority(AuthoritiesConstants.UPDATE_USER));
+        template.save(createAuthority(AuthoritiesConstants.DELETE_USER));
+        template.save(createAuthority(AuthoritiesConstants.VIEW_USER));
+        template.save(createAuthority(AuthoritiesConstants.MANAGE_ROLES));
+
+        template.save(createAuthority(AuthoritiesConstants.VIEW_SETTINGS));
+        template.save(createAuthority(AuthoritiesConstants.UPDATE_SETTINGS));
+        template.save(createAuthority(AuthoritiesConstants.MANAGE_SYSTEM_CONFIG));
     }
 }

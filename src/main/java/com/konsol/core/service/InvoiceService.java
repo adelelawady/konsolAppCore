@@ -88,7 +88,7 @@ public interface InvoiceService {
      * @param kind kind of new created invoice
      * @return invoice saved , mapped to InvoiceDTO
      */
-    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.CREATE_INVOICE + "\")")
+    //@PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.CREATE_INVOICE + "\")")
     InvoiceDTO initializeNewInvoice(InvoiceKind kind);
 
     /**
