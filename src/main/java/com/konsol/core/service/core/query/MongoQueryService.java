@@ -693,48 +693,65 @@ import org.bson.Document;
      * @return
      */
     public AccountUserContainer accountUserSearchPaginate(AccountUserSearchModel accountUserSearchModel) {
-        List<Document> arrays = new ArrayList<>();
+        List<Document> orConditions = new ArrayList<>();
+        Document andCondition = new Document();
 
-        if (accountUserSearchModel.getId() != null) {
-            arrays.add(new Document("_id", new ObjectId(accountUserSearchModel.getId())));
+        // Add the "kind" condition to the `andCondition` document
+        if (accountUserSearchModel.getKind() != null) {
+            andCondition.put("kind", new Document("$regex", accountUserSearchModel.getKind().toString()).append("$options", "i"));
         }
 
-        if (accountUserSearchModel.getKind() != null) {
-            arrays.add(new Document("kind", new Document("$regex", accountUserSearchModel.getKind().toString()).append("$options", "i")));
+        // Add other conditions to the `orConditions` list
+        if (accountUserSearchModel.getId() != null) {
+            orConditions.add(new Document("_id", new ObjectId(accountUserSearchModel.getId())));
         }
 
         if (accountUserSearchModel.getName() != null) {
-            arrays.add(new Document("name", new Document("$regex", accountUserSearchModel.getName()).append("$options", "i")));
+            orConditions.add(new Document("name", new Document("$regex", accountUserSearchModel.getName()).append("$options", "i")));
         }
 
         if (accountUserSearchModel.getPhone() != null) {
-            arrays.add(new Document("phone", new Document("$regex", accountUserSearchModel.getPhone()).append("$options", "i")));
+            orConditions.add(new Document("phone", new Document("$regex", accountUserSearchModel.getPhone()).append("$options", "i")));
         }
 
         if (accountUserSearchModel.getAddress() != null) {
-            arrays.add(new Document("address", new Document("$regex", accountUserSearchModel.getAddress()).append("$options", "i")));
+            orConditions.add(new Document("address", new Document("$regex", accountUserSearchModel.getAddress()).append("$options", "i")));
         }
 
         if (accountUserSearchModel.getAddress2() != null) {
-            arrays.add(new Document("address_2", new Document("$regex", accountUserSearchModel.getAddress2()).append("$options", "i")));
+            orConditions.add(
+                new Document("address_2", new Document("$regex", accountUserSearchModel.getAddress2()).append("$options", "i"))
+            );
         }
 
         MongoCollection<Document> collection = mongoTemplate.getCollection("accounts");
         AccountUserContainer accountUserContainer = new AccountUserContainer();
-        if (!arrays.isEmpty()) {
-            //
+
+        if (!orConditions.isEmpty() || !andCondition.isEmpty()) {
             AggregateIterable<Document> result;
+
+            // Build the `$match` condition with `$and` for "kind" and `$or` for others
+            List<Document> matchConditions = new ArrayList<>();
+            if (!orConditions.isEmpty()) {
+                matchConditions.add(new Document("$or", orConditions));
+            }
+            if (!andCondition.isEmpty()) {
+                matchConditions.add(andCondition);
+            }
+
+            Document match = new Document("$match", new Document("$and", matchConditions));
+
             if (accountUserSearchModel.getPage() != null) {
                 result =
                     collection.aggregate(
                         List.of(
-                            new Document("$match", new Document("$or", arrays)),
-                            new Document("$skip", (accountUserSearchModel.getPage()) * accountUserSearchModel.getSize()),
+                            match,
+                            new Document("$skip", accountUserSearchModel.getPage() * accountUserSearchModel.getSize()),
                             new Document("$limit", accountUserSearchModel.getSize())
                         )
                     );
             } else {
-                result = collection.aggregate(List.of(new Document("$match", new Document("$or", arrays))));
+                result = collection.aggregate(List.of(match));
             }
 
             if (result.iterator().hasNext()) {

@@ -70,8 +70,11 @@ export class AccountsComponent implements OnInit {
           this.accounts = [...response.result];
           this.totalRecords = response.total ?? 0;
           if (this.dataTable) {
-            this.dataTable.refresh();
+            // this.dataTable.refresh();
           }
+        } else {
+          this.accounts = [];
+          this.dataTable.refresh();
         }
         this.loading = false;
       },
@@ -133,7 +136,7 @@ export class AccountsComponent implements OnInit {
   }
 
   onKindChange(kind: string | undefined) {
-    this.currentPage = 1; // Reset to first page
+    this.currentPage = 0; // Reset to first page
     this.loadAccounts();
   }
 }
