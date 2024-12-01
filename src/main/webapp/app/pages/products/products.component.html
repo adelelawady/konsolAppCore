@@ -33,7 +33,9 @@
                 [loading]="loading"
                 [totalItems]="totalItems"
                 [currentPage]="currentPage"
+                [pageSize]="pageSize"
                 (pageChange)="onPageChange($event)"
+                (pageSizeChange)="onPageSizeChange($event)"
                 (rowClick)="onRowClick($event)"
               >
                 <ng-template #actionsTemplate let-item="item">

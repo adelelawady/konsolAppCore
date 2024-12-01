@@ -32,6 +32,8 @@ export class DataTableComponent implements OnInit, OnChanges {
   @Output() edit = new EventEmitter<any>();
   @Output() delete = new EventEmitter<any>();
   @Output() pageChange = new EventEmitter<number>();
+  @Output() pageSizeChange = new EventEmitter<number>();
+
   @Output() sortChange = new EventEmitter<{ field: string; direction: string }>();
   @Output() search = new EventEmitter<string>();
   @Output() valueChange = new EventEmitter<{ row: any; field: string; value: any }>();
@@ -89,8 +91,7 @@ export class DataTableComponent implements OnInit, OnChanges {
 
   onPageSizeChange(size: number): void {
     this.pageSize = size;
-    this.currentPage = 0;
-    this.pageChange.emit(0);
+    this.pageSizeChange.emit(this.pageSize);
   }
 
   onPageNumberChange(page: number): void {
