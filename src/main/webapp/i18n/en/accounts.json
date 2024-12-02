@@ -43,7 +43,9 @@
       "search": "Search accounts...",
       "print": "Print",
       "export": "Export",
-      "refresh": "Refresh"
+      "refresh": "Refresh",
+      "save": "Save Account",
+      "cancel": "Cancel"
     },
     "messages": {
       "noData": "No accounts found",

@@ -38,10 +38,14 @@ export class AddAccountComponent implements OnInit {
         kind: this.account.kind,
         phone: this.account.phone,
         address: this.account.address,
+        balanceIn: this.account.balanceIn || 0,
+        balanceOut: this.account.balanceOut || 0,
       });
     } else if (!this.account && this.accountForm) {
       this.accountForm.reset({
         kind: AccountUserDTO.KindEnum.Customer,
+        balanceIn: 0,
+        balanceOut: 0,
       });
     }
   }
@@ -52,6 +56,8 @@ export class AddAccountComponent implements OnInit {
       kind: [AccountUserDTO.KindEnum.Customer, [Validators.required]],
       phone: [''],
       address: [''],
+      balanceIn: [0, [Validators.required]],
+      balanceOut: [0, [Validators.required]],
     });
   }
 
@@ -65,6 +71,8 @@ export class AddAccountComponent implements OnInit {
       const accountData: AccountUserDTO = {
         ...formData,
         id: this.account?.id,
+        balanceIn: Number(formData.balanceIn),
+        balanceOut: Number(formData.balanceOut),
       };
 
       const request = this.account?.id
@@ -76,7 +84,11 @@ export class AddAccountComponent implements OnInit {
           this.accountSaved.emit(response);
           this.loading = false;
           this.submitted = false;
-          this.accountForm.reset({ kind: AccountUserDTO.KindEnum.Customer });
+          this.accountForm.reset({
+            kind: AccountUserDTO.KindEnum.Customer,
+            balanceIn: 0,
+            balanceOut: 0,
+          });
           this.onClose();
         },
         error: error => {

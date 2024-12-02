@@ -12,10 +12,7 @@
           <!-- Account Type -->
           <div class="mb-3">
             <label class="form-label">{{ 'accounts.fields.kind' | translate }} <span class="text-danger">*</span></label>
-            <div class="input-icon">
-              <span class="input-icon-addon">
-                <i class="ti ti-users"></i>
-              </span>
+            <div class="">
               <select class="form-select" formControlName="kind" [class.is-invalid]="submitted && accountForm.get('kind')?.errors">
                 <option *ngFor="let type of accountTypes" [value]="type.value">
                   {{ type.label | translate }}
@@ -73,16 +70,54 @@
               />
             </div>
           </div>
-        </div>
 
-        <div class="modal-footer">
-          <button type="button" class="btn btn-link link-secondary" (click)="onClose()">
-            {{ 'accounts.buttons.cancel' | translate }}
-          </button>
-          <button type="submit" class="btn btn-primary ms-auto" [disabled]="loading">
-            <span class="spinner-border spinner-border-sm me-2" *ngIf="loading"></span>
-            {{ 'accounts.buttons.save' | translate }}
-          </button>
+          <!-- Balance In -->
+          <div class="mb-3">
+            <label class="form-label">{{ 'accounts.fields.balanceIn' | translate }} <span class="text-danger">*</span></label>
+            <div class="input-icon">
+              <span class="input-icon-addon">
+                <i class="ti ti-cash"></i>
+              </span>
+              <input
+                type="number"
+                class="form-control"
+                formControlName="balanceIn"
+                [class.is-invalid]="submitted && accountForm.get('balanceIn')?.errors"
+              />
+            </div>
+            <div class="invalid-feedback" *ngIf="submitted && getFieldError('balanceIn') as error">
+              {{ error | translate }}
+            </div>
+          </div>
+
+          <!-- Balance Out -->
+          <div class="mb-3">
+            <label class="form-label">{{ 'accounts.fields.balanceOut' | translate }} <span class="text-danger">*</span></label>
+            <div class="input-icon">
+              <span class="input-icon-addon">
+                <i class="ti ti-cash"></i>
+              </span>
+              <input
+                type="number"
+                class="form-control"
+                formControlName="balanceOut"
+                [class.is-invalid]="submitted && accountForm.get('balanceOut')?.errors"
+              />
+            </div>
+            <div class="invalid-feedback" *ngIf="submitted && getFieldError('balanceOut') as error">
+              {{ error | translate }}
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-link link-secondary" (click)="onClose()">
+              {{ 'accounts.actions.cancel' | translate }}
+            </button>
+            <button type="submit" class="btn btn-primary ms-auto" [disabled]="loading">
+              <span class="spinner-border spinner-border-sm me-2" *ngIf="loading"></span>
+              {{ (account ? 'accounts.actions.save' : 'accounts.actions.create') | translate }}
+            </button>
+          </div>
         </div>
       </form>
     </div>
