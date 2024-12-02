@@ -3,13 +3,19 @@
     <div class="page-header d-print-none">
       <div class="row align-items-center">
         <div class="col">
-          <h2 class="page-title">{{ 'accounts.title' | translate }}</h2>
-          <div class="text-muted mt-1">{{ 'accounts.subtitle' | translate }}</div>
+          <h2 class="page-title">
+            <fa-icon [icon]="'users'" class="me-2"></fa-icon>
+            {{ 'accounts.title' | translate }}
+          </h2>
+          <div class="text-muted mt-1">
+            <fa-icon [icon]="'circle-user'" class="me-2"></fa-icon>
+            {{ 'accounts.subtitle' | translate }}
+          </div>
         </div>
         <div class="col-auto ms-auto d-print-none">
           <div class="btn-list">
             <button class="btn btn-primary d-none d-sm-inline-block" (click)="createAccount()">
-              <i class="ti ti-plus"></i>
+              <fa-icon [icon]="'plus'" class="me-2"></fa-icon>
               {{ 'accounts.actions.create' | translate }}
             </button>
           </div>
@@ -24,12 +30,17 @@
             <!-- Filter Section -->
             <div class="d-flex align-items-center mb-3">
               <div class="me-3">
-                <select class="form-select" [(ngModel)]="selectedKind" (ngModelChange)="onKindChange($event)">
-                  <option selected value="ALL">{{ 'accounts.kind.all' | translate }}</option>
-                  <option *ngFor="let kind of accountKinds" [value]="kind">
-                    {{ 'accounts.kind.' + kind | translate }}
-                  </option>
-                </select>
+                <div class="input-group">
+                  <span class="input-group-text">
+                    <fa-icon [icon]="'user'"></fa-icon>
+                  </span>
+                  <select class="form-select" [(ngModel)]="selectedKind" (ngModelChange)="onKindChange($event)">
+                    <option selected value="ALL">{{ 'accounts.kind.all' | translate }}</option>
+                    <option *ngFor="let kind of accountKinds" [value]="kind">
+                      {{ 'accounts.kind.' + kind | translate }}
+                    </option>
+                  </select>
+                </div>
               </div>
             </div>
 
@@ -49,8 +60,8 @@
               (delete)="onDelete($event)"
               (pageChange)="onPageChange($event)"
               (pageSizeChange)="onPageSizeChange($event)"
-              (sortChange)="onSort($event)"
               (search)="onSearch($event)"
+              (sort)="onSort($event)"
             >
             </app-data-table>
           </div>

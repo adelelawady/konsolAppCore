@@ -151,7 +151,7 @@ export class AccountsComponent implements OnInit {
     this.selectedAccount = undefined;
   }
 
-  onAccountSaved(account: AccountUserDTO): void {
+  onAccountSaved(account: any): void {
     this.toastr.success(
       this.translate.instant(this.selectedAccount ? 'accounts.messages.updateSuccess' : 'accounts.messages.createSuccess')
     );

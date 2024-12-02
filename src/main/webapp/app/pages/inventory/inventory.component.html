@@ -2,12 +2,15 @@
   <div class="page-header d-print-none">
     <div class="row align-items-center">
       <div class="col">
-        <h2 class="page-title">{{ 'inventory.title' | translate }}</h2>
+        <h2 class="page-title">
+          <fa-icon [icon]="'database'" class="me-2"></fa-icon>
+          {{ 'inventory.title' | translate }}
+        </h2>
       </div>
       <div class="col-auto ms-auto d-print-none">
         <div class="btn-list">
           <button class="btn btn-primary d-none d-sm-inline-block" (click)="onAddStore()">
-            <i class="ti ti-plus"></i>
+            <fa-icon [icon]="'plus'" class="me-2"></fa-icon>
             {{ 'inventory.actions.addStore' | translate }}
           </button>
         </div>
@@ -20,7 +23,10 @@
     <div class="col-md-3">
       <div class="card">
         <div class="card-header">
-          <h3 class="card-title">{{ 'inventory.stores.title' | translate }}</h3>
+          <h3 class="card-title">
+            <fa-icon [icon]="'home'" class="me-2"></fa-icon>
+            {{ 'inventory.stores.title' | translate }}
+          </h3>
         </div>
         <div class="list-group list-group-flush">
           <a
@@ -29,13 +35,22 @@
             [class.active]="selectedStore?.id === store.id"
             (click)="loadStoreItems(store)"
           >
+            <fa-icon [icon]="'store'" class="me-2"></fa-icon>
             {{ store.name }}
             <div class="btn-group float-end">
-              <button class="btn btn-sm btn-primary" (click)="onEditStore(store); $event.stopPropagation()">
-                <i class="ti ti-edit"></i>
+              <button
+                class="btn btn-sm btn-primary"
+                (click)="onEditStore(store); $event.stopPropagation()"
+                title="{{ 'inventory.actions.edit' | translate }}"
+              >
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>
               </button>
-              <button class="btn btn-sm btn-danger" (click)="onDeleteStore(store); $event.stopPropagation()">
-                <i class="ti ti-trash"></i>
+              <button
+                class="btn btn-sm btn-danger"
+                (click)="onDeleteStore(store); $event.stopPropagation()"
+                title="{{ 'inventory.actions.delete' | translate }}"
+              >
+                <fa-icon [icon]="'trash-alt'"></fa-icon>
               </button>
             </div>
           </a>
@@ -48,6 +63,7 @@
       <div class="card">
         <div class="card-header">
           <h3 class="card-title">
+            <fa-icon [icon]="'box'" class="me-2"></fa-icon>
             {{ (selectedStore?.name || '') + (selectedStore ? ' - ' : '') + ('inventory.items.title' | translate) }}
           </h3>
         </div>
