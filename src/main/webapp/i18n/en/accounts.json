@@ -19,6 +19,7 @@
       "searchPlaceholder": "Search by name, phone, or address..."
     },
     "kind": {
+      "all": "All Types",
       "CUSTOMER": "Customer",
       "SUPPLIER": "Supplier",
       "SALEMAN": "Salesman"
