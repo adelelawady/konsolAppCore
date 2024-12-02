@@ -1,79 +1,72 @@
-<div class="container-xl">
+<div class="page-wrapper">
+  <!-- Page header -->
   <div class="page-header d-print-none">
-    <div class="row align-items-center">
-      <div class="col">
-        <h2 class="page-title">{{ 'konsolCoreApp.invoice.home.title' | translate }}</h2>
-        <div class="text-muted mt-1">{{ 'konsolCoreApp.invoice.home.subtitle' | translate }}</div>
-      </div>
-      <div class="col-auto ms-auto d-print-none">
-        <div class="btn-list">
-          <button *ngIf="activeTab === 'sales'" class="btn btn-primary d-none d-sm-inline-block me-2" routerLink="/sales">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="icon"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              stroke-width="2"
-              stroke="currentColor"
-              fill="none"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-              <path d="M12 5l0 14" />
-              <path d="M5 12l14 0" />
-            </svg>
-            {{ 'konsolCoreApp.invoice.tabs.sales' | translate }}
-          </button>
-          <button *ngIf="activeTab === 'purchases'" class="btn btn-primary d-none d-sm-inline-block" routerLink="/purchase">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="icon"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              stroke-width="2"
-              stroke="currentColor"
-              fill="none"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-              <path d="M12 5l0 14" />
-              <path d="M5 12l14 0" />
-            </svg>
-            {{ 'konsolCoreApp.invoice.tabs.purchases' | translate }}
-          </button>
+    <div class="container-xl">
+      <div class="row g-2 align-items-center">
+        <div class="col">
+          <div class="d-flex align-items-center gap-2">
+            <i class="fas fa-file-invoice fs-3 text-primary"></i>
+            <div>
+              <h2 class="page-title mb-0">{{ 'konsolCoreApp.invoice.home.title' | translate }}</h2>
+              <div class="text-muted mt-1">{{ 'konsolCoreApp.invoice.home.subtitle' | translate }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-auto ms-auto d-print-none">
+          <div class="btn-list">
+            <button *ngIf="activeTab === 'sales'" class="btn btn-primary d-flex align-items-center gap-2" routerLink="/sales">
+              <i class="fas fa-plus"></i>
+              {{ 'konsolCoreApp.invoice.tabs.sales' | translate }}
+            </button>
+            <button *ngIf="activeTab === 'purchases'" class="btn btn-primary d-flex align-items-center gap-2" routerLink="/purchase">
+              <i class="fas fa-plus"></i>
+              {{ 'konsolCoreApp.invoice.tabs.purchases' | translate }}
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Tabs -->
+  <!-- Page body -->
   <div class="page-body">
-    <div class="card">
-      <div class="card-header">
-        <ul class="nav nav-tabs card-header-tabs" role="tablist">
-          <li class="nav-item" role="presentation">
-            <a class="nav-link" [class.active]="activeTab === 'sales'" (click)="setActiveTab('sales')" href="javascript:void(0)">
-              {{ 'konsolCoreApp.invoice.tabs.sales' | translate }}
-            </a>
-          </li>
-          <li class="nav-item" role="presentation">
-            <a class="nav-link" [class.active]="activeTab === 'purchases'" (click)="setActiveTab('purchases')" href="javascript:void(0)">
-              {{ 'konsolCoreApp.invoice.tabs.purchases' | translate }}
-            </a>
-          </li>
-        </ul>
-      </div>
-      <div class="card-body">
-        <div class="tab-content">
-          <div class="tab-pane fade" [class.show]="activeTab === 'sales'" [class.active]="activeTab === 'sales'" role="tabpanel">
-            <app-sales-invoices #salesInvoices></app-sales-invoices>
-          </div>
-          <div class="tab-pane fade" [class.show]="activeTab === 'purchases'" [class.active]="activeTab === 'purchases'" role="tabpanel">
-            <app-purchase-invoices #purchaseInvoices></app-purchase-invoices>
+    <div class="container-xl">
+      <div class="card">
+        <!-- Tabs -->
+        <div class="card-header">
+          <ul class="nav nav-tabs card-header-tabs nav-fill" role="tablist">
+            <li class="nav-item" role="presentation">
+              <a
+                class="nav-link d-flex align-items-center gap-2"
+                [class.active]="activeTab === 'sales'"
+                (click)="setActiveTab('sales')"
+                href="javascript:void(0)"
+              >
+                <i class="fas fa-shopping-cart"></i>
+                {{ 'konsolCoreApp.invoice.tabs.sales' | translate }}
+              </a>
+            </li>
+            <li class="nav-item" role="presentation">
+              <a
+                class="nav-link d-flex align-items-center gap-2"
+                [class.active]="activeTab === 'purchases'"
+                (click)="setActiveTab('purchases')"
+                href="javascript:void(0)"
+              >
+                <i class="fas fa-truck"></i>
+                {{ 'konsolCoreApp.invoice.tabs.purchases' | translate }}
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="card-body">
+          <div class="tab-content">
+            <div class="tab-pane fade" [class.show]="activeTab === 'sales'" [class.active]="activeTab === 'sales'" role="tabpanel">
+              <app-sales-invoices #salesInvoices></app-sales-invoices>
+            </div>
+            <div class="tab-pane fade" [class.show]="activeTab === 'purchases'" [class.active]="activeTab === 'purchases'" role="tabpanel">
+              <app-purchase-invoices #purchaseInvoices></app-purchase-invoices>
+            </div>
           </div>
         </div>
       </div>

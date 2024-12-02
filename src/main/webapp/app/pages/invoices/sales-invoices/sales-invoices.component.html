@@ -1,37 +1,64 @@
 <!-- sales-invoices.component.html and purchase-invoices.component.html -->
-<div class="table-responsive">
-  <app-data-table
-    [data]="invoices"
-    [columns]="columns"
-    [loading]="loading"
-    [totalItems]="totalRecords"
-    [currentPage]="currentPage"
-    [pageSize]="pageSize"
-    [showSearch]="false"
-    [showPagination]="true"
-    [emptyMessage]="'invoices.messages.noData' | translate"
-    (edit)="onEdit($event)"
-    (delete)="onDelete($event)"
-    (pageChange)="onPageChange($event)"
-    (pageSizeChange)="onPageSizeChange($event)"
-    (search)="onSearch($event)"
-    (rowClick)="onItemClick($event)"
-  >
-  </app-data-table>
-
-  <!-- Invoice Items Table -->
-  <div class="mt-4" *ngIf="selectedInvoice">
-    <h5>{{ 'konsolCoreApp.invoice.invoiceItems' | translate }}</h5>
-    <div class="card-body">
+<div class="card">
+  <div class="card-header">
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center gap-2">
+        <i class="fas fa-list fs-4 text-primary"></i>
+        <h3 class="card-title mb-0">{{ 'konsolCoreApp.invoice.salesList' | translate }}</h3>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-outline-primary btn-sm d-flex align-items-center gap-2">
+          <i class="fas fa-file-export"></i>
+          {{ 'konsolCoreApp.invoice.actions.export' | translate }}
+        </button>
+        <button class="btn btn-outline-success btn-sm d-flex align-items-center gap-2">
+          <i class="fas fa-print"></i>
+          {{ 'konsolCoreApp.invoice.actions.print' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="card-body p-0">
+    <div class="table-responsive">
       <app-data-table
-        [data]="invoiceItems"
-        [columns]="itemColumns"
+        [data]="invoices"
+        [columns]="columns"
         [loading]="loading"
+        [totalItems]="totalRecords"
+        [currentPage]="currentPage"
+        [pageSize]="pageSize"
         [showSearch]="false"
-        [showPagination]="false"
-        [emptyMessage]="'invoices.messages.noItems' | translate"
+        [showPagination]="true"
+        [emptyMessage]="'invoices.messages.noData' | translate"
+        (edit)="onEdit($event)"
+        (delete)="onDelete($event)"
+        (pageChange)="onPageChange($event)"
+        (pageSizeChange)="onPageSizeChange($event)"
+        (search)="onSearch($event)"
+        (rowClick)="onItemClick($event)"
       >
       </app-data-table>
+    </div>
+
+    <!-- Invoice Items Section -->
+    <div class="mt-4 px-4 pb-4" *ngIf="selectedInvoice">
+      <div class="d-flex align-items-center gap-2 mb-3">
+        <i class="fas fa-receipt fs-4 text-primary"></i>
+        <h4 class="mb-0">{{ 'konsolCoreApp.invoice.invoiceItems' | translate }}</h4>
+      </div>
+      <div class="card">
+        <div class="card-body p-0">
+          <app-data-table
+            [data]="invoiceItems"
+            [columns]="itemColumns"
+            [loading]="loading"
+            [showSearch]="false"
+            [showPagination]="false"
+            [emptyMessage]="'invoices.messages.noItems' | translate"
+          >
+          </app-data-table>
+        </div>
+      </div>
     </div>
   </div>
 </div>

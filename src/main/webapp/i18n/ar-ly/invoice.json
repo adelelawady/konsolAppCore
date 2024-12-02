@@ -70,7 +70,32 @@
       "item": "الصنف",
       "account": "الحساب",
       "invoiceItems": "بنود الفاتورة",
-      "deferred": "مؤجل"
+      "deferred": "مؤجل",
+      "salesList": "قائمة فواتير المبيعات",
+      "purchaseList": "قائمة فواتير المشتريات",
+      "actions": {
+        "export": "تصدير",
+        "print": "طباعة",
+        "edit": "تعديل",
+        "delete": "حذف",
+        "view": "عرض التفاصيل"
+      },
+      "messages": {
+        "noData": "لا توجد فواتير",
+        "noItems": "لا توجد أصناف في هذه الفاتورة",
+        "deleteConfirm": "هل أنت متأكد من حذف هذه الفاتورة؟",
+        "deleteSuccess": "تم حذف الفاتورة بنجاح",
+        "deleteError": "خطأ في حذف الفاتورة",
+        "loadError": "خطأ في تحميل الفواتير"
+      },
+      "table": {
+        "number": "رقم الفاتورة",
+        "date": "التاريخ",
+        "customer": "العميل",
+        "total": "الإجمالي",
+        "status": "الحالة",
+        "actions": "الإجراءات"
+      }
     }
   }
 }
