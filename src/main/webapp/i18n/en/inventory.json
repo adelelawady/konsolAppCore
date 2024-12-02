@@ -1,0 +1,79 @@
+{
+  "inventory": {
+    "title": "Inventory Management",
+    "subtitle": "Manage your stores and inventory items",
+    "actions": {
+      "addStore": "Add Store",
+      "editStore": "Edit Store",
+      "deleteStore": "Delete Store",
+      "save": "Save",
+      "cancel": "Cancel"
+    },
+    "stores": {
+      "title": "Stores",
+      "empty": "No stores found",
+      "list": "Stores List",
+      "select": "Select Store"
+    },
+    "items": {
+      "title": "Store Items",
+      "selectStore": "Please select a store to view its items",
+      "empty": "No items found in this store",
+      "list": "Items List",
+      "details": "Item Details"
+    },
+    "fields": {
+      "storeName": "Store Name",
+      "itemName": "Item Name",
+      "barcode": "Barcode",
+      "quantity": "Quantity",
+      "price": "Price",
+      "cost": "Cost",
+      "category": "Category",
+      "unit": "Unit",
+      "status": "Status"
+    },
+    "modals": {
+      "addStore": {
+        "title": "Add New Store",
+        "nameLabel": "Store Name",
+        "namePlaceholder": "Enter store name"
+      },
+      "editStore": {
+        "title": "Edit Store",
+        "nameLabel": "Store Name",
+        "namePlaceholder": "Enter store name"
+      }
+    },
+    "messages": {
+      "loadError": "Error loading stores",
+      "loadItemsError": "Error loading store items",
+      "deleteStoreConfirm": "Are you sure you want to delete this store?",
+      "storeDeleted": "Store deleted successfully",
+      "deleteError": "Error deleting store",
+      "storeUpdated": "Store updated successfully",
+      "storeCreated": "Store created successfully",
+      "saveError": "Error saving store",
+      "required": "This field is required",
+      "nameRequired": "Store name is required"
+    },
+    "buttons": {
+      "close": "Close",
+      "save": "Save",
+      "cancel": "Cancel",
+      "edit": "Edit",
+      "delete": "Delete",
+      "print": "Print",
+      "addItem": "Add Item"
+    },
+    "table": {
+      "noData": "No data available",
+      "loading": "Loading...",
+      "search": "Search items..."
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    }
+  }
+}
