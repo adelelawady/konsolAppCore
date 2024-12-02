@@ -1,9 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AccountUserDTO } from 'app/core/konsolApi/model/accountUserDTO';
-import { AccountUserResourceService } from 'app/core/konsolApi/api/accountUserResource.service';
-import { ToastrService } from 'ngx-toastr';
-import { TranslateService } from '@ngx-translate/core';
+import { AccountUserDTO } from 'app/shared/model/account-user-dto.model';
+import { AccountUserResourceService } from 'app/entities/account-user/account-user.service';
 
 @Component({
   selector: 'app-add-account',
@@ -16,91 +14,103 @@ export class AddAccountComponent implements OnInit {
   @Output() closeModal = new EventEmitter<void>();
   @Output() accountSaved = new EventEmitter<AccountUserDTO>();
 
-  accountForm: FormGroup;
+  accountForm!: FormGroup;
   loading = false;
-  accountKinds: AccountUserDTO['kind'][] = ['CUSTOMER', 'SUPPLIER', 'SALEMAN'];
+  submitted = false;
 
-  constructor(
-    private fb: FormBuilder,
-    private accountService: AccountUserResourceService,
-    private toastr: ToastrService,
-    private translate: TranslateService
-  ) {
-    this.accountForm = this.createForm();
+  accountTypes = [
+    { value: 'CUSTOMER', label: 'accounts.kind.CUSTOMER' },
+    { value: 'SUPPLIER', label: 'accounts.kind.SUPPLIER' },
+    { value: 'SALEMAN', label: 'accounts.kind.SALEMAN' },
+  ];
+
+  constructor(private fb: FormBuilder, private accountService: AccountUserResourceService) {
+    this.initForm();
   }
 
   ngOnInit(): void {
-    if (this.account) {
-      this.accountForm.patchValue(this.account);
+    this.initForm();
+  }
+
+  ngOnChanges(): void {
+    if (this.account && this.accountForm) {
+      this.accountForm.patchValue({
+        name: this.account.name,
+        kind: this.account.kind,
+        phone: this.account.phone,
+        email: this.account.email,
+        address: this.account.address,
+        address2: this.account.address2,
+        notes: this.account.notes,
+        active: this.account.active,
+      });
+    } else if (!this.account && this.accountForm) {
+      this.accountForm.reset({
+        active: true,
+      });
     }
   }
 
-  private createForm(): FormGroup {
-    return this.fb.group({
-      id: [null],
+  private initForm(): void {
+    this.accountForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
-      kind: ['CUSTOMER', Validators.required],
+      kind: ['CUSTOMER', [Validators.required]],
       phone: [''],
+      email: ['', [Validators.email]],
       address: [''],
       address2: [''],
-      email: ['', [Validators.email]],
       notes: [''],
       active: [true],
-      balanceIn: [0],
-      balanceOut: [0],
     });
   }
 
   onSubmit(): void {
-    if (this.accountForm.invalid || this.loading) {
-      return;
+    this.submitted = true;
+
+    if (this.accountForm.valid) {
+      this.loading = true;
+      const formData = this.accountForm.value;
+
+      const accountData: AccountUserDTO = {
+        ...formData,
+        id: this.account?.id,
+      };
+
+      const request = this.account ? this.accountService.update(accountData) : this.accountService.create(accountData);
+
+      request.subscribe({
+        next: response => {
+          this.accountSaved.emit(response);
+          this.loading = false;
+          this.submitted = false;
+          this.accountForm.reset({ active: true });
+        },
+        error: error => {
+          console.error('Error saving account:', error);
+          this.loading = false;
+        },
+      });
     }
-
-    this.loading = true;
-    const accountData: AccountUserDTO = this.accountForm.value;
-
-    const operation = accountData.id
-      ? this.accountService.updateAccountUser(accountData, accountData.id)
-      : this.accountService.createAccountUser(accountData);
-
-    operation.subscribe({
-      next: (response: AccountUserDTO) => {
-        this.toastr.success(
-          this.translate.instant(accountData.id ? 'accounts.messages.updateSuccess' : 'accounts.messages.createSuccess'),
-          this.translate.instant('success.title')
-        );
-        this.accountSaved.emit(response);
-        this.onClose();
-      },
-      error: error => {
-        console.error('Error saving account:', error);
-        this.toastr.error(
-          this.translate.instant(accountData.id ? 'accounts.messages.updateError' : 'accounts.messages.createError'),
-          this.translate.instant('error.title')
-        );
-        this.loading = false;
-      },
-    });
   }
 
   onClose(): void {
-    this.accountForm.reset({ kind: 'CUSTOMER', active: true });
+    this.submitted = false;
     this.closeModal.emit();
   }
 
-  getFieldError(fieldName: string): string {
+  getFieldError(fieldName: string): string | null {
     const control = this.accountForm.get(fieldName);
-    if (control?.errors && control.touched) {
-      if (control.errors['required']) {
+    if (control?.invalid && (control.dirty || control.touched || this.submitted)) {
+      if (control.errors?.['required']) {
         return 'accounts.validation.required';
       }
-      if (control.errors['minlength']) {
+      if (control.errors?.['minlength']) {
         return 'accounts.validation.minLength';
       }
-      if (control.errors['email']) {
+      if (control.errors?.['email']) {
         return 'accounts.validation.email';
       }
     }
-    return '';
+    return null;
   }
 }

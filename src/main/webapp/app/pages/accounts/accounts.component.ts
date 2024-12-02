@@ -110,14 +110,24 @@ export class AccountsComponent implements OnInit {
   }
 
   onEdit(account: AccountUserDTO): void {
-    this.selectedAccount = account;
+    this.selectedAccount = { ...account }; // Create a copy to avoid direct reference
     this.showAddEditModal = true;
   }
 
   onDelete(account: AccountUserDTO): void {
     if (confirm(this.translate.instant('accounts.messages.deleteConfirm'))) {
-      // TODO: Implement delete logic
-      console.log('Delete account:', account);
+      this.loading = true;
+      this.accountUserService.delete(account.id).subscribe({
+        next: () => {
+          this.toastr.success(this.translate.instant('accounts.messages.deleteSuccess'));
+          this.loadAccounts();
+        },
+        error: error => {
+          console.error('Error deleting account:', error);
+          this.toastr.error(this.translate.instant('accounts.messages.deleteError'));
+          this.loading = false;
+        },
+      });
     }
   }
 
@@ -136,13 +146,16 @@ export class AccountsComponent implements OnInit {
   }
 
   onAccountSaved(account: AccountUserDTO): void {
+    this.toastr.success(
+      this.translate.instant(this.selectedAccount ? 'accounts.messages.updateSuccess' : 'accounts.messages.createSuccess')
+    );
     this.loadAccounts();
     this.showAddEditModal = false;
     this.selectedAccount = undefined;
   }
 
   private showError(key: string): void {
-    this.toastr.error(this.translate.instant(`accounts.messages.${key}`));
+    this.toastr.error(this.translate.instant(key));
   }
 
   private showSuccess(key: string): void {

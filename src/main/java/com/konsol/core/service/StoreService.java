@@ -1,10 +1,8 @@
 package com.konsol.core.service;
 
 import com.konsol.core.domain.Store;
-import com.konsol.core.service.api.dto.StoreDTO;
-import com.konsol.core.service.api.dto.StoreItemDTO;
-import com.konsol.core.service.api.dto.StoreItemIdOnlyDTO;
-import com.konsol.core.service.api.dto.StoreNameDTO;
+import com.konsol.core.domain.StoreItem;
+import com.konsol.core.service.api.dto.*;
 import com.konsol.core.web.api.StoresApi;
 import java.math.BigDecimal;
 import java.util.List;
@@ -125,4 +123,6 @@ public interface StoreService {
      * @return the entity.
      */
     Optional<Store> findFirstByOrderById();
+
+    List<StoreItem> getStoresItemsForStore(String id, PaginationSearchModel paginationSearchModel);
 }

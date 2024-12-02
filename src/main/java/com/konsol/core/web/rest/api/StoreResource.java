@@ -4,10 +4,7 @@ import com.konsol.core.repository.StoreItemRepository;
 import com.konsol.core.repository.StoreRepository;
 import com.konsol.core.service.StoreItemService;
 import com.konsol.core.service.StoreService;
-import com.konsol.core.service.api.dto.StoreDTO;
-import com.konsol.core.service.api.dto.StoreItemDTO;
-import com.konsol.core.service.api.dto.StoreItemIdOnlyDTO;
-import com.konsol.core.service.api.dto.StoreNameDTO;
+import com.konsol.core.service.api.dto.*;
 import com.konsol.core.web.api.StoresApi;
 import com.konsol.core.web.api.StoresApiDelegate;
 import com.konsol.core.web.rest.errors.BadRequestAlertException;
@@ -213,5 +210,10 @@ public class StoreResource implements StoresApiDelegate {
     @Override
     public ResponseEntity<StoreItemDTO> setStoreItem(StoreItemIdOnlyDTO storeItemIdOnlyDTO) {
         return ResponseEntity.ok().body(storeService.setStoreItem(storeItemIdOnlyDTO));
+    }
+
+    @Override
+    public ResponseEntity<List<StoreItemDTO>> getStoresItemsForStore(String id, PaginationSearchModel paginationSearchModel) {
+        return StoresApiDelegate.super.getStoresItemsForStore(id, paginationSearchModel);
     }
 }

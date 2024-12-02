@@ -27,6 +27,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Sort;
 import org.springframework.stereotype.Service;
 
 /**
@@ -313,6 +315,63 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public Optional<Store> findFirstByOrderById() {
         return storeRepository.findFirstByOrderById();
+    }
+
+    @Override
+    public List<StoreItem> getStoresItemsForStore(String id, PaginationSearchModel paginationSearchModel) {
+        Query query = new Query();
+        Query countQuery = new Query();
+
+        // Add store filter
+        query.addCriteria(Criteria.where("store.id").is(id));
+        countQuery.addCriteria(Criteria.where("store.id").is(id));
+
+        // Add pagination
+        if (paginationSearchModel.getPage() != null && paginationSearchModel.getSize() != null && paginationSearchModel.getSize() > 0) {
+            Pageable pageable = PageRequest.of(paginationSearchModel.getPage(), paginationSearchModel.getSize());
+            query.with(pageable);
+        }
+
+        // Add sorting
+        if (paginationSearchModel.getSortField() != null && !paginationSearchModel.getSortField().isEmpty()) {
+            if (paginationSearchModel.getSortOrder() != null && !paginationSearchModel.getSortOrder().isEmpty()) {
+                switch (paginationSearchModel.getSortOrder().toLowerCase()) {
+                    case "asc": {
+                        query.with(Sort.by(Sort.Direction.ASC, paginationSearchModel.getSortField()));
+                        break;
+                    }
+                    case "desc": {
+                        query.with(Sort.by(Sort.Direction.DESC, paginationSearchModel.getSortField()));
+                        break;
+                    }
+                }
+            } else {
+                query.with(Sort.by(Sort.Direction.DESC, paginationSearchModel.getSortField()));
+            }
+        } else {
+            query.with(Sort.by(Sort.Direction.ASC, "item.pk"));
+        }
+
+        // Add search criteria
+        if (paginationSearchModel.getSearchText() != null && !paginationSearchModel.getSearchText().isEmpty()) {
+            ObjectId objectId = null;
+            if (ObjectId.isValid(paginationSearchModel.getSearchText())) {
+                objectId = new ObjectId(paginationSearchModel.getSearchText());
+            }
+
+            Criteria criteria = new Criteria();
+            criteria.orOperator(
+                Criteria.where("_id").is(objectId),
+                Criteria.where("item.pk").regex(paginationSearchModel.getSearchText(), "i"),
+                Criteria.where("item.name").regex(paginationSearchModel.getSearchText(), "i"),
+                Criteria.where("item.barcode").regex(paginationSearchModel.getSearchText(), "i"),
+                Criteria.where("qty").regex(paginationSearchModel.getSearchText(), "i")
+            );
+            query.addCriteria(criteria);
+            countQuery.addCriteria(criteria);
+        }
+
+        return mongoTemplate.find(query, StoreItem.class);
     }
 
     /**
