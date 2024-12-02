@@ -10,19 +10,21 @@
  * Do not edit the class manually.
  */
 
-export interface InvoiceItemViewDTO {
-  pk?: string;
-  id?: string;
-  unit?: string;
-  unitQtyIn?: number;
-  unitQtyOut?: number;
-  discount?: number;
-  discountPer?: number;
-  totalCost?: number;
-  totalPrice?: number;
-  qtyIn?: number;
-  qtyOut?: number;
-  netCost?: number;
-  netPrice?: number;
-  itemName?: string;
+
+export interface InvoiceItemViewDTO { 
+    pk?: string;
+    id?: string;
+    unit?: string;
+    unitQtyIn?: number;
+    unitQtyOut?: number;
+    discount?: number;
+    discountPer?: number;
+    totalCost?: number;
+    totalPrice?: number;
+    qtyIn?: number;
+    qtyOut?: number;
+    netCost?: number;
+    netPrice?: number;
+    itemName?: string;
 }
+

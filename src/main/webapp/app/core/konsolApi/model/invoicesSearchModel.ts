@@ -10,27 +10,30 @@
  * Do not edit the class manually.
  */
 
+
 /**
  * search with pagination , plain text , date [ from , to ]
  */
-export interface InvoicesSearchModel {
-  page?: number;
-  size?: number;
-  sortField?: string;
-  sortOrder?: string;
-  searchText?: string;
-  dateFrom?: string;
-  dateTo?: string;
-  kind?: InvoicesSearchModel.KindEnum;
-  accountId?: string;
-  storeId?: string;
-  bankId?: string;
+export interface InvoicesSearchModel { 
+    page?: number;
+    size?: number;
+    sortField?: string;
+    sortOrder?: string;
+    searchText?: string;
+    dateFrom?: string;
+    dateTo?: string;
+    kind?: InvoicesSearchModel.KindEnum;
+    accountId?: string;
+    storeId?: string;
+    bankId?: string;
 }
 export namespace InvoicesSearchModel {
-  export type KindEnum = 'ALL' | 'SALE' | 'PURCHASE';
-  export const KindEnum = {
-    All: 'ALL' as KindEnum,
-    Sale: 'SALE' as KindEnum,
-    Purchase: 'PURCHASE' as KindEnum,
-  };
+    export type KindEnum = 'ALL' | 'SALE' | 'PURCHASE';
+    export const KindEnum = {
+        All: 'ALL' as KindEnum,
+        Sale: 'SALE' as KindEnum,
+        Purchase: 'PURCHASE' as KindEnum
+    };
 }
+
+

@@ -12,10 +12,12 @@
 import { ContactInfo } from './contactInfo';
 import { ItemViewDTO } from './itemViewDTO';
 
+
 /**
- *
+ * 
  */
-export interface ItemsPrintDTO {
-  global_info?: ContactInfo;
-  item?: ItemViewDTO;
+export interface ItemsPrintDTO { 
+    global_info?: ContactInfo;
+    item?: ItemViewDTO;
 }
+

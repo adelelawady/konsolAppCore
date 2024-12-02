@@ -12,15 +12,17 @@
 import { KonsolGridBand } from './konsolGridBand';
 import { KonsolGridColumn } from './konsolGridColumn';
 
-export interface KonsolGridOptions {
-  id?: string;
-  name?: string;
-  allowBands?: boolean;
-  showSearch?: boolean;
-  showGroupSearch?: boolean;
-  sortField?: string;
-  columns?: Array<KonsolGridColumn>;
-  bands?: Array<KonsolGridBand>;
-  rowHeight?: number;
-  showCurrency?: boolean;
+
+export interface KonsolGridOptions { 
+    id?: string;
+    name?: string;
+    allowBands?: boolean;
+    showSearch?: boolean;
+    showGroupSearch?: boolean;
+    sortField?: string;
+    columns?: Array<KonsolGridColumn>;
+    bands?: Array<KonsolGridBand>;
+    rowHeight?: number;
+    showCurrency?: boolean;
 }
+

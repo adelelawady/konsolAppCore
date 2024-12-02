@@ -12,19 +12,21 @@
 import { ContactInfo } from './contactInfo';
 import { GlobalSettings } from './globalSettings';
 
+
 /**
- * Main Application options and settings
+ * Main Application options and settings 
  */
-export interface SysOptions {
-  /**
-   * Main Application name
-   */
-  appName?: string;
-  /**
-   * current application version
-   */
-  appVersion?: string;
-  contactInfo?: ContactInfo;
-  settings?: GlobalSettings;
-  showTimer?: boolean;
+export interface SysOptions { 
+    /**
+     * Main Application name 
+     */
+    appName?: string;
+    /**
+     * current application version
+     */
+    appVersion?: string;
+    contactInfo?: ContactInfo;
+    settings?: GlobalSettings;
+    showTimer?: boolean;
 }
+

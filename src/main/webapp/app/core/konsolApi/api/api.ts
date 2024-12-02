@@ -22,17 +22,4 @@ export * from './userJwtController.service';
 import { UserJwtControllerService } from './userJwtController.service';
 export * from './userResource.service';
 import { UserResourceService } from './userResource.service';
-export const APIS = [
-  AccountResourceService,
-  AccountUserResourceService,
-  BankResourceService,
-  GLOBALService,
-  InvoiceResourceService,
-  ItemResourceService,
-  MoneyResourceService,
-  PublicUserResourceService,
-  ServerSettingsService,
-  StoreResourceService,
-  UserJwtControllerService,
-  UserResourceService,
-];
+export const APIS = [AccountResourceService, AccountUserResourceService, BankResourceService, GLOBALService, InvoiceResourceService, ItemResourceService, MoneyResourceService, PublicUserResourceService, ServerSettingsService, StoreResourceService, UserJwtControllerService, UserResourceService];

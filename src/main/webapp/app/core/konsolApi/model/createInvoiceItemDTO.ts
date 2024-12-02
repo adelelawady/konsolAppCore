@@ -10,13 +10,15 @@
  * Do not edit the class manually.
  */
 
+
 /**
  * model for creating new invoice items
  */
-export interface CreateInvoiceItemDTO {
-  id?: string;
-  itemId: string;
-  unitId?: string;
-  qty?: number;
-  price?: number;
+export interface CreateInvoiceItemDTO { 
+    id?: string;
+    itemId: string;
+    unitId?: string;
+    qty?: number;
+    price?: number;
 }
+

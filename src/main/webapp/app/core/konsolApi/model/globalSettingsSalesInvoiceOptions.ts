@@ -10,31 +10,33 @@
  * Do not edit the class manually.
  */
 
-export interface GlobalSettingsSalesInvoiceOptions {
-  /**
-   * selected file for invoice to print UI_OPTION
-   */
-  selectedInvoiceReport?: string;
-  /**
-   * send print order directly to printer after saving  UI_OPTION
-   */
-  autoPrintAfterSave?: boolean;
-  /**
-   * show preview after saving invoice UI_OPTION
-   */
-  printPreview?: boolean;
-  userReportFile?: boolean;
-  /**
-   * selected printer name to send print file to UI_OPTION
-   */
-  selectedPrinterName?: string;
-  /**
-   * check if item has required qty in store BE_OPTION
-   */
-  checkItemQty?: boolean;
-  /**
-   * updates item qty saving invoice add/subtract BE_OPTION
-   */
-  updateItemQtyAfterSave?: boolean;
-  report_page_name?: string;
+
+export interface GlobalSettingsSalesInvoiceOptions { 
+    /**
+     * selected file for invoice to print UI_OPTION
+     */
+    selectedInvoiceReport?: string;
+    /**
+     * send print order directly to printer after saving  UI_OPTION
+     */
+    autoPrintAfterSave?: boolean;
+    /**
+     * show preview after saving invoice UI_OPTION
+     */
+    printPreview?: boolean;
+    userReportFile?: boolean;
+    /**
+     * selected printer name to send print file to UI_OPTION
+     */
+    selectedPrinterName?: string;
+    /**
+     * check if item has required qty in store BE_OPTION
+     */
+    checkItemQty?: boolean;
+    /**
+     * updates item qty saving invoice add/subtract BE_OPTION
+     */
+    updateItemQtyAfterSave?: boolean;
+    report_page_name?: string;
 }
+

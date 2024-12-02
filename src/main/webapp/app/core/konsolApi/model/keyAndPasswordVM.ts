@@ -10,7 +10,9 @@
  * Do not edit the class manually.
  */
 
-export interface KeyAndPasswordVM {
-  key?: string;
-  newPassword?: string;
+
+export interface KeyAndPasswordVM { 
+    key?: string;
+    newPassword?: string;
 }
+

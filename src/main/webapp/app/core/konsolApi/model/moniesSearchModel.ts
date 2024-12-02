@@ -10,44 +10,47 @@
  * Do not edit the class manually.
  */
 
+
 /**
  * search Monies with pagination , plain text , date [ from , to ] also account and bank
  */
-export interface MoniesSearchModel {
-  /**
-   * search for single money instance
-   */
-  id?: string;
-  pk?: string;
-  page?: number;
-  size?: number;
-  sortField?: string;
-  sortOrder?: MoniesSearchModel.SortOrderEnum;
-  /**
-   * text to seach for
-   */
-  kind?: MoniesSearchModel.KindEnum;
-  /**
-   * date form to seach for or null
-   */
-  dateFrom?: string;
-  /**
-   * date to to seach for or null
-   */
-  dateTo?: string;
-  accountId?: string;
-  bankId?: string;
-  details?: string;
+export interface MoniesSearchModel { 
+    /**
+     * search for single money instance
+     */
+    id?: string;
+    pk?: string;
+    page?: number;
+    size?: number;
+    sortField?: string;
+    sortOrder?: MoniesSearchModel.SortOrderEnum;
+    /**
+     * text to seach for
+     */
+    kind?: MoniesSearchModel.KindEnum;
+    /**
+     * date form to seach for or null
+     */
+    dateFrom?: string;
+    /**
+     * date to to seach for or null
+     */
+    dateTo?: string;
+    accountId?: string;
+    bankId?: string;
+    details?: string;
 }
 export namespace MoniesSearchModel {
-  export type SortOrderEnum = 'DESC' | 'ASC';
-  export const SortOrderEnum = {
-    Desc: 'DESC' as SortOrderEnum,
-    Asc: 'ASC' as SortOrderEnum,
-  };
-  export type KindEnum = 'RECEIPT' | 'PAYMENT';
-  export const KindEnum = {
-    Receipt: 'RECEIPT' as KindEnum,
-    Payment: 'PAYMENT' as KindEnum,
-  };
+    export type SortOrderEnum = 'DESC' | 'ASC';
+    export const SortOrderEnum = {
+        Desc: 'DESC' as SortOrderEnum,
+        Asc: 'ASC' as SortOrderEnum
+    };
+    export type KindEnum = 'RECEIPT' | 'PAYMENT';
+    export const KindEnum = {
+        Receipt: 'RECEIPT' as KindEnum,
+        Payment: 'PAYMENT' as KindEnum
+    };
 }
+
+

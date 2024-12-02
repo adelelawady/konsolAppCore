@@ -11,9 +11,11 @@
  */
 import { MoneyDTO } from './moneyDTO';
 
-export interface MoniesViewDTOContainer {
-  result?: Array<MoneyDTO>;
-  totalMoneyIn?: number;
-  totalMoneyOut?: number;
-  total?: number;
+
+export interface MoniesViewDTOContainer { 
+    result?: Array<MoneyDTO>;
+    totalMoneyIn?: number;
+    totalMoneyOut?: number;
+    total?: number;
 }
+

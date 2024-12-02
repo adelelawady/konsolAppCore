@@ -13,22 +13,25 @@ import { BankDTO } from './bankDTO';
 import { ItemDTO } from './itemDTO';
 import { AccountUserDTO } from './accountUserDTO';
 
-export interface MoneyDTO {
-  pk?: string;
-  id?: string;
-  kind?: MoneyDTO.KindEnum;
-  details?: string;
-  moneyIn?: number;
-  moneyOut?: number;
-  bank?: BankDTO;
-  item?: ItemDTO;
-  account?: AccountUserDTO;
-  created_date?: string;
+
+export interface MoneyDTO { 
+    pk?: string;
+    id?: string;
+    kind?: MoneyDTO.KindEnum;
+    details?: string;
+    moneyIn?: number;
+    moneyOut?: number;
+    bank?: BankDTO;
+    item?: ItemDTO;
+    account?: AccountUserDTO;
+    created_date?: string;
 }
 export namespace MoneyDTO {
-  export type KindEnum = 'PAYMENT' | 'RECEIPT';
-  export const KindEnum = {
-    Payment: 'PAYMENT' as KindEnum,
-    Receipt: 'RECEIPT' as KindEnum,
-  };
+    export type KindEnum = 'PAYMENT' | 'RECEIPT';
+    export const KindEnum = {
+        Payment: 'PAYMENT' as KindEnum,
+        Receipt: 'RECEIPT' as KindEnum
+    };
 }
+
+

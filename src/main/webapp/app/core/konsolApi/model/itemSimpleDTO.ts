@@ -10,15 +10,17 @@
  * Do not edit the class manually.
  */
 
+
 /**
- * simple model details for item
+ * simple model details for item 
  */
-export interface ItemSimpleDTO {
-  id?: string;
-  pk?: number;
-  name: string;
-  price1?: string;
-  category?: string;
-  qty?: number;
-  cost?: number;
+export interface ItemSimpleDTO { 
+    id?: string;
+    pk?: number;
+    name: string;
+    price1?: string;
+    category?: string;
+    qty?: number;
+    cost?: number;
 }
+

@@ -321,12 +321,18 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public List<StoreItem> getStoresItemsForStore(String id, PaginationSearchModel paginationSearchModel) {
+        // Validate store exists
+        Optional<Store> store = storeRepository.findById(id);
+        if (!store.isPresent()) {
+            throw new StoreNotFoundException(String.format("Store with id %s not found", id));
+        }
+
         Query query = new Query();
         Query countQuery = new Query();
 
         // Add store filter
-        query.addCriteria(Criteria.where("store.id").is(id));
-        countQuery.addCriteria(Criteria.where("store.id").is(id));
+        query.addCriteria(Criteria.where("store.$id").is(new ObjectId(id)));
+        countQuery.addCriteria(Criteria.where("store.$id").is(new ObjectId(id)));
 
         // Add pagination
         if (paginationSearchModel.getPage() != null && paginationSearchModel.getSize() != null && paginationSearchModel.getSize() > 0) {
@@ -338,22 +344,20 @@ public class StoreServiceImpl implements StoreService {
         if (paginationSearchModel.getSortField() != null && !paginationSearchModel.getSortField().isEmpty()) {
             if (paginationSearchModel.getSortOrder() != null && !paginationSearchModel.getSortOrder().isEmpty()) {
                 switch (paginationSearchModel.getSortOrder().toLowerCase()) {
-                    case "asc":
-                        {
-                            query.with(Sort.by(Sort.Direction.ASC, paginationSearchModel.getSortField()));
-                            break;
-                        }
-                    case "desc":
-                        {
-                            query.with(Sort.by(Sort.Direction.DESC, paginationSearchModel.getSortField()));
-                            break;
-                        }
+                    case "asc": {
+                        query.with(Sort.by(Sort.Direction.ASC, paginationSearchModel.getSortField()));
+                        break;
+                    }
+                    case "desc": {
+                        query.with(Sort.by(Sort.Direction.DESC, paginationSearchModel.getSortField()));
+                        break;
+                    }
                 }
             } else {
                 query.with(Sort.by(Sort.Direction.DESC, paginationSearchModel.getSortField()));
             }
         } else {
-            query.with(Sort.by(Sort.Direction.ASC, "item.pk"));
+            query.with(Sort.by(Sort.Direction.ASC, "item.$id"));
         }
 
         // Add search criteria
@@ -363,18 +367,23 @@ public class StoreServiceImpl implements StoreService {
                 objectId = new ObjectId(paginationSearchModel.getSearchText());
             }
 
-            Criteria criteria = new Criteria();
-            criteria.orOperator(
-                Criteria.where("_id").is(objectId),
-                Criteria.where("item.pk").regex(paginationSearchModel.getSearchText(), "i"),
-                Criteria.where("item.name").regex(paginationSearchModel.getSearchText(), "i"),
-                Criteria.where("item.barcode").regex(paginationSearchModel.getSearchText(), "i"),
-                Criteria.where("qty").regex(paginationSearchModel.getSearchText(), "i")
-            );
-            query.addCriteria(criteria);
-            countQuery.addCriteria(criteria);
+            List<Criteria> searchCriteria = new ArrayList<>();
+            
+            if (objectId != null) {
+                searchCriteria.add(Criteria.where("_id").is(objectId));
+                searchCriteria.add(Criteria.where("item.$id").is(objectId));
+            }
+            
+            searchCriteria.add(Criteria.where("qty").regex(paginationSearchModel.getSearchText(), "i"));
+
+            // Add the search criteria to the query
+            if (!searchCriteria.isEmpty()) {
+                query.addCriteria(new Criteria().orOperator(searchCriteria.toArray(new Criteria[0])));
+                countQuery.addCriteria(new Criteria().orOperator(searchCriteria.toArray(new Criteria[0])));
+            }
         }
 
+        log.debug("Executing query to get store items for store: {}", id);
         return mongoTemplate.find(query, StoreItem.class);
     }
 

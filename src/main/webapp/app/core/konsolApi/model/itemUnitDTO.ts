@@ -10,11 +10,13 @@
  * Do not edit the class manually.
  */
 
-export interface ItemUnitDTO {
-  id?: string;
-  name: string;
-  pieces?: number;
-  price?: number;
-  basic?: boolean;
-  cost?: number;
+
+export interface ItemUnitDTO { 
+    id?: string;
+    name: string;
+    pieces?: number;
+    price?: number;
+    basic?: boolean;
+    cost?: number;
 }
+

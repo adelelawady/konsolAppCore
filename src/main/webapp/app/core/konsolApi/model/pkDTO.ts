@@ -10,16 +10,19 @@
  * Do not edit the class manually.
  */
 
-export interface PkDTO {
-  id?: string;
-  kind?: PkDTO.KindEnum;
-  value?: number;
+
+export interface PkDTO { 
+    id?: string;
+    kind?: PkDTO.KindEnum;
+    value?: number;
 }
 export namespace PkDTO {
-  export type KindEnum = 'INVOICE' | 'InvoicesItems' | 'Money';
-  export const KindEnum = {
-    Invoice: 'INVOICE' as KindEnum,
-    InvoicesItems: 'InvoicesItems' as KindEnum,
-    Money: 'Money' as KindEnum,
-  };
+    export type KindEnum = 'INVOICE' | 'InvoicesItems' | 'Money';
+    export const KindEnum = {
+        Invoice: 'INVOICE' as KindEnum,
+        InvoicesItems: 'InvoicesItems' as KindEnum,
+        Money: 'Money' as KindEnum
+    };
 }
+
+

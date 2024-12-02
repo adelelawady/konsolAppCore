@@ -10,14 +10,16 @@
  * Do not edit the class manually.
  */
 
-export interface User {
-  id?: string;
-  login: string;
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  activated?: boolean;
-  langKey?: string;
-  imageUrl?: string;
-  resetDate?: string;
+
+export interface User { 
+    id?: string;
+    login: string;
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    activated?: boolean;
+    langKey?: string;
+    imageUrl?: string;
+    resetDate?: string;
 }
+

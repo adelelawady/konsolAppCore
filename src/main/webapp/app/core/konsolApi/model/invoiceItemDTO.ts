@@ -11,25 +11,27 @@
  */
 import { ItemSimpleDTO } from './itemSimpleDTO';
 
-export interface InvoiceItemDTO {
-  pk?: string;
-  id?: string;
-  unit?: string;
-  unitPieces?: number;
-  userQty?: number;
-  unitQtyIn?: number;
-  unitQtyOut?: number;
-  unitCost?: number;
-  unitPrice?: number;
-  discountPer?: number;
-  discount?: number;
-  totalCost?: number;
-  totalPrice?: number;
-  qtyIn?: number;
-  qtyOut?: number;
-  cost?: number;
-  price?: number;
-  netCost?: number;
-  netPrice?: number;
-  item?: ItemSimpleDTO;
+
+export interface InvoiceItemDTO { 
+    pk?: string;
+    id?: string;
+    unit?: string;
+    unitPieces?: number;
+    userQty?: number;
+    unitQtyIn?: number;
+    unitQtyOut?: number;
+    unitCost?: number;
+    unitPrice?: number;
+    discountPer?: number;
+    discount?: number;
+    totalCost?: number;
+    totalPrice?: number;
+    qtyIn?: number;
+    qtyOut?: number;
+    cost?: number;
+    price?: number;
+    netCost?: number;
+    netPrice?: number;
+    item?: ItemSimpleDTO;
 }
+

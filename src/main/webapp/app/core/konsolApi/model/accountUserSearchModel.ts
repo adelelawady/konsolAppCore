@@ -10,36 +10,39 @@
  * Do not edit the class manually.
  */
 
-export interface AccountUserSearchModel {
-  /**
-   * Kind of user searching for
-   */
-  kind?: AccountUserSearchModel.KindEnum;
-  /**
-   * name of user searching for
-   */
-  name?: string;
-  /**
-   * phone of user searching for
-   */
-  phone?: string;
-  /**
-   * adress of user searching for
-   */
-  address?: string;
-  /**
-   * adress of user searching for
-   */
-  address_2?: string;
-  page?: number;
-  size?: number;
-  id?: string;
+
+export interface AccountUserSearchModel { 
+    /**
+     * Kind of user searching for
+     */
+    kind?: AccountUserSearchModel.KindEnum;
+    /**
+     * name of user searching for
+     */
+    name?: string;
+    /**
+     * phone of user searching for
+     */
+    phone?: string;
+    /**
+     * adress of user searching for
+     */
+    address?: string;
+    /**
+     * adress of user searching for
+     */
+    address_2?: string;
+    page?: number;
+    size?: number;
+    id?: string;
 }
 export namespace AccountUserSearchModel {
-  export type KindEnum = 'CUSTOMER' | 'SUPPLIER' | 'SALEMAN';
-  export const KindEnum = {
-    Customer: 'CUSTOMER' as KindEnum,
-    Supplier: 'SUPPLIER' as KindEnum,
-    Saleman: 'SALEMAN' as KindEnum,
-  };
+    export type KindEnum = 'CUSTOMER' | 'SUPPLIER' | 'SALEMAN';
+    export const KindEnum = {
+        Customer: 'CUSTOMER' as KindEnum,
+        Supplier: 'SUPPLIER' as KindEnum,
+        Saleman: 'SALEMAN' as KindEnum
+    };
 }
+
+

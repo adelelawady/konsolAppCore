@@ -10,15 +10,17 @@
  * Do not edit the class manually.
  */
 
+
 /**
  * main app owner contact info  [ used in print designer ]
  */
-export interface ContactInfo {
-  VendorContactName?: string;
-  VendorPhone?: string;
-  VendorAddress?: string;
-  VendorCity?: string;
-  VendorCountry?: string;
-  VendorWebsite?: string;
-  VendorEmail?: string;
+export interface ContactInfo { 
+    VendorContactName?: string;
+    VendorPhone?: string;
+    VendorAddress?: string;
+    VendorCity?: string;
+    VendorCountry?: string;
+    VendorWebsite?: string;
+    VendorEmail?: string;
 }
+

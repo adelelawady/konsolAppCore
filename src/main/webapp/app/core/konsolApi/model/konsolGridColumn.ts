@@ -10,17 +10,19 @@
  * Do not edit the class manually.
  */
 
+
 /**
- *
+ * 
  */
-export interface KonsolGridColumn {
-  fieldName?: string;
-  capition?: string;
-  visible?: boolean;
-  visibleCustomization?: boolean;
-  description?: string;
-  displayFormat?: string;
-  editable?: boolean;
-  foreColor?: string;
-  index?: number;
+export interface KonsolGridColumn { 
+    fieldName?: string;
+    capition?: string;
+    visible?: boolean;
+    visibleCustomization?: boolean;
+    description?: string;
+    displayFormat?: string;
+    editable?: boolean;
+    foreColor?: string;
+    index?: number;
 }
+

@@ -10,7 +10,9 @@
  * Do not edit the class manually.
  */
 
-export interface GlobalSettingsItemsOptions {
-  selectedReport?: string;
-  report_page_name?: string;
+
+export interface GlobalSettingsItemsOptions { 
+    selectedReport?: string;
+    report_page_name?: string;
 }
+

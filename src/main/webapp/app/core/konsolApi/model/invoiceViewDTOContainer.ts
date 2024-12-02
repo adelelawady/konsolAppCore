@@ -11,16 +11,18 @@
  */
 import { InvoiceViewSimpleDTO } from './invoiceViewSimpleDTO';
 
+
 /**
- *
+ * 
  */
-export interface InvoiceViewDTOContainer {
-  result?: Array<InvoiceViewSimpleDTO>;
-  total?: number;
-  totalCost?: number;
-  totalPrice?: number;
-  netCost?: number;
-  netPrice?: number;
-  netResult?: number;
-  totalDiscount?: number;
+export interface InvoiceViewDTOContainer { 
+    result?: Array<InvoiceViewSimpleDTO>;
+    total?: number;
+    totalCost?: number;
+    totalPrice?: number;
+    netCost?: number;
+    netPrice?: number;
+    netResult?: number;
+    totalDiscount?: number;
 }
+

@@ -11,18 +11,20 @@
  */
 import { ItemUnitDTO } from './itemUnitDTO';
 
-export interface ItemDTO {
-  id?: string;
-  pk?: number;
-  name: string;
-  barcode?: string;
-  price1?: string;
-  price2?: string;
-  category?: string;
-  qty?: number;
-  cost?: number;
-  itemUnits?: Set<ItemUnitDTO>;
-  createdBy?: string;
-  createdDate?: string;
-  checkQty?: boolean;
+
+export interface ItemDTO { 
+    id?: string;
+    pk?: number;
+    name: string;
+    barcode?: string;
+    price1?: string;
+    price2?: string;
+    category?: string;
+    qty?: number;
+    cost?: number;
+    itemUnits?: Set<ItemUnitDTO>;
+    createdBy?: string;
+    createdDate?: string;
+    checkQty?: boolean;
 }
+

@@ -13,34 +13,37 @@ import { GlobalSettingsSalesInvoiceOptions } from './globalSettingsSalesInvoiceO
 import { GlobalSettingsItemsOptions } from './globalSettingsItemsOptions';
 import { GlobalSettingsPurchaseInvoiceOptions } from './globalSettingsPurchaseInvoiceOptions';
 
-export interface GlobalSettings {
-  salesInvoiceOptions?: GlobalSettingsSalesInvoiceOptions;
-  /**
-   * selected folder for report files
-   */
-  reportFilesDir?: string;
-  /**
-   * selected store to add and subtract items qty from after saving invoice BE_OPTION
-   */
-  selectedStoreId?: string;
-  /**
-   * selected printer name to send print file to UI_OPTION
-   */
-  mainPrinterName?: string;
-  /**
-   * culture language for currency persentation in ui / table / print / preview
-   */
-  cultureName?: string;
-  ItemsOptions?: GlobalSettingsItemsOptions;
-  purchaseInvoiceOptions?: GlobalSettingsPurchaseInvoiceOptions;
-  report_page_names_List?: Array<GlobalSettings.ReportPageNamesListEnum>;
+
+export interface GlobalSettings { 
+    salesInvoiceOptions?: GlobalSettingsSalesInvoiceOptions;
+    /**
+     * selected folder for report files
+     */
+    reportFilesDir?: string;
+    /**
+     * selected store to add and subtract items qty from after saving invoice BE_OPTION
+     */
+    selectedStoreId?: string;
+    /**
+     * selected printer name to send print file to UI_OPTION
+     */
+    mainPrinterName?: string;
+    /**
+     * culture language for currency persentation in ui / table / print / preview 
+     */
+    cultureName?: string;
+    ItemsOptions?: GlobalSettingsItemsOptions;
+    purchaseInvoiceOptions?: GlobalSettingsPurchaseInvoiceOptions;
+    report_page_names_List?: Array<GlobalSettings.ReportPageNamesListEnum>;
 }
 export namespace GlobalSettings {
-  export type ReportPageNamesListEnum = 'sale' | 'pur' | 'items' | 'invoiceReport';
-  export const ReportPageNamesListEnum = {
-    Sale: 'sale' as ReportPageNamesListEnum,
-    Pur: 'pur' as ReportPageNamesListEnum,
-    Items: 'items' as ReportPageNamesListEnum,
-    InvoiceReport: 'invoiceReport' as ReportPageNamesListEnum,
-  };
+    export type ReportPageNamesListEnum = 'sale' | 'pur' | 'items' | 'invoiceReport';
+    export const ReportPageNamesListEnum = {
+        Sale: 'sale' as ReportPageNamesListEnum,
+        Pur: 'pur' as ReportPageNamesListEnum,
+        Items: 'items' as ReportPageNamesListEnum,
+        InvoiceReport: 'invoiceReport' as ReportPageNamesListEnum
+    };
 }
+
+

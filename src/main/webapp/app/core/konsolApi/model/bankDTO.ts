@@ -10,7 +10,9 @@
  * Do not edit the class manually.
  */
 
-export interface BankDTO {
-  id?: string;
-  name: string;
+
+export interface BankDTO { 
+    id?: string;
+    name: string;
 }
+

@@ -12,9 +12,11 @@
 import { ItemSimpleDTO } from './itemSimpleDTO';
 import { StoreNameDTO } from './storeNameDTO';
 
-export interface StoreItemDTO {
-  id?: string;
-  qty?: number;
-  item?: ItemSimpleDTO;
-  store?: StoreNameDTO;
+
+export interface StoreItemDTO { 
+    id?: string;
+    qty?: number;
+    item?: ItemSimpleDTO;
+    store?: StoreNameDTO;
 }
+

@@ -10,7 +10,9 @@
  * Do not edit the class manually.
  */
 
-export interface StoreNameDTO {
-  id?: string;
-  name?: string;
+
+export interface StoreNameDTO { 
+    id?: string;
+    name?: string;
 }
+

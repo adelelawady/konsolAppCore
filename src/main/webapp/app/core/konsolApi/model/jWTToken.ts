@@ -10,6 +10,8 @@
  * Do not edit the class manually.
  */
 
-export interface JWTToken {
-  id_token?: string;
+
+export interface JWTToken { 
+    id_token?: string;
 }
+

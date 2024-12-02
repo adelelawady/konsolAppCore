@@ -10,7 +10,9 @@
  * Do not edit the class manually.
  */
 
-export interface UserDTO {
-  id?: string;
-  login?: string;
+
+export interface UserDTO { 
+    id?: string;
+    login?: string;
 }
+

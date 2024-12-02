@@ -687,11 +687,15 @@ paths:
         in: path
         required: true
   '/stores/{id}/storeItems':
-    get:
-      tags:
-        - store-resource
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    post:
+      summary: ''
       operationId: getStoresItemsForStore
-      parameters: []
       responses:
         '200':
           description: OK
@@ -701,18 +705,14 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/StoreItemDTO'
-      description: return store items for store by store id
+      tags:
+        - store-resource
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/PaginationSearchModel'
-    parameters:
-      - schema:
-          type: string
-        name: id
-        in: path
-        required: true
+      description: return store items for store by store id
   /monies:
     get:
       tags:

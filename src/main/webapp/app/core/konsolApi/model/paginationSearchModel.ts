@@ -10,10 +10,12 @@
  * Do not edit the class manually.
  */
 
-export interface PaginationSearchModel {
-  page?: number;
-  size?: number;
-  sortField?: string;
-  sortOrder?: string;
-  searchText?: string;
+
+export interface PaginationSearchModel { 
+    page?: number;
+    size?: number;
+    sortField?: string;
+    sortOrder?: string;
+    searchText?: string;
 }
+

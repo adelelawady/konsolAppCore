@@ -10,21 +10,24 @@
  * Do not edit the class manually.
  */
 
+
 /**
  * dto to create new money
  */
-export interface CreateMoneyDTO {
-  kind: CreateMoneyDTO.KindEnum;
-  details?: string;
-  moneyIn?: number;
-  moneyOut?: number;
-  bankId?: string;
-  accountId?: string;
+export interface CreateMoneyDTO { 
+    kind: CreateMoneyDTO.KindEnum;
+    details?: string;
+    moneyIn?: number;
+    moneyOut?: number;
+    bankId?: string;
+    accountId?: string;
 }
 export namespace CreateMoneyDTO {
-  export type KindEnum = 'PAYMENT' | 'RECEIPT';
-  export const KindEnum = {
-    Payment: 'PAYMENT' as KindEnum,
-    Receipt: 'RECEIPT' as KindEnum,
-  };
+    export type KindEnum = 'PAYMENT' | 'RECEIPT';
+    export const KindEnum = {
+        Payment: 'PAYMENT' as KindEnum,
+        Receipt: 'RECEIPT' as KindEnum
+    };
 }
+
+

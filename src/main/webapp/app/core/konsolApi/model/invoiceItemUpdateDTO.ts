@@ -10,15 +10,17 @@
  * Do not edit the class manually.
  */
 
-export interface InvoiceItemUpdateDTO {
-  id?: string;
-  unitPieces?: number;
-  unitQty?: number;
-  unitCost?: number;
-  unitPrice?: number;
-  discountPer?: number;
-  discount?: number;
-  qty?: number;
-  cost?: number;
-  price?: number;
+
+export interface InvoiceItemUpdateDTO { 
+    id?: string;
+    unitPieces?: number;
+    unitQty?: number;
+    unitCost?: number;
+    unitPrice?: number;
+    discountPer?: number;
+    discount?: number;
+    qty?: number;
+    cost?: number;
+    price?: number;
 }
+

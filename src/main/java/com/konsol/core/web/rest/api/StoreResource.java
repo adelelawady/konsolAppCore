@@ -5,6 +5,7 @@ import com.konsol.core.repository.StoreRepository;
 import com.konsol.core.service.StoreItemService;
 import com.konsol.core.service.StoreService;
 import com.konsol.core.service.api.dto.*;
+import com.konsol.core.service.mapper.StoreItemMapper;
 import com.konsol.core.web.api.StoresApi;
 import com.konsol.core.web.api.StoresApiDelegate;
 import com.konsol.core.web.rest.errors.BadRequestAlertException;
@@ -13,6 +14,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
@@ -47,9 +49,12 @@ public class StoreResource implements StoresApiDelegate {
 
     private final StoreRepository storeRepository;
 
-    public StoreResource(StoreService storeService, StoreRepository storeRepository) {
+    private final StoreItemMapper storeItemMapper;
+
+    public StoreResource(StoreService storeService, StoreRepository storeRepository, StoreItemMapper storeItemMapper) {
         this.storeService = storeService;
         this.storeRepository = storeRepository;
+        this.storeItemMapper = storeItemMapper;
     }
 
     /**
@@ -214,6 +219,6 @@ public class StoreResource implements StoresApiDelegate {
 
     @Override
     public ResponseEntity<List<StoreItemDTO>> getStoresItemsForStore(String id, PaginationSearchModel paginationSearchModel) {
-        return StoresApiDelegate.super.getStoresItemsForStore(id, paginationSearchModel);
+        return ResponseEntity.ok().body(storeService.getStoresItemsForStore(id, paginationSearchModel).stream().map(storeItemMapper::toDto).collect(Collectors.toList()));
     }
 }

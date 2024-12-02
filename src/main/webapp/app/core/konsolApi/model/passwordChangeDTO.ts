@@ -10,7 +10,9 @@
  * Do not edit the class manually.
  */
 
-export interface PasswordChangeDTO {
-  currentPassword?: string;
-  newPassword?: string;
+
+export interface PasswordChangeDTO { 
+    currentPassword?: string;
+    newPassword?: string;
 }
+

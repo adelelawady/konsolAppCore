@@ -10,20 +10,22 @@
  * Do not edit the class manually.
  */
 
+
 /**
  * A model that contains all the elements that can be modified  in the invoice by requesting the modification
  */
-export interface InvoiceUpdateDTO {
-  id?: string;
-  discountPer?: number;
-  discount?: number;
-  additions?: number;
-  additionsType?: string;
-  expenses?: number;
-  expensesType?: string;
-  bankId?: string;
-  accountId?: string;
-  created_date?: string;
-  storeId?: string;
-  deferred?: boolean;
+export interface InvoiceUpdateDTO { 
+    id?: string;
+    discountPer?: number;
+    discount?: number;
+    additions?: number;
+    additionsType?: string;
+    expenses?: number;
+    expensesType?: string;
+    bankId?: string;
+    accountId?: string;
+    created_date?: string;
+    storeId?: string;
+    deferred?: boolean;
 }
+

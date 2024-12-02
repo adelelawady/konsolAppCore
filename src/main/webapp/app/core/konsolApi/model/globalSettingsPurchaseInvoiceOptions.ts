@@ -10,12 +10,14 @@
  * Do not edit the class manually.
  */
 
-export interface GlobalSettingsPurchaseInvoiceOptions {
-  selectedInvoiceReport?: string;
-  autoPrintAfterSave?: boolean;
-  printPreview?: boolean;
-  userReportFile?: string;
-  selectedPrinterName?: string;
-  updateItemQtyAfterSave?: boolean;
-  report_page_name?: string;
+
+export interface GlobalSettingsPurchaseInvoiceOptions { 
+    selectedInvoiceReport?: string;
+    autoPrintAfterSave?: boolean;
+    printPreview?: boolean;
+    userReportFile?: string;
+    selectedPrinterName?: string;
+    updateItemQtyAfterSave?: boolean;
+    report_page_name?: string;
 }
+

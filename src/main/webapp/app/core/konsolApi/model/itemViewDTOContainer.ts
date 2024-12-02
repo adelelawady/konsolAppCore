@@ -11,7 +11,9 @@
  */
 import { ItemViewDTO } from './itemViewDTO';
 
-export interface ItemViewDTOContainer {
-  result?: Array<ItemViewDTO>;
-  total?: number;
+
+export interface ItemViewDTOContainer { 
+    result?: Array<ItemViewDTO>;
+    total?: number;
 }
+

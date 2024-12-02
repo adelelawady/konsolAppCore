@@ -10,6 +10,8 @@
  * Do not edit the class manually.
  */
 
-export interface CategoryItem {
-  name?: string;
+
+export interface CategoryItem { 
+    name?: string;
 }
+

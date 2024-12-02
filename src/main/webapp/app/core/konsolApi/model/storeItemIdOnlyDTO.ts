@@ -10,8 +10,10 @@
  * Do not edit the class manually.
  */
 
-export interface StoreItemIdOnlyDTO {
-  qty: number;
-  itemId: string;
-  storeId: string;
+
+export interface StoreItemIdOnlyDTO { 
+    qty: number;
+    itemId: string;
+    storeId: string;
 }
+

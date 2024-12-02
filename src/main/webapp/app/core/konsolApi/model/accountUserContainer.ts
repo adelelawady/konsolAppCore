@@ -11,7 +11,9 @@
  */
 import { AccountUserDTO } from './accountUserDTO';
 
-export interface AccountUserContainer {
-  result?: Array<AccountUserDTO>;
-  total?: number;
+
+export interface AccountUserContainer { 
+    result?: Array<AccountUserDTO>;
+    total?: number;
 }
+

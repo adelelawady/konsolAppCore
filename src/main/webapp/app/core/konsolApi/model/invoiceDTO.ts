@@ -14,42 +14,45 @@ import { BankDTO } from './bankDTO';
 import { AccountUserDTO } from './accountUserDTO';
 import { StoreDTO } from './storeDTO';
 
-export interface InvoiceDTO {
-  /**
-   * Invoice pk
-   */
-  pk?: string;
-  id?: string;
-  kind?: InvoiceDTO.KindEnum;
-  totalCost?: number;
-  totalPrice?: number;
-  discountPer?: number;
-  discount?: number;
-  additions?: number;
-  additionsType?: string;
-  netCost?: number;
-  netPrice?: number;
-  netResult?: number;
-  expenses?: number;
-  expensesType?: string;
-  bank?: BankDTO;
-  account?: AccountUserDTO;
-  invoiceItems?: Set<InvoiceItemDTO>;
-  created_by?: string;
-  created_date?: string;
-  deferred?: boolean;
-  store?: StoreDTO;
+
+export interface InvoiceDTO { 
+    /**
+     * Invoice pk 
+     */
+    pk?: string;
+    id?: string;
+    kind?: InvoiceDTO.KindEnum;
+    totalCost?: number;
+    totalPrice?: number;
+    discountPer?: number;
+    discount?: number;
+    additions?: number;
+    additionsType?: string;
+    netCost?: number;
+    netPrice?: number;
+    netResult?: number;
+    expenses?: number;
+    expensesType?: string;
+    bank?: BankDTO;
+    account?: AccountUserDTO;
+    invoiceItems?: Set<InvoiceItemDTO>;
+    created_by?: string;
+    created_date?: string;
+    deferred?: boolean;
+    store?: StoreDTO;
 }
 export namespace InvoiceDTO {
-  export type KindEnum = 'SALE' | 'PURCHASE' | 'ADJUST' | 'TRANSFER' | 'SALEQUOTE' | 'RETURNPUR' | 'RETURNSALE' | 'COMPONENT';
-  export const KindEnum = {
-    Sale: 'SALE' as KindEnum,
-    Purchase: 'PURCHASE' as KindEnum,
-    Adjust: 'ADJUST' as KindEnum,
-    Transfer: 'TRANSFER' as KindEnum,
-    Salequote: 'SALEQUOTE' as KindEnum,
-    Returnpur: 'RETURNPUR' as KindEnum,
-    Returnsale: 'RETURNSALE' as KindEnum,
-    Component: 'COMPONENT' as KindEnum,
-  };
+    export type KindEnum = 'SALE' | 'PURCHASE' | 'ADJUST' | 'TRANSFER' | 'SALEQUOTE' | 'RETURNPUR' | 'RETURNSALE' | 'COMPONENT';
+    export const KindEnum = {
+        Sale: 'SALE' as KindEnum,
+        Purchase: 'PURCHASE' as KindEnum,
+        Adjust: 'ADJUST' as KindEnum,
+        Transfer: 'TRANSFER' as KindEnum,
+        Salequote: 'SALEQUOTE' as KindEnum,
+        Returnpur: 'RETURNPUR' as KindEnum,
+        Returnsale: 'RETURNSALE' as KindEnum,
+        Component: 'COMPONENT' as KindEnum
+    };
 }
+
+

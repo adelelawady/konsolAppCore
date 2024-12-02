@@ -10,12 +10,14 @@
  * Do not edit the class manually.
  */
 
+
 /**
- *
+ * 
  */
-export interface KonsolGridBand {
-  caption?: string;
-  visible?: boolean;
-  visibleCustomization?: boolean;
-  columns?: Array<string>;
+export interface KonsolGridBand { 
+    caption?: string;
+    visible?: boolean;
+    visibleCustomization?: boolean;
+    columns?: Array<string>;
 }
+

@@ -12,7 +12,9 @@
 import { InvoiceDTO } from './invoiceDTO';
 import { ContactInfo } from './contactInfo';
 
-export interface InvoicePrintDTO {
-  invoice?: InvoiceDTO;
-  global_info?: ContactInfo;
+
+export interface InvoicePrintDTO { 
+    invoice?: InvoiceDTO;
+    global_info?: ContactInfo;
 }
+
