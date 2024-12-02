@@ -192,7 +192,8 @@ export class ProductsComponent implements OnInit {
     if (this.loading) return;
 
     this.loading = true;
-    const operation = item.id ? this.itemService.updateItem(item.id, item) : this.itemService.createItem(item);
+    const itemId = typeof item.id === 'object' ? (item.id as any).id?.toString() : item.id?.toString();
+    const operation = itemId ? this.itemService.updateItem(itemId, item) : this.itemService.createItem(item);
 
     operation
       .pipe(
@@ -206,14 +207,14 @@ export class ProductsComponent implements OnInit {
           this.loadItems(this.currentPage, this.searchTerm);
 
           this.toastr.success(
-            this.translateService.instant(item.id ? 'products.update.success' : 'products.create.success'),
+            this.translateService.instant(itemId ? 'products.update.success' : 'products.create.success'),
             this.translateService.instant('success.title')
           );
         },
         error: error => {
           console.error('Error saving item:', error);
           this.toastr.error(
-            this.translateService.instant(item.id ? 'products.update.error' : 'products.create.error'),
+            this.translateService.instant(itemId ? 'products.update.error' : 'products.create.error'),
             this.translateService.instant('error.title')
           );
         },
@@ -234,7 +235,7 @@ export class ProductsComponent implements OnInit {
   }
 
   editItem(item: ItemViewDTO): void {
-    this.selectedItem = { ...item };
+    this.selectedItem = item;
     this.showEditModal = true;
   }
 

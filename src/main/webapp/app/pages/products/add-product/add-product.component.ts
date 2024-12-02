@@ -181,12 +181,12 @@ export class AddProductComponent implements OnInit {
   }
 
   updateStoreQuantity(storeId: string, qty: number): void {
-    if (!this._item.id) return;
+    if (!this._item?.id) return;
 
     const storeItem: StoreItemIdOnlyDTO = {
-      itemId: this._item.id,
-      storeId: storeId,
-      qty: qty,
+      itemId: typeof this._item.id === 'object' ? (this._item.id as any).id?.toString() : this._item.id.toString(),
+      storeId: storeId?.toString(),
+      qty: qty || 0,
     };
 
     this.storeService.setStoreItem(storeItem).subscribe({
@@ -215,7 +215,7 @@ export class AddProductComponent implements OnInit {
 
     this.loading = true;
     const operation =
-      this.isEditMode && this.item.id ? this.itemService.updateItem(itemData, this.item.id) : this.itemService.createItem(itemData);
+      this.isEditMode && this.item.id ? this.itemService.updateItem(this.item.id, itemData) : this.itemService.createItem(itemData);
 
     operation.subscribe({
       next: response => {
