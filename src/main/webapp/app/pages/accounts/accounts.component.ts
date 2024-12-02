@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { AccountUserResourceService } from '../../core/konsolApi/api/accountUserResource.service';
 import { AccountUserDTO } from '../../core/konsolApi/model/accountUserDTO';
 import { AccountUserContainer } from '../../core/konsolApi/model/accountUserContainer';
 import { AccountUserSearchModel } from '../../core/konsolApi/model/accountUserSearchModel';
@@ -7,6 +6,7 @@ import { TableColumn } from '../../shared/components/data-table/table-column.mod
 import { ToastrService } from 'ngx-toastr';
 import { TranslateService } from '@ngx-translate/core';
 import { DataTableComponent } from '../../shared/components/data-table/data-table.component';
+import { AccountUserResourceService } from '../../core/konsolApi/api/accountUserResource.service';
 
 @Component({
   selector: 'jhi-accounts',
@@ -117,7 +117,10 @@ export class AccountsComponent implements OnInit {
   onDelete(account: AccountUserDTO): void {
     if (confirm(this.translate.instant('accounts.messages.deleteConfirm'))) {
       this.loading = true;
-      this.accountUserService.delete(account.id).subscribe({
+      if (!account.id) {
+        return;
+      }
+      this.accountUserService.deleteAccountUser(account.id).subscribe({
         next: () => {
           this.toastr.success(this.translate.instant('accounts.messages.deleteSuccess'));
           this.loadAccounts();

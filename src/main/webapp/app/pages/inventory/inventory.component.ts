@@ -113,7 +113,7 @@ export class InventoryComponent implements OnInit {
   }
 
   saveStore(store: StoreDTO): void {
-    const operation = store.id ? this.storeService.updateStore(store, store.id) : this.storeService.createStore(store);
+    const operation = store.id ? this.storeService.updateStore(store.id, store) : this.storeService.createStore(store);
 
     operation.subscribe({
       next: () => {

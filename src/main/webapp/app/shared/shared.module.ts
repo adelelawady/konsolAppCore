@@ -20,9 +20,10 @@ import { PosInvoiceComponent } from './components/pos-invoice/pos-invoice.compon
 import { StoreSelectorComponent } from './components/store-selector/store-selector.component';
 import { BankSelectorComponent } from './components/bank-selector/bank-selector.component';
 import { AccountSelectorComponent } from './components/account-selector/account-selector.component';
+import { TranslationModule } from '../shared/language/translation.module';
 
 @NgModule({
-  imports: [SharedLibsModule],
+  imports: [SharedLibsModule, TranslationModule],
   declarations: [
     FindLanguageFromKeyPipe,
     TranslateDirective,

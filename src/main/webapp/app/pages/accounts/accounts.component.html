@@ -1,10 +1,10 @@
 <div class="page-wrapper">
   <div class="container-xl">
-    <!-- Page header -->
     <div class="page-header d-print-none">
       <div class="row align-items-center">
         <div class="col">
           <h2 class="page-title">{{ 'accounts.title' | translate }}</h2>
+          <div class="text-muted mt-1">{{ 'accounts.subtitle' | translate }}</div>
         </div>
         <div class="col-auto ms-auto d-print-none">
           <div class="btn-list">
@@ -16,61 +16,54 @@
         </div>
       </div>
     </div>
-    <!-- Page body -->
+
     <div class="page-body">
-      <div class="card">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <!-- Filter by Kind -->
-            <div class="w-auto">
-              <select class="form-select" [(ngModel)]="selectedKind" (ngModelChange)="onKindChange($event)">
-                <option [ngValue]="undefined">{{ 'accounts.kind.all' | translate }}</option>
-                <option *ngFor="let kind of accountKinds" [value]="kind">
-                  {{ 'accounts.kind.' + kind | translate }}
-                </option>
-              </select>
+      <div class="container-xl">
+        <div class="card">
+          <div class="card-body">
+            <!-- Filter Section -->
+            <div class="d-flex align-items-center mb-3">
+              <div class="me-3">
+                <select class="form-select" [(ngModel)]="selectedKind" (ngModelChange)="onKindChange($event)">
+                  <option value="">{{ 'accounts.kind.all' | translate }}</option>
+                  <option *ngFor="let kind of accountKinds" [value]="kind">
+                    {{ 'accounts.kind.' + kind | translate }}
+                  </option>
+                </select>
+              </div>
             </div>
-            <!-- Action Buttons -->
-            <div class="btn-list">
-              <button class="btn btn-outline-primary btn-icon" title="{{ 'accounts.actions.print' | translate }}">
-                <i class="ti ti-printer"></i>
-              </button>
-              <button class="btn btn-outline-success btn-icon" title="{{ 'accounts.actions.export' | translate }}">
-                <i class="ti ti-file-export"></i>
-              </button>
-              <button class="btn btn-outline-info btn-icon" title="{{ 'accounts.actions.refresh' | translate }}" (click)="loadAccounts()">
-                <i class="ti ti-refresh"></i>
-              </button>
-            </div>
+
+            <!-- Data Table -->
+            <app-data-table
+              #dataTable
+              [data]="accounts"
+              [columns]="columns"
+              [loading]="loading"
+              [totalItems]="totalRecords"
+              [currentPage]="currentPage"
+              [pageSize]="pageSize"
+              [showSearch]="true"
+              [showPagination]="true"
+              [emptyMessage]="'accounts.messages.noData' | translate"
+              (edit)="onEdit($event)"
+              (delete)="onDelete($event)"
+              (pageChange)="onPageChange($event)"
+              (pageSizeChange)="onPageSizeChange($event)"
+              (sortChange)="onSort($event)"
+              (search)="onSearch($event)"
+            >
+            </app-data-table>
           </div>
-          <!-- Data Table -->
-          <app-data-table
-            #dataTable
-            [data]="accounts"
-            [columns]="columns"
-            [loading]="loading"
-            [totalItems]="totalRecords"
-            [currentPage]="currentPage"
-            [pageSize]="pageSize"
-            [showSearch]="true"
-            [showPagination]="true"
-            [emptyMessage]="'accounts.messages.noData'"
-            (edit)="onEdit($event)"
-            (delete)="onDelete($event)"
-            (pageChange)="onPageChange($event)"
-            (pageSizeChange)="onPageSizeChange($event)"
-            (sortChange)="onSort($event)"
-            (search)="onSearch($event)"
-          >
-          </app-data-table>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<!-- Add/Edit Account Modal -->
 <app-add-account
-  (closeModal)="onModalClose()"
-  [account]="selectedAccount"
-  (accountSaved)="onAccountSaved($event)"
   [showModal]="showAddEditModal"
+  [account]="selectedAccount"
+  (closeModal)="onModalClose()"
+  (accountSaved)="onAccountSaved($event)"
 ></app-add-account>

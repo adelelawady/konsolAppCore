@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AccountUserDTO } from 'app/shared/model/account-user-dto.model';
-import { AccountUserResourceService } from 'app/entities/account-user/account-user.service';
+import { AccountUserDTO } from '../../../core/konsolApi/model/accountUserDTO';
+import { AccountUserResourceService } from '../../../core/konsolApi/api/accountUserResource.service';
 
 @Component({
   selector: 'app-add-account',
@@ -38,11 +38,8 @@ export class AddAccountComponent implements OnInit {
         name: this.account.name,
         kind: this.account.kind,
         phone: this.account.phone,
-        email: this.account.email,
         address: this.account.address,
         address2: this.account.address2,
-        notes: this.account.notes,
-        active: this.account.active,
       });
     } else if (!this.account && this.accountForm) {
       this.accountForm.reset({
@@ -75,8 +72,13 @@ export class AddAccountComponent implements OnInit {
         ...formData,
         id: this.account?.id,
       };
+      if (!this.account?.id) {
+        return;
+      }
 
-      const request = this.account ? this.accountService.update(accountData) : this.accountService.create(accountData);
+      const request = this.account
+        ? this.accountService.updateAccountUser(this.account.id, accountData)
+        : this.accountService.createAccountUser(accountData);
 
       request.subscribe({
         next: response => {

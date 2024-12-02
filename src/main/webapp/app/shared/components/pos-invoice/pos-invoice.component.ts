@@ -8,6 +8,7 @@ import { StoreDTO } from 'app/core/konsolApi/model/storeDTO';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ItemsSearchBoxComponent } from 'app/shared/components/items-search-box/items-search-box.component';
 import { InvoiceItemDTO } from 'app/core/konsolApi/model/invoiceItemDTO';
+
 interface ErrorResponse {
   type: string;
   title: string;
@@ -126,7 +127,7 @@ export class PosInvoiceComponent implements OnInit {
   onBankChange(bankId: string): void {
     if (this.currentInvoice?.id) {
       this.loading = true;
-      this.invoiceService.updateInvoice({ bankId }, this.currentInvoice.id).subscribe({
+      this.invoiceService.updateInvoice(this.currentInvoice.id, { bankId }).subscribe({
         next: result => {
           this.reloadInvoice();
         },
@@ -141,7 +142,7 @@ export class PosInvoiceComponent implements OnInit {
   onAccountChange(accountId: string): void {
     if (this.currentInvoice?.id) {
       this.loading = true;
-      this.invoiceService.updateInvoice({ accountId }, this.currentInvoice.id).subscribe({
+      this.invoiceService.updateInvoice(this.currentInvoice.id, { accountId }).subscribe({
         next: result => {
           this.reloadInvoice();
         },
@@ -163,7 +164,7 @@ export class PosInvoiceComponent implements OnInit {
     this.discountTimeout = setTimeout(() => {
       if (this.currentInvoice?.id) {
         this.loading = true;
-        this.invoiceService.updateInvoice({ discount: value }, this.currentInvoice.id).subscribe({
+        this.invoiceService.updateInvoice(this.currentInvoice.id, { discount: value }).subscribe({
           next: () => {
             this.reloadInvoice();
           },
@@ -187,7 +188,7 @@ export class PosInvoiceComponent implements OnInit {
     const value = Number(this.discountInput.nativeElement.value);
     if (this.currentInvoice?.id) {
       this.loading = true;
-      this.invoiceService.updateInvoice({ discount: value }, this.currentInvoice.id).subscribe({
+      this.invoiceService.updateInvoice(this.currentInvoice.id, { discount: value }).subscribe({
         next: () => {
           this.reloadInvoice();
         },
@@ -307,7 +308,7 @@ export class PosInvoiceComponent implements OnInit {
     this.selectedBank = bank;
     if (this.currentInvoice) {
       this.currentInvoice.bank = bank; // Assuming bankId is a property in InvoiceDTO
-      this.invoiceService.updateInvoice({ bankId: bank.id }, this.currentInvoice.id).subscribe({
+      this.invoiceService.updateInvoice(this.currentInvoice.id, { bankId: bank.id }).subscribe({
         next: () => {
           this.reloadInvoice();
         },
@@ -324,7 +325,7 @@ export class PosInvoiceComponent implements OnInit {
     this.selectedStore = store;
     if (this.currentInvoice) {
       this.currentInvoice.store = store; // Assuming storeId is a property in InvoiceDTO
-      this.invoiceService.updateInvoice({ storeId: store.id }, this.currentInvoice.id).subscribe({
+      this.invoiceService.updateInvoice(this.currentInvoice.id, { storeId: store.id }).subscribe({
         next: () => {
           this.reloadInvoice();
         },
@@ -340,7 +341,7 @@ export class PosInvoiceComponent implements OnInit {
     this.additions = value;
     if (this.currentInvoice) {
       this.currentInvoice.additions = value;
-      this.invoiceService.updateInvoice({ additions: value }, this.currentInvoice.id).subscribe({
+      this.invoiceService.updateInvoice(this.currentInvoice.id, { additions: value }).subscribe({
         next: () => {
           this.reloadInvoice();
         },
@@ -356,7 +357,7 @@ export class PosInvoiceComponent implements OnInit {
     this.additionsType = value;
     if (this.currentInvoice) {
       this.currentInvoice.additionsType = value;
-      this.invoiceService.updateInvoice({ additionsType: value }, this.currentInvoice.id).subscribe({
+      this.invoiceService.updateInvoice(this.currentInvoice.id, { additionsType: value }).subscribe({
         next: () => {
           this.reloadInvoice();
         },
@@ -371,11 +372,11 @@ export class PosInvoiceComponent implements OnInit {
   onAccountSelected(account: any): void {
     if (this.currentInvoice) {
       this.loading = true;
-      this.invoiceService.updateInvoice({ accountId: account.id }, this.currentInvoice.id).subscribe({
+      this.invoiceService.updateInvoice(this.currentInvoice.id, { accountId: account.id }).subscribe({
         next: () => {
           this.reloadInvoice();
         },
-        error: error => {
+        error: (error: any) => {
           console.error('Error updating account:', error);
           this.loading = false;
         },

@@ -192,7 +192,7 @@ export class ProductsComponent implements OnInit {
     if (this.loading) return;
 
     this.loading = true;
-    const operation = item.id ? this.itemService.updateItem(item, item.id) : this.itemService.createItem(item);
+    const operation = item.id ? this.itemService.updateItem(item.id, item) : this.itemService.createItem(item);
 
     operation
       .pipe(

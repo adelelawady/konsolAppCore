@@ -17,7 +17,6 @@ import { SharedModule } from 'app/shared/shared.module';
 import { TranslationModule } from 'app/shared/language/translation.module';
 import { AppRoutingModule } from './app-routing.module';
 import { HomeModule } from './home/home.module';
-// jhipster-needle-angular-add-module-import JHipster will add new module here
 import { NgbDateDayjsAdapter } from './config/datepicker-adapter';
 import { fontAwesomeIcons } from './config/font-awesome-icons';
 import { httpInterceptorProviders } from 'app/core/interceptor/index';
@@ -28,60 +27,46 @@ import { FooterComponent } from './layouts/footer/footer.component';
 import { PageRibbonComponent } from './layouts/profiles/page-ribbon.component';
 import { ActiveMenuDirective } from './layouts/navbar/active-menu.directive';
 import { ErrorComponent } from './layouts/error/error.component';
-import { ApiModule } from './core/konsolApi/api.module';
+import { ApiModule, Configuration } from './core/konsolApi';
 import { CurrencyConfigService } from './core/config/currency-config.service';
-import { APIS } from './core/konsolApi/api/api';
 import { PagesModule } from './pages/pages.module';
 
 @NgModule({
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    ApiModule,
+    ApiModule.forRoot(() => {
+      return new Configuration({
+        basePath: 'api',
+      });
+    }),
+    TranslationModule,
     PagesModule,
-
     SharedModule,
     HomeModule,
-    // jhipster-needle-angular-add-module JHipster will add new module here
     AppRoutingModule,
-
-    // Set this to true to enable service worker (PWA)
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: false }),
     HttpClientModule,
     NgxWebstorageModule.forRoot({ prefix: 'jhi', separator: '-', caseSensitive: true }),
-    TranslationModule,
     ToastrModule.forRoot({
-      timeOut: 5000,
       positionClass: 'toast-top-right',
       preventDuplicates: true,
-      progressBar: true,
-      closeButton: true,
-      easing: 'ease-in',
-      easeTime: 300,
     }),
   ],
   providers: [
     Title,
     { provide: LOCALE_ID, useValue: 'en' },
     { provide: NgbDateAdapter, useClass: NgbDateDayjsAdapter },
-    FindLanguageFromKeyPipe,
     httpInterceptorProviders,
     CurrencyConfigService,
+    FindLanguageFromKeyPipe,
   ],
   declarations: [MainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, ActiveMenuDirective, FooterComponent],
   bootstrap: [MainComponent],
 })
 export class AppModule {
-  constructor(
-    applicationConfigService: ApplicationConfigService,
-    iconLibrary: FaIconLibrary,
-    dpConfig: NgbDatepickerConfig,
-    currencyConfig: CurrencyConfigService
-  ) {
-    applicationConfigService.setEndpointPrefix(SERVER_API_URL);
+  constructor(applicationConfigService: ApplicationConfigService, iconLibrary: FaIconLibrary) {
     registerLocaleData(locale);
     iconLibrary.addIcons(...fontAwesomeIcons);
-    dpConfig.minDate = { year: dayjs().subtract(100, 'year').year(), month: 1, day: 1 };
-    currencyConfig.setCurrency('$');
   }
 }
