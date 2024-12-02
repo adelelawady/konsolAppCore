@@ -25,7 +25,7 @@
             <div class="d-flex align-items-center mb-3">
               <div class="me-3">
                 <select class="form-select" [(ngModel)]="selectedKind" (ngModelChange)="onKindChange($event)">
-                  <option value="">{{ 'accounts.kind.all' | translate }}</option>
+                  <option selected value="ALL">{{ 'accounts.kind.all' | translate }}</option>
                   <option *ngFor="let kind of accountKinds" [value]="kind">
                     {{ 'accounts.kind.' + kind | translate }}
                   </option>

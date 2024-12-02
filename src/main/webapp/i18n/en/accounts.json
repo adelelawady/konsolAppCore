@@ -12,19 +12,14 @@
       "phone": "Phone",
       "address": "Address",
       "address2": "Address 2",
-      "email": "Email",
-      "notes": "Notes",
-      "active": "Active",
       "balanceIn": "Balance In",
       "balanceOut": "Balance Out"
     },
     "placeholders": {
       "name": "Enter account name",
       "phone": "Enter phone number",
-      "email": "Enter email address",
       "address": "Enter primary address",
-      "address2": "Enter secondary address",
-      "notes": "Enter any additional notes"
+      "address2": "Enter secondary address"
     },
     "validation": {
       "required": "This field is required",

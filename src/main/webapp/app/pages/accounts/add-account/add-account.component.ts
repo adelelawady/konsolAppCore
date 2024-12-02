@@ -18,11 +18,10 @@ export class AddAccountComponent implements OnInit {
   loading = false;
   submitted = false;
 
-  accountTypes = [
-    { value: 'CUSTOMER', label: 'accounts.kind.CUSTOMER' },
-    { value: 'SUPPLIER', label: 'accounts.kind.SUPPLIER' },
-    { value: 'SALEMAN', label: 'accounts.kind.SALEMAN' },
-  ];
+  accountTypes = Object.entries(AccountUserDTO.KindEnum).map(([key, value]) => ({
+    value,
+    label: `accounts.kind.${value}`,
+  }));
 
   constructor(private fb: FormBuilder, private accountService: AccountUserResourceService) {
     this.initForm();
@@ -39,11 +38,10 @@ export class AddAccountComponent implements OnInit {
         kind: this.account.kind,
         phone: this.account.phone,
         address: this.account.address,
-        address2: this.account.address2,
       });
     } else if (!this.account && this.accountForm) {
       this.accountForm.reset({
-        active: true,
+        kind: AccountUserDTO.KindEnum.Customer,
       });
     }
   }
@@ -51,13 +49,9 @@ export class AddAccountComponent implements OnInit {
   private initForm(): void {
     this.accountForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
-      kind: ['CUSTOMER', [Validators.required]],
+      kind: [AccountUserDTO.KindEnum.Customer, [Validators.required]],
       phone: [''],
-      email: ['', [Validators.email]],
       address: [''],
-      address2: [''],
-      notes: [''],
-      active: [true],
     });
   }
 
@@ -72,11 +66,8 @@ export class AddAccountComponent implements OnInit {
         ...formData,
         id: this.account?.id,
       };
-      if (!this.account?.id) {
-        return;
-      }
 
-      const request = this.account
+      const request = this.account?.id
         ? this.accountService.updateAccountUser(this.account.id, accountData)
         : this.accountService.createAccountUser(accountData);
 
@@ -85,7 +76,8 @@ export class AddAccountComponent implements OnInit {
           this.accountSaved.emit(response);
           this.loading = false;
           this.submitted = false;
-          this.accountForm.reset({ active: true });
+          this.accountForm.reset({ kind: AccountUserDTO.KindEnum.Customer });
+          this.onClose();
         },
         error: error => {
           console.error('Error saving account:', error);
@@ -95,24 +87,21 @@ export class AddAccountComponent implements OnInit {
     }
   }
 
-  onClose(): void {
-    this.submitted = false;
-    this.closeModal.emit();
-  }
-
-  getFieldError(fieldName: string): string | null {
-    const control = this.accountForm.get(fieldName);
-    if (control?.invalid && (control.dirty || control.touched || this.submitted)) {
-      if (control.errors?.['required']) {
+  getFieldError(field: string): string | null {
+    const control = this.accountForm.get(field);
+    if (control && control.touched && control.errors) {
+      if (control.errors['required']) {
         return 'accounts.validation.required';
       }
-      if (control.errors?.['minlength']) {
+      if (control.errors['minlength']) {
         return 'accounts.validation.minLength';
-      }
-      if (control.errors?.['email']) {
-        return 'accounts.validation.email';
       }
     }
     return null;
+  }
+
+  onClose(): void {
+    this.submitted = false;
+    this.closeModal.emit();
   }
 }

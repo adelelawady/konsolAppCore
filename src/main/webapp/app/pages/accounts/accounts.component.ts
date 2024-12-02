@@ -22,7 +22,7 @@ export class AccountsComponent implements OnInit {
   currentPage = 0;
   pageSize = 10;
   searchText = '';
-  selectedKind?: AccountUserSearchModel['kind'];
+  selectedKind: any = 'ALL';
 
   accountKinds: AccountUserDTO['kind'][] = ['CUSTOMER', 'SUPPLIER', 'SALEMAN'];
 
@@ -62,8 +62,11 @@ export class AccountsComponent implements OnInit {
           address: this.searchText,
           address2: this.searchText,
         }),
-      kind: this.selectedKind,
     };
+
+    if (this.selectedKind && this.selectedKind.toString() !== '' && this.selectedKind.toString() !== 'ALL') {
+      searchModel.kind = this.selectedKind;
+    }
     console.log(searchModel);
 
     this.accountUserService.searchAccountUsers(searchModel).subscribe({
