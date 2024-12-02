@@ -11,8 +11,25 @@
       "kind": "Type",
       "phone": "Phone",
       "address": "Address",
+      "address2": "Address 2",
+      "email": "Email",
+      "notes": "Notes",
+      "active": "Active",
       "balanceIn": "Balance In",
       "balanceOut": "Balance Out"
+    },
+    "placeholders": {
+      "name": "Enter account name",
+      "phone": "Enter phone number",
+      "email": "Enter email address",
+      "address": "Enter primary address",
+      "address2": "Enter secondary address",
+      "notes": "Enter any additional notes"
+    },
+    "validation": {
+      "required": "This field is required",
+      "minLength": "Must be at least 3 characters",
+      "email": "Please enter a valid email address"
     },
     "filters": {
       "allTypes": "All Types",
@@ -28,9 +45,13 @@
       "create": "New Account",
       "edit": "Edit Account",
       "delete": "Delete Account",
-      "search": "Search accounts..."
+      "search": "Search accounts...",
+      "print": "Print",
+      "export": "Export",
+      "refresh": "Refresh"
     },
     "messages": {
+      "noData": "No accounts found",
       "loadError": "Failed to load accounts",
       "deleteConfirm": "Are you sure you want to delete this account?",
       "deleteSuccess": "Account deleted successfully",
@@ -38,7 +59,8 @@
       "createSuccess": "Account created successfully",
       "createError": "Failed to create account",
       "updateSuccess": "Account updated successfully",
-      "updateError": "Failed to update account"
+      "updateError": "Failed to update account",
+      "featureComingSoon": "This feature is coming soon"
     }
   }
 }

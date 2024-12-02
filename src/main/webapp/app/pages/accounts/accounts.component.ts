@@ -41,6 +41,9 @@ export class AccountsComponent implements OnInit {
     { field: 'actions', header: '', type: 'actions', width: '120px' },
   ];
 
+  showAddEditModal = false;
+  selectedAccount?: AccountUserDTO;
+
   constructor(private accountUserService: AccountUserResourceService, private toastr: ToastrService, private translate: TranslateService) {}
 
   ngOnInit(): void {
@@ -107,8 +110,8 @@ export class AccountsComponent implements OnInit {
   }
 
   onEdit(account: AccountUserDTO): void {
-    // TODO: Implement edit logic
-    console.log('Edit account:', account);
+    this.selectedAccount = account;
+    this.showAddEditModal = true;
   }
 
   onDelete(account: AccountUserDTO): void {
@@ -123,9 +126,19 @@ export class AccountsComponent implements OnInit {
   }
 
   createAccount(): void {
-    // TODO: Implement create account logic
-    console.log('Create new account');
-    this.toastr.info(this.translate.instant('accounts.messages.featureComingSoon'));
+    this.selectedAccount = undefined;
+    this.showAddEditModal = true;
+  }
+
+  onModalClose(): void {
+    this.showAddEditModal = false;
+    this.selectedAccount = undefined;
+  }
+
+  onAccountSaved(account: AccountUserDTO): void {
+    this.loadAccounts();
+    this.showAddEditModal = false;
+    this.selectedAccount = undefined;
   }
 
   private showError(key: string): void {

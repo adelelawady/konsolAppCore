@@ -1,0 +1,126 @@
+<div class="modal" [class.show]="showModal" [style.display]="showModal ? 'block' : 'none'" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          {{ (account ? 'accounts.actions.edit' : 'accounts.actions.create') | translate }}
+        </h5>
+        <button type="button" class="btn-close" (click)="onClose()"></button>
+      </div>
+      <form [formGroup]="accountForm" (ngSubmit)="onSubmit()">
+        <div class="modal-body">
+          <!-- Account Type -->
+          <div class="mb-3">
+            <label class="form-label">{{ 'accounts.fields.kind' | translate }} <span class="text-danger">*</span></label>
+            <select class="form-select" formControlName="kind">
+              <option *ngFor="let kind of accountKinds" [value]="kind">
+                {{ 'accounts.kind.' + kind | translate }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Name -->
+          <div class="mb-3">
+            <label class="form-label">{{ 'accounts.fields.name' | translate }} <span class="text-danger">*</span></label>
+            <div class="input-icon">
+              <span class="input-icon-addon">
+                <i class="ti ti-user"></i>
+              </span>
+              <input type="text" class="form-control" formControlName="name" [placeholder]="'accounts.placeholders.name' | translate" />
+            </div>
+            <div class="invalid-feedback" *ngIf="getFieldError('name') as error">
+              {{ error | translate }}
+            </div>
+          </div>
+
+          <!-- Phone -->
+          <div class="mb-3">
+            <label class="form-label">{{ 'accounts.fields.phone' | translate }}</label>
+            <div class="input-icon">
+              <span class="input-icon-addon">
+                <i class="ti ti-phone"></i>
+              </span>
+              <input type="tel" class="form-control" formControlName="phone" [placeholder]="'accounts.placeholders.phone' | translate" />
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="mb-3">
+            <label class="form-label">{{ 'accounts.fields.email' | translate }}</label>
+            <div class="input-icon">
+              <span class="input-icon-addon">
+                <i class="ti ti-mail"></i>
+              </span>
+              <input type="email" class="form-control" formControlName="email" [placeholder]="'accounts.placeholders.email' | translate" />
+            </div>
+            <div class="invalid-feedback" *ngIf="getFieldError('email') as error">
+              {{ error | translate }}
+            </div>
+          </div>
+
+          <!-- Address -->
+          <div class="mb-3">
+            <label class="form-label">{{ 'accounts.fields.address' | translate }}</label>
+            <div class="input-icon">
+              <span class="input-icon-addon">
+                <i class="ti ti-map-pin"></i>
+              </span>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="address"
+                [placeholder]="'accounts.placeholders.address' | translate"
+              />
+            </div>
+          </div>
+
+          <!-- Address 2 -->
+          <div class="mb-3">
+            <label class="form-label">{{ 'accounts.fields.address2' | translate }}</label>
+            <div class="input-icon">
+              <span class="input-icon-addon">
+                <i class="ti ti-map-pin"></i>
+              </span>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="address2"
+                [placeholder]="'accounts.placeholders.address2' | translate"
+              />
+            </div>
+          </div>
+
+          <!-- Notes -->
+          <div class="mb-3">
+            <label class="form-label">{{ 'accounts.fields.notes' | translate }}</label>
+            <textarea
+              class="form-control"
+              formControlName="notes"
+              rows="3"
+              [placeholder]="'accounts.placeholders.notes' | translate"
+            ></textarea>
+          </div>
+
+          <!-- Active Status -->
+          <div class="mb-3">
+            <label class="form-check">
+              <input type="checkbox" class="form-check-input" formControlName="active" />
+              <span class="form-check-label">{{ 'accounts.fields.active' | translate }}</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-link" (click)="onClose()">
+            {{ 'common.cancel' | translate }}
+          </button>
+          <button type="submit" class="btn btn-primary" [disabled]="accountForm.invalid || loading">
+            <span class="spinner-border spinner-border-sm me-2" *ngIf="loading"></span>
+            {{ (account ? 'common.save' : 'common.create') | translate }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop fade show" *ngIf="showModal"></div>
