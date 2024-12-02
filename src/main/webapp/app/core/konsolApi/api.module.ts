@@ -19,20 +19,7 @@ import { UserResourceService } from './api/userResource.service';
   imports: [],
   declarations: [],
   exports: [],
-  providers: [
-    AccountResourceService,
-    AccountUserResourceService,
-    BankResourceService,
-    GLOBALService,
-    InvoiceResourceService,
-    ItemResourceService,
-    MoneyResourceService,
-    PublicUserResourceService,
-    ServerSettingsService,
-    StoreResourceService,
-    UserJwtControllerService,
-    UserResourceService,
-  ],
+  providers: [],
 })
 export class ApiModule {
   public static forRoot(configurationFactory: () => Configuration): ModuleWithProviders<ApiModule> {

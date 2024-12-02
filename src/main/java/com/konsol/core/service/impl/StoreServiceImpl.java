@@ -25,10 +25,12 @@ import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Sort;
 import org.springframework.stereotype.Service;
 
 /**
@@ -336,14 +338,16 @@ public class StoreServiceImpl implements StoreService {
         if (paginationSearchModel.getSortField() != null && !paginationSearchModel.getSortField().isEmpty()) {
             if (paginationSearchModel.getSortOrder() != null && !paginationSearchModel.getSortOrder().isEmpty()) {
                 switch (paginationSearchModel.getSortOrder().toLowerCase()) {
-                    case "asc": {
-                        query.with(Sort.by(Sort.Direction.ASC, paginationSearchModel.getSortField()));
-                        break;
-                    }
-                    case "desc": {
-                        query.with(Sort.by(Sort.Direction.DESC, paginationSearchModel.getSortField()));
-                        break;
-                    }
+                    case "asc":
+                        {
+                            query.with(Sort.by(Sort.Direction.ASC, paginationSearchModel.getSortField()));
+                            break;
+                        }
+                    case "desc":
+                        {
+                            query.with(Sort.by(Sort.Direction.DESC, paginationSearchModel.getSortField()));
+                            break;
+                        }
                 }
             } else {
                 query.with(Sort.by(Sort.Direction.DESC, paginationSearchModel.getSortField()));
