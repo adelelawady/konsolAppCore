@@ -23,16 +23,18 @@
           <h3 class="card-title">{{ 'inventory.stores.title' | translate }}</h3>
         </div>
         <div class="list-group list-group-flush">
-          <a *ngFor="let store of stores" 
-             class="list-group-item list-group-item-action" 
-             [class.active]="selectedStore?.id === store.id"
-             (click)="loadStoreItems(store)">
+          <a
+            *ngFor="let store of stores"
+            class="list-group-item list-group-item-action"
+            [class.active]="selectedStore?.id === store.id"
+            (click)="loadStoreItems(store)"
+          >
             {{ store.name }}
             <div class="btn-group float-end">
-              <button class="btn btn-sm btn-ghost-primary" (click)="onEditStore(store); $event.stopPropagation()">
+              <button class="btn btn-sm btn-primary" (click)="onEditStore(store); $event.stopPropagation()">
                 <i class="ti ti-edit"></i>
               </button>
-              <button class="btn btn-sm btn-ghost-danger" (click)="onDeleteStore(store); $event.stopPropagation()">
+              <button class="btn btn-sm btn-danger" (click)="onDeleteStore(store); $event.stopPropagation()">
                 <i class="ti ti-trash"></i>
               </button>
             </div>
@@ -69,7 +71,8 @@
             (valueChange)="onValueChange($event)"
             [emptyMessage]="'inventory.noItems' | translate"
             (editEvent)="onEditClick($event)"
-            (deleteEvent)="onDeleteClick($event)">
+            (deleteEvent)="onDeleteClick($event)"
+          >
           </app-data-table>
         </div>
       </div>
@@ -87,16 +90,23 @@
           </div>
           <div class="modal-body">
             <div class="mb-3">
-              <label class="form-label">{{ 'inventory.fields.storeName' | translate }}</label>
-              <input type="text" class="form-control" name="name" [(ngModel)]="newStore.name" required>
+              <label class="form-label">{{ 'inventory.modals.addStore.nameLabel' | translate }}</label>
+              <input
+                type="text"
+                class="form-control"
+                name="name"
+                [(ngModel)]="newStore.name"
+                required
+                placeholder="{{ 'inventory.modals.addStore.namePlaceholder' | translate }}"
+              />
             </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-link link-secondary" (click)="showAddStoreModal = false">
-              {{ 'common.cancel' | translate }}
+              {{ 'inventory.buttons.cancel' | translate }}
             </button>
             <button type="submit" class="btn btn-primary ms-auto" [disabled]="!addStoreForm.valid">
-              {{ 'common.save' | translate }}
+              {{ 'inventory.buttons.save' | translate }}
             </button>
           </div>
         </form>
@@ -105,7 +115,7 @@
   </div>
 
   <!-- Edit Store Modal -->
-  <div class="modal modal-blur fade" [class.show]="showEditStoreModal" [class.d-block]="showEditStoreModal" tabindex="-1">
+  <div class="modal" [class.show]="showEditStoreModal" [class.d-block]="showEditStoreModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <form #editStoreForm="ngForm" (ngSubmit)="onEditStoreSubmit(editStoreForm)" *ngIf="editingStore">
@@ -115,16 +125,23 @@
           </div>
           <div class="modal-body">
             <div class="mb-3">
-              <label class="form-label">{{ 'inventory.fields.storeName' | translate }}</label>
-              <input type="text" class="form-control" name="name" [(ngModel)]="editingStore.name" required>
+              <label class="form-label">{{ 'inventory.modals.editStore.nameLabel' | translate }}</label>
+              <input
+                type="text"
+                class="form-control"
+                name="name"
+                [(ngModel)]="editingStore.name"
+                required
+                placeholder="{{ 'inventory.modals.editStore.namePlaceholder' | translate }}"
+              />
             </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-link link-secondary" (click)="showEditStoreModal = false">
-              {{ 'common.cancel' | translate }}
+              {{ 'inventory.buttons.cancel' | translate }}
             </button>
             <button type="submit" class="btn btn-primary ms-auto" [disabled]="!editStoreForm.valid">
-              {{ 'common.save' | translate }}
+              {{ 'inventory.buttons.save' | translate }}
             </button>
           </div>
         </form>
