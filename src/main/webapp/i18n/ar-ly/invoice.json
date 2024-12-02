@@ -2,38 +2,75 @@
   "konsolCoreApp": {
     "invoice": {
       "home": {
-        "title": "Invoices",
-        "refreshListLabel": "Refresh list",
-        "createLabel": "Create a new Invoice",
-        "createOrEditLabel": "Create or edit a Invoice",
-        "notFound": "No Invoices found"
+        "title": "الفواتير",
+        "refreshListLabel": "تحديث القائمة",
+        "createLabel": "إنشاء فاتورة جديدة",
+        "createOrEditLabel": "إنشاء أو تعديل فاتورة",
+        "notFound": "لم يتم العثور على فواتير",
+        "subtitle": "إدارة جميع الفواتير"
       },
-      "created": "A new Invoice is created with identifier {{ param }}",
-      "updated": "A Invoice is updated with identifier {{ param }}",
-      "deleted": "A Invoice is deleted with identifier {{ param }}",
+      "tabs": {
+        "sales": "فواتير المبيعات",
+        "purchases": "فواتير المشتريات"
+      },
+      "create": {
+        "title": "إنشاء فاتورة"
+      },
+      "edit": {
+        "title": "تعديل الفاتورة"
+      },
+      "created": "تم إنشاء فاتورة جديدة برقم {{ param }}",
+      "updated": "تم تحديث الفاتورة برقم {{ param }}",
+      "deleted": "تم حذف الفاتورة برقم {{ param }}",
       "delete": {
-        "question": "Are you sure you want to delete Invoice {{ id }}?"
+        "question": "هل أنت متأكد من حذف هذه الفاتورة؟"
       },
       "detail": {
-        "title": "Invoice"
+        "title": "تفاصيل الفاتورة",
+        "info": {
+          "number": "رقم الفاتورة",
+          "date": "التاريخ",
+          "account": "الحساب",
+          "totalCost": "إجمالي التكلفة",
+          "totalPrice": "إجمالي السعر",
+          "discount": "الخصم",
+          "additions": "الإضافات",
+          "expenses": "المصروفات",
+          "netCost": "صافي التكلفة",
+          "netPrice": "صافي السعر",
+          "netResult": "صافي النتيجة"
+        }
       },
-      "pk": "Pk",
-      "id": "Id",
-      "kind": "Kind",
-      "totalCost": "Total Cost",
-      "totalPrice": "Total Price",
-      "discountPer": "Discount Per",
-      "discount": "Discount",
-      "additions": "Additions",
-      "additionsType": "Additions Type",
-      "netCost": "Net Cost",
-      "netPrice": "Net Price",
-      "expenses": "Expenses",
-      "expensesType": "Expenses Type",
-      "bank": "Bank",
-      "item": "Item",
-      "account": "Account",
-      "invoiceItems": "Invoice Items"
+      "items": {
+        "title": "بنود الفاتورة",
+        "empty": "لا توجد بنود",
+        "item": "الصنف",
+        "quantity": "الكمية",
+        "price": "سعر الوحدة",
+        "cost": "تكلفة الوحدة",
+        "total": "الإجمالي",
+        "totalCost": "إجمالي التكلفة",
+        "qtyIn": "الكمية الواردة",
+        "qtyOut": "الكمية الصادرة"
+      },
+      "pk": "المفتاح",
+      "id": "الرقم",
+      "kind": "النوع",
+      "totalCost": "إجمالي التكلفة",
+      "totalPrice": "إجمالي السعر",
+      "discountPer": "نسبة الخصم",
+      "discount": "الخصم",
+      "additions": "الإضافات",
+      "additionsType": "نوع الإضافات",
+      "netCost": "صافي التكلفة",
+      "netPrice": "صافي السعر",
+      "expenses": "المصروفات",
+      "expensesType": "نوع المصروفات",
+      "bank": "البنك",
+      "item": "الصنف",
+      "account": "الحساب",
+      "invoiceItems": "بنود الفاتورة",
+      "deferred": "مؤجل"
     }
   }
 }
