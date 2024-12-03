@@ -30,8 +30,12 @@ public class InitialSetupMigration {
         userAuthority = template.save(userAuthority);
         Authority adminAuthority = createAdminAuthority();
         adminAuthority = template.save(adminAuthority);
+
+        Authority superAdminAuthority = createAdminAuthority();
+        superAdminAuthority = template.save(superAdminAuthority);
+
         createAllAuthorities(userAuthority, adminAuthority);
-        addUsers(userAuthority, adminAuthority);
+        addUsers(userAuthority, adminAuthority, superAdminAuthority);
         createFirstBank();
         createFirstStore();
     }
@@ -55,11 +59,23 @@ public class InitialSetupMigration {
         return userAuthority;
     }
 
-    private void addUsers(Authority userAuthority, Authority adminAuthority) {
+    private Authority createSuperAdminAuthority() {
+        Authority superAdminAuthority = createAuthority(AuthoritiesConstants.SUPER_ADMIN);
+        return superAdminAuthority;
+    }
+
+    private void addUsers(Authority userAuthority, Authority adminAuthority, Authority superAdminAuthority) {
+        /*  CREATE USER */
         User user = createUser(userAuthority);
         template.save(user);
-        User admin = createAdmin(adminAuthority, userAuthority);
+
+        /*  CREATE SUPER ADMIN */
+        User admin = createAdmin(adminAuthority, userAuthority, null);
         template.save(admin);
+
+        /*  CREATE SUPER ADMIN */
+        User superAdmin = createAdmin(adminAuthority, userAuthority, superAdminAuthority);
+        template.save(superAdmin);
     }
 
     private User createUser(Authority userAuthority) {
@@ -78,7 +94,7 @@ public class InitialSetupMigration {
         return userUser;
     }
 
-    private User createAdmin(Authority adminAuthority, Authority userAuthority) {
+    private User createAdmin(Authority adminAuthority, Authority userAuthority, Authority superAdminAuthority) {
         User adminUser = new User();
         adminUser.setId("user-1");
         adminUser.setLogin("admin");
@@ -92,6 +108,9 @@ public class InitialSetupMigration {
         adminUser.setCreatedDate(Instant.now());
         adminUser.getAuthorities().add(adminAuthority);
         adminUser.getAuthorities().add(userAuthority);
+        if (superAdminAuthority != null) {
+            adminUser.getAuthorities().add(superAdminAuthority);
+        }
         return adminUser;
     }
 
