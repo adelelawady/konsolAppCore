@@ -1,4 +1,15 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  OnInit,
+  OnChanges,
+  SimpleChanges,
+  ChangeDetectorRef,
+  ContentChild,
+  TemplateRef,
+} from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -6,12 +17,14 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 export interface TableColumn {
   field: string;
   header: string;
-  type?: 'text' | 'number' | 'currency' | 'date' | 'actions';
+  type?: 'text' | 'number' | 'currency' | 'date' | 'actions' | 'template';
   width?: string;
   sortable?: boolean;
   filterable?: boolean;
   editable?: boolean;
   format?: string | ((value: any) => string);
+  template?: string;
+  visible?: () => boolean;
 }
 
 @Component({
@@ -40,6 +53,8 @@ export class DataTableComponent implements OnInit, OnChanges {
   @Output() valueChange = new EventEmitter<{ row: any; field: string; value: any }>();
   @Output() rowClick = new EventEmitter<any>();
   @Output() rowSelect = new EventEmitter<any>();
+
+  @ContentChild('actionTemplate', { static: true }) actionTemplate?: TemplateRef<any>;
 
   filteredData: any[] = [];
   searchText: string = '';
@@ -206,5 +221,16 @@ export class DataTableComponent implements OnInit, OnChanges {
   refresh() {
     this.updateFilteredData();
     this.cdr.detectChanges();
+  }
+
+  getTemplateRef(templateName: string | undefined): TemplateRef<any> | null {
+    if (!templateName) return null;
+
+    switch (templateName) {
+      case 'actionTemplate':
+        return this.actionTemplate || null;
+      default:
+        return null;
+    }
   }
 }

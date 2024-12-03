@@ -25,6 +25,7 @@
                   [clickMode]="true"
                   (itemSelected)="onItemSelected($event)"
                   class="w-100"
+                  [showResultsAfterInit]="false"
                 >
                 </jhi-items-search-box>
               </div>
@@ -239,12 +240,12 @@
           </div>
 
           <div class="mb-3">
-            <app-store-selector (storeSelected)="onStoreSelected($event)"></app-store-selector>
+            <app-store-selector [selectedStore]="selectedStore" (storeSelected)="onStoreSelected($event)"></app-store-selector>
           </div>
 
           <div class="mb-3">
             <!-- Add the Bank Selector Component -->
-            <app-bank-selector (bankSelected)="onBankSelected($event)"></app-bank-selector>
+            <app-bank-selector [selectedBank]="selectedBank" (bankSelected)="onBankSelected($event)"></app-bank-selector>
           </div>
           <!-- Invoice Discount -->
           <div class="mb-3">

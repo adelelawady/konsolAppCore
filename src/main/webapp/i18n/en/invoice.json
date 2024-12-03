@@ -74,6 +74,7 @@
       "salesList": "Sales Invoices List",
       "purchaseList": "Purchase Invoices List",
       "actions": {
+        "title": "Actions",
         "export": "Export",
         "print": "Print",
         "edit": "Edit",

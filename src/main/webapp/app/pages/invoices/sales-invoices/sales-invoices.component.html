@@ -29,14 +29,26 @@
         [pageSize]="pageSize"
         [showSearch]="false"
         [showPagination]="true"
-        [emptyMessage]="'invoices.messages.noData' | translate"
         (edit)="onEdit($event)"
         (delete)="onDelete($event)"
         (pageChange)="onPageChange($event)"
         (pageSizeChange)="onPageSizeChange($event)"
         (search)="onSearch($event)"
         (rowClick)="onItemClick($event)"
+        [emptyMessage]="'invoices.messages.noData' | translate"
       >
+        <ng-template #actionTemplate let-row="row">
+          <div class="d-flex align-items-center gap-2">
+            <a [routerLink]="['/sales', row.id]" class="btn btn-sm btn-outline-primary">
+              <i class="fas fa-edit"></i>
+              {{ 'konsolCoreApp.invoice.actions.edit' | translate }}
+            </a>
+            <button (click)="onDelete(row)" class="btn btn-sm btn-outline-danger">
+              <i class="fas fa-trash"></i>
+              {{ 'konsolCoreApp.invoice.actions.delete' | translate }}
+            </button>
+          </div>
+        </ng-template>
       </app-data-table>
     </div>
 

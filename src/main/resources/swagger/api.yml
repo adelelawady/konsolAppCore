@@ -2243,6 +2243,8 @@ components:
           type: boolean
           x-stoplight:
             id: w655ialp3egre
+        store:
+          $ref: '#/components/schemas/StoreDTO'
     InvoiceViewSimpleDTO:
       type: object
       properties:
@@ -2316,6 +2318,8 @@ components:
           type: boolean
           x-stoplight:
             id: esn8m7uagipey
+        store:
+          $ref: '#/components/schemas/StoreDTO'
     InvoiceUpdateDTO:
       type: object
       description: |-

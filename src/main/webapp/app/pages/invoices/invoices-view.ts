@@ -8,6 +8,7 @@ import { InvoiceItemDTO } from 'app/core/konsolApi/model/invoiceItemDTO';
 import { InvoiceDTO } from 'app/core/konsolApi/model/invoiceDTO';
 import { InvoiceItemViewDTO } from 'app/core/konsolApi/model/invoiceItemViewDTO';
 import { formatDate } from '@angular/common';
+import { TableColumn } from 'app/shared/components/data-table/data-table.component';
 
 @Directive()
 export abstract class InvoicesView implements OnInit {
@@ -28,95 +29,120 @@ export abstract class InvoicesView implements OnInit {
   sortDirection: 'asc' | 'desc' = 'desc';
 
   // Table columns configuration
-  columns = [
-    { field: 'pk', header: 'konsolCoreApp.invoice.id' },
+  columns: TableColumn[] = [
+    { field: 'pk', header: 'konsolCoreApp.invoice.id', type: 'text' as const },
     {
       field: 'created_date',
       header: 'konsolCoreApp.invoice.detail.info.date',
+      type: 'date' as const,
       format: (value: string) => this.formatDate(value),
     },
-    { field: 'account', header: 'konsolCoreApp.invoice.detail.info.account', format: (row: any) => row?.name || 'NA' },
+    {
+      field: 'account',
+      header: 'konsolCoreApp.invoice.detail.info.account',
+      type: 'text' as const,
+      format: (row: any) => row?.name || 'NA',
+    },
     {
       field: 'totalCost',
       header: 'konsolCoreApp.invoice.detail.info.totalCost',
+      type: 'currency' as const,
       format: (value: number) => value?.toFixed(2) || '0.00',
       visible: () => this.type === 'PURCHASE',
     },
     {
       field: 'totalPrice',
       header: 'konsolCoreApp.invoice.detail.info.totalPrice',
+      type: 'currency' as const,
       format: (value: number) => value?.toFixed(2) || '0.00',
       visible: () => this.type === 'SALE',
     },
     {
       field: 'netCost',
       header: 'konsolCoreApp.invoice.detail.info.netCost',
+      type: 'currency' as const,
       format: (value: number) => value?.toFixed(2) || '0.00',
       visible: () => this.type === 'PURCHASE',
     },
     {
       field: 'netPrice',
       header: 'konsolCoreApp.invoice.detail.info.netPrice',
+      type: 'currency' as const,
       format: (value: number) => value?.toFixed(2) || '0.00',
       visible: () => this.type === 'SALE',
     },
-    { field: 'deferred', header: 'konsolCoreApp.invoice.deferred' },
+    { field: 'deferred', header: 'konsolCoreApp.invoice.deferred', type: 'text' as const },
+    {
+      field: 'actions',
+      header: 'konsolCoreApp.invoice.actions.title',
+      type: 'template' as const,
+      template: 'actionTemplate',
+    },
   ];
 
-  get itemColumns() {
-    const baseColumns = [
-      { field: 'pk', header: 'konsolCoreApp.invoice.id' },
-      { field: 'item', header: 'konsolCoreApp.invoice.item', format: (row: any) => row?.name || 'NA' },
+  get itemColumns(): TableColumn[] {
+    const baseColumns: TableColumn[] = [
+      { field: 'pk', header: 'konsolCoreApp.invoice.id', type: 'text' as const },
+      { field: 'item', header: 'konsolCoreApp.invoice.item', type: 'text' as const, format: (row: any) => row?.name || 'NA' },
       {
         field: 'userQty',
         header: 'konsolCoreApp.invoice.items.quantity',
+        type: 'number' as const,
         format: (value: number) => value?.toFixed(2) || '0.00',
       },
     ];
 
-    const salesColumns = [
+    const salesColumns: TableColumn[] = [
       {
         field: 'price',
         header: 'konsolCoreApp.invoice.items.price',
+        type: 'currency' as const,
         format: (value: number) => value?.toFixed(2) || '0.00',
       },
       {
         field: 'qtyOut',
         header: 'konsolCoreApp.invoice.items.quantity',
+        type: 'number' as const,
         format: (value: number) => value?.toFixed(2) || '0.00',
       },
       {
         field: 'totalPrice',
         header: 'konsolCoreApp.invoice.totalPrice',
+        type: 'currency' as const,
         format: (value: number) => value?.toFixed(2) || '0.00',
       },
       {
         field: 'netPrice',
         header: 'konsolCoreApp.invoice.netPrice',
+        type: 'currency' as const,
         format: (value: number) => value?.toFixed(2) || '0.00',
         visible: () => this.type === 'SALE',
       },
     ];
 
-    const purchaseColumns = [
+    const purchaseColumns: TableColumn[] = [
       {
         field: 'cost',
         header: 'konsolCoreApp.invoice.items.cost',
+        type: 'currency' as const,
         format: (value: number) => value?.toFixed(2) || '0.00',
       },
       {
         field: 'qtyIn',
         header: 'konsolCoreApp.invoice.items.quantity',
+        type: 'number' as const,
         format: (value: number) => value?.toFixed(2) || '0.00',
       },
       {
         field: 'totalCost',
         header: 'konsolCoreApp.invoice.totalCost',
+        type: 'currency' as const,
         format: (value: number) => value?.toFixed(2) || '0.00',
       },
       {
         field: 'netCost',
         header: 'konsolCoreApp.invoice.netCost',
+        type: 'currency' as const,
         format: (value: number) => value?.toFixed(2) || '0.00',
         visible: () => this.type === 'PURCHASE',
       },

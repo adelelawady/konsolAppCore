@@ -22,7 +22,6 @@ export interface AccountUserDTO {
   created_date?: string;
   lastModifiedDate?: string;
 }
-
 export namespace AccountUserDTO {
   export type KindEnum = 'CUSTOMER' | 'SUPPLIER' | 'SALEMAN';
   export const KindEnum = {

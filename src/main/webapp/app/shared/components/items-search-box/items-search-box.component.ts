@@ -23,6 +23,7 @@ export class ItemsSearchBoxComponent implements OnInit, OnDestroy {
   searchResults: ItemViewDTO[] = [];
   isLoading = false;
   showResults = false;
+  @Input() showResultsAfterInit = true;
   currentCurrency: string;
 
   // New properties for keyboard navigation
@@ -63,6 +64,9 @@ export class ItemsSearchBoxComponent implements OnInit, OnDestroy {
     this.searchSubject.next(term);
   }
 
+  closePopUp(): void {
+    this.showResults = false;
+  }
   onSearchFocus(): void {
     if (this.showSelectedItem) {
       // If there's a selected item, clear it when focusing on search
@@ -88,7 +92,11 @@ export class ItemsSearchBoxComponent implements OnInit, OnDestroy {
       next: response => {
         if (response && response.result) {
           this.searchResults = response.result;
-          this.showResults = true;
+          if (this.showResultsAfterInit) {
+            this.showResults = true;
+          } else {
+            this.showResultsAfterInit = true;
+          }
         }
         this.isLoading = false;
       },

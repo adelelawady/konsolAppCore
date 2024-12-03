@@ -43,7 +43,17 @@ const routes: Routes = [
     canActivate: [UserRouteAccessService],
   },
   {
+    path: 'purchase/:invoiceId',
+    component: PurchaseComponent,
+    canActivate: [UserRouteAccessService],
+  },
+  {
     path: 'sales',
+    component: SalesComponent,
+    canActivate: [UserRouteAccessService],
+  },
+  {
+    path: 'sales/:invoiceId',
     component: SalesComponent,
     canActivate: [UserRouteAccessService],
   },
