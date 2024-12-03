@@ -247,11 +247,10 @@ public class InvoiceServiceImpl implements InvoiceService {
     public InvoiceDTO initializeNewInvoice(InvoiceKind kind) {
         Invoice invoice = new Invoice();
         invoice.setActive(false);
-        invoice.setPk(null);
+        Pk pk = pkService.getPkEntity(PkKind.INVOICE);
+        invoice.setPk(pk.getValue().add(new BigDecimal(1)).intValue() + "");
         invoice.setKind(kind);
         Invoice resultInvoice = invoiceRepository.save(invoice);
-        Pk pk = pkService.getPkEntity(PkKind.INVOICE);
-        resultInvoice.setPk(pk.getValue().add(new BigDecimal(1)).intValue() + "");
         return invoiceMapper.toDto(resultInvoice);
     }
 

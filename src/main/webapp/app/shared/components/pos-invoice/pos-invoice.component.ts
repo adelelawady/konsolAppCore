@@ -43,7 +43,6 @@ export class PosInvoiceComponent implements OnInit, AfterViewInit {
   additions: number = 0;
   additionsType: string = '';
 
-  invoicePk: string = '-';
   // New properties for selected bank and store
   selectedBank: BankDTO | null = null;
   selectedStore: StoreDTO | null = null;
@@ -85,7 +84,9 @@ export class PosInvoiceComponent implements OnInit, AfterViewInit {
       next: (invoice: any) => {
         // Ensure the invoice structure matches what the template expects
         this.currentInvoice = invoice;
-        this.invoicePk = String(invoice.pk);
+
+        this.additions = invoice.additions;
+        this.additionsType = invoice.additionsType;
 
         // Set bank and store with a slight delay to ensure components are ready
         setTimeout(() => {
@@ -124,18 +125,20 @@ export class PosInvoiceComponent implements OnInit, AfterViewInit {
     this.loading = true;
     this.invoiceService.initializeNewInvoice(this.invoiceType).subscribe({
       next: invoice => {
-        this.currentInvoice = invoice;
-        this.invoicePk = String(invoice.pk);
-        this.selectedBankId = invoice.bank?.id || null;
-        this.selectedAccountId = invoice.account?.id || null;
-        this.selectedStore = invoice.store || null;
-        this.loading = false;
-
-        // Update the URL to include the new invoice ID without reloading the page
-        this.router.navigate([invoice.id], {
-          relativeTo: this.route,
-          replaceUrl: true,
-        });
+        switch (this.invoiceType) {
+          case 'SALE':
+            this.router.navigate(['/', 'sales', invoice.id], {
+              relativeTo: this.route,
+              replaceUrl: true,
+            });
+            break;
+          case 'PURCHASE':
+            this.router.navigate(['/', 'purchase', invoice.id], {
+              relativeTo: this.route,
+              replaceUrl: true,
+            });
+            break;
+        }
       },
       error: error => {
         console.error('Error initializing invoice:', error);

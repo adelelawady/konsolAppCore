@@ -1,7 +1,8 @@
-import { Component, OnInit, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ViewChild, ElementRef, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { AccountUserContainer } from 'app/core/konsolApi/model/accountUserContainer';
 import { AccountUserResourceService } from 'app/core/konsolApi/api/accountUserResource.service';
 import { AccountUserSearchModel } from 'app/core/konsolApi/model/accountUserSearchModel';
+import { AccountUserDTO } from 'app/core/konsolApi/model/accountUserDTO';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
 @Component({
@@ -9,13 +10,14 @@ import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
   templateUrl: './account-selector.component.html',
   styleUrls: ['./account-selector.component.scss'],
 })
-export class AccountSelectorComponent implements OnInit {
-  @Output() accountSelected = new EventEmitter<AccountUserContainer | undefined>();
+export class AccountSelectorComponent implements OnInit, OnChanges {
+  @Output() accountSelected = new EventEmitter<AccountUserDTO | undefined>();
+  @Input() selectedAccountId: string | null = null;
   @ViewChild('searchInput') searchInput!: ElementRef;
 
   searchTerm = '';
-  searchResults: any[] = [];
-  selectedAccount: any | null = null;
+  searchResults: AccountUserDTO[] = [];
+  selectedAccount: AccountUserDTO | null = null;
   showResults = false;
   showSelectedAccount = false;
   isLoading = false;
@@ -25,6 +27,28 @@ export class AccountSelectorComponent implements OnInit {
 
   ngOnInit(): void {
     this.setupSearch();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['selectedAccountId'] && changes['selectedAccountId'].currentValue) {
+      this.loadSelectedAccount(changes['selectedAccountId'].currentValue);
+    }
+  }
+
+  private loadSelectedAccount(accountId: string): void {
+    this.isLoading = true;
+    this.accountUserResourceService.getAccountUser(accountId).subscribe({
+      next: account => {
+        if (account) {
+          this.selectAccount(account);
+        }
+        this.isLoading = false;
+      },
+      error: error => {
+        console.error('Error loading account:', error);
+        this.isLoading = false;
+      },
+    });
   }
 
   private setupSearch(): void {
@@ -52,20 +76,22 @@ export class AccountSelectorComponent implements OnInit {
     };
 
     this.accountUserResourceService.searchAccountUsers(searchModel).subscribe({
-      next: (response: any) => {
-        this.searchResults = response.result || [];
+      next: (response: AccountUserContainer) => {
+        if (response && response.result) {
+          this.searchResults = response.result;
+          this.showResults = true;
+        }
+        this.isLoading = false;
       },
       error: error => {
         console.error('Error searching accounts:', error);
-        this.searchResults = [];
-      },
-      complete: () => {
         this.isLoading = false;
+        this.searchResults = [];
       },
     });
   }
 
-  selectAccount(account: AccountUserContainer): void {
+  selectAccount(account: AccountUserDTO): void {
     this.selectedAccount = account;
     this.showSelectedAccount = true;
     this.showResults = false;
@@ -77,55 +103,27 @@ export class AccountSelectorComponent implements OnInit {
     this.showSelectedAccount = false;
     this.searchTerm = '';
     this.accountSelected.emit(undefined);
-  }
-
-  onSearchFocus(): void {
-    this.showResults = true;
-    if (!this.searchTerm) {
-      this.loadInitialResults();
-    }
-  }
-
-  private loadInitialResults(): void {
-    this.isLoading = true;
-    const searchModel: AccountUserSearchModel = {
-      page: 0,
-      size: 10,
-    };
-
-    this.accountUserResourceService.searchAccountUsers(searchModel).subscribe({
-      next: (response: any) => {
-        this.searchResults = response.result || [];
-      },
-      error: error => {
-        console.error('Error loading initial accounts:', error);
-        this.searchResults = [];
-      },
-      complete: () => {
-        this.isLoading = false;
-      },
-    });
-  }
-
-  onFocusOut(event: FocusEvent): void {
-    setTimeout(() => {
-      this.showResults = false;
-    }, 200);
-  }
-
-  onSelectedAccountClick(): void {
-    this.showSelectedAccount = false;
-    this.showResults = true;
-    this.searchTerm = '';
     setTimeout(() => {
       this.searchInput?.nativeElement?.focus();
     });
   }
 
-  getBalanceBadgeClass(balance?: number): string {
-    if (!balance) return 'bg-secondary-subtle text-secondary';
-    if (balance > 0) return 'bg-success-subtle text-success';
-    if (balance < 0) return 'bg-danger-subtle text-danger';
-    return 'bg-secondary-subtle text-secondary';
+  onSelectedAccountClick(): void {
+    this.clearSelection();
+  }
+
+  onSearchFocus(): void {
+    if (!this.showSelectedAccount) {
+      this.showResults = true;
+    }
+  }
+
+  onFocusOut(event: FocusEvent): void {
+    const relatedTarget = event.relatedTarget as HTMLElement;
+    if (!relatedTarget?.closest('.search-results-popup')) {
+      setTimeout(() => {
+        this.showResults = false;
+      }, 200);
+    }
   }
 }

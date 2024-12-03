@@ -17,6 +17,7 @@
           <path d="M21 21l-6 -6" />
         </svg>
       </span>
+
       <ng-container *ngIf="!showSelectedAccount; else selectedAccountTemplate">
         <input
           #searchInput
@@ -55,9 +56,6 @@
                       <i class="icon icon-sm me-1" data-feather="phone"></i>
                       {{ selectedAccount?.phone || ('global.accountSearch.noPhone' | translate) }}
                     </span>
-                    <span *ngIf="selectedAccount?.balance" class="badge" [ngClass]="getBalanceBadgeClass()">
-                      {{ selectedAccount?.balance | currency: 'SAR':'symbol':'1.2-2' }}
-                    </span>
                   </div>
                 </div>
               </div>
@@ -90,7 +88,6 @@
         <div class="row g-0 text-muted border-bottom py-2 px-3">
           <div class="col-5" jhiTranslate="global.accountSearch.columns.name">اسم الحساب</div>
           <div class="col-4" jhiTranslate="global.accountSearch.columns.phone">الهاتف</div>
-          <div class="col-3 text-end" jhiTranslate="global.accountSearch.columns.balance">الرصيد</div>
         </div>
       </div>
 
@@ -104,14 +101,9 @@
           <div class="row g-0 py-2 px-3 border-bottom hover-bg">
             <div class="col-5">
               <div class="fw-medium">{{ account.name }}</div>
-              <small class="text-muted" *ngIf="account.code">{{ account.code }}</small>
+              <small class="text-muted" *ngIf="account.id">{{ account.id }}</small>
             </div>
             <div class="col-4">{{ account.phone || ('global.accountSearch.noPhone' | translate) }}</div>
-            <div class="col-3 text-end">
-              <span class="badge" [ngClass]="getBalanceBadgeClass(account.balance)">
-                {{ account.balance | currency: 'SAR':'symbol':'1.2-2' }}
-              </span>
-            </div>
           </div>
         </div>
 
