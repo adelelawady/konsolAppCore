@@ -1,115 +1,120 @@
 <div>
-  <h2>
+  <h2 class="mb-4">
     <span id="user-management-page-heading" jhiTranslate="userManagement.home.title" data-cy="userManagementPageHeading">Users</span>
 
     <div class="d-flex justify-content-end">
-      <button class="btn btn-info me-2" (click)="loadAll()" [disabled]="isLoading">
+      <button class="btn btn-outline-secondary me-2" (click)="loadAll()" [disabled]="isLoading">
         <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
         <span jhiTranslate="userManagement.home.refreshListLabel">Refresh list</span>
       </button>
-      <button class="btn btn-primary jh-create-entity" [routerLink]="['./new']">
+      <button class="btn btn-primary jh-create-entity" [routerLink]="['./new']" data-cy="createUserBtn">
         <fa-icon icon="plus"></fa-icon> <span jhiTranslate="userManagement.home.createLabel">Create a new user</span>
       </button>
     </div>
   </h2>
 
-  <jhi-alert-error></jhi-alert-error>
-
-  <jhi-alert></jhi-alert>
-
-  <div class="table-responsive" *ngIf="users">
-    <table class="table table-striped" aria-describedby="user-management-page-heading">
-      <thead>
-        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="transition()">
-          <th scope="col" jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
-          <th scope="col" jhiSortBy="login"><span jhiTranslate="userManagement.login">Login</span> <fa-icon icon="sort"></fa-icon></th>
-          <th scope="col" jhiSortBy="email"><span jhiTranslate="userManagement.email">Email</span> <fa-icon icon="sort"></fa-icon></th>
-          <th scope="col"></th>
-          <th scope="col" jhiSortBy="langKey">
-            <span jhiTranslate="userManagement.langKey">Language</span> <fa-icon icon="sort"></fa-icon>
-          </th>
-          <th scope="col"><span jhiTranslate="userManagement.profiles">Profiles</span></th>
-          <th scope="col" jhiSortBy="createdDate">
-            <span jhiTranslate="userManagement.createdDate">Created date</span> <fa-icon icon="sort"></fa-icon>
-          </th>
-          <th scope="col" jhiSortBy="lastModifiedBy">
-            <span jhiTranslate="userManagement.lastModifiedBy">Modified by</span> <fa-icon icon="sort"></fa-icon>
-          </th>
-          <th scope="col" jhiSortBy="lastModifiedDate">
-            <span jhiTranslate="userManagement.lastModifiedDate">Modified date</span> <fa-icon icon="sort"></fa-icon>
-          </th>
-          <th scope="col"></th>
-        </tr>
-      </thead>
-      <tbody *ngIf="users">
-        <tr *ngFor="let user of users; trackBy: trackIdentity">
-          <td>
-            <a [routerLink]="['./', user.login, 'view']">{{ user.id }}</a>
-          </td>
-          <td>{{ user.login }}</td>
-          <td>{{ user.email }}</td>
-          <td>
-            <button
-              class="btn btn-danger btn-sm"
-              (click)="setActive(user, true)"
-              *ngIf="!user.activated"
-              jhiTranslate="userManagement.deactivated"
-            >
-              Deactivated
-            </button>
-            <button
-              class="btn btn-success btn-sm"
-              (click)="setActive(user, false)"
-              *ngIf="user.activated"
-              [disabled]="!currentAccount || currentAccount.login === user.login"
-              jhiTranslate="userManagement.activated"
-            >
-              Activated
-            </button>
-          </td>
-          <td>{{ user.langKey }}</td>
-          <td>
-            <div *ngFor="let authority of user.authorities">
-              <span class="badge bg-info">{{ authority }}</span>
-            </div>
-          </td>
-          <td>{{ user.createdDate | date: 'dd/MM/yy HH:mm' }}</td>
-          <td>{{ user.lastModifiedBy }}</td>
-          <td>{{ user.lastModifiedDate | date: 'dd/MM/yy HH:mm' }}</td>
-          <td class="text-end">
-            <div class="btn-group">
-              <button type="submit" [routerLink]="['./', user.login, 'view']" class="btn btn-info btn-sm">
-                <fa-icon icon="eye"></fa-icon>
-                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
-              </button>
-
-              <button type="submit" [routerLink]="['./', user.login, 'edit']" queryParamsHandling="merge" class="btn btn-primary btn-sm">
-                <fa-icon icon="pencil-alt"></fa-icon>
-                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
-              </button>
-
-              <button
-                type="button"
-                (click)="deleteUser(user)"
-                class="btn btn-danger btn-sm"
-                [disabled]="!currentAccount || currentAccount.login === user.login"
-              >
-                <fa-icon icon="times"></fa-icon>
-                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
-              </button>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="search-filter-section mb-4">
+    <div class="row">
+      <div class="col-12">
+        <div class="input-group">
+          <span class="input-group-text"><i class="fa fa-search"></i></span>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="searchText"
+            (ngModelChange)="filterUsers()"
+            placeholder="Search users..."
+            aria-label="Search users"
+          />
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div *ngIf="users">
-    <div class="d-flex justify-content-center">
-      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
+  <div class="user-cards-container">
+    <div class="alert alert-warning" *ngIf="!isLoading && (!filteredUsers || filteredUsers.length === 0)">
+      <span jhiTranslate="userManagement.home.notFound">No users found</span>
     </div>
 
-    <div class="d-flex justify-content-center">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" *ngIf="filteredUsers && filteredUsers.length > 0">
+      <div class="col" *ngFor="let user of filteredUsers; trackBy: trackIdentity">
+        <div class="card h-100 user-card" [class.inactive]="!user.activated">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <h5 class="card-title mb-0">{{ user.login }}</h5>
+              <span class="badge status-badge" [class.active]="user.activated" [class.inactive]="!user.activated">
+                {{ user.activated ? 'Active' : 'Inactive' }}
+              </span>
+            </div>
+
+            <div class="user-info">
+              <p class="mb-1">
+                <i class="bi bi-person-circle me-2"></i>
+                {{ user.firstName }} {{ user.lastName }}
+              </p>
+              <p class="mb-1">
+                <i class="bi bi-envelope me-2"></i>
+                {{ user.email }}
+              </p>
+              <p class="mb-1">
+                <i class="bi bi-shield-check me-2"></i>
+                <span *ngFor="let authority of user.authorities">
+                  <span class="badge text-dark me-1"> {{ authority }}</span>
+                </span>
+              </p>
+            </div>
+
+            <div class="mt-3 text-muted">
+              <p class="mb-1 small">
+                <span jhiTranslate="userManagement.created" [translateValues]="{ param: user.login }">Created</span>
+              </p>
+              <p class="mb-1 small" *ngIf="user.lastModifiedBy">
+                <span jhiTranslate="userManagement.lastModifiedBy">Modified by</span>
+                {{ user.lastModifiedBy }}
+              </p>
+              <p class="mb-0 small" *ngIf="user.lastModifiedDate">
+                <span jhiTranslate="userManagement.lastModifiedDate">Modified date</span>
+                {{ user.lastModifiedDate | date: 'dd/MM/yy HH:mm' }}
+              </p>
+            </div>
+          </div>
+
+          <div class="card-footer bg-transparent">
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="btn-group">
+                <button type="submit" [routerLink]="['./', user.login, 'view']" class="btn btn-outline-secondary btn-sm mx-1">
+                  <fa-icon icon="eye"></fa-icon>
+                  <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                </button>
+
+                <button
+                  type="submit"
+                  [routerLink]="['./', user.login, 'edit']"
+                  queryParamsHandling="merge"
+                  class="btn btn-outline-primary btn-sm mx-1"
+                >
+                  <fa-icon icon="pencil-alt"></fa-icon>
+                  <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                </button>
+
+                <button type="button" (click)="deleteUser(user)" class="btn btn-outline-danger btn-sm mx-1" [disabled]="!user.activated">
+                  <fa-icon icon="times"></fa-icon>
+                  <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                </button>
+              </div>
+
+              <div class="form-check form-switch">
+                <input type="checkbox" class="form-check-input" [checked]="user.activated" (click)="setActive(user, !user.activated)" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="filteredUsers && filteredUsers.length > 0">
+    <div class="d-flex justify-content-center mt-4">
       <ngb-pagination
         [collectionSize]="totalItems"
         [(page)]="page"

@@ -14,8 +14,8 @@ import { UserManagementDeleteDialogComponent } from '../delete/user-management-d
 
 @Component({
   selector: 'jhi-user-mgmt',
-  styleUrls: ['./user-management.component.scss'],
   templateUrl: './user-management.component.html',
+  styleUrls: ['./user-management.component.scss'],
 })
 export class UserManagementComponent implements OnInit {
   currentAccount: Account | null = null;
@@ -23,12 +23,11 @@ export class UserManagementComponent implements OnInit {
   filteredUsers: User[] | null = null;
   isLoading = false;
   totalItems = 0;
-  itemsPerPage = 10;
-  page = 1;
-  predicate = 'id';
-  ascending = true;
-  searchTerm = '';
-  statusFilter = 'all';
+  itemsPerPage = ITEMS_PER_PAGE;
+  page!: number;
+  predicate!: string;
+  ascending!: boolean;
+  searchText = '';
 
   constructor(
     private userService: UserManagementService,
@@ -43,60 +42,33 @@ export class UserManagementComponent implements OnInit {
     this.handleNavigation();
   }
 
-  onSearch(event: Event): void {
-    const searchInput = event.target as HTMLInputElement;
-    this.searchTerm = searchInput.value.toLowerCase();
-    this.filterUsers();
-  }
-
-  onStatusFilter(event: Event): void {
-    const select = event.target as HTMLSelectElement;
-    this.statusFilter = select.value;
-    this.filterUsers();
-  }
-
-  private filterUsers(): void {
+  filterUsers(): void {
     if (!this.users) {
       return;
     }
 
     this.filteredUsers = this.users.filter(user => {
-      const matchesSearch =
-        !this.searchTerm ||
-        (user.login?.toLowerCase().includes(this.searchTerm) ?? false) ||
-        (user.email?.toLowerCase().includes(this.searchTerm) ?? false) ||
-        (user.authorities?.some(auth => auth.toLowerCase().includes(this.searchTerm)) ?? false);
+      const searchFields = [user.login, user.email, ...(user.authorities || []), user.firstName, user.lastName].filter(
+        (field): field is string => field !== null && field !== undefined
+      );
 
-      const matchesStatus =
-        this.statusFilter === 'all' ||
-        (this.statusFilter === 'active' && user.activated) ||
-        (this.statusFilter === 'inactive' && !user.activated);
-
-      return matchesSearch && matchesStatus;
+      return !this.searchText || searchFields.some(field => field.toLowerCase().includes(this.searchText.toLowerCase()));
     });
 
-    this.updatePagination();
-  }
-
-  private updatePagination(): void {
-    if (this.filteredUsers) {
-      this.totalItems = this.filteredUsers.length;
-      const startIndex = (this.page - 1) * this.itemsPerPage;
-      const endIndex = startIndex + this.itemsPerPage;
-      this.filteredUsers = this.filteredUsers.slice(startIndex, endIndex);
-    }
+    this.totalItems = this.filteredUsers.length;
   }
 
   setActive(user: User, isActivated: boolean): void {
     this.userService.update({ ...user, activated: isActivated }).subscribe(() => {
       if (user) {
         user.activated = isActivated;
+        this.filterUsers();
       }
     });
   }
 
   trackIdentity(_index: number, item: User): string {
-    return item.id ?? '';
+    return item.id!;
   }
 
   deleteUser(user: User): void {
@@ -111,20 +83,20 @@ export class UserManagementComponent implements OnInit {
 
   loadAll(): void {
     this.isLoading = true;
-
     this.userService
       .query({
         page: this.page - 1,
         size: this.itemsPerPage,
         sort: this.sort(),
       })
-      .subscribe({
-        next: (res: HttpResponse<User[]>) => {
+      .subscribe(
+        (res: HttpResponse<User[]>) => {
           this.isLoading = false;
           this.onSuccess(res.body, res.headers);
+          this.filterUsers();
         },
-        error: () => (this.isLoading = false),
-      });
+        () => (this.isLoading = false)
+      );
   }
 
   transition(): void {
@@ -132,7 +104,7 @@ export class UserManagementComponent implements OnInit {
       relativeTo: this.activatedRoute.parent,
       queryParams: {
         page: this.page,
-        sort: `${this.predicate},${this.ascending ? 'asc' : 'desc'}`,
+        sort: `${this.predicate},${this.ascending ? ASC : DESC}`,
       },
     });
   }
@@ -140,16 +112,16 @@ export class UserManagementComponent implements OnInit {
   private handleNavigation(): void {
     combineLatest([this.activatedRoute.data, this.activatedRoute.queryParamMap]).subscribe(([data, params]) => {
       const page = params.get('page');
-      this.page = page !== null ? +page : 1;
-      const sort = (params.get('sort') ?? data['defaultSort']).split(',');
+      this.page = +(page ?? 1);
+      const sort = (params.get(SORT) ?? data['defaultSort']).split(',');
       this.predicate = sort[0];
-      this.ascending = sort[1] === 'asc';
+      this.ascending = sort[1] === ASC;
       this.loadAll();
     });
   }
 
   private sort(): string[] {
-    const result = [`${this.predicate},${this.ascending ? 'asc' : 'desc'}`];
+    const result = [`${this.predicate},${this.ascending ? ASC : DESC}`];
     if (this.predicate !== 'id') {
       result.push('id');
     }
