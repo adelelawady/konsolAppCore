@@ -1,55 +1,92 @@
-<div class="d-flex justify-content-center">
-  <div class="col-8">
-    <div *ngIf="user">
+<div class="user-detail-container">
+  <div class="user-detail-card" *ngIf="user">
+    <!-- Header -->
+    <div class="user-header">
       <h2>
-        <span jhiTranslate="userManagement.detail.title">User</span> [<strong>{{ user.login }}</strong
-        >]
+        <span jhiTranslate="userManagement.detail.title">User</span>
+        <strong>{{ user.login }}</strong>
+        <span class="status-badge" [class.active]="user.activated" [class.inactive]="!user.activated">
+          <span *ngIf="user.activated" jhiTranslate="userManagement.activated">Activated</span>
+          <span *ngIf="!user.activated" jhiTranslate="userManagement.deactivated">Deactivated</span>
+        </span>
       </h2>
+    </div>
 
-      <dl class="row-md jh-entity-details">
-        <dt><span jhiTranslate="userManagement.login">Login</span></dt>
-        <dd>
-          <span>{{ user.login }}</span>
-          <span *ngIf="user.activated" class="badge bg-success" jhiTranslate="userManagement.activated">Activated</span>
-          <span *ngIf="!user.activated" class="badge bg-danger" jhiTranslate="userManagement.deactivated">Deactivated</span>
-        </dd>
+    <!-- User Details Grid -->
+    <div class="user-details">
+      <!-- Basic Info -->
+      <div class="detail-group">
+        <div class="detail-label" jhiTranslate="userManagement.login">Login</div>
+        <div class="detail-value">{{ user.login }}</div>
+      </div>
 
-        <dt><span jhiTranslate="userManagement.firstName">First name</span></dt>
-        <dd>{{ user.firstName }}</dd>
+      <div class="detail-group">
+        <div class="detail-label" jhiTranslate="userManagement.email">Email</div>
+        <div class="detail-value">{{ user.email }}</div>
+      </div>
 
-        <dt><span jhiTranslate="userManagement.lastName">Last name</span></dt>
-        <dd>{{ user.lastName }}</dd>
+      <div class="detail-group">
+        <div class="detail-label" jhiTranslate="userManagement.firstName">First Name</div>
+        <div class="detail-value" [class.empty]="!user.firstName">
+          {{ user.firstName || 'Not specified' }}
+        </div>
+      </div>
 
-        <dt><span jhiTranslate="userManagement.email">Email</span></dt>
-        <dd>{{ user.email }}</dd>
+      <div class="detail-group">
+        <div class="detail-label" jhiTranslate="userManagement.lastName">Last Name</div>
+        <div class="detail-value" [class.empty]="!user.lastName">
+          {{ user.lastName || 'Not specified' }}
+        </div>
+      </div>
 
-        <dt><span jhiTranslate="userManagement.langKey">Language</span></dt>
-        <dd>{{ user.langKey }}</dd>
+      <div class="detail-group">
+        <div class="detail-label" jhiTranslate="userManagement.langKey">Language</div>
+        <div class="detail-value">{{ user.langKey | uppercase }}</div>
+      </div>
 
-        <dt><span jhiTranslate="userManagement.createdBy">Created by</span></dt>
-        <dd>{{ user.createdBy }}</dd>
+      <!-- Creation Info -->
+      <div class="detail-group">
+        <div class="detail-label" jhiTranslate="userManagement.createdBy">Created By</div>
+        <div class="detail-value">{{ user.createdBy }}</div>
+      </div>
 
-        <dt><span jhiTranslate="userManagement.createdDate">Created date</span></dt>
-        <dd>{{ user.createdDate | date: 'dd/MM/yy HH:mm' }}</dd>
+      <div class="detail-group">
+        <div class="detail-label" jhiTranslate="userManagement.createdDate">Created Date</div>
+        <div class="detail-value">{{ user.createdDate | date: 'medium' }}</div>
+      </div>
 
-        <dt><span jhiTranslate="userManagement.lastModifiedBy">Modified by</span></dt>
-        <dd>{{ user.lastModifiedBy }}</dd>
+      <!-- Modification Info -->
+      <div class="detail-group">
+        <div class="detail-label" jhiTranslate="userManagement.lastModifiedBy">Last Modified By</div>
+        <div class="detail-value">{{ user.lastModifiedBy }}</div>
+      </div>
 
-        <dt><span jhiTranslate="userManagement.lastModifiedDate">Modified date</span></dt>
-        <dd>{{ user.lastModifiedDate | date: 'dd/MM/yy HH:mm' }}</dd>
+      <div class="detail-group">
+        <div class="detail-label" jhiTranslate="userManagement.lastModifiedDate">Last Modified Date</div>
+        <div class="detail-value">{{ user.lastModifiedDate | date: 'medium' }}</div>
+      </div>
+    </div>
 
-        <dt><span jhiTranslate="userManagement.profiles">Profiles</span></dt>
-        <dd>
-          <ul class="list-unstyled">
-            <li *ngFor="let authority of user.authorities">
-              <span class="badge bg-info">{{ authority }}</span>
-            </li>
-          </ul>
-        </dd>
-      </dl>
+    <!-- Authorities Section -->
+    <div class="authorities-section">
+      <div class="authorities-title" jhiTranslate="userManagement.profiles">Profiles</div>
+      <ul class="authorities-list">
+        <li *ngFor="let authority of user.authorities" class="authority-item">
+          <i class="authority-icon bi bi-shield-check"></i>
+          <span>{{ authority }}</span>
+        </li>
+      </ul>
+    </div>
 
-      <button type="submit" routerLink="../../" class="btn btn-info">
-        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button type="submit" routerLink="../../" class="btn btn-back">
+        <span class="bi bi-arrow-left"></span>&nbsp;
+        <span jhiTranslate="entity.action.back">Back</span>
+      </button>
+      <button type="submit" [routerLink]="['/', 'admin', 'user-management', user.login, 'edit']" class="btn btn-edit">
+        <span class="bi bi-pencil"></span>&nbsp;
+        <span jhiTranslate="entity.action.edit">Edit</span>
       </button>
     </div>
   </div>
