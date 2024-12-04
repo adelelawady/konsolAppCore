@@ -1,10 +1,13 @@
 package com.konsol.core.web.rest;
 
+import com.konsol.core.domain.Authority;
 import com.konsol.core.service.UserService;
+import com.konsol.core.service.api.dto.AuthorityDTO;
 import com.konsol.core.web.api.AuthoritiesApiDelegate;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
@@ -39,8 +42,17 @@ public class AuthoritiesResource implements AuthoritiesApiDelegate {
      * @return a string list of all roles.
      */
     // @GetMapping("/authorities")
+    /*
     @Override
-    public ResponseEntity<List<String>> getAuthorities() {
+    public ResponseEntity<List<Authority>> getAuthorities() {
         return ResponseEntity.ok(userService.getAuthorities());
+    }
+    */
+
+    @Override
+    public ResponseEntity<List<AuthorityDTO>> getAuthorities() {
+        return ResponseEntity.ok(
+            userService.getAuthoritiesDomains().stream().map(userService::toAuthorityDTO).collect(Collectors.toList())
+        );
     }
 }

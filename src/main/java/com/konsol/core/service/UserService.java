@@ -8,6 +8,7 @@ import com.konsol.core.repository.UserRepository;
 import com.konsol.core.security.AuthoritiesConstants;
 import com.konsol.core.security.SecurityUtils;
 import com.konsol.core.service.api.dto.AdminUserDTO;
+import com.konsol.core.service.api.dto.AuthorityDTO;
 import com.konsol.core.service.api.dto.UserDTO;
 import com.konsol.core.service.mapper.UserMapper;
 import java.time.Instant;
@@ -132,8 +133,7 @@ public class UserService {
         newUser.setActivated(false);
         // new user gets registration key
         newUser.setActivationKey(RandomUtil.generateActivationKey());
-        Set<Authority> authorities = new HashSet<>();
-        authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
+        Set<Authority> authorities = handleCreatingUserAuthorities(userDTO);
         newUser.setAuthorities(authorities);
         userRepository.save(newUser);
         this.clearUserCaches(newUser);
@@ -169,16 +169,8 @@ public class UserService {
         user.setResetKey(RandomUtil.generateResetKey());
         user.setResetDate(Instant.now());
         user.setActivated(true);
-        if (userDTO.getAuthorities() != null) {
-            Set<Authority> authorities = userDTO
-                .getAuthorities()
-                .stream()
-                .map(authorityRepository::findById)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toSet());
-            user.setAuthorities(authorities);
-        }
+        Set<Authority> authorities = handleCreatingUserAuthorities(userDTO);
+        user.setAuthorities(authorities);
         userRepository.save(user);
         this.clearUserCaches(user);
         log.debug("Created Information for User: {}", user);
@@ -207,15 +199,7 @@ public class UserService {
                 user.setImageUrl(userDTO.getImageUrl());
                 user.setActivated(userDTO.getActivated());
                 user.setLangKey(userDTO.getLangKey());
-                Set<Authority> managedAuthorities = user.getAuthorities();
-                managedAuthorities.clear();
-                userDTO
-                    .getAuthorities()
-                    .stream()
-                    .map(authorityRepository::findById)
-                    .filter(Optional::isPresent)
-                    .map(Optional::get)
-                    .forEach(managedAuthorities::add);
+                handleSavingUserAuthorities(userDTO, user);
                 userRepository.save(user);
                 this.clearUserCaches(user);
                 log.debug("Changed Information for User: {}", user);
@@ -224,10 +208,129 @@ public class UserService {
             .map(userMapper::userToAdminUserDTO);
     }
 
+    public void handleSavingUserAuthorities(AdminUserDTO userDTO, User userDomain) {
+        Set<Authority> managedAuthorities = userDomain.getAuthorities();
+        Set<String> newAuthorities = userDTO.getAuthorities();
+
+        // Check if current user is trying to modify an admin user
+        boolean isTargetAdmin = managedAuthorities.stream().anyMatch(auth -> auth.getName().equals(AuthoritiesConstants.ADMIN));
+
+        // Get current user's authorities
+        String currentUserLogin = SecurityUtils
+            .getCurrentUserLogin()
+            .orElseThrow(() -> new RuntimeException("Current user login not found"));
+        User currentUser = getUserByLogin(currentUserLogin).orElseThrow(() -> new RuntimeException("Current user not found"));
+        boolean isCurrentUserSuperAdmin = currentUser
+            .getAuthorities()
+            .stream()
+            .anyMatch(auth -> auth.getName().equals(AuthoritiesConstants.SUPER_ADMIN));
+        boolean isCurrentUserAdmin = currentUser
+            .getAuthorities()
+            .stream()
+            .anyMatch(auth -> auth.getName().equals(AuthoritiesConstants.ADMIN));
+
+        // Only super admin can modify admin users
+        if (isTargetAdmin && !isCurrentUserSuperAdmin) {
+            throw new RuntimeException("Only super admins can modify admin users");
+        }
+
+        // Check if trying to grant admin privileges
+        boolean willHaveAdmin = newAuthorities.contains(AuthoritiesConstants.ADMIN);
+        boolean hadAdmin = managedAuthorities.stream().anyMatch(auth -> auth.getName().equals(AuthoritiesConstants.ADMIN));
+
+        // Only super admin can grant admin privileges
+        if (!hadAdmin && willHaveAdmin && !isCurrentUserSuperAdmin) {
+            throw new RuntimeException("Only super admins can grant admin privileges");
+        }
+
+        // Prevent modification of SUPER_ADMIN role
+        boolean hadSuperAdmin = managedAuthorities.stream().anyMatch(auth -> auth.getName().equals(AuthoritiesConstants.SUPER_ADMIN));
+        boolean willHaveSuperAdmin = newAuthorities.contains(AuthoritiesConstants.SUPER_ADMIN);
+
+        if (hadSuperAdmin != willHaveSuperAdmin) {
+            throw new RuntimeException("SUPER_ADMIN role cannot be added or removed");
+        }
+
+        // Update authorities
+        managedAuthorities.clear();
+        newAuthorities
+            .stream()
+            .map(authorityRepository::findById)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .forEach(managedAuthorities::add);
+    }
+
+    public Set<Authority> handleCreatingUserAuthorities(AdminUserDTO userDTO) {
+        Set<String> authorities = userDTO.getAuthorities();
+
+        // Get current user's authorities
+        String currentUserLogin = SecurityUtils
+            .getCurrentUserLogin()
+            .orElseThrow(() -> new RuntimeException("Current user login not found"));
+        User currentUser = getUserByLogin(currentUserLogin).orElseThrow(() -> new RuntimeException("Current user not found"));
+        boolean isCurrentUserSuperAdmin = currentUser
+            .getAuthorities()
+            .stream()
+            .anyMatch(auth -> auth.getName().equals(AuthoritiesConstants.SUPER_ADMIN));
+
+        // Check if trying to create an admin user
+        boolean isCreatingAdmin = authorities.contains(AuthoritiesConstants.ADMIN);
+
+        // Only super admin can create admin users
+        if (isCreatingAdmin && !isCurrentUserSuperAdmin) {
+            throw new RuntimeException("Only super admins can create admin users");
+        }
+
+        // Prevent creation of users with SUPER_ADMIN role
+        if (authorities.contains(AuthoritiesConstants.SUPER_ADMIN)) {
+            throw new RuntimeException("Cannot create users with SUPER_ADMIN role");
+        }
+
+        // Create authorities set
+        Set<Authority> managedAuthorities = new HashSet<>();
+        authorities
+            .stream()
+            .map(authorityRepository::findById)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .forEach(managedAuthorities::add);
+
+        return managedAuthorities;
+    }
+
     public void deleteUser(String login) {
         userRepository
             .findOneByLogin(login)
             .ifPresent(user -> {
+                // Check if user has SUPER_ADMIN role
+                boolean isSuperAdmin = user
+                    .getAuthorities()
+                    .stream()
+                    .anyMatch(auth -> auth.getName().equals(AuthoritiesConstants.SUPER_ADMIN));
+
+                if (isSuperAdmin) {
+                    throw new RuntimeException("Users with SUPER_ADMIN role cannot be deleted");
+                }
+
+                // Get current user's authorities
+                String currentUserLogin = SecurityUtils
+                    .getCurrentUserLogin()
+                    .orElseThrow(() -> new RuntimeException("Current user login not found"));
+                User currentUser = getUserByLogin(currentUserLogin).orElseThrow(() -> new RuntimeException("Current user not found"));
+                boolean isCurrentUserSuperAdmin = currentUser
+                    .getAuthorities()
+                    .stream()
+                    .anyMatch(auth -> auth.getName().equals(AuthoritiesConstants.SUPER_ADMIN));
+
+                // Check if target user is admin
+                boolean isTargetAdmin = user.getAuthorities().stream().anyMatch(auth -> auth.getName().equals(AuthoritiesConstants.ADMIN));
+
+                // Only super admin can delete admin users
+                if (isTargetAdmin && !isCurrentUserSuperAdmin) {
+                    throw new RuntimeException("Only super admins can delete admin users");
+                }
+
                 userRepository.delete(user);
                 this.clearUserCaches(user);
                 log.debug("Deleted User: {}", user);
@@ -318,10 +421,26 @@ public class UserService {
         return authorityRepository.findAll().stream().map(Authority::getName).collect(Collectors.toList());
     }
 
+    public List<Authority> getAuthoritiesDomains() {
+        return new ArrayList<>(authorityRepository.findAll());
+    }
+
+    public AuthorityDTO toAuthorityDTO(Authority authority) {
+        AuthorityDTO authorityDTO = new AuthorityDTO();
+        authorityDTO.category(authority.getCategory());
+        authorityDTO.setId(authority.getName());
+        authorityDTO.setDescription(authority.getDescription());
+        return authorityDTO;
+    }
+
     private void clearUserCaches(User user) {
         Objects.requireNonNull(cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE)).evict(user.getLogin());
         if (user.getEmail() != null) {
             Objects.requireNonNull(cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE)).evict(user.getEmail());
         }
+    }
+
+    private Optional<User> getUserByLogin(String login) {
+        return userRepository.findOneByLogin(login);
     }
 }

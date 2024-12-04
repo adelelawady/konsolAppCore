@@ -1526,7 +1526,7 @@ paths:
               schema:
                 type: array
                 items:
-                  type: string
+                  $ref: '#/components/schemas/AuthorityDTO'
     parameters: []
   '/admin/users/{login}':
     get:
@@ -3243,3 +3243,19 @@ components:
           x-stoplight:
             id: gldsozrb9xp7h
           default: true
+    AuthorityDTO:
+      title: AuthorityDTO
+      x-stoplight:
+        id: wavrzl1rq54tp
+      type: object
+      properties:
+        id:
+          type: string
+        category:
+          type: string
+          x-stoplight:
+            id: 4602fxjsl6vtz
+        description:
+          type: string
+          x-stoplight:
+            id: 0si0umrjegckk

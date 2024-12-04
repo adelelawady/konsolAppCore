@@ -6,6 +6,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
  * An authority (a security role) used by Spring Security.
@@ -19,6 +20,12 @@ public class Authority implements Serializable {
     @Size(max = 50)
     @Id
     private String name;
+
+    @Field("category")
+    private String category;
+
+    @Field("description")
+    private String description;
 
     public String getName() {
         return name;
@@ -50,5 +57,21 @@ public class Authority implements Serializable {
         return "Authority{" +
             "name='" + name + '\'' +
             "}";
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

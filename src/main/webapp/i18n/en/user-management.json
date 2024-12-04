@@ -26,6 +26,30 @@
     "createdBy": "Created by",
     "createdDate": "Created date",
     "lastModifiedBy": "Modified by",
-    "lastModifiedDate": "Modified date"
+    "lastModifiedDate": "Modified date",
+    "roles": {
+      "title": "User Roles & Permissions",
+      "admin": "Administrator",
+      "user": "User",
+      "manager": "Manager",
+      "accountant": "Accountant",
+      "sales": "Sales",
+      "inventory": "Inventory",
+      "descriptions": {
+        "admin": "Full system access and management",
+        "user": "Standard user access",
+        "manager": "Department management access",
+        "accountant": "Financial system access",
+        "sales": "Sales system access",
+        "inventory": "Inventory management access"
+      }
+    },
+    "sections": {
+      "basicInfo": "Basic Information"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    }
   }
 }

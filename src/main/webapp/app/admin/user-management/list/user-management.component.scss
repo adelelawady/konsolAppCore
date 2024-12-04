@@ -1,0 +1,198 @@
+// Modern color palette
+:root {
+  --primary-color: #2563eb;
+  --primary-hover: #1d4ed8;
+  --secondary-color: #64748b;
+  --success-color: #22c55e;
+  --danger-color: #ef4444;
+  --background-color: #f8fafc;
+  --card-background: #ffffff;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --border-color: #e2e8f0;
+}
+
+// Container styles
+.user-management-container {
+  padding: 1.5rem;
+  background-color: var(--background-color);
+  min-height: 100vh;
+}
+
+// Header section
+.header-section {
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+  padding: 2rem;
+  border-radius: 0.5rem;
+  margin-bottom: 2rem;
+  color: white;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+
+  .heading-text {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+  }
+}
+
+// Action buttons
+.action-buttons {
+  .btn {
+    transition: all 0.3s ease;
+    border-radius: 0.375rem;
+
+    &.btn-animate {
+      &:hover {
+        transform: translateY(-2px);
+      }
+    }
+  }
+}
+
+// Search and filter section
+.search-filter-section {
+  background-color: var(--card-background);
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+  .search-box {
+    position: relative;
+
+    .search-icon {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-secondary);
+    }
+  }
+}
+
+// User cards (mobile view)
+.user-card {
+  background-color: var(--card-background);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+
+  .user-status {
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.875rem;
+
+    &.active {
+      background-color: var(--success-color);
+      color: white;
+    }
+
+    &:not(.active) {
+      background-color: var(--danger-color);
+      color: white;
+    }
+  }
+}
+
+// Modern table styles
+.modern-table {
+  background-color: var(--card-background);
+  border-radius: 0.5rem;
+  overflow: hidden;
+
+  th {
+    background-color: #f8fafc;
+    border-bottom: 2px solid var(--border-color);
+    color: var(--text-secondary);
+    font-weight: 600;
+    padding: 1rem;
+  }
+
+  td {
+    padding: 1rem;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  tbody tr {
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #f1f5f9;
+    }
+  }
+}
+
+// Form elements
+.form-control,
+.form-select {
+  border: 1px solid var(--border-color);
+  border-radius: 0.375rem;
+  padding: 0.5rem 1rem;
+  transition: all 0.3s ease;
+
+  &:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+  }
+}
+
+// Badges
+.badge {
+  padding: 0.35em 0.65em;
+  font-size: 0.75em;
+  font-weight: 500;
+  border-radius: 0.25rem;
+  letter-spacing: 0.025em;
+}
+
+// Switch toggle
+.form-check-input {
+  &:checked {
+    background-color: var(--success-color);
+    border-color: var(--success-color);
+  }
+}
+
+// Pagination
+.pagination-container {
+  background-color: var(--card-background);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-top: 1.5rem;
+
+  .page-link {
+    border-radius: 0.375rem;
+    margin: 0 0.25rem;
+    color: var(--primary-color);
+
+    &:hover {
+      background-color: #f1f5f9;
+    }
+
+    &.active {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+  }
+}
+
+// Accessibility improvements
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}
+
+// High contrast mode
+@media (prefers-contrast: high) {
+  :root {
+    --primary-color: #0040ff;
+    --success-color: #008000;
+    --danger-color: #cc0000;
+  }
+}

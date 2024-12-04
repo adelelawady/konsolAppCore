@@ -31,10 +31,10 @@ public class InitialSetupMigration {
         Authority adminAuthority = createAdminAuthority();
         adminAuthority = template.save(adminAuthority);
 
-        Authority superAdminAuthority = createAdminAuthority();
+        Authority superAdminAuthority = createSuperAdminAuthority();
         superAdminAuthority = template.save(superAdminAuthority);
 
-        createAllAuthorities(userAuthority, adminAuthority);
+        createAllAuthorities(userAuthority, adminAuthority, superAdminAuthority);
         addUsers(userAuthority, adminAuthority, superAdminAuthority);
         createFirstBank();
         createFirstStore();
@@ -126,69 +126,279 @@ public class InitialSetupMigration {
         return template.save(store);
     }
 
-    private void createAllAuthorities(Authority userAuthority, Authority adminAuthority) {
+    private void createAllAuthorities(Authority userAuthority, Authority adminAuthority, Authority superAdminAuthority) {
+        // Basic Roles
+        userAuthority.setCategory("Basic Roles");
+        userAuthority.setDescription("Regular user with basic access");
         template.save(userAuthority);
+
+        adminAuthority.setCategory("Basic Roles");
+        adminAuthority.setDescription("Administrator with elevated privileges");
         template.save(adminAuthority);
 
-        template.save(createAuthority(AuthoritiesConstants.CREATE_INVOICE));
-        template.save(createAuthority(AuthoritiesConstants.UPDATE_INVOICE));
-        template.save(createAuthority(AuthoritiesConstants.DELETE_INVOICE));
-        template.save(createAuthority(AuthoritiesConstants.VIEW_INVOICE));
-        template.save(createAuthority(AuthoritiesConstants.SAVE_INVOICE));
-        template.save(createAuthority(AuthoritiesConstants.PRINT_INVOICE));
-        template.save(createAuthority(AuthoritiesConstants.CANCEL_INVOICE));
+        superAdminAuthority.setCategory("Basic Roles");
+        superAdminAuthority.setDescription("Super Administrator with all privileges");
+        template.save(superAdminAuthority);
 
-        template.save(createAuthority(AuthoritiesConstants.CREATE_STORE));
-        template.save(createAuthority(AuthoritiesConstants.UPDATE_STORE));
-        template.save(createAuthority(AuthoritiesConstants.DELETE_STORE));
-        template.save(createAuthority(AuthoritiesConstants.VIEW_STORE));
+        // Invoice Management
+        Authority createInvoice = createAuthority(AuthoritiesConstants.CREATE_INVOICE);
+        createInvoice.setCategory("Invoice Management");
+        createInvoice.setDescription("Create new invoices");
+        template.save(createInvoice);
 
-        template.save(createAuthority(AuthoritiesConstants.CREATE_ACCOUNT));
-        template.save(createAuthority(AuthoritiesConstants.UPDATE_ACCOUNT));
-        template.save(createAuthority(AuthoritiesConstants.DELETE_ACCOUNT));
-        template.save(createAuthority(AuthoritiesConstants.VIEW_ACCOUNT));
+        Authority updateInvoice = createAuthority(AuthoritiesConstants.UPDATE_INVOICE);
+        updateInvoice.setCategory("Invoice Management");
+        updateInvoice.setDescription("Modify existing invoices");
+        template.save(updateInvoice);
 
-        template.save(createAuthority(AuthoritiesConstants.CREATE_ITEM));
-        template.save(createAuthority(AuthoritiesConstants.UPDATE_ITEM));
-        template.save(createAuthority(AuthoritiesConstants.DELETE_ITEM));
-        template.save(createAuthority(AuthoritiesConstants.VIEW_ITEM));
+        Authority deleteInvoice = createAuthority(AuthoritiesConstants.DELETE_INVOICE);
+        deleteInvoice.setCategory("Invoice Management");
+        deleteInvoice.setDescription("Delete invoices from the system");
+        template.save(deleteInvoice);
 
-        template.save(createAuthority(AuthoritiesConstants.CREATE_BANK));
-        template.save(createAuthority(AuthoritiesConstants.UPDATE_BANK));
-        template.save(createAuthority(AuthoritiesConstants.DELETE_BANK));
-        template.save(createAuthority(AuthoritiesConstants.VIEW_BANK));
+        Authority viewInvoice = createAuthority(AuthoritiesConstants.VIEW_INVOICE);
+        viewInvoice.setCategory("Invoice Management");
+        viewInvoice.setDescription("View invoice details");
+        template.save(viewInvoice);
 
-        template.save(createAuthority(AuthoritiesConstants.CREATE_PAYMENT));
-        template.save(createAuthority(AuthoritiesConstants.UPDATE_PAYMENT));
-        template.save(createAuthority(AuthoritiesConstants.DELETE_PAYMENT));
-        template.save(createAuthority(AuthoritiesConstants.VIEW_PAYMENT));
+        Authority saveInvoice = createAuthority(AuthoritiesConstants.SAVE_INVOICE);
+        saveInvoice.setCategory("Invoice Management");
+        saveInvoice.setDescription("Save invoice changes");
+        template.save(saveInvoice);
 
-        template.save(createAuthority(AuthoritiesConstants.CREATE_SALE));
-        template.save(createAuthority(AuthoritiesConstants.UPDATE_SALE));
-        template.save(createAuthority(AuthoritiesConstants.DELETE_SALE));
-        template.save(createAuthority(AuthoritiesConstants.VIEW_SALE));
-        template.save(createAuthority(AuthoritiesConstants.CANCEL_SALE));
-        template.save(createAuthority(AuthoritiesConstants.PRINT_SALE));
+        Authority printInvoice = createAuthority(AuthoritiesConstants.PRINT_INVOICE);
+        printInvoice.setCategory("Invoice Management");
+        printInvoice.setDescription("Print invoice documents");
+        template.save(printInvoice);
 
-        template.save(createAuthority(AuthoritiesConstants.CREATE_PURCHASE));
-        template.save(createAuthority(AuthoritiesConstants.UPDATE_PURCHASE));
-        template.save(createAuthority(AuthoritiesConstants.DELETE_PURCHASE));
-        template.save(createAuthority(AuthoritiesConstants.VIEW_PURCHASE));
-        template.save(createAuthority(AuthoritiesConstants.CANCEL_PURCHASE));
-        template.save(createAuthority(AuthoritiesConstants.PRINT_PURCHASE));
+        Authority cancelInvoice = createAuthority(AuthoritiesConstants.CANCEL_INVOICE);
+        cancelInvoice.setCategory("Invoice Management");
+        cancelInvoice.setDescription("Cancel existing invoices");
+        template.save(cancelInvoice);
 
-        template.save(createAuthority(AuthoritiesConstants.VIEW_REPORTS));
-        template.save(createAuthority(AuthoritiesConstants.GENERATE_REPORT));
-        template.save(createAuthority(AuthoritiesConstants.EXPORT_REPORT));
+        // Store Management
+        Authority createStore = createAuthority(AuthoritiesConstants.CREATE_STORE);
+        createStore.setCategory("Store Management");
+        createStore.setDescription("Create new stores");
+        template.save(createStore);
 
-        template.save(createAuthority(AuthoritiesConstants.CREATE_USER));
-        template.save(createAuthority(AuthoritiesConstants.UPDATE_USER));
-        template.save(createAuthority(AuthoritiesConstants.DELETE_USER));
-        template.save(createAuthority(AuthoritiesConstants.VIEW_USER));
-        template.save(createAuthority(AuthoritiesConstants.MANAGE_ROLES));
+        Authority updateStore = createAuthority(AuthoritiesConstants.UPDATE_STORE);
+        updateStore.setCategory("Store Management");
+        updateStore.setDescription("Modify store information");
+        template.save(updateStore);
 
-        template.save(createAuthority(AuthoritiesConstants.VIEW_SETTINGS));
-        template.save(createAuthority(AuthoritiesConstants.UPDATE_SETTINGS));
-        template.save(createAuthority(AuthoritiesConstants.MANAGE_SYSTEM_CONFIG));
+        Authority deleteStore = createAuthority(AuthoritiesConstants.DELETE_STORE);
+        deleteStore.setCategory("Store Management");
+        deleteStore.setDescription("Delete stores from the system");
+        template.save(deleteStore);
+
+        Authority viewStore = createAuthority(AuthoritiesConstants.VIEW_STORE);
+        viewStore.setCategory("Store Management");
+        viewStore.setDescription("View store details");
+        template.save(viewStore);
+
+        // Account Management
+        Authority createAccount = createAuthority(AuthoritiesConstants.CREATE_ACCOUNT);
+        createAccount.setCategory("Account Management");
+        createAccount.setDescription("Create new accounts");
+        template.save(createAccount);
+
+        Authority updateAccount = createAuthority(AuthoritiesConstants.UPDATE_ACCOUNT);
+        updateAccount.setCategory("Account Management");
+        updateAccount.setDescription("Modify account information");
+        template.save(updateAccount);
+
+        Authority deleteAccount = createAuthority(AuthoritiesConstants.DELETE_ACCOUNT);
+        deleteAccount.setCategory("Account Management");
+        deleteAccount.setDescription("Delete accounts from the system");
+        template.save(deleteAccount);
+
+        Authority viewAccount = createAuthority(AuthoritiesConstants.VIEW_ACCOUNT);
+        viewAccount.setCategory("Account Management");
+        viewAccount.setDescription("View account details");
+        template.save(viewAccount);
+
+        // Item Management
+        Authority createItem = createAuthority(AuthoritiesConstants.CREATE_ITEM);
+        createItem.setCategory("Item Management");
+        createItem.setDescription("Create new items");
+        template.save(createItem);
+
+        Authority updateItem = createAuthority(AuthoritiesConstants.UPDATE_ITEM);
+        updateItem.setCategory("Item Management");
+        updateItem.setDescription("Modify item information");
+        template.save(updateItem);
+
+        Authority deleteItem = createAuthority(AuthoritiesConstants.DELETE_ITEM);
+        deleteItem.setCategory("Item Management");
+        deleteItem.setDescription("Delete items from the system");
+        template.save(deleteItem);
+
+        Authority viewItem = createAuthority(AuthoritiesConstants.VIEW_ITEM);
+        viewItem.setCategory("Item Management");
+        viewItem.setDescription("View item details");
+        template.save(viewItem);
+
+        // Bank Management
+        Authority createBank = createAuthority(AuthoritiesConstants.CREATE_BANK);
+        createBank.setCategory("Bank Management");
+        createBank.setDescription("Create new bank entries");
+        template.save(createBank);
+
+        Authority updateBank = createAuthority(AuthoritiesConstants.UPDATE_BANK);
+        updateBank.setCategory("Bank Management");
+        updateBank.setDescription("Modify bank information");
+        template.save(updateBank);
+
+        Authority deleteBank = createAuthority(AuthoritiesConstants.DELETE_BANK);
+        deleteBank.setCategory("Bank Management");
+        deleteBank.setDescription("Delete bank entries");
+        template.save(deleteBank);
+
+        Authority viewBank = createAuthority(AuthoritiesConstants.VIEW_BANK);
+        viewBank.setCategory("Bank Management");
+        viewBank.setDescription("View bank details");
+        template.save(viewBank);
+
+        // Payment Management
+        Authority createPayment = createAuthority(AuthoritiesConstants.CREATE_PAYMENT);
+        createPayment.setCategory("Payment Management");
+        createPayment.setDescription("Create new payments");
+        template.save(createPayment);
+
+        Authority updatePayment = createAuthority(AuthoritiesConstants.UPDATE_PAYMENT);
+        updatePayment.setCategory("Payment Management");
+        updatePayment.setDescription("Modify payment information");
+        template.save(updatePayment);
+
+        Authority deletePayment = createAuthority(AuthoritiesConstants.DELETE_PAYMENT);
+        deletePayment.setCategory("Payment Management");
+        deletePayment.setDescription("Delete payments from the system");
+        template.save(deletePayment);
+
+        Authority viewPayment = createAuthority(AuthoritiesConstants.VIEW_PAYMENT);
+        viewPayment.setCategory("Payment Management");
+        viewPayment.setDescription("View payment details");
+        template.save(viewPayment);
+
+        // Sales Management
+        Authority createSale = createAuthority(AuthoritiesConstants.CREATE_SALE);
+        createSale.setCategory("Sales Management");
+        createSale.setDescription("Create new sales records");
+        template.save(createSale);
+
+        Authority updateSale = createAuthority(AuthoritiesConstants.UPDATE_SALE);
+        updateSale.setCategory("Sales Management");
+        updateSale.setDescription("Modify sales information");
+        template.save(updateSale);
+
+        Authority deleteSale = createAuthority(AuthoritiesConstants.DELETE_SALE);
+        deleteSale.setCategory("Sales Management");
+        deleteSale.setDescription("Delete sales records");
+        template.save(deleteSale);
+
+        Authority viewSale = createAuthority(AuthoritiesConstants.VIEW_SALE);
+        viewSale.setCategory("Sales Management");
+        viewSale.setDescription("View sales details");
+        template.save(viewSale);
+
+        Authority cancelSale = createAuthority(AuthoritiesConstants.CANCEL_SALE);
+        cancelSale.setCategory("Sales Management");
+        cancelSale.setDescription("Cancel sales transactions");
+        template.save(cancelSale);
+
+        Authority printSale = createAuthority(AuthoritiesConstants.PRINT_SALE);
+        printSale.setCategory("Sales Management");
+        printSale.setDescription("Print sales documents");
+        template.save(printSale);
+
+        // Purchase Management
+        Authority createPurchase = createAuthority(AuthoritiesConstants.CREATE_PURCHASE);
+        createPurchase.setCategory("Purchase Management");
+        createPurchase.setDescription("Create new purchase records");
+        template.save(createPurchase);
+
+        Authority updatePurchase = createAuthority(AuthoritiesConstants.UPDATE_PURCHASE);
+        updatePurchase.setCategory("Purchase Management");
+        updatePurchase.setDescription("Modify purchase information");
+        template.save(updatePurchase);
+
+        Authority deletePurchase = createAuthority(AuthoritiesConstants.DELETE_PURCHASE);
+        deletePurchase.setCategory("Purchase Management");
+        deletePurchase.setDescription("Delete purchase records");
+        template.save(deletePurchase);
+
+        Authority viewPurchase = createAuthority(AuthoritiesConstants.VIEW_PURCHASE);
+        viewPurchase.setCategory("Purchase Management");
+        viewPurchase.setDescription("View purchase details");
+        template.save(viewPurchase);
+
+        Authority cancelPurchase = createAuthority(AuthoritiesConstants.CANCEL_PURCHASE);
+        cancelPurchase.setCategory("Purchase Management");
+        cancelPurchase.setDescription("Cancel purchase transactions");
+        template.save(cancelPurchase);
+
+        Authority printPurchase = createAuthority(AuthoritiesConstants.PRINT_PURCHASE);
+        printPurchase.setCategory("Purchase Management");
+        printPurchase.setDescription("Print purchase documents");
+        template.save(printPurchase);
+
+        // Report Management
+        Authority viewReports = createAuthority(AuthoritiesConstants.VIEW_REPORTS);
+        viewReports.setCategory("Report Management");
+        viewReports.setDescription("View system reports");
+        template.save(viewReports);
+
+        Authority generateReport = createAuthority(AuthoritiesConstants.GENERATE_REPORT);
+        generateReport.setCategory("Report Management");
+        generateReport.setDescription("Generate new reports");
+        template.save(generateReport);
+
+        Authority exportReport = createAuthority(AuthoritiesConstants.EXPORT_REPORT);
+        exportReport.setCategory("Report Management");
+        exportReport.setDescription("Export reports to different formats");
+        template.save(exportReport);
+
+        // User Management
+        Authority createUser = createAuthority(AuthoritiesConstants.CREATE_USER);
+        createUser.setCategory("User Management");
+        createUser.setDescription("Create new system users");
+        template.save(createUser);
+
+        Authority updateUser = createAuthority(AuthoritiesConstants.UPDATE_USER);
+        updateUser.setCategory("User Management");
+        updateUser.setDescription("Modify user information");
+        template.save(updateUser);
+
+        Authority deleteUser = createAuthority(AuthoritiesConstants.DELETE_USER);
+        deleteUser.setCategory("User Management");
+        deleteUser.setDescription("Delete users from the system");
+        template.save(deleteUser);
+
+        Authority viewUser = createAuthority(AuthoritiesConstants.VIEW_USER);
+        viewUser.setCategory("User Management");
+        viewUser.setDescription("View user details");
+        template.save(viewUser);
+
+        Authority manageRoles = createAuthority(AuthoritiesConstants.MANAGE_ROLES);
+        manageRoles.setCategory("User Management");
+        manageRoles.setDescription("Manage user roles and permissions");
+        template.save(manageRoles);
+
+        // System Settings
+        Authority viewSettings = createAuthority(AuthoritiesConstants.VIEW_SETTINGS);
+        viewSettings.setCategory("System Settings");
+        viewSettings.setDescription("View system settings");
+        template.save(viewSettings);
+
+        Authority updateSettings = createAuthority(AuthoritiesConstants.UPDATE_SETTINGS);
+        updateSettings.setCategory("System Settings");
+        updateSettings.setDescription("Modify system settings");
+        template.save(updateSettings);
+
+        Authority manageSystemConfig = createAuthority(AuthoritiesConstants.MANAGE_SYSTEM_CONFIG);
+        manageSystemConfig.setCategory("System Settings");
+        manageSystemConfig.setDescription("Manage system configuration");
+        template.save(manageSystemConfig);
     }
 }

@@ -1,60 +1,103 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { LANGUAGES } from 'app/config/language.constants';
-import { IUser } from '../user-management.model';
-import { UserManagementService } from '../service/user-management.service';
-
-const userTemplate = {} as IUser;
-
-const newUser: IUser = {
-  langKey: 'en',
-  activated: true,
-} as IUser;
+import { IUser, User } from '../user-management.model';
+import { UserManagementService, IAuthority } from '../service/user-management.service';
 
 @Component({
   selector: 'jhi-user-mgmt-update',
   templateUrl: './user-management-update.component.html',
+  styleUrls: ['./user-management-update.component.scss'],
 })
 export class UserManagementUpdateComponent implements OnInit {
-  languages = LANGUAGES;
-  authorities: string[] = [];
+  user: IUser | null = null;
+  authorities: IAuthority[] = [];
   isSaving = false;
+  languages = LANGUAGES;
+  private fb!: FormBuilder;
+  editForm!: FormGroup;
+  authorityGroups: { category: string; authorities: IAuthority[] }[] = [];
 
-  editForm = new FormGroup({
-    id: new FormControl(userTemplate.id),
-    login: new FormControl(userTemplate.login, {
-      nonNullable: true,
-      validators: [
-        Validators.required,
-        Validators.minLength(1),
-        Validators.maxLength(50),
-        Validators.pattern('^[a-zA-Z0-9!$&*+=?^_`{|}~.-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$|^[_.@A-Za-z0-9-]+$'),
+  constructor(private userService: UserManagementService, private route: ActivatedRoute, fb: FormBuilder) {
+    this.fb = fb;
+    this.editForm = this.fb.group({
+      id: [null as string | null],
+      login: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(1),
+          Validators.maxLength(50),
+          Validators.pattern('^[a-zA-Z0-9!$&*+=?^_`{|}~.-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$|^[_.@A-Za-z0-9-]+$'),
+        ],
       ],
-    }),
-    firstName: new FormControl(userTemplate.firstName, { validators: [Validators.maxLength(50)] }),
-    lastName: new FormControl(userTemplate.lastName, { validators: [Validators.maxLength(50)] }),
-    email: new FormControl(userTemplate.email, {
-      nonNullable: true,
-      validators: [Validators.minLength(5), Validators.maxLength(254), Validators.email],
-    }),
-    activated: new FormControl(userTemplate.activated, { nonNullable: true }),
-    langKey: new FormControl(userTemplate.langKey, { nonNullable: true }),
-    authorities: new FormControl(userTemplate.authorities, { nonNullable: true }),
-  });
-
-  constructor(private userService: UserManagementService, private route: ActivatedRoute) {}
+      firstName: [null as string | null, [Validators.maxLength(50)]],
+      lastName: [null as string | null, [Validators.maxLength(50)]],
+      email: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(254), Validators.email]],
+      activated: [true],
+      langKey: ['en'],
+      authorities: [[] as string[]],
+    });
+  }
 
   ngOnInit(): void {
     this.route.data.subscribe(({ user }) => {
       if (user) {
-        this.editForm.reset(user);
-      } else {
-        this.editForm.reset(newUser);
+        this.user = new User(
+          user.id,
+          user.login,
+          user.firstName,
+          user.lastName,
+          user.email,
+          user.activated ?? true,
+          user.langKey,
+          user.authorities,
+          user.createdBy,
+          user.createdDate,
+          user.lastModifiedBy,
+          user.lastModifiedDate
+        );
+        this.updateForm(this.user);
       }
     });
-    this.userService.authorities().subscribe(authorities => (this.authorities = authorities));
+
+    this.userService.authorities().subscribe(authorities => {
+      this.authorities = authorities;
+      this.organizeAuthorities(authorities);
+    });
+  }
+
+  private organizeAuthorities(authorities: IAuthority[]): void {
+    // Group authorities by category
+    const groupedByCategory = authorities.reduce((groups: { [key: string]: IAuthority[] }, auth) => {
+      const category = auth.category || 'Other';
+      if (!groups[category]) {
+        groups[category] = [];
+      }
+      groups[category].push(auth);
+      return groups;
+    }, {});
+
+    // Convert to array format
+    this.authorityGroups = Object.entries(groupedByCategory).map(([category, auths]) => ({
+      category,
+      authorities: auths,
+    }));
+  }
+
+  updateForm(user: IUser): void {
+    this.editForm.patchValue({
+      id: user.id,
+      login: user.login,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      activated: user.activated,
+      langKey: user.langKey,
+      authorities: user.authorities,
+    });
   }
 
   previousState(): void {
@@ -63,7 +106,7 @@ export class UserManagementUpdateComponent implements OnInit {
 
   save(): void {
     this.isSaving = true;
-    const user = this.editForm.getRawValue();
+    const user = this.updateUser();
     if (user.id !== null) {
       this.userService.update(user).subscribe({
         next: () => this.onSaveSuccess(),
@@ -77,6 +120,21 @@ export class UserManagementUpdateComponent implements OnInit {
     }
   }
 
+  private updateUser(): IUser {
+    const formValue = this.editForm.value;
+    const user = {
+      id: formValue.id,
+      login: formValue.login,
+      firstName: formValue.firstName,
+      lastName: formValue.lastName,
+      email: formValue.email,
+      activated: formValue.activated,
+      langKey: formValue.langKey,
+      authorities: formValue.authorities,
+    };
+    return user;
+  }
+
   private onSaveSuccess(): void {
     this.isSaving = false;
     this.previousState();
@@ -84,5 +142,19 @@ export class UserManagementUpdateComponent implements OnInit {
 
   private onSaveError(): void {
     this.isSaving = false;
+  }
+
+  updateAuthorities(event: Event): void {
+    const checkbox = event.target as HTMLInputElement;
+    const authority = checkbox.value;
+    const authorities = this.editForm.get('authorities')!.value as string[];
+
+    if (checkbox.checked && !authorities.includes(authority)) {
+      authorities.push(authority);
+    } else if (!checkbox.checked && authorities.includes(authority)) {
+      authorities.splice(authorities.indexOf(authority), 1);
+    }
+
+    this.editForm.patchValue({ authorities });
   }
 }
