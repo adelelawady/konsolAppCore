@@ -344,6 +344,9 @@
         "noProducts": "لا توجد منتجات",
         "noProductsDesc": "قم بإضافة منتج جديد للبدء"
       }
+    },
+    "invoice": {
+      "deferred": "دفع مؤجل"
     }
   },
   "dataTable": {

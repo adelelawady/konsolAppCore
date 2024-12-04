@@ -70,7 +70,7 @@
       "item": "Item",
       "account": "Account",
       "invoiceItems": "Invoice Items",
-      "deferred": "Deferred",
+      "deferred": "Deferred Payment",
       "salesList": "Sales Invoices List",
       "purchaseList": "Purchase Invoices List",
       "actions": {

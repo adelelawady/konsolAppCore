@@ -49,16 +49,19 @@ export class PosInvoiceComponent implements OnInit, AfterViewInit {
   private discountTimeout: any;
   editingItem: { id: string; qty: number; price: number; discount: number } | null = null;
 
+  // Add deferred property
+  isDeferred = false;
+
   constructor(private route: ActivatedRoute, private router: Router, protected invoiceService: InvoiceResourceService) {}
   ngAfterViewInit(): void {
     if (this.isLoadingExistingInvoiceId) {
       // Set bank and store directly from the invoice
-      if (this.currentInvoice.bank) {
+      if (this.currentInvoice && this.currentInvoice.bank) {
         this.selectedBank = this.currentInvoice.bank;
         this.selectedBankId = this.currentInvoice.bank.id;
       }
 
-      if (this.currentInvoice.store) {
+      if (this.currentInvoice && this.currentInvoice.store) {
         this.selectedStore = this.currentInvoice.store;
       }
     }
@@ -87,6 +90,7 @@ export class PosInvoiceComponent implements OnInit, AfterViewInit {
 
         this.additions = invoice.additions;
         this.additionsType = invoice.additionsType;
+        this.isDeferred = invoice.deferred || false;
 
         // Set bank and store with a slight delay to ensure components are ready
         setTimeout(() => {
@@ -221,21 +225,6 @@ export class PosInvoiceComponent implements OnInit, AfterViewInit {
     }
   }
 
-  onAccountChange(accountId: string): void {
-    if (this.currentInvoice?.id) {
-      this.loading = true;
-      this.invoiceService.updateInvoice(this.currentInvoice.id, { accountId }).subscribe({
-        next: result => {
-          this.reloadInvoice();
-        },
-        error: error => {
-          console.error('Error updating account:', error);
-          this.loading = false;
-        },
-      });
-    }
-  }
-
   onDiscountChange(value: number): void {
     // Clear any existing timeout
     if (this.discountTimeout) {
@@ -309,13 +298,18 @@ export class PosInvoiceComponent implements OnInit, AfterViewInit {
     if (this.currentInvoice?.id) {
       this.loading = true;
       this.invoiceService.saveInvoice(this.currentInvoice.id).subscribe({
-        next: result => {
+        next: () => {
           this.loading = false;
+          // Show notification if deferred is true
+          if (this.isDeferred && this.selectedAccountId) {
+            // You can use your notification service here
+            alert('Money has been added to the selected account');
+          }
           this.itemSearchBox.loadInitialItems();
           this.selectedAccountId = null;
           this.initializeNewInvoice();
         },
-        error: error => {
+        error: (error: HttpErrorResponse) => {
           console.error('Error saving invoice:', error);
           this.loading = false;
         },
@@ -464,16 +458,36 @@ export class PosInvoiceComponent implements OnInit, AfterViewInit {
   }
 
   onAccountSelected(account: any): void {
-    if (this.isLoadingExistingInvoiceId) {
-      return;
+    if (!account || !account.id) {
+      if (!this.currentInvoice) {
+        return;
+      }
     }
+
     if (this.currentInvoice) {
       this.invoiceService.updateInvoice(this.currentInvoice.id, { accountId: account.id }).subscribe({
         next: () => {
-          this.reloadInvoice(false);
+          // this.reloadInvoice(false);
         },
         error: (error: any) => {
           console.error('Error updating account:', error);
+          this.loading = false;
+        },
+      });
+    }
+  }
+
+  onDeferredChange(event: any): void {
+    const isDeferred = event.target.checked;
+    if (this.currentInvoice?.id) {
+      this.loading = true;
+      this.invoiceService.updateInvoice(this.currentInvoice.id, { deferred: isDeferred }).subscribe({
+        next: () => {
+          this.isDeferred = isDeferred;
+          this.reloadInvoice(false);
+        },
+        error: error => {
+          console.error('Error updating deferred status:', error);
           this.loading = false;
         },
       });

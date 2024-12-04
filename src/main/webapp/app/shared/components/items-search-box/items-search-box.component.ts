@@ -92,11 +92,8 @@ export class ItemsSearchBoxComponent implements OnInit, OnDestroy {
       next: response => {
         if (response && response.result) {
           this.searchResults = response.result;
-          if (this.showResultsAfterInit) {
-            this.showResults = true;
-          } else {
-            this.showResultsAfterInit = true;
-          }
+
+          this.showResults = true;
         }
         this.isLoading = false;
       },

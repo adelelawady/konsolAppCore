@@ -27,11 +27,18 @@ export class AccountSelectorComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.setupSearch();
+    this.initialLoad();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['selectedAccountId'] && changes['selectedAccountId'].currentValue) {
-      this.loadSelectedAccount(changes['selectedAccountId'].currentValue);
+    console.log('selectedAccountId', changes['selectedAccountId'].currentValue);
+    if (changes['selectedAccountId']) {
+      if (changes['selectedAccountId'].currentValue) {
+        this.loadSelectedAccount(changes['selectedAccountId'].currentValue);
+      } else {
+        // Clear selection if selectedAccountId is null
+        this.clearSelection();
+      }
     }
   }
 
@@ -39,13 +46,18 @@ export class AccountSelectorComponent implements OnInit, OnChanges {
     this.isLoading = true;
     this.accountUserResourceService.getAccountUser(accountId).subscribe({
       next: account => {
-        if (account) {
-          this.selectAccount(account);
+        if (account && account.id) {
+          this.selectedAccount = account;
+          this.showSelectedAccount = true;
+          this.showResults = false;
+        } else {
+          this.clearSelection();
         }
         this.isLoading = false;
       },
       error: error => {
         console.error('Error loading account:', error);
+        this.clearSelection();
         this.isLoading = false;
       },
     });
@@ -63,17 +75,15 @@ export class AccountSelectorComponent implements OnInit, OnChanges {
   }
 
   private performSearch(term: string): void {
-    if (!term || term.length < 2) {
-      this.searchResults = [];
-      return;
-    }
-
     this.isLoading = true;
     const searchModel: AccountUserSearchModel = {
-      name: term,
       page: 0,
       size: 10,
     };
+
+    if (term && term.length > 0) {
+      searchModel.name = term;
+    }
 
     this.accountUserResourceService.searchAccountUsers(searchModel).subscribe({
       next: (response: AccountUserContainer) => {
@@ -86,6 +96,26 @@ export class AccountSelectorComponent implements OnInit, OnChanges {
       error: error => {
         console.error('Error searching accounts:', error);
         this.isLoading = false;
+        this.searchResults = [];
+      },
+    });
+  }
+
+  private initialLoad(): void {
+    const searchModel: AccountUserSearchModel = {
+      page: 0,
+      size: 10,
+    };
+
+    this.accountUserResourceService.searchAccountUsers(searchModel).subscribe({
+      next: (response: AccountUserContainer) => {
+        if (response && response.result) {
+          this.searchResults = response.result;
+          // Don't show results on initial load
+          this.showResults = false;
+        }
+      },
+      error: error => {
         this.searchResults = [];
       },
     });
@@ -114,7 +144,10 @@ export class AccountSelectorComponent implements OnInit, OnChanges {
 
   onSearchFocus(): void {
     if (!this.showSelectedAccount) {
-      this.showResults = true;
+      // Show results only when focused and we have results
+      if (this.searchResults && this.searchResults.length > 0) {
+        this.showResults = true;
+      }
     }
   }
 
@@ -123,6 +156,10 @@ export class AccountSelectorComponent implements OnInit, OnChanges {
     if (!relatedTarget?.closest('.search-results-popup')) {
       setTimeout(() => {
         this.showResults = false;
+        // If no account is selected and search term is empty, emit undefined
+        if (!this.selectedAccount && !this.searchTerm) {
+          this.accountSelected.emit(undefined);
+        }
       }, 200);
     }
   }

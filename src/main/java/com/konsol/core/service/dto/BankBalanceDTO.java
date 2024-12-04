@@ -4,53 +4,91 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
+ *
+ *
+ * التعديلات على BankBalanceDTO
+ * أضف الحقول الجديدة:
+ *
+ * java
+ * Copy code
+ * private Double grossRevenue;   // الإيرادات الإجمالية قبل الخصم
+ * private Double netRevenue;     // الإيرادات الصافية بعد الخصم
+ * private Double totalCost;      // التكلفة الإجمالية للمشتريات
+ * private Double totalDiscounts; // إجمالي الخصومات المقدمة
+ * private Double totalAdditions; // إجمالي الإضافات
+ *
+ * // Getter and Setter methods
+ * شرح القيم المحسوبة
+ * grossRevenue: الإيرادات الإجمالية قبل الخصم.
+ * netRevenue: الإيرادات الصافية بعد الخصم.
+ * totalCost: التكلفة الإجمالية النهائية للمشتريات.
+ * totalSalesProfits: صافي الربح من المبيعات.
+ * totalDiscounts: إجمالي الخصومات المطبقة على المبيعات.
+ * totalAdditions: إجمالي الإضافات مثل الضرائب أو الرسوم.
+ * totalMoneyIn و totalMoneyOut: الأموال الداخلة والخارجة من معاملات الأموال.
+ * totalBalance: الرصيد الإجمالي الحالي (الأموال الداخلة - الأموال الخارجة).
+ *
+ *
  * A DTO for the BankBalance entity.
  */
 public class BankBalanceDTO {
 
+    private Double totalSalesProfits;
+    private Double grossRevenue; // الإيرادات الإجمالية قبل الخصم
+    private Double netRevenue; // الإيرادات الصافية بعد الخصم
+    private Double totalCost; // التكلفة الإجمالية للمشتريات
+    private Double totalDiscounts; // إجمالي الخصومات المقدمة
+    private Double totalAdditions; // إجمالي الإضافات
     private Double totalBalance;
-    private Double invoiceProfits;
-    private Double moneyProfits;
-    private Double totalProfits;
-    private Double totalSales;
-    private Double totalPurchases;
     private Double moneyInFromMoney;
     private Double moneyOutFromMoney;
-    private Double moneyInFromInvoices;
-    private Double moneyOutFromInvoices;
-    private Double totalMoneyIn;
-    private Double totalMoneyOut;
 
-    @Override
-    public String toString() {
-        return (
-            "BankBalanceDTO{" +
-            "totalBalance=" +
-            totalBalance +
-            ", invoiceProfits=" +
-            invoiceProfits +
-            ", moneyProfits=" +
-            moneyProfits +
-            ", totalProfits=" +
-            totalProfits +
-            ", totalSales=" +
-            totalSales +
-            ", totalPurchases=" +
-            totalPurchases +
-            ", moneyInFromMoney=" +
-            moneyInFromMoney +
-            ", moneyOutFromMoney=" +
-            moneyOutFromMoney +
-            ", moneyInFromInvoices=" +
-            moneyInFromInvoices +
-            ", moneyOutFromInvoices=" +
-            moneyOutFromInvoices +
-            ", totalMoneyIn=" +
-            totalMoneyIn +
-            ", totalMoneyOut=" +
-            totalMoneyOut +
-            '}'
-        );
+    public Double getGrossRevenue() {
+        return grossRevenue;
+    }
+
+    public void setGrossRevenue(Double grossRevenue) {
+        this.grossRevenue = grossRevenue;
+    }
+
+    public Double getNetRevenue() {
+        return netRevenue;
+    }
+
+    public void setNetRevenue(Double netRevenue) {
+        this.netRevenue = netRevenue;
+    }
+
+    public Double getTotalCost() {
+        return totalCost;
+    }
+
+    public void setTotalCost(Double totalCost) {
+        this.totalCost = totalCost;
+    }
+
+    public Double getTotalDiscounts() {
+        return totalDiscounts;
+    }
+
+    public void setTotalDiscounts(Double totalDiscounts) {
+        this.totalDiscounts = totalDiscounts;
+    }
+
+    public Double getTotalAdditions() {
+        return totalAdditions;
+    }
+
+    public void setTotalAdditions(Double totalAdditions) {
+        this.totalAdditions = totalAdditions;
+    }
+
+    public Double getTotalSalesProfits() {
+        return totalSalesProfits;
+    }
+
+    public void setTotalSalesProfits(Double totalSalesProfits) {
+        this.totalSalesProfits = totalSalesProfits;
     }
 
     public Double getTotalBalance() {
@@ -59,46 +97,6 @@ public class BankBalanceDTO {
 
     public void setTotalBalance(Double totalBalance) {
         this.totalBalance = totalBalance;
-    }
-
-    public Double getInvoiceProfits() {
-        return invoiceProfits;
-    }
-
-    public void setInvoiceProfits(Double invoiceProfits) {
-        this.invoiceProfits = invoiceProfits;
-    }
-
-    public Double getMoneyProfits() {
-        return moneyProfits;
-    }
-
-    public void setMoneyProfits(Double moneyProfits) {
-        this.moneyProfits = moneyProfits;
-    }
-
-    public Double getTotalProfits() {
-        return totalProfits;
-    }
-
-    public void setTotalProfits(Double totalProfits) {
-        this.totalProfits = totalProfits;
-    }
-
-    public Double getTotalSales() {
-        return totalSales;
-    }
-
-    public void setTotalSales(Double totalSales) {
-        this.totalSales = totalSales;
-    }
-
-    public Double getTotalPurchases() {
-        return totalPurchases;
-    }
-
-    public void setTotalPurchases(Double totalPurchases) {
-        this.totalPurchases = totalPurchases;
     }
 
     public Double getMoneyInFromMoney() {
@@ -117,35 +115,29 @@ public class BankBalanceDTO {
         this.moneyOutFromMoney = moneyOutFromMoney;
     }
 
-    public Double getMoneyInFromInvoices() {
-        return moneyInFromInvoices;
-    }
-
-    public void setMoneyInFromInvoices(Double moneyInFromInvoices) {
-        this.moneyInFromInvoices = moneyInFromInvoices;
-    }
-
-    public Double getMoneyOutFromInvoices() {
-        return moneyOutFromInvoices;
-    }
-
-    public void setMoneyOutFromInvoices(Double moneyOutFromInvoices) {
-        this.moneyOutFromInvoices = moneyOutFromInvoices;
-    }
-
-    public Double getTotalMoneyIn() {
-        return totalMoneyIn;
-    }
-
-    public void setTotalMoneyIn(Double totalMoneyIn) {
-        this.totalMoneyIn = totalMoneyIn;
-    }
-
-    public Double getTotalMoneyOut() {
-        return totalMoneyOut;
-    }
-
-    public void setTotalMoneyOut(Double totalMoneyOut) {
-        this.totalMoneyOut = totalMoneyOut;
+    @Override
+    public String toString() {
+        return (
+            "BankBalanceDTO{" +
+            "totalSalesProfits=" +
+            totalSalesProfits +
+            ", grossRevenue=" +
+            grossRevenue +
+            ", netRevenue=" +
+            netRevenue +
+            ", totalCost=" +
+            totalCost +
+            ", totalDiscounts=" +
+            totalDiscounts +
+            ", totalAdditions=" +
+            totalAdditions +
+            ", totalBalance=" +
+            totalBalance +
+            ", moneyInFromMoney=" +
+            moneyInFromMoney +
+            ", moneyOutFromMoney=" +
+            moneyOutFromMoney +
+            '}'
+        );
     }
 }

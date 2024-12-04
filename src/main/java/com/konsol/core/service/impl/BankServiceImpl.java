@@ -220,118 +220,147 @@ public class BankServiceImpl implements BankService {
         }
     }
 
+    @Override
     public BankBalanceDTO calculateBankBalance(String bankId) {
         if (bankId == null || bankId.trim().isEmpty()) {
             throw new IllegalArgumentException("Bank ID cannot be null or empty");
         }
 
         try {
-            // Create the aggregation pipeline
-            List<Document> pipeline = Arrays.asList(
-                // Match invoices for the given bank
-                new Document("$match", new Document("bank.$id", new ObjectId(bankId))),
-                // Project necessary fields with correct conditional logic and type conversions
-                new Document(
-                    "$project",
-                    new Document(
-                        "salesNetPrice",
+            // Aggregation for invoices
+            List<Document> invoicePipeline =
+                (
+                    Arrays.asList(
+                        new Document("$match", new Document("bank.$id", new ObjectId(bankId))),
                         new Document(
-                            "$cond",
-                            new Document("if", new Document("$eq", Arrays.asList("$kind", "SALE")))
-                                .append("then", new Document("$toDouble", "$net_price"))
-                                .append("else", 0L)
+                            "$project",
+                            new Document(
+                                "salesTotalPrice",
+                                new Document(
+                                    "$cond",
+                                    new Document("if", new Document("$eq", Arrays.asList("$kind", "SALE")))
+                                        .append("then", new Document("$toDouble", "$total_price"))
+                                        .append("else", 0L)
+                                )
+                            )
+                                .append(
+                                    "salesNetPrice",
+                                    new Document(
+                                        "$cond",
+                                        new Document("if", new Document("$eq", Arrays.asList("$kind", "SALE")))
+                                            .append("then", new Document("$toDouble", "$net_price"))
+                                            .append("else", 0L)
+                                    )
+                                )
+                                .append(
+                                    "purchaseTotalCost",
+                                    new Document(
+                                        "$cond",
+                                        new Document("if", new Document("$eq", Arrays.asList("$kind", "PURCHASE")))
+                                            .append("then", new Document("$toDouble", "$total_cost"))
+                                            .append("else", 0L)
+                                    )
+                                )
+                                .append(
+                                    "purchaseNetCost",
+                                    new Document(
+                                        "$cond",
+                                        new Document("if", new Document("$eq", Arrays.asList("$kind", "PURCHASE")))
+                                            .append("then", new Document("$toDouble", "$net_cost"))
+                                            .append("else", 0L)
+                                    )
+                                )
+                                .append(
+                                    "discount",
+                                    new Document(
+                                        "$subtract",
+                                        Arrays.asList(new Document("$toDouble", "$total_price"), new Document("$toDouble", "$net_price"))
+                                    )
+                                )
+                                .append("additions", new Document("$toDouble", "$additions"))
+                        ),
+                        new Document(
+                            "$group",
+                            new Document("_id", new BsonNull())
+                                .append("totalSalesTotalPrice", new Document("$sum", "$salesTotalPrice"))
+                                .append("totalSalesNetPrice", new Document("$sum", "$salesNetPrice"))
+                                .append("totalPurchasesTotalCost", new Document("$sum", "$purchaseTotalCost"))
+                                .append("totalPurchasesNetCost", new Document("$sum", "$purchaseNetCost"))
+                                .append("totalDiscounts", new Document("$sum", "$discount"))
+                                .append("totalAdditions", new Document("$sum", "$additions"))
+                        ),
+                        new Document(
+                            "$project",
+                            new Document(
+                                "totalSalesProfits",
+                                new Document("$subtract", Arrays.asList("$totalSalesNetPrice", "$totalPurchasesNetCost"))
+                            )
+                                .append("totalDiscounts", 1L)
+                                .append("totalAdditions", 1L)
+                                .append("grossRevenue", "$totalSalesTotalPrice")
+                                .append("netRevenue", "$totalSalesNetPrice")
+                                .append("totalCost", "$totalPurchasesNetCost")
                         )
                     )
-                        .append(
-                            "salesNetCost",
-                            new Document(
-                                "$cond",
-                                new Document("if", new Document("$eq", Arrays.asList("$kind", "SALE")))
-                                    .append("then", new Document("$toDouble", "$net_cost"))
-                                    .append("else", 0L)
-                            )
-                        )
-                        .append(
-                            "purchaseNetPrice",
-                            new Document(
-                                "$cond",
-                                new Document("if", new Document("$eq", Arrays.asList("$kind", "PURCHASE")))
-                                    .append("then", new Document("$toDouble", "$net_price"))
-                                    .append("else", 0L)
-                            )
-                        )
-                        .append(
-                            "purchaseNetCost",
-                            new Document(
-                                "$cond",
-                                new Document("if", new Document("$eq", Arrays.asList("$kind", "PURCHASE")))
-                                    .append("then", new Document("$toDouble", "$net_cost"))
-                                    .append("else", 0L)
-                            )
-                        )
-                ),
-                // Group stage to calculate totals
+                );
+
+            // Execute invoice aggregation
+            MongoCollection<Document> invoiceCollection = mongoTemplate.getCollection("invoices");
+            AggregateIterable<Document> invoiceResult = invoiceCollection.aggregate(invoicePipeline);
+            Document invoiceAggregation = invoiceResult.first();
+
+            if (invoiceAggregation == null) {
+                log.warn("No invoice data found for bank ID: {}", bankId);
+                return new BankBalanceDTO(); // Return empty DTO if no result
+            }
+
+            // Aggregation for monies
+            List<Document> moneyPipeline = Arrays.asList(
+                new Document("$match", new Document("bank.$id", new ObjectId(bankId))),
                 new Document(
                     "$group",
                     new Document("_id", new BsonNull())
-                        .append("totalNetSales", new Document("$sum", "$salesNetPrice"))
-                        .append("totalNetCostSales", new Document("$sum", "$salesNetCost"))
-                        .append("totalNetPurchases", new Document("$sum", "$purchaseNetPrice"))
-                        .append("totalNetCostPurchases", new Document("$sum", "$purchaseNetCost"))
-                ),
-                // Final projection stage to perform calculations
-                new Document(
-                    "$project",
-                    new Document("totalNetSales", 1L)
-                        .append("totalNetCostSales", 1L)
-                        .append("totalNetPurchases", 1L)
-                        .append("totalNetCostPurchases", 1L)
-                        .append("totalSalesProfits", new Document("$subtract", Arrays.asList("$totalNetSales", "$totalNetCostSales")))
-                        .append(
-                            "totalPurchasesCost",
-                            new Document("$subtract", Arrays.asList("$totalNetPurchases", "$totalNetCostPurchases"))
-                        )
-                        .append("totalInflow", "$totalNetSales")
-                        .append("totalOutflow", "$totalNetCostPurchases")
-                        .append("overallBalance", new Document("$subtract", Arrays.asList("$totalNetSales", "$totalNetCostPurchases")))
+                        .append("totalMoneyIn", new Document("$sum", new Document("$toDouble", "$money_in")))
+                        .append("totalMoneyOut", new Document("$sum", new Document("$toDouble", "$money_out")))
                 )
             );
 
-            // Execute the aggregation query
-            MongoCollection<Document> collection = mongoTemplate.getCollection("invoices");
-            AggregateIterable<Document> result = collection.aggregate(pipeline);
+            //   Execute money aggregation
+            MongoCollection<Document> moneyCollection = mongoTemplate.getCollection("monies");
+            AggregateIterable<Document> moneyResult = moneyCollection.aggregate(moneyPipeline);
+            Document moneyAggregation = moneyResult.first();
 
-            // Retrieve the result and map it to a DTO
-            Document aggregationResult = result.first(); // Assuming only one result document
-
-            if (aggregationResult == null) {
-                log.warn("No results found for bank ID: {}", bankId);
-                return new BankBalanceDTO(); // Return an empty DTO if no result found
-            }
-
-            // Map the result to BankBalanceDTO
+            log.info("Aggregation Result: {}", invoiceAggregation);
+            log.info("Money Aggregation Result: {}", moneyAggregation);
+            // Map results to BankBalanceDTO
             BankBalanceDTO bankBalance = new BankBalanceDTO();
 
-            // Extract and set values into the DTO, ensuring safe mapping
-            bankBalance.setTotalSales(safeGetDouble(aggregationResult, "totalNetSales"));
-            bankBalance.setTotalPurchases(safeGetDouble(aggregationResult, "totalNetPurchases"));
-            bankBalance.setMoneyInFromInvoices(safeGetDouble(aggregationResult, "totalNetSales"));
-            bankBalance.setMoneyOutFromInvoices(safeGetDouble(aggregationResult, "totalNetCostPurchases"));
-            bankBalance.setInvoiceProfits(safeGetDouble(aggregationResult, "totalSalesProfits"));
-            bankBalance.setTotalMoneyIn(safeGetDouble(aggregationResult, "totalNetSales"));
-            bankBalance.setTotalMoneyOut(safeGetDouble(aggregationResult, "totalNetCostPurchases"));
+            // Set invoice-related values
+            bankBalance.setGrossRevenue(safeGetDouble(invoiceAggregation, "grossRevenue"));
+            bankBalance.setNetRevenue(safeGetDouble(invoiceAggregation, "netRevenue"));
+            bankBalance.setTotalCost(safeGetDouble(invoiceAggregation, "totalCost"));
+            bankBalance.setTotalSalesProfits(safeGetDouble(invoiceAggregation, "totalSalesProfits"));
+            bankBalance.setTotalDiscounts(safeGetDouble(invoiceAggregation, "totalDiscounts"));
+            bankBalance.setTotalAdditions(safeGetDouble(invoiceAggregation, "totalAdditions"));
+
+            // Set money-related values
+            bankBalance.setMoneyInFromMoney(safeGetDouble(moneyAggregation, "totalMoneyIn"));
+            bankBalance.setMoneyOutFromMoney(safeGetDouble(moneyAggregation, "totalMoneyOut"));
 
             // Calculate derived fields
-            double totalBalance = bankBalance.getTotalMoneyIn() - bankBalance.getTotalMoneyOut();
+            double totalMoneyIn = bankBalance.getMoneyInFromMoney();
+            double totalMoneyOut = bankBalance.getMoneyOutFromMoney();
+            // double totalBalance = totalMoneyIn - totalMoneyOut;
+
+            double totalBalance =
+                (totalMoneyIn - totalMoneyOut) +
+                bankBalance.getTotalSalesProfits() +
+                bankBalance.getTotalAdditions() -
+                bankBalance.getTotalDiscounts();
+
             bankBalance.setTotalBalance(totalBalance);
 
-            double totalProfits = bankBalance.getInvoiceProfits();
-            bankBalance.setTotalProfits(totalProfits);
-
-            double moneyProfits = totalBalance; // Adjust based on your specific logic
-            bankBalance.setMoneyProfits(moneyProfits);
-
-            // Log the result for debugging purposes
+            // Log the results
             log.info("Bank Balance DTO: {}", bankBalance);
 
             return bankBalance;
@@ -368,3 +397,31 @@ public class BankServiceImpl implements BankService {
         return 0.0;
     }
 }
+/*
+
+
+أمثلة لسيناريوهات الحسابات
+1. حساب بسيط يعتمد على الأموال فقط
+إذا كانت الخزينة تعتمد فقط على الإيداعات والسحوبات:
+makefile
+Copy code
+totalBalance = totalMoneyIn - totalMoneyOut
+2. حساب يشمل الفواتير
+إذا كانت الفواتير (المبيعات والمشتريات) تؤثر على الخزينة:
+scss
+Copy code
+totalBalance = (totalMoneyIn - totalMoneyOut) + (netRevenue - totalCost)
+3. حساب يشمل الإضافات والخصومات
+إذا كانت هناك خصومات أو إضافات تؤثر على الإيرادات:
+scss
+Copy code
+totalBalance = (totalMoneyIn - totalMoneyOut) + (netRevenue - totalCost) + totalAdditions - totalDiscounts
+4. حساب يشمل الأرباح والمصادر الأخرى
+إذا كنت تريد حساب كل العوامل التي تؤثر على الخزينة:
+makefile
+Copy code
+totalBalance = (totalMoneyIn - totalMoneyOut) + totalSalesProfits + totalAdditions - totalDiscounts
+
+
+
+ */

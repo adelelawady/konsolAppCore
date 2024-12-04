@@ -82,10 +82,24 @@
                 </div>
               </div>
               <div class="col-md-12">
-                <jhi-account-selector
-                  [selectedAccountId]="selectedAccountId"
-                  (accountSelected)="onAccountSelected($event)"
-                ></jhi-account-selector>
+                <div class="d-flex align-items-center gap-3">
+                  <div class="flex-grow-1">
+                    <jhi-account-selector
+                      [selectedAccountId]="selectedAccountId"
+                      (accountSelected)="onAccountSelected($event)"
+                    ></jhi-account-selector>
+                  </div>
+                  <div class="form-check mb-0">
+                    <input
+                      type="checkbox"
+                      class="form-check-input"
+                      id="deferredCheckbox"
+                      [checked]="isDeferred"
+                      (change)="onDeferredChange($event)"
+                    />
+                    <label class="form-check-label" for="deferredCheckbox" jhiTranslate="global.invoice.deferred"> Deferred Payment </label>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
