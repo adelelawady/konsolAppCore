@@ -50,7 +50,6 @@ public class UserJWTController implements AuthenticateApiDelegate {
     }
 
     @Override
-    //@PostMapping("/authenticate")
     public ResponseEntity<com.konsol.core.service.api.dto.JWTToken> authorize(
         @Valid @RequestBody com.konsol.core.service.api.dto.LoginVM loginVM
     ) {

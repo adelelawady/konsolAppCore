@@ -1,4 +1,4 @@
-package com.konsol.core.service;
+package com.konsol.core.service.error;
 
 public class UsernameAlreadyUsedException extends RuntimeException {
 

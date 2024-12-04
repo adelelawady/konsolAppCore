@@ -1,5 +1,6 @@
 package com.konsol.core.web.rest.errors;
 
+import com.konsol.core.service.error.UsernameAlreadyUsedException;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
@@ -117,7 +118,7 @@ public class ExceptionTranslator implements ProblemHandling, SecurityAdviceTrait
 
     @ExceptionHandler
     public ResponseEntity<Problem> handleEmailAlreadyUsedException(
-        com.konsol.core.service.EmailAlreadyUsedException ex,
+        com.konsol.core.service.error.EmailAlreadyUsedException ex,
         NativeWebRequest request
     ) {
         EmailAlreadyUsedException problem = new EmailAlreadyUsedException();
@@ -129,10 +130,7 @@ public class ExceptionTranslator implements ProblemHandling, SecurityAdviceTrait
     }
 
     @ExceptionHandler
-    public ResponseEntity<Problem> handleUsernameAlreadyUsedException(
-        com.konsol.core.service.UsernameAlreadyUsedException ex,
-        NativeWebRequest request
-    ) {
+    public ResponseEntity<Problem> handleUsernameAlreadyUsedException(UsernameAlreadyUsedException ex, NativeWebRequest request) {
         LoginAlreadyUsedException problem = new LoginAlreadyUsedException();
         return create(
             problem,
@@ -143,7 +141,7 @@ public class ExceptionTranslator implements ProblemHandling, SecurityAdviceTrait
 
     @ExceptionHandler
     public ResponseEntity<Problem> handleInvalidPasswordException(
-        com.konsol.core.service.InvalidPasswordException ex,
+        com.konsol.core.service.error.InvalidPasswordException ex,
         NativeWebRequest request
     ) {
         return create(new InvalidPasswordException(), request);

@@ -77,7 +77,6 @@ public class ActivateResource implements ActivateApiDelegate {
      * @throws RuntimeException {@code 500 (Internal Server Error)} if the user couldn't be activated.
      */
     @Override
-    //@GetMapping("/activate")
     public ResponseEntity<Void> activateAccount(@RequestParam(value = "key") String key) {
         Optional<User> user = userService.activateRegistration(key);
         if (!user.isPresent()) {

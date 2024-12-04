@@ -2,6 +2,7 @@ package com.konsol.core.web.rest;
 
 import com.konsol.core.domain.User;
 import com.konsol.core.repository.UserRepository;
+import com.konsol.core.security.AuthoritiesConstants;
 import com.konsol.core.security.SecurityUtils;
 import com.konsol.core.service.MailService;
 import com.konsol.core.service.UserService;
@@ -18,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
@@ -68,7 +70,6 @@ public class AccountResource implements AccountApiDelegate {
      * @throws RuntimeException {@code 500 (Internal Server Error)} if the user couldn't be returned.
      */
     @Override
-    //@GetMapping("/account")
     public ResponseEntity<com.konsol.core.service.api.dto.AdminUserDTO> getAccount() {
         return ResponseEntity.ok(
             userService
@@ -85,8 +86,10 @@ public class AccountResource implements AccountApiDelegate {
      * @throws EmailAlreadyUsedException {@code 400 (Bad Request)} if the email is already used.
      * @throws RuntimeException {@code 500 (Internal Server Error)} if the user login wasn't found.
      */
-    //@PostMapping("/account")
     @Override
+    @PreAuthorize(
+        "hasAuthority(\"" + AuthoritiesConstants.USER + "||" + AuthoritiesConstants.ADMIN + "||" + AuthoritiesConstants.SUPER_ADMIN + "\")"
+    )
     public ResponseEntity<Void> saveAccount(@Valid @RequestBody AdminUserDTO userDTO) {
         String userLogin = SecurityUtils
             .getCurrentUserLogin()
@@ -115,8 +118,10 @@ public class AccountResource implements AccountApiDelegate {
      * @param passwordChangeDto current and new password.
      * @throws InvalidPasswordException {@code 400 (Bad Request)} if the new password is incorrect.
      */
-    //@PostMapping(path = "/account/change-password")
     @Override
+    @PreAuthorize(
+        "hasAuthority(\"" + AuthoritiesConstants.USER + "||" + AuthoritiesConstants.ADMIN + "||" + AuthoritiesConstants.SUPER_ADMIN + "\")"
+    )
     public ResponseEntity<Void> changePassword(@RequestBody PasswordChangeDTO passwordChangeDto) {
         if (isPasswordLengthInvalid(passwordChangeDto.getNewPassword())) {
             throw new InvalidPasswordException();
@@ -130,8 +135,6 @@ public class AccountResource implements AccountApiDelegate {
      *
      * @param mail the mail of the user.
      */
-    // @PostMapping(path = "/account/reset-password/init")
-
     @Override
     public ResponseEntity<Void> requestPasswordReset(@RequestBody String mail) {
         Optional<User> user = userService.requestPasswordReset(mail);
@@ -152,7 +155,6 @@ public class AccountResource implements AccountApiDelegate {
      * @throws InvalidPasswordException {@code 400 (Bad Request)} if the password is incorrect.
      * @throws RuntimeException {@code 500 (Internal Server Error)} if the password could not be reset.
      */
-    //@PostMapping(path = "/account/reset-password/finish")
     @Override
     public ResponseEntity<Void> finishPasswordReset(@RequestBody com.konsol.core.service.api.dto.KeyAndPasswordVM keyAndPassword) {
         if (isPasswordLengthInvalid(keyAndPassword.getNewPassword())) {
