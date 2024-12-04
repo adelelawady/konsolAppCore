@@ -1,6 +1,7 @@
 package com.konsol.core.web.rest.api;
 
 import com.konsol.core.repository.BankRepository;
+import com.konsol.core.security.AuthoritiesConstants;
 import com.konsol.core.service.BankService;
 import com.konsol.core.service.api.dto.BankDTO;
 import com.konsol.core.web.api.BanksApiDelegate;
@@ -21,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -59,6 +61,15 @@ public class BankResource implements BanksApiDelegate {
      */
     //@PostMapping("/banks")
     @Override
+    @PreAuthorize(
+        "hasAnyAuthority('" +
+        AuthoritiesConstants.CREATE_BANK +
+        "') || hasAnyAuthority('" +
+        AuthoritiesConstants.ADMIN +
+        "','" +
+        AuthoritiesConstants.SUPER_ADMIN +
+        "')"
+    )
     public ResponseEntity<BankDTO> createBank(@Valid @RequestBody BankDTO bankDTO) {
         log.debug("REST request to save Bank : {}", bankDTO);
         if (bankDTO.getId() != null) {
@@ -87,6 +98,15 @@ public class BankResource implements BanksApiDelegate {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @Override
+    @PreAuthorize(
+        "hasAnyAuthority('" +
+        AuthoritiesConstants.UPDATE_BANK +
+        "') || hasAnyAuthority('" +
+        AuthoritiesConstants.ADMIN +
+        "','" +
+        AuthoritiesConstants.SUPER_ADMIN +
+        "')"
+    )
     public ResponseEntity<BankDTO> updateBank(
         @PathVariable(value = "id", required = false) final String id,
         @NotNull @RequestBody BankDTO bankDTO
@@ -114,6 +134,15 @@ public class BankResource implements BanksApiDelegate {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of banks in body.
      */
     @Override
+    @PreAuthorize(
+        "hasAnyAuthority('" +
+        AuthoritiesConstants.VIEW_BANK +
+        "') || hasAnyAuthority('" +
+        AuthoritiesConstants.ADMIN +
+        "','" +
+        AuthoritiesConstants.SUPER_ADMIN +
+        "')"
+    )
     public ResponseEntity<List<BankDTO>> getAllBanks(Integer page, Integer size, List<String> sort) {
         log.debug("REST request to get a page of Banks");
         Pageable pageable = PageRequest.of(page, size);
@@ -129,6 +158,15 @@ public class BankResource implements BanksApiDelegate {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the bankDTO, or with status {@code 404 (Not Found)}.
      */
     @Override
+    @PreAuthorize(
+        "hasAnyAuthority('" +
+        AuthoritiesConstants.VIEW_BANK +
+        "') || hasAnyAuthority('" +
+        AuthoritiesConstants.ADMIN +
+        "','" +
+        AuthoritiesConstants.SUPER_ADMIN +
+        "')"
+    )
     public ResponseEntity<BankDTO> getBank(@PathVariable String id) {
         log.debug("REST request to get Bank : {}", id);
         Optional<BankDTO> bankDTO = bankService.findOne(id);
@@ -142,6 +180,15 @@ public class BankResource implements BanksApiDelegate {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @Override
+    @PreAuthorize(
+        "hasAnyAuthority('" +
+        AuthoritiesConstants.DELETE_BANK +
+        "') || hasAnyAuthority('" +
+        AuthoritiesConstants.ADMIN +
+        "','" +
+        AuthoritiesConstants.SUPER_ADMIN +
+        "')"
+    )
     public ResponseEntity<Void> deleteBank(@PathVariable String id) {
         log.debug("REST request to delete Bank : {}", id);
         bankService.delete(id);

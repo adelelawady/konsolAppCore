@@ -1,6 +1,7 @@
 package com.konsol.core.web.rest.api;
 
 import com.konsol.core.repository.AccountUserRepository;
+import com.konsol.core.security.AuthoritiesConstants;
 import com.konsol.core.service.AccountUserService;
 import com.konsol.core.service.api.dto.AccountUserContainer;
 import com.konsol.core.service.api.dto.AccountUserDTO;
@@ -24,6 +25,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -60,6 +62,15 @@ public class AccountUserResource implements AccountUserApiDelegate {
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new accountUserDTO, or with status {@code 400 (Bad Request)} if the accountUser has already an ID.
      */
     @Override
+    @PreAuthorize(
+        "hasAnyAuthority('" +
+        AuthoritiesConstants.CREATE_ACCOUNT +
+        "') || hasAnyAuthority('" +
+        AuthoritiesConstants.ADMIN +
+        "','" +
+        AuthoritiesConstants.SUPER_ADMIN +
+        "')"
+    )
     public ResponseEntity<AccountUserDTO> createAccountUser(@Valid @RequestBody CreateAccountUserDTO createAccountUserDTO) {
         log.debug("REST request to save AccountUser : {}", createAccountUserDTO);
 
@@ -85,6 +96,15 @@ public class AccountUserResource implements AccountUserApiDelegate {
      * or with status {@code 500 (Internal Server Error)} if the accountUserDTO couldn't be updated.
      */
     @Override
+    @PreAuthorize(
+        "hasAnyAuthority('" +
+        AuthoritiesConstants.UPDATE_ACCOUNT +
+        "') || hasAnyAuthority('" +
+        AuthoritiesConstants.ADMIN +
+        "','" +
+        AuthoritiesConstants.SUPER_ADMIN +
+        "')"
+    )
     public ResponseEntity<AccountUserDTO> updateAccountUser(
         @PathVariable(value = "id", required = false) final String id,
         @NotNull @RequestBody AccountUserDTO accountUserDTO
@@ -115,6 +135,15 @@ public class AccountUserResource implements AccountUserApiDelegate {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of accountUsers in body.
      */
     @Override
+    @PreAuthorize(
+        "hasAnyAuthority('" +
+        AuthoritiesConstants.VIEW_ACCOUNT +
+        "') || hasAnyAuthority('" +
+        AuthoritiesConstants.ADMIN +
+        "','" +
+        AuthoritiesConstants.SUPER_ADMIN +
+        "')"
+    )
     public ResponseEntity<List<AccountUserDTO>> getAllAccountUsers(Integer page, Integer size, List<String> sort) {
         Pageable pageable = PageRequest.of(page, size);
 
@@ -132,6 +161,15 @@ public class AccountUserResource implements AccountUserApiDelegate {
      */
 
     @Override
+    @PreAuthorize(
+        "hasAnyAuthority('" +
+        AuthoritiesConstants.VIEW_USER +
+        "') || hasAnyAuthority('" +
+        AuthoritiesConstants.ADMIN +
+        "','" +
+        AuthoritiesConstants.SUPER_ADMIN +
+        "')"
+    )
     public ResponseEntity<AccountUserDTO> getAccountUser(@PathVariable String id) {
         log.debug("REST request to get AccountUser : {}", id);
         Optional<AccountUserDTO> accountUserDTO = accountUserService.findOne(id);
@@ -145,6 +183,15 @@ public class AccountUserResource implements AccountUserApiDelegate {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @Override
+    @PreAuthorize(
+        "hasAnyAuthority('" +
+        AuthoritiesConstants.DELETE_ACCOUNT +
+        "') || hasAnyAuthority('" +
+        AuthoritiesConstants.ADMIN +
+        "','" +
+        AuthoritiesConstants.SUPER_ADMIN +
+        "')"
+    )
     public ResponseEntity<Void> deleteAccountUser(@PathVariable String id) {
         log.debug("REST request to delete AccountUser : {}", id);
         accountUserService.delete(id);
@@ -152,6 +199,15 @@ public class AccountUserResource implements AccountUserApiDelegate {
     }
 
     @Override
+    @PreAuthorize(
+        "hasAnyAuthority('" +
+        AuthoritiesConstants.VIEW_ACCOUNT +
+        "') || hasAnyAuthority('" +
+        AuthoritiesConstants.ADMIN +
+        "','" +
+        AuthoritiesConstants.SUPER_ADMIN +
+        "')"
+    )
     public ResponseEntity<AccountUserContainer> searchAccountUsers(AccountUserSearchModel accountUserSearchModel) {
         return ResponseEntity.ok().body(accountUserService.accountUserSearchPaginate(accountUserSearchModel));
     }

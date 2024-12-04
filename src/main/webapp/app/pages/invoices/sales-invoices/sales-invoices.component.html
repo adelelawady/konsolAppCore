@@ -19,7 +19,7 @@
     </div>
   </div>
   <div class="card-body p-0">
-    <div class="table-responsive">
+    <div class="table-responsive m-3">
       <app-data-table
         [data]="invoices"
         [columns]="columns"
@@ -35,7 +35,7 @@
         (pageSizeChange)="onPageSizeChange($event)"
         (search)="onSearch($event)"
         (rowClick)="onItemClick($event)"
-        [emptyMessage]="'invoices.messages.noData' | translate"
+        [emptyMessage]="'konsolCoreApp.invoice.messages.noData' | translate"
       >
         <ng-template #actionTemplate let-row="row">
           <div class="d-flex align-items-center gap-2">

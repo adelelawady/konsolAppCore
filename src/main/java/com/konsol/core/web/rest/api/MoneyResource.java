@@ -1,6 +1,7 @@
 package com.konsol.core.web.rest.api;
 
 import com.konsol.core.repository.MoneyRepository;
+import com.konsol.core.security.AuthoritiesConstants;
 import com.konsol.core.service.MoneyService;
 import com.konsol.core.service.api.dto.CreateMoneyDTO;
 import com.konsol.core.service.api.dto.MoneyDTO;
@@ -24,6 +25,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -64,6 +66,15 @@ public class MoneyResource implements MoniesApiDelegate {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @Override
+    @PreAuthorize(
+        "hasAnyAuthority('" +
+        AuthoritiesConstants.CREATE_PAYMENT +
+        "') || hasAnyAuthority('" +
+        AuthoritiesConstants.ADMIN +
+        "','" +
+        AuthoritiesConstants.SUPER_ADMIN +
+        "')"
+    )
     public ResponseEntity<MoneyDTO> createMoney(@Valid @RequestBody CreateMoneyDTO createMoneyDTO) {
         log.debug("REST request to save Money : {}", createMoneyDTO);
 
@@ -90,6 +101,15 @@ public class MoneyResource implements MoniesApiDelegate {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @Override
+    @PreAuthorize(
+        "hasAnyAuthority('" +
+        AuthoritiesConstants.UPDATE_PAYMENT +
+        "') || hasAnyAuthority('" +
+        AuthoritiesConstants.ADMIN +
+        "','" +
+        AuthoritiesConstants.SUPER_ADMIN +
+        "')"
+    )
     public ResponseEntity<MoneyDTO> updateMoney(
         @PathVariable(value = "id", required = false) final String id,
         @NotNull @RequestBody MoneyDTO moneyDTO
@@ -121,6 +141,15 @@ public class MoneyResource implements MoniesApiDelegate {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of monies in body.
      */
     @Override
+    @PreAuthorize(
+        "hasAnyAuthority('" +
+        AuthoritiesConstants.VIEW_PAYMENT +
+        "') || hasAnyAuthority('" +
+        AuthoritiesConstants.ADMIN +
+        "','" +
+        AuthoritiesConstants.SUPER_ADMIN +
+        "')"
+    )
     public ResponseEntity<List<MoneyDTO>> getAllMonies(Integer page, Integer size, List<String> sort) {
         log.debug("REST request to get a page of Monies");
         Pageable pageable = PageRequest.of(page, size);
@@ -136,6 +165,15 @@ public class MoneyResource implements MoniesApiDelegate {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the moneyDTO, or with status {@code 404 (Not Found)}.
      */
     @Override
+    @PreAuthorize(
+        "hasAnyAuthority('" +
+        AuthoritiesConstants.VIEW_PAYMENT +
+        "') || hasAnyAuthority('" +
+        AuthoritiesConstants.ADMIN +
+        "','" +
+        AuthoritiesConstants.SUPER_ADMIN +
+        "')"
+    )
     public ResponseEntity<MoneyDTO> getMoney(@PathVariable String id) {
         log.debug("REST request to get Money : {}", id);
         Optional<MoneyDTO> moneyDTO = moneyService.findOne(id);
@@ -149,6 +187,15 @@ public class MoneyResource implements MoniesApiDelegate {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @Override
+    @PreAuthorize(
+        "hasAnyAuthority('" +
+        AuthoritiesConstants.DELETE_PAYMENT +
+        "') || hasAnyAuthority('" +
+        AuthoritiesConstants.ADMIN +
+        "','" +
+        AuthoritiesConstants.SUPER_ADMIN +
+        "')"
+    )
     public ResponseEntity<Void> deleteMoney(@PathVariable String id) {
         log.debug("REST request to delete Money : {}", id);
         moneyService.delete(id);
@@ -156,6 +203,15 @@ public class MoneyResource implements MoniesApiDelegate {
     }
 
     @Override
+    @PreAuthorize(
+        "hasAnyAuthority('" +
+        AuthoritiesConstants.VIEW_PAYMENT +
+        "') || hasAnyAuthority('" +
+        AuthoritiesConstants.ADMIN +
+        "','" +
+        AuthoritiesConstants.SUPER_ADMIN +
+        "')"
+    )
     public ResponseEntity<MoniesViewDTOContainer> moniesViewSearchPaginate(MoniesSearchModel moniesSearchModel) {
         return ResponseEntity.ok(mongoQueryService.moniesViewSearchPaginate(moniesSearchModel));
     }

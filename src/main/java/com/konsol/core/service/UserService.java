@@ -24,6 +24,9 @@ import org.springframework.cache.CacheManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import tech.jhipster.security.RandomUtil;
@@ -445,5 +448,26 @@ public class UserService {
 
     private Optional<User> getUserByLogin(String login) {
         return userRepository.findOneByLogin(login);
+    }
+
+    public static void checkAuthority(String authority) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (
+            authentication == null ||
+            (
+                authentication.getAuthorities().stream().noneMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(authority)) &&
+                authentication
+                    .getAuthorities()
+                    .stream()
+                    .noneMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(AuthoritiesConstants.ADMIN)) &&
+                authentication
+                    .getAuthorities()
+                    .stream()
+                    .noneMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(AuthoritiesConstants.SUPER_ADMIN))
+            )
+        ) {
+            throw new AccessDeniedException("Access is denied Authority required : " + authority);
+        }
     }
 }

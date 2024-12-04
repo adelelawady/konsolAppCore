@@ -2,6 +2,7 @@ package com.konsol.core.web.rest.api;
 
 import com.konsol.core.repository.StoreItemRepository;
 import com.konsol.core.repository.StoreRepository;
+import com.konsol.core.security.AuthoritiesConstants;
 import com.konsol.core.service.StoreItemService;
 import com.konsol.core.service.StoreService;
 import com.konsol.core.service.api.dto.*;
@@ -25,6 +26,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -65,6 +67,15 @@ public class StoreResource implements StoresApiDelegate {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @Override
+    @PreAuthorize(
+        "hasAnyAuthority('" +
+        AuthoritiesConstants.CREATE_STORE +
+        "') || hasAnyAuthority('" +
+        AuthoritiesConstants.ADMIN +
+        "','" +
+        AuthoritiesConstants.SUPER_ADMIN +
+        "')"
+    )
     public ResponseEntity<StoreDTO> createStore(@Valid @RequestBody StoreDTO storeDTO) {
         log.debug("REST request to save Store : {}", storeDTO);
         if (storeDTO.getId() != null) {
@@ -93,6 +104,15 @@ public class StoreResource implements StoresApiDelegate {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @Override
+    @PreAuthorize(
+        "hasAnyAuthority('" +
+        AuthoritiesConstants.UPDATE_STORE +
+        "') || hasAnyAuthority('" +
+        AuthoritiesConstants.ADMIN +
+        "','" +
+        AuthoritiesConstants.SUPER_ADMIN +
+        "')"
+    )
     public ResponseEntity<StoreDTO> updateStore(
         @PathVariable(value = "id", required = false) final String id,
         @NotNull @RequestBody StoreDTO storeDTO
@@ -128,6 +148,15 @@ public class StoreResource implements StoresApiDelegate {
      * @see StoresApi#getAllStores
      */
     @Override
+    @PreAuthorize(
+        "hasAnyAuthority('" +
+        AuthoritiesConstants.VIEW_STORE +
+        "') || hasAnyAuthority('" +
+        AuthoritiesConstants.ADMIN +
+        "','" +
+        AuthoritiesConstants.SUPER_ADMIN +
+        "')"
+    )
     public ResponseEntity<List<StoreDTO>> getAllStores(Integer pager, Integer size, List<String> sort, Boolean eagerload) {
         log.debug("REST request to get a page of Stores");
         Pageable pageable = PageRequest.of(pager, size);
@@ -148,6 +177,15 @@ public class StoreResource implements StoresApiDelegate {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the storeDTO, or with status {@code 404 (Not Found)}.
      */
     @Override
+    @PreAuthorize(
+        "hasAnyAuthority('" +
+        AuthoritiesConstants.VIEW_STORE +
+        "') || hasAnyAuthority('" +
+        AuthoritiesConstants.ADMIN +
+        "','" +
+        AuthoritiesConstants.SUPER_ADMIN +
+        "')"
+    )
     public ResponseEntity<StoreDTO> getStore(@PathVariable String id) {
         log.debug("REST request to get Store : {}", id);
         Optional<StoreDTO> storeDTO = storeService.findOne(id);
@@ -161,6 +199,15 @@ public class StoreResource implements StoresApiDelegate {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @Override
+    @PreAuthorize(
+        "hasAnyAuthority('" +
+        AuthoritiesConstants.DELETE_STORE +
+        "') || hasAnyAuthority('" +
+        AuthoritiesConstants.ADMIN +
+        "','" +
+        AuthoritiesConstants.SUPER_ADMIN +
+        "')"
+    )
     public ResponseEntity<Void> deleteStore(@PathVariable String id) {
         log.debug("REST request to delete Store : {}", id);
         storeService.delete(id);
@@ -219,6 +266,14 @@ public class StoreResource implements StoresApiDelegate {
 
     @Override
     public ResponseEntity<List<StoreItemDTO>> getStoresItemsForStore(String id, PaginationSearchModel paginationSearchModel) {
-        return ResponseEntity.ok().body(storeService.getStoresItemsForStore(id, paginationSearchModel).stream().map(storeItemMapper::toDto).collect(Collectors.toList()));
+        return ResponseEntity
+            .ok()
+            .body(
+                storeService
+                    .getStoresItemsForStore(id, paginationSearchModel)
+                    .stream()
+                    .map(storeItemMapper::toDto)
+                    .collect(Collectors.toList())
+            );
     }
 }

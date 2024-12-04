@@ -3,6 +3,7 @@ package com.konsol.core.web.rest.api;
 import com.konsol.core.domain.Pk;
 import com.konsol.core.domain.enumeration.PkKind;
 import com.konsol.core.repository.ItemRepository;
+import com.konsol.core.security.AuthoritiesConstants;
 import com.konsol.core.service.ItemService;
 import com.konsol.core.service.PkService;
 import com.konsol.core.service.api.dto.*;
@@ -24,6 +25,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -57,6 +59,15 @@ public class ItemResource implements ItemsApiDelegate {
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new itemDTO, or with status {@code 400 (Bad Request)} if the item has already an ID.
      */
     @Override
+    @PreAuthorize(
+        "hasAnyAuthority('" +
+        AuthoritiesConstants.CREATE_ITEM +
+        "') || hasAnyAuthority('" +
+        AuthoritiesConstants.ADMIN +
+        "','" +
+        AuthoritiesConstants.SUPER_ADMIN +
+        "')"
+    )
     public ResponseEntity<ItemDTO> createItem(@Valid @RequestBody ItemDTO itemDTO) {
         log.debug("REST request to save Item : {}", itemDTO);
         if (itemDTO.getId() != null) {
@@ -84,6 +95,15 @@ public class ItemResource implements ItemsApiDelegate {
      * or with status {@code 500 (Internal Server Error)} if the itemDTO couldn't be updated.
      */
     @Override
+    @PreAuthorize(
+        "hasAnyAuthority('" +
+        AuthoritiesConstants.UPDATE_ITEM +
+        "') || hasAnyAuthority('" +
+        AuthoritiesConstants.ADMIN +
+        "','" +
+        AuthoritiesConstants.SUPER_ADMIN +
+        "')"
+    )
     public ResponseEntity<ItemDTO> updateItem(
         @PathVariable(value = "id", required = false) final String id,
         @Valid @RequestBody ItemDTO itemDTO
@@ -124,6 +144,15 @@ public class ItemResource implements ItemsApiDelegate {
      * or with status {@code 500 (Internal Server Error)} if the itemDTO couldn't be updated.
      */
     @Override
+    @PreAuthorize(
+        "hasAnyAuthority('" +
+        AuthoritiesConstants.UPDATE_ITEM +
+        "') || hasAnyAuthority('" +
+        AuthoritiesConstants.ADMIN +
+        "','" +
+        AuthoritiesConstants.SUPER_ADMIN +
+        "')"
+    )
     public ResponseEntity<ItemDTO> partialUpdateItem(
         @PathVariable(value = "id", required = false) final String id,
         @NotNull @RequestBody ItemDTO itemDTO
@@ -152,6 +181,15 @@ public class ItemResource implements ItemsApiDelegate {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of items in body.
      */
     @Override
+    @PreAuthorize(
+        "hasAnyAuthority('" +
+        AuthoritiesConstants.VIEW_ITEM +
+        "') || hasAnyAuthority('" +
+        AuthoritiesConstants.ADMIN +
+        "','" +
+        AuthoritiesConstants.SUPER_ADMIN +
+        "')"
+    )
     public ResponseEntity<List<ItemDTO>> getAllItems(Integer pager, Integer size, List<String> sort, Boolean eagerload) {
         Pageable pageable = PageRequest.of(pager, size);
         log.debug("REST request to get a page of Items");
@@ -172,6 +210,15 @@ public class ItemResource implements ItemsApiDelegate {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the itemDTO, or with status {@code 404 (Not Found)}.
      */
     @Override
+    @PreAuthorize(
+        "hasAnyAuthority('" +
+        AuthoritiesConstants.VIEW_ITEM +
+        "') || hasAnyAuthority('" +
+        AuthoritiesConstants.ADMIN +
+        "','" +
+        AuthoritiesConstants.SUPER_ADMIN +
+        "')"
+    )
     public ResponseEntity<ItemDTO> getItem(@PathVariable String id) {
         log.debug("REST request to get Item : {}", id);
         Optional<ItemDTO> itemDTO = itemService.findOne(id);
@@ -185,6 +232,15 @@ public class ItemResource implements ItemsApiDelegate {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @Override
+    @PreAuthorize(
+        "hasAnyAuthority('" +
+        AuthoritiesConstants.DELETE_ITEM +
+        "') || hasAnyAuthority('" +
+        AuthoritiesConstants.ADMIN +
+        "','" +
+        AuthoritiesConstants.SUPER_ADMIN +
+        "')"
+    )
     public ResponseEntity<Void> deleteItem(@PathVariable String id) {
         log.debug("REST request to delete Item : {}", id);
         itemService.delete(id);
@@ -212,6 +268,15 @@ public class ItemResource implements ItemsApiDelegate {
      * @see ItemsApi#getItemByPk
      */
     @Override
+    @PreAuthorize(
+        "hasAnyAuthority('" +
+        AuthoritiesConstants.VIEW_ITEM +
+        "') || hasAnyAuthority('" +
+        AuthoritiesConstants.ADMIN +
+        "','" +
+        AuthoritiesConstants.SUPER_ADMIN +
+        "')"
+    )
     public ResponseEntity<ItemDTO> getItemByPk(String pkId) {
         return ResponseEntity.ok(itemService.findOneByPk(pkId).orElse(null));
     }
@@ -225,6 +290,15 @@ public class ItemResource implements ItemsApiDelegate {
      * @see ItemsApi#getItemBeforeItemById
      */
     @Override
+    @PreAuthorize(
+        "hasAnyAuthority('" +
+        AuthoritiesConstants.VIEW_ITEM +
+        "') || hasAnyAuthority('" +
+        AuthoritiesConstants.ADMIN +
+        "','" +
+        AuthoritiesConstants.SUPER_ADMIN +
+        "')"
+    )
     public ResponseEntity<ItemDTO> getItemBeforeItemById(String id) {
         return ResponseEntity.ok(itemService.getItemBeforeItemById(id).orElse(null));
     }
@@ -238,6 +312,15 @@ public class ItemResource implements ItemsApiDelegate {
      * @see ItemsApi#getItemAfterItemById
      */
     @Override
+    @PreAuthorize(
+        "hasAnyAuthority('" +
+        AuthoritiesConstants.VIEW_ITEM +
+        "') || hasAnyAuthority('" +
+        AuthoritiesConstants.ADMIN +
+        "','" +
+        AuthoritiesConstants.SUPER_ADMIN +
+        "')"
+    )
     public ResponseEntity<ItemDTO> getItemAfterItemById(String id) {
         return ResponseEntity.ok(itemService.getItemAfterItemById(id).orElse(null));
     }
@@ -251,6 +334,15 @@ public class ItemResource implements ItemsApiDelegate {
      * @see ItemsApi#itemsViewSearchPaginate
      */
     @Override
+    @PreAuthorize(
+        "hasAnyAuthority('" +
+        AuthoritiesConstants.VIEW_ITEM +
+        "') || hasAnyAuthority('" +
+        AuthoritiesConstants.ADMIN +
+        "','" +
+        AuthoritiesConstants.SUPER_ADMIN +
+        "')"
+    )
     public ResponseEntity<ItemViewDTOContainer> itemsViewSearchPaginate(PaginationSearchModel paginationSearchModel) {
         return ResponseEntity.ok().body(itemService.findAllItemsViewDTO(paginationSearchModel));
     }
