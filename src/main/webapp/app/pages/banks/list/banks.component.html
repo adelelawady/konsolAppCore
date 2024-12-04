@@ -1,0 +1,178 @@
+<div class="container-fluid">
+  <div class="row">
+    <!-- Side List -->
+    <div class="col-md-3 col-lg-2 p-3 border-end">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0">{{ 'banks.title' | translate }}</h5>
+        <button class="btn btn-primary btn-sm" (click)="createNew()">
+          <fa-icon icon="plus"></fa-icon>
+        </button>
+      </div>
+
+      <div class="input-group mb-3">
+        <span class="input-group-text">
+          <fa-icon icon="search"></fa-icon>
+        </span>
+        <input
+          type="text"
+          class="form-control"
+          [placeholder]="'global.search' | translate"
+          [(ngModel)]="searchText"
+          (ngModelChange)="onSearch($event)"
+        />
+      </div>
+
+      <div class="list-group">
+        <a
+          *ngFor="let bank of filteredBanks"
+          class="list-group-item list-group-item-action"
+          [class.active]="selectedBank?.id === bank.id"
+          (click)="selectBank(bank)"
+        >
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h6 class="mb-0">{{ bank.name }}</h6>
+              <small class="text-muted">ID: {{ bank.id }}</small>
+            </div>
+            <div class="dropdown" (click)="$event.stopPropagation()">
+              <button class="btn btn-link text-muted p-0" type="button" data-bs-toggle="dropdown">
+                <fa-icon icon="ellipsis-v"></fa-icon>
+              </button>
+              <ul class="dropdown-menu">
+                <li>
+                  <a class="dropdown-item" [routerLink]="['./', bank.id, 'edit']" *ngIf="bank.id">
+                    <fa-icon icon="pencil-alt" class="me-2"></fa-icon>
+                    <span jhiTranslate="entity.action.edit">Edit</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item text-danger" (click)="delete(bank.id)" *ngIf="bank.id">
+                    <fa-icon icon="times" class="me-2"></fa-icon>
+                    <span jhiTranslate="entity.action.delete">Delete</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="col-md-9 col-lg-10 p-3">
+      <div *ngIf="selectedBank && selectedBank.id && bankStats[selectedBank.id]">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <div>
+            <h3 class="mb-0">{{ selectedBank.name }}</h3>
+            <p class="text-muted mb-0">Bank Dashboard</p>
+          </div>
+          <button class="btn btn-outline-secondary" (click)="refresh()">
+            <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+            <span class="ms-1" jhiTranslate="banks.refreshList">Refresh</span>
+          </button>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="row g-3 mb-4">
+          <div class="col-sm-6 col-lg-3">
+            <div class="card">
+              <div class="card-body">
+                <h6 class="card-title text-muted mb-3">Current Balance</h6>
+                <h3 class="mb-0">{{ formatCurrency(bankStats[selectedBank.id].balance) }}</h3>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-lg-3">
+            <div class="card">
+              <div class="card-body">
+                <h6 class="card-title text-muted mb-3">Today's Transactions</h6>
+                <h3 class="mb-0">{{ bankStats[selectedBank.id].transactions.today }}</h3>
+                <small [class]="getGrowthClass(bankStats[selectedBank.id].growth.daily)">
+                  {{ bankStats[selectedBank.id].growth.daily }}% today
+                </small>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-lg-3">
+            <div class="card">
+              <div class="card-body">
+                <h6 class="card-title text-muted mb-3">Weekly Transactions</h6>
+                <h3 class="mb-0">{{ bankStats[selectedBank.id].transactions.thisWeek }}</h3>
+                <small [class]="getGrowthClass(bankStats[selectedBank.id].growth.weekly)">
+                  {{ bankStats[selectedBank.id].growth.weekly }}% this week
+                </small>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-lg-3">
+            <div class="card">
+              <div class="card-body">
+                <h6 class="card-title text-muted mb-3">Monthly Transactions</h6>
+                <h3 class="mb-0">{{ bankStats[selectedBank.id].transactions.thisMonth }}</h3>
+                <small [class]="getGrowthClass(bankStats[selectedBank.id].growth.monthly)">
+                  {{ bankStats[selectedBank.id].growth.monthly }}% this month
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Account Types -->
+        <div class="row mb-4">
+          <div class="col-lg-6">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title mb-3">Account Distribution</h5>
+                <div class="list-group">
+                  <div class="list-group-item d-flex justify-content-between align-items-center">
+                    Savings Accounts
+                    <span class="badge bg-primary rounded-pill">{{ bankStats[selectedBank.id].accountTypes.savings }}</span>
+                  </div>
+                  <div class="list-group-item d-flex justify-content-between align-items-center">
+                    Checking Accounts
+                    <span class="badge bg-info rounded-pill">{{ bankStats[selectedBank.id].accountTypes.checking }}</span>
+                  </div>
+                  <div class="list-group-item d-flex justify-content-between align-items-center">
+                    Business Accounts
+                    <span class="badge bg-success rounded-pill">{{ bankStats[selectedBank.id].accountTypes.business }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Transactions -->
+          <div class="col-lg-6">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title mb-3">Recent Transactions</h5>
+                <div class="list-group">
+                  <div *ngFor="let transaction of bankStats[selectedBank.id].topTransactions" class="list-group-item">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <h6 class="mb-0 text-capitalize">{{ transaction.type }}</h6>
+                        <small class="text-muted">{{ transaction.date | date: 'medium' }}</small>
+                      </div>
+                      <span
+                        [class.text-success]="transaction.type === 'deposit'"
+                        [class.text-danger]="transaction.type === 'withdrawal'"
+                        [class.text-info]="transaction.type === 'transfer'"
+                      >
+                        {{ formatCurrency(transaction.amount) }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="!selectedBank" class="text-center p-5">
+        <h4 class="text-muted">Select a bank to view details</h4>
+      </div>
+    </div>
+  </div>
+</div>

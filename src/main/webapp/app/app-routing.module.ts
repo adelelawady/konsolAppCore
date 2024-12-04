@@ -33,6 +33,10 @@ import { PagesModule } from './pages/pages.module';
           path: '',
           loadChildren: () => import('./pages/pages.module').then(m => m.PagesModule),
         },
+        {
+          path: 'banks',
+          loadChildren: () => import('./pages/banks/banks.module').then(m => m.BanksModule),
+        },
         navbarRoute,
         ...errorRoute,
       ]

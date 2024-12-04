@@ -1,0 +1,44 @@
+{
+  "banks": {
+    "title": "Banks",
+    "subtitle": "Manage your bank accounts",
+    "refreshList": "Refresh List",
+    "create": {
+      "title": "Create Bank",
+      "success": "Bank created successfully"
+    },
+    "update": {
+      "title": "Edit Bank",
+      "success": "Bank updated successfully"
+    },
+    "delete": {
+      "title": "Delete Bank",
+      "question": "Are you sure you want to delete this bank?",
+      "success": "Bank deleted successfully"
+    },
+    "detail": {
+      "title": "Bank Details"
+    },
+    "id": "ID",
+    "name": "Name",
+    "balance": "Balance",
+    "description": "Description",
+    "createdBy": "Created By",
+    "createdDate": "Created Date",
+    "lastModifiedBy": "Modified By",
+    "lastModifiedDate": "Modified Date",
+    "actions": "Actions",
+    "notFound": "No banks found",
+    "validation": {
+      "name": {
+        "required": "Name is required",
+        "minlength": "Name must be at least 2 characters",
+        "maxlength": "Name cannot be longer than 50 characters"
+      },
+      "balance": {
+        "required": "Balance is required",
+        "min": "Balance must be greater than or equal to 0"
+      }
+    }
+  }
+}

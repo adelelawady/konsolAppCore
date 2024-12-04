@@ -11,10 +11,11 @@ import { SalesComponent } from './sales/sales.component';
 import { ProductsModule } from './products/products.module';
 import { AccountsModule } from './accounts/accounts.module';
 import { InvoicesModule } from './invoices/invoices.module';
+import { BanksModule } from './banks/banks.module';
 
 @NgModule({
   declarations: [InventoryComponent, PurchaseComponent, SalesComponent],
-  imports: [CommonModule, SharedModule, RouterModule, PagesRoutingModule, ProductsModule, AccountsModule, InvoicesModule],
+  imports: [CommonModule, SharedModule, RouterModule, PagesRoutingModule, ProductsModule, AccountsModule, InvoicesModule, BanksModule],
   exports: [],
 })
 export class PagesModule {}
