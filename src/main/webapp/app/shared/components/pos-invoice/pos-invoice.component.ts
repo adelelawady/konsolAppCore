@@ -151,7 +151,12 @@ export class PosInvoiceComponent implements OnInit, AfterViewInit {
     if (item) {
       this.selectedItem = item;
       this.currentQuantity = 1;
-      this.currentPrice = Number(item.price1) || 0;
+
+      if (this.currentInvoice.kind === 'SALE') {
+        this.currentPrice = Number(item?.price1) || 0;
+      } else if (this.currentInvoice.kind === 'PURCHASE') {
+        this.currentPrice = Number(item?.cost) || 0;
+      }
 
       setTimeout(() => {
         this.qtyInput?.nativeElement.focus();

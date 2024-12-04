@@ -16,4 +16,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface InvoiceRepository extends MongoRepository<Invoice, String> {
     List<Invoice> findAllByActiveIsFalseAndCreatedDateBefore(Instant dateTime);
+
+    /**
+     * Find all invoices for a specific bank.
+     *
+     * @param bankId the bank ID
+     * @return list of invoices
+     */
+    List<Invoice> findByBankId(String bankId);
 }

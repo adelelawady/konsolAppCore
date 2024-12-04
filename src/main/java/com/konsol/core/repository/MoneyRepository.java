@@ -14,4 +14,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MoneyRepository extends MongoRepository<Money, String> {
     List<Money> findAllByIdIn(List<String> ids, Sort sort);
+
+    /**
+     * Find all money records for a specific bank.
+     *
+     * @param bankId the bank ID
+     * @return list of money records
+     */
+    List<Money> findByBankId(String bankId);
 }
