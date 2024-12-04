@@ -2,9 +2,10 @@
   "banks": {
     "title": "Banks",
     "subtitle": "Manage your bank accounts",
+    "description": "Manage banks",
     "refreshList": "Refresh List",
     "create": {
-      "title": "Create Bank",
+      "title": "Create New Bank",
       "success": "Bank created successfully"
     },
     "update": {
@@ -20,7 +21,7 @@
       "title": "Bank Details"
     },
     "id": "ID",
-    "name": "Name",
+    "name": "Bank Name",
     "balance": "Balance",
     "description": "Description",
     "createdBy": "Created By",
@@ -31,7 +32,7 @@
     "notFound": "No banks found",
     "validation": {
       "name": {
-        "required": "Name is required",
+        "required": "Bank name is required",
         "minlength": "Name must be at least 2 characters",
         "maxlength": "Name cannot be longer than 50 characters"
       },

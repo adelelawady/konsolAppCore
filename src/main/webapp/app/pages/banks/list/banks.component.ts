@@ -6,6 +6,7 @@ import { BankResourceService } from '../../../core/konsolApi/api/bankResource.se
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '@ngx-translate/core';
+import { BankCreateModalComponent } from '../create/bank-create-modal.component';
 
 @Component({
   selector: 'jhi-banks',
@@ -134,7 +135,17 @@ export class BanksComponent implements OnInit {
   }
 
   createNew(): void {
-    this.router.navigate(['/banks/new']);
+    const modalRef = this.modalService.open(BankCreateModalComponent, { backdrop: 'static' });
+    modalRef.result.then(
+      (result) => {
+        if (result) {
+          this.loadAll();
+        }
+      },
+      () => {
+        // Modal dismissed
+      }
+    );
   }
 
   getGrowthClass(value: number): string {
