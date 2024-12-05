@@ -1625,7 +1625,8 @@ paths:
         required: true
     get:
       summary: Your GET endpoint
-      tags: []
+      tags:
+        - bank-resource
       responses:
         '200':
           description: OK
@@ -1646,7 +1647,8 @@ paths:
         required: true
     get:
       summary: Your GET endpoint
-      tags: []
+      tags:
+        - bank-resource
       responses:
         '200':
           description: OK

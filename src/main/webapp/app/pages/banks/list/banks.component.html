@@ -60,112 +60,101 @@
 
     <!-- Dashboard -->
     <div class="col-md-9 col-lg-10 p-3">
-      <div *ngIf="selectedBank && selectedBank.id && bankStats[selectedBank.id]">
+      <div *ngIf="selectedBank && bankAnalysis">
         <div class="d-flex justify-content-between align-items-center mb-4">
           <div>
             <h3 class="mb-0">{{ selectedBank.name }}</h3>
             <p class="text-muted mb-0">Bank Dashboard</p>
           </div>
-          <button class="btn btn-outline-secondary" (click)="refresh()">
-            <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
-            <span class="ms-1" jhiTranslate="banks.refreshList">Refresh</span>
-          </button>
         </div>
 
-        <!-- Stats Cards -->
-        <div class="row g-3 mb-4">
-          <div class="col-sm-6 col-lg-3">
-            <div class="card">
+        <!-- Bank Analysis Dashboard -->
+        <div class="row g-3">
+          <div class="col-md-6 col-lg-4">
+            <div class="card highlight-card border-primary">
               <div class="card-body">
-                <h6 class="card-title text-muted mb-3">Current Balance</h6>
-                <h3 class="mb-0">{{ formatCurrency(bankStats[selectedBank.id].balance) }}</h3>
+                <h6 class="card-subtitle mb-2 text-primary">{{ 'banks.analysis.totalBalance' | translate }}</h6>
+                <h4 class="card-title mb-0 text-primary">{{ bankAnalysis.totalBalance | number: '1.2-2' }}</h4>
               </div>
             </div>
           </div>
-          <div class="col-sm-6 col-lg-3">
-            <div class="card">
+
+          <div class="col-md-6 col-lg-4">
+            <div class="card dashboard-card">
               <div class="card-body">
-                <h6 class="card-title text-muted mb-3">Today's Transactions</h6>
-                <h3 class="mb-0">{{ bankStats[selectedBank.id].transactions.today }}</h3>
-                <small [class]="getGrowthClass(bankStats[selectedBank.id].growth.daily)">
-                  {{ bankStats[selectedBank.id].growth.daily }}% today
-                </small>
+                <h6 class="card-subtitle mb-2 text-muted">{{ 'banks.analysis.grossRevenue' | translate }}</h6>
+                <h4 class="card-title mb-0">{{ bankAnalysis.grossRevenue | number: '1.2-2' }}</h4>
               </div>
             </div>
           </div>
-          <div class="col-sm-6 col-lg-3">
-            <div class="card">
+
+          <div class="col-md-6 col-lg-4">
+            <div class="card dashboard-card">
               <div class="card-body">
-                <h6 class="card-title text-muted mb-3">Weekly Transactions</h6>
-                <h3 class="mb-0">{{ bankStats[selectedBank.id].transactions.thisWeek }}</h3>
-                <small [class]="getGrowthClass(bankStats[selectedBank.id].growth.weekly)">
-                  {{ bankStats[selectedBank.id].growth.weekly }}% this week
-                </small>
+                <h6 class="card-subtitle mb-2 text-muted">{{ 'banks.analysis.netRevenue' | translate }}</h6>
+                <h4 class="card-title mb-0">{{ bankAnalysis.netRevenue | number: '1.2-2' }}</h4>
               </div>
             </div>
           </div>
-          <div class="col-sm-6 col-lg-3">
-            <div class="card">
+
+          <div class="col-md-6 col-lg-4">
+            <div class="card dashboard-card">
               <div class="card-body">
-                <h6 class="card-title text-muted mb-3">Monthly Transactions</h6>
-                <h3 class="mb-0">{{ bankStats[selectedBank.id].transactions.thisMonth }}</h3>
-                <small [class]="getGrowthClass(bankStats[selectedBank.id].growth.monthly)">
-                  {{ bankStats[selectedBank.id].growth.monthly }}% this month
-                </small>
+                <h6 class="card-subtitle mb-2 text-muted">{{ 'banks.analysis.totalSalesProfits' | translate }}</h6>
+                <h4 class="card-title mb-0">{{ bankAnalysis.totalSalesProfits | number: '1.2-2' }}</h4>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-lg-4">
+            <div class="card dashboard-card">
+              <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">{{ 'banks.analysis.moneyIn' | translate }}</h6>
+                <h4 class="card-title mb-0">{{ bankAnalysis.moneyInFromMoney | number: '1.2-2' }}</h4>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-lg-4">
+            <div class="card dashboard-card">
+              <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">{{ 'banks.analysis.moneyOut' | translate }}</h6>
+                <h4 class="card-title mb-0">{{ bankAnalysis.moneyOutFromMoney | number: '1.2-2' }}</h4>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Account Types -->
-        <div class="row mb-4">
-          <div class="col-lg-6">
-            <div class="card">
+        <!-- Additional Analysis -->
+        <div class="row mt-4">
+          <div class="col-md-6">
+            <div class="card dashboard-card">
               <div class="card-body">
-                <h5 class="card-title mb-3">Account Distribution</h5>
-                <div class="list-group">
+                <h5 class="card-title">{{ 'banks.analysis.costAnalysis' | translate }}</h5>
+                <div class="list-group list-group-flush">
                   <div class="list-group-item d-flex justify-content-between align-items-center">
-                    Savings Accounts
-                    <span class="badge bg-primary rounded-pill">{{ bankStats[selectedBank.id].accountTypes.savings }}</span>
+                    <span>{{ 'banks.analysis.totalCost' | translate }}</span>
+                    <span>{{ bankAnalysis.totalCost | number: '1.2-2' }}</span>
                   </div>
                   <div class="list-group-item d-flex justify-content-between align-items-center">
-                    Checking Accounts
-                    <span class="badge bg-info rounded-pill">{{ bankStats[selectedBank.id].accountTypes.checking }}</span>
+                    <span>{{ 'banks.analysis.totalDiscounts' | translate }}</span>
+                    <span>{{ bankAnalysis.totalDiscounts | number: '1.2-2' }}</span>
                   </div>
                   <div class="list-group-item d-flex justify-content-between align-items-center">
-                    Business Accounts
-                    <span class="badge bg-success rounded-pill">{{ bankStats[selectedBank.id].accountTypes.business }}</span>
+                    <span>{{ 'banks.analysis.totalAdditions' | translate }}</span>
+                    <span>{{ bankAnalysis.totalAdditions | number: '1.2-2' }}</span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+        </div>
+      </div>
 
-          <!-- Recent Transactions -->
-          <div class="col-lg-6">
-            <div class="card">
-              <div class="card-body">
-                <h5 class="card-title mb-3">Recent Transactions</h5>
-                <div class="list-group">
-                  <div *ngFor="let transaction of bankStats[selectedBank.id].topTransactions" class="list-group-item">
-                    <div class="d-flex justify-content-between align-items-center">
-                      <div>
-                        <h6 class="mb-0 text-capitalize">{{ transaction.type }}</h6>
-                        <small class="text-muted">{{ transaction.date | date: 'medium' }}</small>
-                      </div>
-                      <span
-                        [class.text-success]="transaction.type === 'deposit'"
-                        [class.text-danger]="transaction.type === 'withdrawal'"
-                        [class.text-info]="transaction.type === 'transfer'"
-                      >
-                        {{ formatCurrency(transaction.amount) }}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+      <!-- Loading State -->
+      <div *ngIf="isLoading" class="text-center p-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
         </div>
       </div>
 

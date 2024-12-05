@@ -17,9 +17,9 @@ import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
 // @ts-ignore
-import { AuthorityDTO } from '../model/authorityDTO';
+import { BankBalanceDTO } from '../model/bankBalanceDTO';
 // @ts-ignore
-import { UserDTO } from '../model/userDTO';
+import { BankTransactionsDTO } from '../model/bankTransactionsDTO';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS } from '../variables';
@@ -28,7 +28,7 @@ import { Configuration } from '../configuration';
 @Injectable({
   providedIn: 'root',
 })
-export class PublicUserResourceService {
+export class DefaultService {
   protected basePath = 'http://localhost:8080/api';
   public defaultHeaders = new HttpHeaders();
   public configuration = new Configuration();
@@ -85,55 +85,37 @@ export class PublicUserResourceService {
   }
 
   /**
-   * @param page Zero-based page index (0..N)
-   * @param size The size of the page to be returned
-   * @param sort Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
+   * Your GET endpoint
+   * @param id
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public getAllPublicUsers(
-    page?: number,
-    size?: number,
-    sort?: Array<string>,
+  public getBankAnalysis(
+    id: string,
     observe?: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
-  ): Observable<Array<UserDTO>>;
-  public getAllPublicUsers(
-    page?: number,
-    size?: number,
-    sort?: Array<string>,
+  ): Observable<BankBalanceDTO>;
+  public getBankAnalysis(
+    id: string,
     observe?: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
-  ): Observable<HttpResponse<Array<UserDTO>>>;
-  public getAllPublicUsers(
-    page?: number,
-    size?: number,
-    sort?: Array<string>,
+  ): Observable<HttpResponse<BankBalanceDTO>>;
+  public getBankAnalysis(
+    id: string,
     observe?: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
-  ): Observable<HttpEvent<Array<UserDTO>>>;
-  public getAllPublicUsers(
-    page?: number,
-    size?: number,
-    sort?: Array<string>,
+  ): Observable<HttpEvent<BankBalanceDTO>>;
+  public getBankAnalysis(
+    id: string,
     observe: any = 'body',
     reportProgress: boolean = false,
     options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
   ): Observable<any> {
-    let localVarQueryParameters = new HttpParams({ encoder: this.encoder });
-    if (page !== undefined && page !== null) {
-      localVarQueryParameters = this.addToHttpParams(localVarQueryParameters, <any>page, 'page');
-    }
-    if (size !== undefined && size !== null) {
-      localVarQueryParameters = this.addToHttpParams(localVarQueryParameters, <any>size, 'size');
-    }
-    if (sort) {
-      sort.forEach(element => {
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters, <any>element, 'sort');
-      });
+    if (id === null || id === undefined) {
+      throw new Error('Required parameter id was null or undefined when calling getBankAnalysis.');
     }
 
     let localVarHeaders = this.defaultHeaders;
@@ -164,9 +146,8 @@ export class PublicUserResourceService {
       }
     }
 
-    return this.httpClient.get<Array<UserDTO>>(`${this.configuration.basePath}/users`, {
+    return this.httpClient.get<BankBalanceDTO>(`${this.configuration.basePath}/banks/${encodeURIComponent(String(id))}/analysis`, {
       context: localVarHttpContext,
-      params: localVarQueryParameters,
       responseType: <any>responseType_,
       withCredentials: this.configuration.withCredentials,
       headers: localVarHeaders,
@@ -176,29 +157,40 @@ export class PublicUserResourceService {
   }
 
   /**
+   * Your GET endpoint
+   *
+   * @param id
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public getAuthorities(
+  public getBankTransactions(
+    id: string,
     observe?: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
-  ): Observable<Array<AuthorityDTO>>;
-  public getAuthorities(
+  ): Observable<Array<BankTransactionsDTO>>;
+  public getBankTransactions(
+    id: string,
     observe?: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
-  ): Observable<HttpResponse<Array<AuthorityDTO>>>;
-  public getAuthorities(
+  ): Observable<HttpResponse<Array<BankTransactionsDTO>>>;
+  public getBankTransactions(
+    id: string,
     observe?: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
-  ): Observable<HttpEvent<Array<AuthorityDTO>>>;
-  public getAuthorities(
+  ): Observable<HttpEvent<Array<BankTransactionsDTO>>>;
+  public getBankTransactions(
+    id: string,
     observe: any = 'body',
     reportProgress: boolean = false,
     options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
   ): Observable<any> {
+    if (id === null || id === undefined) {
+      throw new Error('Required parameter id was null or undefined when calling getBankTransactions.');
+    }
+
     let localVarHeaders = this.defaultHeaders;
 
     let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
@@ -227,13 +219,16 @@ export class PublicUserResourceService {
       }
     }
 
-    return this.httpClient.get<Array<AuthorityDTO>>(`${this.configuration.basePath}/authorities`, {
-      context: localVarHttpContext,
-      responseType: <any>responseType_,
-      withCredentials: this.configuration.withCredentials,
-      headers: localVarHeaders,
-      observe: observe,
-      reportProgress: reportProgress,
-    });
+    return this.httpClient.get<Array<BankTransactionsDTO>>(
+      `${this.configuration.basePath}/banks/${encodeURIComponent(String(id))}/transactions`,
+      {
+        context: localVarHttpContext,
+        responseType: <any>responseType_,
+        withCredentials: this.configuration.withCredentials,
+        headers: localVarHeaders,
+        observe: observe,
+        reportProgress: reportProgress,
+      }
+    );
   }
 }

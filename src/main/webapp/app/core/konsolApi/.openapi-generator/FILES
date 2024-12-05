@@ -22,8 +22,12 @@ model/accountUserContainer.ts
 model/accountUserDTO.ts
 model/accountUserSearchModel.ts
 model/adminUserDTO.ts
+model/authorityDTO.ts
+model/bankBalanceDTO.ts
 model/bankDTO.ts
+model/bankTransactionsDTO.ts
 model/categoryItem.ts
+model/chartDataDTO.ts
 model/contactInfo.ts
 model/createAccountUserDTO.ts
 model/createInvoiceItemDTO.ts
@@ -42,6 +46,7 @@ model/invoiceViewDTO.ts
 model/invoiceViewDTOContainer.ts
 model/invoiceViewSimpleDTO.ts
 model/invoicesSearchModel.ts
+model/itemAnalysisDTO.ts
 model/itemDTO.ts
 model/itemSimpleDTO.ts
 model/itemUnitDTO.ts

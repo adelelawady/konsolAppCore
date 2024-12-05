@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { finalize } from 'rxjs/operators';
-import { BankDTO } from '../../../core/konsolApi';
+import { BankDTO, BankBalanceDTO } from '../../../core/konsolApi';
 import { BankResourceService } from '../../../core/konsolApi/api/bankResource.service';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -19,7 +19,7 @@ export class BanksComponent implements OnInit {
   searchText = '';
   filteredBanks?: BankDTO[];
   selectedBank?: BankDTO;
-  bankStats: { [key: string]: any } = {};
+  bankAnalysis?: BankBalanceDTO;
 
   constructor(
     private bankService: BankResourceService,
@@ -44,7 +44,6 @@ export class BanksComponent implements OnInit {
           if (banks.length > 0) {
             this.selectBank(banks[0]);
           }
-          this.generateFakeStats();
         },
         error: () => {
           // Handle error
@@ -52,64 +51,22 @@ export class BanksComponent implements OnInit {
       });
   }
 
-  generateFakeStats(): void {
-    this.banks?.forEach(bank => {
-      this.bankStats[bank.id!] = {
-        balance: this.getRandomNumber(10000, 1000000),
-        transactions: {
-          today: this.getRandomNumber(10, 100),
-          thisWeek: this.getRandomNumber(50, 500),
-          thisMonth: this.getRandomNumber(200, 2000),
-        },
-        growth: {
-          daily: this.getRandomNumber(-5, 15),
-          weekly: this.getRandomNumber(-10, 30),
-          monthly: this.getRandomNumber(-20, 50),
-        },
-        topTransactions: [
-          {
-            type: 'deposit',
-            amount: this.getRandomNumber(1000, 50000),
-            date: new Date(Date.now() - this.getRandomNumber(0, 7) * 24 * 60 * 60 * 1000),
-          },
-          {
-            type: 'withdrawal',
-            amount: this.getRandomNumber(1000, 50000),
-            date: new Date(Date.now() - this.getRandomNumber(0, 7) * 24 * 60 * 60 * 1000),
-          },
-          {
-            type: 'transfer',
-            amount: this.getRandomNumber(1000, 50000),
-            date: new Date(Date.now() - this.getRandomNumber(0, 7) * 24 * 60 * 60 * 1000),
-          },
-        ],
-        accountTypes: {
-          savings: this.getRandomNumber(100, 1000),
-          checking: this.getRandomNumber(50, 500),
-          business: this.getRandomNumber(10, 100),
-        },
-      };
-    });
-  }
-
-  getRandomNumber(min: number, max: number): number {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-
-  filterBanks(): void {
-    if (!this.banks) {
-      this.filteredBanks = [];
-      return;
-    }
-
-    const search = this.searchText.toLowerCase();
-    this.filteredBanks = this.banks.filter(
-      bank => !search || (bank.name && bank.name.toLowerCase().includes(search)) || (bank.id && bank.id.toString().includes(search))
-    );
-  }
-
   selectBank(bank: BankDTO): void {
     this.selectedBank = bank;
+    if (bank.id) {
+      this.isLoading = true;
+      this.bankService
+        .getBankAnalysis(bank.id)
+        .pipe(finalize(() => (this.isLoading = false)))
+        .subscribe({
+          next: (analysis: BankBalanceDTO) => {
+            this.bankAnalysis = analysis;
+          },
+          error: () => {
+            console.error('Failed to load bank analysis');
+          },
+        });
+    }
   }
 
   onSearch(query: string): void {
@@ -117,45 +74,45 @@ export class BanksComponent implements OnInit {
     this.filterBanks();
   }
 
+  filterBanks(): void {
+    if (!this.banks) {
+      return;
+    }
+    if (!this.searchText) {
+      this.filteredBanks = this.banks;
+      return;
+    }
+    const searchLower = this.searchText.toLowerCase();
+    this.filteredBanks = this.banks.filter(bank => bank.name?.toLowerCase().includes(searchLower));
+  }
+
   delete(id: string | undefined): void {
-    if (id) {
+    if (!id) {
+      return;
+    }
+
+    if (confirm(this.translateService.instant('entity.delete.warning'))) {
       this.bankService.deleteBank(id).subscribe({
         next: () => {
           this.loadAll();
+          if (this.selectedBank?.id === id) {
+            this.selectedBank = undefined;
+            this.bankAnalysis = undefined;
+          }
         },
         error: () => {
-          // Handle error
+          console.error('Failed to delete bank');
         },
       });
     }
   }
 
-  refresh(): void {
-    this.loadAll();
-  }
-
   createNew(): void {
-    const modalRef = this.modalService.open(BankCreateModalComponent, { backdrop: 'static' });
-    modalRef.result.then(
-      (result) => {
-        if (result) {
-          this.loadAll();
-        }
-      },
-      () => {
-        // Modal dismissed
+    const modalRef = this.modalService.open(BankCreateModalComponent, { size: 'lg' });
+    modalRef.closed.subscribe(result => {
+      if (result) {
+        this.loadAll();
       }
-    );
-  }
-
-  getGrowthClass(value: number): string {
-    return value > 0 ? 'text-success' : value < 0 ? 'text-danger' : 'text-muted';
-  }
-
-  formatCurrency(value: number): string {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(value);
+    });
   }
 }
