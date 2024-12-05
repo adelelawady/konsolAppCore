@@ -3,7 +3,11 @@ package com.konsol.core.web.rest.api;
 import com.konsol.core.repository.BankRepository;
 import com.konsol.core.security.AuthoritiesConstants;
 import com.konsol.core.service.BankService;
+import com.konsol.core.service.api.dto.BankBalanceDTO;
 import com.konsol.core.service.api.dto.BankDTO;
+import com.konsol.core.service.api.dto.BankTransactionsDTO;
+import com.konsol.core.service.mapper.sup.BankBalanceMapper;
+import com.konsol.core.service.mapper.sup.BankTransactionsMapper;
 import com.konsol.core.web.api.BanksApiDelegate;
 import com.konsol.core.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
@@ -11,6 +15,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
@@ -47,9 +52,20 @@ public class BankResource implements BanksApiDelegate {
 
     private final BankRepository bankRepository;
 
-    public BankResource(BankService bankService, BankRepository bankRepository) {
+    private final BankBalanceMapper bankBalanceMapper;
+
+    private final BankTransactionsMapper bankTransactionsMapper;
+
+    public BankResource(
+        BankService bankService,
+        BankRepository bankRepository,
+        BankBalanceMapper bankBalanceMapper,
+        BankTransactionsMapper bankTransactionsMapper
+    ) {
         this.bankService = bankService;
         this.bankRepository = bankRepository;
+        this.bankBalanceMapper = bankBalanceMapper;
+        this.bankTransactionsMapper = bankTransactionsMapper;
     }
 
     /**
@@ -193,5 +209,17 @@ public class BankResource implements BanksApiDelegate {
         log.debug("REST request to delete Bank : {}", id);
         bankService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id)).build();
+    }
+
+    @Override
+    public ResponseEntity<BankBalanceDTO> getBankAnalysis(String id) {
+        return ResponseEntity.ok(bankBalanceMapper.toDto(bankService.calculateBankBalance(id)));
+    }
+
+    @Override
+    public ResponseEntity<List<BankTransactionsDTO>> getBankTransactions(String id) {
+        return ResponseEntity.ok(
+            bankService.processBankTransactions(id).stream().map(bankTransactionsMapper::toDto).collect(Collectors.toList())
+        );
     }
 }

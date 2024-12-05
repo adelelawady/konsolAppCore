@@ -16,7 +16,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  */
 @Document(collection = "invoice_items")
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class InvoiceItem implements Serializable {
+public class InvoiceItem extends AbstractAuditingEntity<String> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

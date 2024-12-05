@@ -10,15 +10,20 @@ import com.konsol.core.service.ItemService;
 import com.konsol.core.service.ItemUnitService;
 import com.konsol.core.service.PkService;
 import com.konsol.core.service.api.dto.*;
+import com.konsol.core.service.dto.ChartDataDTO;
+import com.konsol.core.service.dto.ItemAnalysisDTO;
 import com.konsol.core.service.mapper.ItemMapper;
 import com.konsol.core.service.mapper.ItemUnitMapper;
 import com.konsol.core.web.rest.api.errors.ItemNotFoundException;
 import com.konsol.core.web.rest.api.errors.ItemUnitException;
+import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.DistinctIterable;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
+import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -545,5 +550,193 @@ public class ItemServiceImpl implements ItemService {
         }
 
         return items.stream().findFirst().map(itemMapper::toDto);
+    }
+
+    @Override
+    public ItemAnalysisDTO analyzeItem(String itemId, String storeId, Date startDate, Date endDate) {
+        if (itemId == null || itemId.trim().isEmpty()) {
+            throw new IllegalArgumentException("Item ID cannot be null or empty");
+        }
+
+        try {
+            // Build the aggregation pipeline
+            List<Document> pipeline = new ArrayList<>();
+
+            // Match stage: Filter by itemId, storeId, and optional date range
+            Document matchStage = new Document("$match", new Document("item.$id", new ObjectId(itemId)));
+            if (storeId != null && !storeId.trim().isEmpty()) {
+                matchStage.get("$match", Document.class).append("store.$id", new ObjectId(storeId));
+            }
+            if (startDate != null || endDate != null) {
+                Document dateFilter = new Document();
+                if (startDate != null) {
+                    dateFilter.append("$gte", startDate);
+                }
+                if (endDate != null) {
+                    dateFilter.append("$lte", endDate);
+                }
+                matchStage.get("$match", Document.class).append("created_date", dateFilter);
+            }
+            pipeline.add(matchStage);
+
+            // Project stage: Calculate derived fields (e.g., profits, discounts)
+            pipeline.add(
+                new Document(
+                    "$project",
+                    new Document("totalSales", new Document("$toDouble", "$total_price"))
+                        .append("netSales", new Document("$toDouble", "$net_price"))
+                        .append("totalCost", new Document("$toDouble", "$total_cost"))
+                        .append("netCost", new Document("$toDouble", "$net_cost"))
+                        .append(
+                            "profit",
+                            new Document(
+                                "$subtract",
+                                Arrays.asList(new Document("$toDouble", "$net_price"), new Document("$toDouble", "$net_cost"))
+                            )
+                        )
+                        .append("discount", new Document("$toDouble", "$discount"))
+                        .append("qtyOut", new Document("$toDouble", "$qty_out"))
+                        .append("qtyIn", new Document("$toDouble", "$qty_in"))
+                )
+            );
+
+            // Group stage: Aggregate totals for the item
+            pipeline.add(
+                new Document(
+                    "$group",
+                    new Document("_id", null)
+                        .append("totalSales", new Document("$sum", "$totalSales"))
+                        .append("netSales", new Document("$sum", "$netSales"))
+                        .append("totalCost", new Document("$sum", "$totalCost"))
+                        .append("netCost", new Document("$sum", "$netCost"))
+                        .append("totalProfit", new Document("$sum", "$profit"))
+                        .append("totalDiscount", new Document("$sum", "$discount"))
+                        .append("totalQtyOut", new Document("$sum", "$qtyOut"))
+                        .append("totalQtyIn", new Document("$sum", "$qtyIn"))
+                )
+            );
+
+            // Execute the aggregation
+            MongoCollection<Document> collection = mongoTemplate.getCollection("invoice_items");
+            AggregateIterable<Document> result = collection.aggregate(pipeline);
+            Document aggregationResult = result.first();
+
+            if (aggregationResult == null) {
+                log.warn("No results found for item ID: {}", itemId);
+                return new ItemAnalysisDTO(); // Return empty DTO if no result
+            }
+
+            // Map the aggregation result to ItemAnalysisDTO
+            ItemAnalysisDTO itemAnalysis = new ItemAnalysisDTO();
+            itemAnalysis.setTotalSales(safeGetDouble(aggregationResult, "totalSales"));
+            itemAnalysis.setNetSales(safeGetDouble(aggregationResult, "netSales"));
+            itemAnalysis.setTotalCost(safeGetDouble(aggregationResult, "totalCost"));
+            itemAnalysis.setNetCost(safeGetDouble(aggregationResult, "netCost"));
+            itemAnalysis.setTotalProfit(safeGetDouble(aggregationResult, "totalProfit"));
+            itemAnalysis.setTotalDiscount(safeGetDouble(aggregationResult, "totalDiscount"));
+            itemAnalysis.setTotalQtyOut(safeGetDouble(aggregationResult, "totalQtyOut"));
+            itemAnalysis.setTotalQtyIn(safeGetDouble(aggregationResult, "totalQtyIn"));
+
+            // Log the results for debugging
+            log.info("Item Analysis DTO: {}", itemAnalysis);
+
+            return itemAnalysis;
+        } catch (Exception e) {
+            log.error("Error analyzing item ID: {}", itemId, e);
+            throw new RuntimeException("Failed to analyze item", e);
+        }
+    }
+
+    @Override
+    public List<ChartDataDTO> getSalesChartData(String itemId, Date startDate, Date endDate) {
+        if (itemId == null || itemId.trim().isEmpty()) {
+            throw new IllegalArgumentException("Item ID cannot be null or empty");
+        }
+
+        try {
+            // Build the aggregation pipeline to group sales by date
+            List<Document> pipeline = new ArrayList<>();
+
+            // Match stage: Filter by itemId and optional date range
+            Document matchStage = new Document(
+                "$match",
+                new Document("item.$id", new ObjectId(itemId))
+                    .append("created_date", new Document("$gte", startDate).append("$lte", endDate))
+            );
+            pipeline.add(matchStage);
+
+            // Project stage: Extract necessary fields (date, total sales, qty, price)
+            pipeline.add(
+                new Document(
+                    "$project",
+                    new Document("date", "$created_date")
+                        .append("totalSales", new Document("$toDouble", "$total_price"))
+                        .append("qty", new Document("$toDouble", "$qty_out"))
+                        .append("price", new Document("$toDouble", "$unit_price"))
+                )
+            );
+
+            // Group stage: Group by date (or month) and calculate total sales, quantity, and price
+            pipeline.add(
+                new Document(
+                    "$group",
+                    new Document("_id", new Document("$dateToString", new Document("format", "%Y-%m-%d").append("date", "$date")))
+                        .append("totalSales", new Document("$sum", "$totalSales"))
+                        .append("totalQty", new Document("$sum", "$qty"))
+                        .append("avgPrice", new Document("$avg", "$price"))
+                )
+            );
+
+            // Sort stage: Sort by date in ascending order
+            pipeline.add(new Document("$sort", new Document("_id", 1)));
+
+            // Execute the aggregation
+            MongoCollection<Document> collection = mongoTemplate.getCollection("invoice_items");
+            AggregateIterable<Document> result = collection.aggregate(pipeline);
+
+            List<ChartDataDTO> chartDataList = new ArrayList<>();
+            for (Document doc : result) {
+                ChartDataDTO chartData = new ChartDataDTO();
+                chartData.setDate(doc.getString("_id"));
+                chartData.setTotalSales(safeGetDouble(doc, "totalSales"));
+                chartData.setTotalQty(safeGetDouble(doc, "totalQty"));
+                chartData.setAvgPrice(safeGetDouble(doc, "avgPrice"));
+                chartDataList.add(chartData);
+            }
+
+            log.info("Item Chart DTO: {}", chartDataList);
+            // Return the result to be used for the chart rendering
+            return chartDataList;
+        } catch (Exception e) {
+            log.error("Error generating sales chart data for item ID: {}", itemId, e);
+            throw new RuntimeException("Failed to generate sales chart data", e);
+        }
+    }
+
+    private double safeGetDouble(Document doc, String key) {
+        if (doc == null || !doc.containsKey(key)) {
+            log.warn("Field {} not found in the document.", key);
+            return 0.0;
+        }
+
+        Object value = doc.get(key);
+        if (value == null) {
+            log.warn("Null value for key: {}", key);
+            return 0.0;
+        }
+
+        try {
+            if (value instanceof Number) {
+                return ((Number) value).doubleValue();
+            }
+
+            if (value instanceof String) {
+                return Double.parseDouble((String) value);
+            }
+        } catch (NumberFormatException e) {
+            log.warn("Unable to parse value for key {}: {}", key, value);
+        }
+
+        return 0.0;
     }
 }

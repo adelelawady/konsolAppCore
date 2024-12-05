@@ -3,7 +3,7 @@ package com.konsol.core.service;
 import com.konsol.core.domain.Bank;
 import com.konsol.core.service.api.dto.BankDTO;
 import com.konsol.core.service.dto.BankBalanceDTO;
-import com.konsol.core.service.dto.BankMovementDTO;
+import com.konsol.core.service.dto.BankTransactionsDTO;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -67,7 +67,7 @@ public interface BankService {
      * @param bankId the id of the bank.
      * @return list of bank movements.
      */
-    List<BankMovementDTO> loadBankMovements(String bankId);
+    List<BankTransactionsDTO> processBankTransactions(String bankId);
 
     /**
      * Calculate bank balance and profits.

@@ -9,10 +9,9 @@ import com.konsol.core.repository.MoneyRepository;
 import com.konsol.core.service.BankService;
 import com.konsol.core.service.api.dto.BankDTO;
 import com.konsol.core.service.dto.BankBalanceDTO;
-import com.konsol.core.service.dto.BankMovementDTO;
+import com.konsol.core.service.dto.BankTransactionsDTO;
 import com.konsol.core.service.exception.BankNotFoundException;
 import com.konsol.core.service.mapper.BankMapper;
-import com.mongodb.MongoException;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
 import java.util.ArrayList;
@@ -27,14 +26,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.MongoExpression;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.*;
-import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
-import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.aggregation.ConditionalOperators;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
@@ -117,7 +111,7 @@ public class BankServiceImpl implements BankService {
     }
 
     @Override
-    public List<BankMovementDTO> loadBankMovements(String bankId) {
+    public List<BankTransactionsDTO> processBankTransactions(String bankId) {
         log.debug("Request to load bank movements for bank ID: {}", bankId);
 
         // Validate bank exists
@@ -128,7 +122,7 @@ public class BankServiceImpl implements BankService {
         }
 
         try {
-            List<BankMovementDTO> movements = new ArrayList<>();
+            List<BankTransactionsDTO> movements = new ArrayList<>();
 
             // Create pipeline for Money collection
             List<AggregationOperation> moneyOperations = Arrays.asList(
@@ -195,11 +189,13 @@ public class BankServiceImpl implements BankService {
             );
 
             // Execute Money aggregation
-            movements.addAll(mongoTemplate.aggregate(newAggregation(moneyOperations), "monies", BankMovementDTO.class).getMappedResults());
+            movements.addAll(
+                mongoTemplate.aggregate(newAggregation(moneyOperations), "monies", BankTransactionsDTO.class).getMappedResults()
+            );
 
             // Execute Invoice aggregation
             movements.addAll(
-                mongoTemplate.aggregate(newAggregation(invoiceOperations), "invoices", BankMovementDTO.class).getMappedResults()
+                mongoTemplate.aggregate(newAggregation(invoiceOperations), "invoices", BankTransactionsDTO.class).getMappedResults()
             );
 
             // Sort the combined results by createdDate

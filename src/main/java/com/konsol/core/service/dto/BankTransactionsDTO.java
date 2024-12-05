@@ -7,7 +7,7 @@ import java.time.Instant;
 /**
  * Data Transfer Object for Bank Movements
  */
-public class BankMovementDTO implements Serializable {
+public class BankTransactionsDTO implements Serializable {
 
     private String id;
     private String pk;

@@ -1616,8 +1616,209 @@ paths:
         - GLOBAL
         - server_settings
     parameters: []
+  '/banks/{id}/transactions':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BankTransactionsDTO'
+      operationId: getBankTransactions
+      description: ''
+  '/banks/{id}/analysis':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankBalanceDTO'
+      operationId: getBankAnalysis
 components:
   schemas:
+    ChartDataDTO:
+      type: object
+      x-stoplight:
+        id: f1ee0f5cd5909
+      properties:
+        date:
+          type: string
+          format: date
+          description: Date in day/month/year format (التاريخ (يوم/شهر/سنة)).
+        totalSales:
+          type: number
+          format: double
+          description: Total sales (إجمالي المبيعات).
+          default: 0
+        totalQty:
+          type: number
+          format: double
+          description: Total quantity sold (إجمالي الكمية المباعة).
+          default: 0
+        avgPrice:
+          type: number
+          format: double
+          description: Average price (متوسط السعر).
+          default: 0
+    ItemAnalysisDTO:
+      type: object
+      properties:
+        totalSales:
+          type: number
+          format: double
+          description: Total gross sales (إجمالي المبيعات الإجمالية).
+          default: 0
+        netSales:
+          type: number
+          format: double
+          description: Total net sales (إجمالي المبيعات الصافية).
+          default: 0
+        totalCost:
+          type: number
+          format: double
+          description: Total gross cost (إجمالي التكلفة الإجمالية).
+          default: 0
+        netCost:
+          type: number
+          format: double
+          description: Total net cost (إجمالي التكلفة الصافية).
+          default: 0
+        totalProfit:
+          type: number
+          format: double
+          description: Total profits (إجمالي الأرباح).
+          default: 0
+        totalDiscount:
+          type: number
+          format: double
+          description: Total discounts (إجمالي الخصومات).
+          default: 0
+        totalQtyOut:
+          type: number
+          format: double
+          description: Total quantity sold (إجمالي الكمية المباعة).
+          default: 0
+        totalQtyIn:
+          type: number
+          format: double
+          description: Total quantity purchased (إجمالي الكمية المشتراة).
+          default: 0
+    BankTransactionsDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the transaction.
+        pk:
+          type: string
+          description: Primary key.
+        bankId:
+          type: string
+          description: Identifier for the associated bank.
+        sourceType:
+          type: string
+          description: 'Type of the source, e.g., "INVOICE" or "MONEY".'
+        sourceKind:
+          type: string
+          description: Kind of the source.
+        sourceId:
+          type: string
+          description: Identifier for the source.
+        sourcePk:
+          type: string
+          description: Primary key of the source.
+        moneyIn:
+          type: number
+          format: double
+          description: Amount of money coming in.
+          default: 0
+        moneyOut:
+          type: number
+          format: double
+          description: Amount of money going out.
+          default: 0
+        details:
+          type: string
+          description: Additional details about the transaction.
+        createdDate:
+          type: string
+          format: date-time
+          description: The date and time when the transaction was created.
+        accountId:
+          type: string
+          description: Identifier for the associated account.
+        accountName:
+          type: string
+          description: Name of the associated account.
+    BankBalanceDTO:
+      type: object
+      properties:
+        totalSalesProfits:
+          type: number
+          format: double
+          description: Total sales profits.
+          default: 0
+        grossRevenue:
+          type: number
+          format: double
+          description: Gross revenue (الإيرادات الإجمالية قبل الخصم).
+          default: 0
+        netRevenue:
+          type: number
+          format: double
+          description: Net revenue (الإيرادات الصافية بعد الخصم).
+          default: 0
+        totalCost:
+          type: number
+          format: double
+          description: Total cost of purchases (التكلفة الإجمالية للمشتريات).
+          default: 0
+        totalDiscounts:
+          type: number
+          format: double
+          description: Total discounts offered (إجمالي الخصومات المقدمة).
+          default: 0
+        totalAdditions:
+          type: number
+          format: double
+          description: Total additions (إجمالي الإضافات).
+          default: 0
+        totalBalance:
+          type: number
+          format: double
+          description: Total balance.
+          default: 0
+        moneyInFromMoney:
+          type: number
+          format: double
+          description: Money in from money.
+          default: 0
+        moneyOutFromMoney:
+          type: number
+          format: double
+          description: Money out from money.
+          default: 0
     ItemDTO:
       type: object
       x-tags:

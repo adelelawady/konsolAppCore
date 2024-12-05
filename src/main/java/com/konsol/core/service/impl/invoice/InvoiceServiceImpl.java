@@ -1,6 +1,7 @@
 package com.konsol.core.service.impl.invoice;
 
 import com.konsol.core.domain.*;
+import com.konsol.core.domain.enumeration.AccountKind;
 import com.konsol.core.domain.enumeration.InvoiceKind;
 import com.konsol.core.domain.enumeration.PkKind;
 import com.konsol.core.repository.InvoiceItemRepository;
@@ -75,6 +76,8 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     private final SettingService settingService;
 
+    private final MoneyService moneyService;
+
     public InvoiceServiceImpl(
         InvoiceRepository invoiceRepository,
         InvoiceMapper invoiceMapper,
@@ -89,7 +92,8 @@ public class InvoiceServiceImpl implements InvoiceService {
         SaleService saleService,
         PurchaseService purchaseService,
         MongoTemplate mongoTemplate,
-        SettingService settingService
+        SettingService settingService,
+        MoneyService moneyService
     ) {
         this.invoiceRepository = invoiceRepository;
         this.invoiceMapper = invoiceMapper;
@@ -105,6 +109,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         this.purchaseService = purchaseService;
         this.mongoTemplate = mongoTemplate;
         this.settingService = settingService;
+        this.moneyService = moneyService;
     }
 
     /**
@@ -840,6 +845,16 @@ public class InvoiceServiceImpl implements InvoiceService {
             storeService.findOneDomain(settings.getMAIN_SELECTED_STORE_ID()).ifPresent(invoice::setStore);
         }
 
+        // Handle deferred invoice money creation
+        if (invoice.isDeferred()) {
+            AccountUser account = invoice.getAccount();
+            if (invoice.getKind() == InvoiceKind.SALE) {
+                accountUserService.subtractAccountBalance(account.getId(), invoice.getNetPrice());
+            } else if (invoice.getKind() == InvoiceKind.PURCHASE) {
+                accountUserService.addAccountBalance(account.getId(), invoice.getNetCost());
+            }
+        }
+
         switch (invoice.getKind()) {
             case SALE:
                 {
@@ -854,7 +869,6 @@ public class InvoiceServiceImpl implements InvoiceService {
                 }
             case PURCHASE:
                 {
-                    // TODO selected store to add to
                     if (purchaseUpdateItemQtyAfterSave) {
                         invoice
                             .getInvoiceItems()

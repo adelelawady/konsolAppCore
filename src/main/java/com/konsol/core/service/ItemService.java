@@ -3,7 +3,10 @@ package com.konsol.core.service;
 import com.konsol.core.domain.Item;
 import com.konsol.core.domain.ItemUnit;
 import com.konsol.core.service.api.dto.*;
+import com.konsol.core.service.dto.ChartDataDTO;
+import com.konsol.core.service.dto.ItemAnalysisDTO;
 import com.konsol.core.service.mapper.ItemMapper;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -154,4 +157,8 @@ public interface ItemService {
     /***
      * TODO advanced options for single item :  round total , math , store options unlimited store warn etc...
      */
+
+    ItemAnalysisDTO analyzeItem(String itemId, String storeId, Date startDate, Date endDate);
+
+    List<ChartDataDTO> getSalesChartData(String itemId, Date startDate, Date endDate);
 }
