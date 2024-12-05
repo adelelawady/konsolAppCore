@@ -21,7 +21,9 @@ import { BankBalanceDTO } from '../model/bankBalanceDTO';
 // @ts-ignore
 import { BankDTO } from '../model/bankDTO';
 // @ts-ignore
-import { BankTransactionsDTO } from '../model/bankTransactionsDTO';
+import { BankTransactionsContainer } from '../model/bankTransactionsContainer';
+// @ts-ignore
+import { PaginationSearchModel } from '../model/paginationSearchModel';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS } from '../variables';
@@ -470,32 +472,37 @@ export class BankResourceService {
   }
 
   /**
-   * Your GET endpoint
+   *
    *
    * @param id
+   * @param paginationSearchModel
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public getBankTransactions(
     id: string,
+    paginationSearchModel?: PaginationSearchModel,
     observe?: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
-  ): Observable<Array<BankTransactionsDTO>>;
+  ): Observable<BankTransactionsContainer>;
   public getBankTransactions(
     id: string,
+    paginationSearchModel?: PaginationSearchModel,
     observe?: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
-  ): Observable<HttpResponse<Array<BankTransactionsDTO>>>;
+  ): Observable<HttpResponse<BankTransactionsContainer>>;
   public getBankTransactions(
     id: string,
+    paginationSearchModel?: PaginationSearchModel,
     observe?: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
-  ): Observable<HttpEvent<Array<BankTransactionsDTO>>>;
+  ): Observable<HttpEvent<BankTransactionsContainer>>;
   public getBankTransactions(
     id: string,
+    paginationSearchModel?: PaginationSearchModel,
     observe: any = 'body',
     reportProgress: boolean = false,
     options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
@@ -521,6 +528,13 @@ export class BankResourceService {
       localVarHttpContext = new HttpContext();
     }
 
+    // to determine the Content-Type header
+    const consumes: string[] = ['application/json'];
+    const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+    if (httpContentTypeSelected !== undefined) {
+      localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+    }
+
     let responseType_: 'text' | 'json' | 'blob' = 'json';
     if (localVarHttpHeaderAcceptSelected) {
       if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
@@ -532,8 +546,9 @@ export class BankResourceService {
       }
     }
 
-    return this.httpClient.get<Array<BankTransactionsDTO>>(
+    return this.httpClient.post<BankTransactionsContainer>(
       `${this.configuration.basePath}/banks/${encodeURIComponent(String(id))}/transactions`,
+      paginationSearchModel,
       {
         context: localVarHttpContext,
         responseType: <any>responseType_,

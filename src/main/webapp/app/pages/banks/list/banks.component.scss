@@ -1,0 +1,38 @@
+.highlight-card {
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-body {
+    border-left: 4px solid #0d6efd;
+    background: linear-gradient(to right, rgba(13, 110, 253, 0.05), transparent);
+  }
+}
+
+.dashboard-card {
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-body {
+    padding: 1.5rem;
+  }
+
+  .card-subtitle {
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .card-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+}

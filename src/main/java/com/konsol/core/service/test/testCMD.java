@@ -25,7 +25,7 @@ public class testCMD implements CommandLineRunner {
      */
     @Override
     public void run(String... args) throws Exception {
-        bankService.processBankTransactions("674ffcaab0c83957e9623138");
+        // bankService.processBankTransactions("674ffcaab0c83957e9623138");
 
         System.out.println(bankService.calculateBankBalance("674ffcaab0c83957e9623138"));
 

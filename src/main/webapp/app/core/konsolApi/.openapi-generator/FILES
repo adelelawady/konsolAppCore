@@ -25,6 +25,7 @@ model/adminUserDTO.ts
 model/authorityDTO.ts
 model/bankBalanceDTO.ts
 model/bankDTO.ts
+model/bankTransactionsContainer.ts
 model/bankTransactionsDTO.ts
 model/categoryItem.ts
 model/chartDataDTO.ts

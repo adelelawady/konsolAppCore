@@ -2,6 +2,8 @@ package com.konsol.core.service;
 
 import com.konsol.core.domain.Bank;
 import com.konsol.core.service.api.dto.BankDTO;
+import com.konsol.core.service.api.dto.BankTransactionsContainer;
+import com.konsol.core.service.api.dto.PaginationSearchModel;
 import com.konsol.core.service.dto.BankBalanceDTO;
 import com.konsol.core.service.dto.BankTransactionsDTO;
 import java.util.List;
@@ -67,7 +69,7 @@ public interface BankService {
      * @param bankId the id of the bank.
      * @return list of bank movements.
      */
-    List<BankTransactionsDTO> processBankTransactions(String bankId);
+    BankTransactionsContainer processBankTransactions(String bankId, PaginationSearchModel paginationSearchModel);
 
     /**
      * Calculate bank balance and profits.

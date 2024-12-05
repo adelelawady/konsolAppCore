@@ -8,16 +8,21 @@ import com.konsol.core.repository.InvoiceRepository;
 import com.konsol.core.repository.MoneyRepository;
 import com.konsol.core.service.BankService;
 import com.konsol.core.service.api.dto.BankDTO;
+import com.konsol.core.service.api.dto.BankTransactionsContainer;
+import com.konsol.core.service.api.dto.PaginationSearchModel;
 import com.konsol.core.service.dto.BankBalanceDTO;
 import com.konsol.core.service.dto.BankTransactionsDTO;
 import com.konsol.core.service.exception.BankNotFoundException;
 import com.konsol.core.service.mapper.BankMapper;
+import com.konsol.core.service.mapper.sup.BankTransactionsMapper;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.bson.BsonNull;
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -26,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
 import org.springframework.data.mongodb.core.aggregation.ConditionalOperators;
@@ -53,9 +59,12 @@ public class BankServiceImpl implements BankService {
     @Autowired
     private InvoiceRepository invoiceRepository;
 
-    public BankServiceImpl(BankRepository bankRepository, BankMapper bankMapper) {
+    private final BankTransactionsMapper bankTransactionsMapper;
+
+    public BankServiceImpl(BankRepository bankRepository, BankMapper bankMapper, BankTransactionsMapper bankTransactionsMapper) {
         this.bankRepository = bankRepository;
         this.bankMapper = bankMapper;
+        this.bankTransactionsMapper = bankTransactionsMapper;
     }
 
     @Override
@@ -111,8 +120,8 @@ public class BankServiceImpl implements BankService {
     }
 
     @Override
-    public List<BankTransactionsDTO> processBankTransactions(String bankId) {
-        log.debug("Request to load bank movements for bank ID: {}", bankId);
+    public BankTransactionsContainer processBankTransactions(String bankId, PaginationSearchModel paginationSearchModel) {
+        log.debug("Request to load bank movements for bank ID: {} with pagination: {}", bankId, paginationSearchModel);
 
         // Validate bank exists
         Optional<Bank> bank = bankRepository.findById(bankId);
@@ -122,70 +131,87 @@ public class BankServiceImpl implements BankService {
         }
 
         try {
+            // Determine sort direction
+            Sort.Direction sortDirection = paginationSearchModel.getSortOrder() != null
+                ? Sort.Direction.fromString(paginationSearchModel.getSortOrder())
+                : Sort.Direction.ASC;
+            String sortField = paginationSearchModel.getSortField() != null ? paginationSearchModel.getSortField() : "created_date";
+
+            // Calculate skip value for pagination
+            int skip = (paginationSearchModel.getPage()) * paginationSearchModel.getSize();
+
             List<BankTransactionsDTO> movements = new ArrayList<>();
 
             // Create pipeline for Money collection
-            List<AggregationOperation> moneyOperations = Arrays.asList(
-                // Match documents for the specific bank
-                match(Criteria.where("bank.$id").is(new ObjectId(bankId))),
-                // Project the required fields
-                project()
-                    .and("_id")
-                    .as("id")
-                    .and("pk")
-                    .as("pk")
-                    .andExpression("{ $toString: '$bank.$id' }")
-                    .as("bankId")
-                    .andExpression("'MONEY'")
-                    .as("sourceType")
-                    .and(ConditionalOperators.ifNull("kind").then("UNKNOWN"))
-                    .as("sourceKind")
-                    .and("_id")
-                    .as("sourceId")
-                    .and("pk")
-                    .as("sourcePk")
-                    .and(ConditionalOperators.ifNull("money_in").then(0))
-                    .as("moneyIn")
-                    .and(ConditionalOperators.ifNull("money_out").then(0))
-                    .as("moneyOut")
-                    .and("details")
-                    .as("details")
-                    .and("created_date")
-                    .as("createdDate")
-                    .andExpression("{ $toString: '$account.$id' }")
-                    .as("accountId")
+            List<AggregationOperation> moneyOperations = new ArrayList<>(
+                Arrays.asList(
+                    // Match documents for the specific bank
+                    match(Criteria.where("bank.$id").is(new ObjectId(bankId))),
+                    // Project the required fields
+                    project()
+                        .and("_id")
+                        .as("id")
+                        .and("pk")
+                        .as("pk")
+                        .andExpression("{ $toString: '$bank.$id' }")
+                        .as("bankId")
+                        .andExpression("'MONEY'")
+                        .as("sourceType")
+                        .and(ConditionalOperators.ifNull("kind").then("UNKNOWN"))
+                        .as("sourceKind")
+                        .and("_id")
+                        .as("sourceId")
+                        .and("pk")
+                        .as("sourcePk")
+                        .and(ConditionalOperators.ifNull("money_in").then(0))
+                        .as("moneyIn")
+                        .and(ConditionalOperators.ifNull("money_out").then(0))
+                        .as("moneyOut")
+                        .and("details")
+                        .as("details")
+                        .and("created_date")
+                        .as("createdDate")
+                        .andExpression("{ $toString: '$account.$id' }")
+                        .as("accountId"),
+                    // Add sort
+                    sort(Sort.by(sortDirection, "createdDate"))
+                )
             );
 
             // Create pipeline for Invoice collection
-            List<AggregationOperation> invoiceOperations = Arrays.asList(
-                // Match documents for the specific bank
-                match(Criteria.where("bank.$id").is(new ObjectId(bankId))),
-                // Project the required fields with conditional money in/out based on invoice kind
-                project()
-                    .and("_id")
-                    .as("id")
-                    .and("pk")
-                    .as("pk")
-                    .andExpression("{ $toString: '$bank.$id' }")
-                    .as("bankId")
-                    .andExpression("'INVOICE'")
-                    .as("sourceType")
-                    .and(ConditionalOperators.ifNull("kind").then("UNKNOWN"))
-                    .as("sourceKind")
-                    .and("_id")
-                    .as("sourceId")
-                    .and("pk")
-                    .as("sourcePk")
-                    .and(ConditionalOperators.ifNull("net_price").then(0))
-                    .as("moneyIn")
-                    .and(ConditionalOperators.ifNull("net_cost").then(0))
-                    .as("moneyOut")
-                    .and("details")
-                    .as("details")
-                    .and("created_date")
-                    .as("createdDate")
-                    .andExpression("{ $toString: '$account.$id' }")
-                    .as("accountId")
+            List<AggregationOperation> invoiceOperations = new ArrayList<>(
+                Arrays.asList(
+                    // Match documents for the specific bank
+                    match(Criteria.where("bank.$id").is(new ObjectId(bankId))),
+                    // Project the required fields
+                    project()
+                        .and("_id")
+                        .as("id")
+                        .and("pk")
+                        .as("pk")
+                        .andExpression("{ $toString: '$bank.$id' }")
+                        .as("bankId")
+                        .andExpression("'INVOICE'")
+                        .as("sourceType")
+                        .and(ConditionalOperators.ifNull("kind").then("UNKNOWN"))
+                        .as("sourceKind")
+                        .and("_id")
+                        .as("sourceId")
+                        .and("pk")
+                        .as("sourcePk")
+                        .and(ConditionalOperators.ifNull("net_price").then(0))
+                        .as("moneyIn")
+                        .and(ConditionalOperators.ifNull("net_cost").then(0))
+                        .as("moneyOut")
+                        .and("details")
+                        .as("details")
+                        .and("created_date")
+                        .as("createdDate")
+                        .andExpression("{ $toString: '$account.$id' }")
+                        .as("accountId"),
+                    // Add sort
+                    sort(Sort.by(sortDirection, "createdDate"))
+                )
             );
 
             // Execute Money aggregation
@@ -203,13 +229,28 @@ public class BankServiceImpl implements BankService {
                 if (m1.getCreatedDate() == null && m2.getCreatedDate() == null) return 0;
                 if (m1.getCreatedDate() == null) return 1;
                 if (m2.getCreatedDate() == null) return -1;
-                return m2.getCreatedDate().compareTo(m1.getCreatedDate());
+                return sortDirection == Sort.Direction.ASC
+                    ? m2.getCreatedDate().compareTo(m1.getCreatedDate())
+                    : m1.getCreatedDate().compareTo(m2.getCreatedDate());
             });
+
+            int movementsTotalSize = movements.size();
+            // Apply pagination to the combined results
+            int toIndex = Math.min(skip + paginationSearchModel.getSize(), movements.size());
+
+            // Check if fromIndex is within bounds
+            if (skip < movements.size()) {
+                movements = movements.subList(skip, toIndex);
+            } else {
+                movements = new ArrayList<>();
+            }
 
             log.debug("Successfully loaded {} bank movements for bank ID: {}", movements.size(), bankId);
 
-            log.debug("movements size  {} movements: {}", movements.size(), movements.toString());
-            return movements;
+            BankTransactionsContainer bankTransactionsContainer = new BankTransactionsContainer();
+            bankTransactionsContainer.setResult(movements.stream().map(bankTransactionsMapper::toDto).collect(Collectors.toList()));
+            bankTransactionsContainer.setTotal(new BigDecimal(movementsTotalSize));
+            return bankTransactionsContainer;
         } catch (Exception e) {
             log.error("Error loading bank movements for bank ID {}: {}", bankId, e.getMessage());
             throw new RuntimeException("Error loading bank movements", e);

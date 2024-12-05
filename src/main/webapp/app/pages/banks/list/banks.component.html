@@ -71,7 +71,7 @@
         <!-- Bank Analysis Dashboard -->
         <div class="row g-3">
           <div class="col-md-6 col-lg-4">
-            <div class="card highlight-card border-primary">
+            <div class="card highlight-card border-primary" style="border: 2px solid ;">
               <div class="card-body">
                 <h6 class="card-subtitle mb-2 text-primary">{{ 'banks.analysis.totalBalance' | translate }}</h6>
                 <h4 class="card-title mb-0 text-primary">{{ bankAnalysis.totalBalance | number: '1.2-2' }}</h4>
@@ -148,6 +148,22 @@
               </div>
             </div>
           </div>
+        </div>
+
+        <div class="bank-transactions-section border card p-4 m-2" *ngIf="selectedBank">
+          <h3>{{ 'banks.transactions.title' | translate }}</h3>
+          <app-data-table
+            [columns]="columns"
+            [data]="bankTransactions"
+            [loading]="isLoading"
+            [currentPage]="currentPage"
+            [totalItems]="totalTransactions"
+            [showSearch]="false"
+            [pageSize]="pageSize"
+            (pageChange)="onPageChange($event)"
+            (pageSizeChange)="onPageSizeChange($event)"
+          >
+          </app-data-table>
         </div>
       </div>
 

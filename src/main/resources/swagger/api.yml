@@ -1623,21 +1623,25 @@ paths:
         name: id
         in: path
         required: true
-    get:
-      summary: Your GET endpoint
-      tags:
-        - bank-resource
+    post:
+      summary: ''
+      operationId: getBankTransactions
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/BankTransactionsDTO'
-      operationId: getBankTransactions
+                $ref: '#/components/schemas/BankTransactionsContainer'
+      tags:
+        - bank-resource
       description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaginationSearchModel'
+        description: ''
   '/banks/{id}/analysis':
     parameters:
       - schema:
@@ -3462,3 +3466,19 @@ components:
           type: string
           x-stoplight:
             id: 0si0umrjegckk
+    BankTransactionsContainer:
+      title: BankTransactionsContainer
+      x-stoplight:
+        id: 76phw1zwkyv5o
+      type: object
+      properties:
+        result:
+          type: array
+          x-stoplight:
+            id: eg8ulp9orxpmf
+          items:
+            $ref: '#/components/schemas/BankTransactionsDTO'
+        total:
+          type: number
+          x-stoplight:
+            id: 8tsb7yw3o2fos

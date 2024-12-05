@@ -3,9 +3,7 @@ package com.konsol.core.web.rest.api;
 import com.konsol.core.repository.BankRepository;
 import com.konsol.core.security.AuthoritiesConstants;
 import com.konsol.core.service.BankService;
-import com.konsol.core.service.api.dto.BankBalanceDTO;
-import com.konsol.core.service.api.dto.BankDTO;
-import com.konsol.core.service.api.dto.BankTransactionsDTO;
+import com.konsol.core.service.api.dto.*;
 import com.konsol.core.service.mapper.sup.BankBalanceMapper;
 import com.konsol.core.service.mapper.sup.BankTransactionsMapper;
 import com.konsol.core.web.api.BanksApiDelegate;
@@ -217,9 +215,7 @@ public class BankResource implements BanksApiDelegate {
     }
 
     @Override
-    public ResponseEntity<List<BankTransactionsDTO>> getBankTransactions(String id) {
-        return ResponseEntity.ok(
-            bankService.processBankTransactions(id).stream().map(bankTransactionsMapper::toDto).collect(Collectors.toList())
-        );
+    public ResponseEntity<BankTransactionsContainer> getBankTransactions(String id, PaginationSearchModel paginationSearchModel) {
+        return ResponseEntity.ok(bankService.processBankTransactions(id, paginationSearchModel));
     }
 }

@@ -3,7 +3,7 @@
     "title": "Banks",
     "subtitle": "Manage your bank accounts",
     "description": "Manage banks",
-    "refreshList": "Refresh List",
+    "refreshList": "Refresh",
     "create": {
       "title": "Create New Bank",
       "success": "Bank created successfully"
@@ -40,6 +40,29 @@
         "required": "Balance is required",
         "min": "Balance must be greater than or equal to 0"
       }
+    },
+    "analysis": {
+      "totalBalance": "Total Balance",
+      "grossRevenue": "Gross Revenue",
+      "netRevenue": "Net Revenue",
+      "totalSalesProfits": "Total Sales Profits",
+      "moneyIn": "Money In",
+      "moneyOut": "Money Out",
+      "costAnalysis": "Cost Analysis",
+      "totalCost": "Total Cost",
+      "totalDiscounts": "Total Discounts",
+      "totalAdditions": "Total Additions"
+    },
+    "transactions": {
+      "title": "Bank Transactions",
+      "date": "Date",
+      "type": "Transaction Type",
+      "kind": "Transaction Kind",
+      "pk": "Transaction Reference No.",
+      "details": "Transaction Details",
+      "moneyIn": "Money In",
+      "moneyOut": "Money Out",
+      "account": "Account"
     }
   }
 }

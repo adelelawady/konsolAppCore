@@ -5,6 +5,7 @@ export * from './adminUserDTO';
 export * from './authorityDTO';
 export * from './bankBalanceDTO';
 export * from './bankDTO';
+export * from './bankTransactionsContainer';
 export * from './bankTransactionsDTO';
 export * from './categoryItem';
 export * from './chartDataDTO';
