@@ -286,7 +286,8 @@
         "delete": "Delete",
         "export": "Export"
       },
-      "exportPDF": "Export as PDF"
+      "exportPDF": "Export to PDF",
+      "exportExcel": "Export to Excel"
     },
     "loading": "Loading...",
     "error": {

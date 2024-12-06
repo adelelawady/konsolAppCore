@@ -282,7 +282,8 @@
         "edit": "تعديل",
         "delete": "حذف",
         "export": "تصدير",
-        "exportPDF": "تصدير كملف PDF"
+        "exportPDF": "تصدير إلى PDF",
+        "exportExcel": "تصدير إلى Excel"
       }
     },
     "products": {
@@ -362,7 +363,8 @@
       "edit": "تعديل",
       "delete": "حذف",
       "export": "تصدير",
-      "exportPDF": "تصدير كملف PDF"
+      "exportPDF": "تصدير إلى PDF",
+      "exportExcel": "تصدير إلى Excel"
     },
     "pagination": {
       "showing": "عرض",

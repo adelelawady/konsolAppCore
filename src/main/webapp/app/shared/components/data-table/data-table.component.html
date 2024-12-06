@@ -16,10 +16,16 @@
       </div>
     </div>
     <div class="ms-3">
-      <button class="btn btn-outline-primary" (click)="exportToPDF()" [title]="'global.dataTable.exportPDF' | translate">
-        <i class="ti ti-file-export me-1"></i>
-        {{ 'global.dataTable.actions.export' | translate }}
-      </button>
+      <div class="btn-group">
+        <button class="btn btn-outline-primary" (click)="exportToPDF()" [title]="'global.dataTable.exportPDF' | translate">
+          <i class="fa fa-file-pdf me-1"></i>
+          PDF
+        </button>
+        <button class="btn btn-outline-success" (click)="exportToExcel()" [title]="'global.dataTable.exportExcel' | translate">
+          <i class="fa fa-file-excel me-1"></i>
+          Excel
+        </button>
+      </div>
     </div>
   </div>
 

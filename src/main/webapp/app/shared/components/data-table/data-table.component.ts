@@ -15,6 +15,7 @@ import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import * as XLSX from 'xlsx';
 
 export interface TableColumn {
   field: string;
@@ -60,7 +61,7 @@ export class DataTableComponent implements OnInit, OnChanges {
 
   filteredData: any[] = [];
   searchText: string = '';
-  pageSizeOptions: number[] = [10, 20, 50, 100];
+  pageSizeOptions: number[] = [10, 20, 50, 100, 500, 1000, 10000, 100000];
   private searchSubject = new Subject<string>();
   Math = Math;
 
@@ -281,5 +282,41 @@ export class DataTableComponent implements OnInit, OnChanges {
     });
 
     doc.save('table-export.pdf');
+  }
+
+  exportToExcel(): void {
+    // Get visible columns
+    const visibleColumns = this.columns.filter(col => !col.type || col.type !== 'actions');
+
+    // Prepare the data for export
+    const exportData = this.data.map(row => {
+      const rowData: any = {};
+      visibleColumns.forEach(col => {
+        let value = row[col.field];
+
+        // Format the value based on column type
+        if (col.type === 'date' && value) {
+          value = new Date(value).toLocaleDateString();
+        } else if (col.format && typeof col.format === 'function') {
+          value = col.format(value);
+        }
+
+        // Use translated headers as column names
+        const header = this.translateService.instant(col.header);
+        rowData[header] = value;
+      });
+      return rowData;
+    });
+
+    // Create worksheet
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(exportData);
+
+    // Create workbook
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Data');
+
+    // Generate Excel file
+    const fileName = `export_${new Date().toISOString().split('T')[0]}.xlsx`;
+    XLSX.writeFile(wb, fileName);
   }
 }
