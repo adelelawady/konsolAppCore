@@ -372,14 +372,21 @@ public class ItemResource implements ItemsApiDelegate {
 
     @Override
     public ResponseEntity<ItemAnalysisDTO> getItemsAnalysis(String id, ItemAnalysisSearchDTO itemAnalysisSearchDTO) {
+        if (itemAnalysisSearchDTO.getStartDate() != null || itemAnalysisSearchDTO.getEndDate() != null) {
+            return ResponseEntity.ok(
+                itemAnalysisMapper.toDto(
+                    itemService.analyzeItem(
+                        itemAnalysisSearchDTO.getItemId(),
+                        itemAnalysisSearchDTO.getStoreId(),
+                        itemAnalysisSearchDTO.getStartDate().toInstant(),
+                        itemAnalysisSearchDTO.getEndDate().toInstant()
+                    )
+                )
+            );
+        }
         return ResponseEntity.ok(
             itemAnalysisMapper.toDto(
-                itemService.analyzeItem(
-                    itemAnalysisSearchDTO.getItemId(),
-                    itemAnalysisSearchDTO.getStoreId(),
-                    itemAnalysisSearchDTO.getStartDate().toInstant(),
-                    itemAnalysisSearchDTO.getEndDate().toInstant()
-                )
+                itemService.analyzeItem(itemAnalysisSearchDTO.getItemId(), itemAnalysisSearchDTO.getStoreId(), null, null)
             )
         );
     }
