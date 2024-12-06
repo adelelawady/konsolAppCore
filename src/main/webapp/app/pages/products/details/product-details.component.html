@@ -16,7 +16,7 @@
       <div>
         <button class="btn btn-outline-primary me-2" routerLink="/products">
           <fa-icon icon="arrow-left" class="me-2"></fa-icon>
-          Back to Products
+          {{ 'product.details.backButton' | translate }}
         </button>
       </div>
     </div>
@@ -26,21 +26,21 @@
       <div class="col-md-6">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">Product Information</h5>
+            <h5 class="card-title">{{ 'product.details.information.title' | translate }}</h5>
             <div class="mb-3">
-              <label class="text-muted">Name:</label>
+              <label class="text-muted">{{ 'product.details.information.name' | translate }}:</label>
               <p class="mb-1">{{ product.name }}</p>
             </div>
             <div class="mb-3">
-              <label class="text-muted">Code:</label>
+              <label class="text-muted">{{ 'product.details.information.code' | translate }}:</label>
               <p class="mb-1">{{ product.barcode }}</p>
             </div>
             <div class="mb-3">
-              <label class="text-muted">Price:</label>
+              <label class="text-muted">{{ 'product.details.information.price' | translate }}:</label>
               <p class="mb-1">{{ product.price1 | number: '1.2-2' }}</p>
             </div>
             <div class="mb-3">
-              <label class="text-muted">Cost:</label>
+              <label class="text-muted">{{ 'product.details.information.cost' | translate }}:</label>
               <p class="mb-1">{{ product.cost | number: '1.2-2' }}</p>
             </div>
           </div>
@@ -51,12 +51,12 @@
       <div class="col-md-6" *ngIf="productAnalysis">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">Analysis</h5>
+            <h5 class="card-title">{{ 'product.details.analysis.title' | translate }}</h5>
             <div class="row g-3">
               <div class="col-sm-6">
                 <div class="card bg-light">
                   <div class="card-body">
-                    <h6 class="card-subtitle mb-2 text-muted">Total Sales</h6>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ 'product.details.analysis.totalSales' | translate }}</h6>
                     <h4 class="mb-0">{{ productAnalysis.totalSales | number: '1.2-2' }}</h4>
                   </div>
                 </div>
@@ -64,7 +64,7 @@
               <div class="col-sm-6">
                 <div class="card bg-light">
                   <div class="card-body">
-                    <h6 class="card-subtitle mb-2 text-muted">Net Sales</h6>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ 'product.details.analysis.netSales' | translate }}</h6>
                     <h4 class="mb-0">{{ productAnalysis.netSales | number: '1.2-2' }}</h4>
                   </div>
                 </div>
@@ -72,7 +72,7 @@
               <div class="col-sm-6">
                 <div class="card bg-light">
                   <div class="card-body">
-                    <h6 class="card-subtitle mb-2 text-muted">Total Profit</h6>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ 'product.details.analysis.totalProfit' | translate }}</h6>
                     <h4 class="mb-0">{{ productAnalysis.totalProfit | number: '1.2-2' }}</h4>
                   </div>
                 </div>
@@ -80,7 +80,7 @@
               <div class="col-sm-6">
                 <div class="card bg-light">
                   <div class="card-body">
-                    <h6 class="card-subtitle mb-2 text-muted">Total Discounts</h6>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ 'product.details.analysis.totalDiscounts' | translate }}</h6>
                     <h4 class="mb-0">{{ productAnalysis.totalDiscount | number: '1.2-2' }}</h4>
                   </div>
                 </div>
@@ -88,7 +88,7 @@
               <div class="col-sm-6">
                 <div class="card bg-light">
                   <div class="card-body">
-                    <h6 class="card-subtitle mb-2 text-muted">Quantity In/Out</h6>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ 'product.details.analysis.quantityInOut' | translate }}</h6>
                     <h4 class="mb-0">{{ productAnalysis.totalQtyIn | number }} / {{ productAnalysis.totalQtyOut | number }}</h4>
                   </div>
                 </div>
@@ -96,7 +96,7 @@
               <div class="col-sm-6">
                 <div class="card bg-light">
                   <div class="card-body">
-                    <h6 class="card-subtitle mb-2 text-muted">Total Cost</h6>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ 'product.details.analysis.totalCost' | translate }}</h6>
                     <h4 class="mb-0">{{ productAnalysis.totalCost | number: '1.2-2' }}</h4>
                   </div>
                 </div>
@@ -107,13 +107,13 @@
       </div>
     </div>
 
-    <!-- After the existing analysis cards -->
+    <!-- Chart Section -->
     <div class="row mt-4">
       <div class="col-12">
         <div class="card">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-4">
-              <h5 class="card-title mb-0">Sales Analysis</h5>
+              <h5 class="card-title mb-0">{{ 'product.details.chart.title' | translate }}</h5>
               <div class="btn-group">
                 <button
                   *ngFor="let range of dateRanges"
@@ -121,19 +121,18 @@
                   [class.active]="selectedRange === range.value"
                   (click)="onRangeChange(range.value)"
                 >
-                  {{ range.label }}
+                  {{ 'product.details.chart.periods.' + range.value | translate }}
                 </button>
               </div>
             </div>
 
-            <!-- Loading spinner for chart -->
+            <!-- Chart content -->
             <div *ngIf="loadingChart" class="text-center py-5">
               <div class="spinner-border text-primary" role="status">
                 <span class="visually-hidden">Loading...</span>
               </div>
             </div>
 
-            <!-- Chart container -->
             <div *ngIf="!loadingChart && chartData" style="height: 400px">
               <canvas #chartCanvas></canvas>
             </div>

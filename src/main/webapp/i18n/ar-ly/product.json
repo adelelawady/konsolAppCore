@@ -1,0 +1,36 @@
+{
+  "details": {
+    "title": "تفاصيل المنتج",
+    "backButton": "العودة إلى المنتجات",
+    "information": {
+      "title": "معلومات المنتج",
+      "name": "الاسم",
+      "code": "الكود",
+      "price": "السعر",
+      "cost": "التكلفة"
+    },
+    "analysis": {
+      "title": "التحليل",
+      "totalSales": "إجمالي المبيعات",
+      "netSales": "صافي المبيعات",
+      "totalProfit": "إجمالي الربح",
+      "totalDiscounts": "إجمالي الخصومات",
+      "quantityInOut": "الكمية الداخلة/الخارجة",
+      "totalCost": "إجمالي التكلفة"
+    },
+    "chart": {
+      "title": "تحليل المبيعات",
+      "periods": {
+        "week": "أسبوع",
+        "month": "شهر",
+        "year": "سنة"
+      },
+      "labels": {
+        "salesAmount": "قيمة المبيعات",
+        "quantitySold": "الكمية المباعة",
+        "averagePrice": "متوسط السعر",
+        "date": "التاريخ"
+      }
+    }
+  }
+}

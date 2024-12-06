@@ -14,6 +14,7 @@ import {
   Legend,
   Tooltip,
 } from 'chart.js';
+import { TranslateService } from '@ngx-translate/core';
 const dateFns = require('date-fns');
 
 // Register required components
@@ -48,7 +49,7 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
   ];
   selectedRange = 'week';
 
-  constructor(private route: ActivatedRoute, private itemService: ItemResourceService) {}
+  constructor(private route: ActivatedRoute, private itemService: ItemResourceService, private translateService: TranslateService) {}
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
