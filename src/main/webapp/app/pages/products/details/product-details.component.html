@@ -106,5 +106,40 @@
         </div>
       </div>
     </div>
+
+    <!-- After the existing analysis cards -->
+    <div class="row mt-4">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h5 class="card-title mb-0">Sales Analysis</h5>
+              <div class="btn-group">
+                <button
+                  *ngFor="let range of dateRanges"
+                  class="btn btn-outline-primary"
+                  [class.active]="selectedRange === range.value"
+                  (click)="onRangeChange(range.value)"
+                >
+                  {{ range.label }}
+                </button>
+              </div>
+            </div>
+
+            <!-- Loading spinner for chart -->
+            <div *ngIf="loadingChart" class="text-center py-5">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+
+            <!-- Chart container -->
+            <div *ngIf="!loadingChart && chartData" style="height: 400px">
+              <canvas #chartCanvas></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
