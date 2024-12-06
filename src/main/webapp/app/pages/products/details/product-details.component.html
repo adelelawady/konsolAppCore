@@ -9,14 +9,22 @@
   <!-- Product Details -->
   <div *ngIf="product && !isLoading">
     <div class="d-flex justify-content-between align-items-center mb-4">
-      <div>
-        <h2 class="mb-1">{{ product.name }}</h2>
-        <p class="text-muted mb-0">{{ product.barcode }}</p>
+      <div class="d-flex align-items-center gap-3">
+        <div class="bg-primary bg-opacity-10 p-3 rounded">
+          <i class="fas fa-box fa-2x text-primary"></i>
+        </div>
+        <div>
+          <h2 class="mb-1">{{ product.name }}</h2>
+          <p class="text-muted mb-0 d-flex align-items-center gap-2">
+            <i class="fas fa-barcode"></i>
+            {{ product.barcode }}
+          </p>
+        </div>
       </div>
       <div>
-        <button class="btn btn-outline-primary me-2" routerLink="/products">
-          <fa-icon icon="arrow-left" class="me-2"></fa-icon>
-          {{ 'product.details.backButton' | translate }}
+        <button class="btn btn-outline-primary d-flex align-items-center gap-2" routerLink="/products">
+          <i class="fas fa-arrow-left"></i>
+          {{ 'common.back' | translate }}
         </button>
       </div>
     </div>
@@ -24,24 +32,60 @@
     <!-- Basic Information -->
     <div class="row mb-4">
       <div class="col-md-6">
-        <div class="card">
+        <div class="card h-100">
+          <div class="card-header bg-light">
+            <div class="d-flex align-items-center gap-2">
+              <i class="fas fa-info-circle text-primary"></i>
+              <h5 class="card-title mb-0">{{ 'products.details.basicInfo' | translate }}</h5>
+            </div>
+          </div>
           <div class="card-body">
-            <h5 class="card-title">{{ 'product.details.information.title' | translate }}</h5>
-            <div class="mb-3">
-              <label class="text-muted">{{ 'product.details.information.name' | translate }}:</label>
-              <p class="mb-1">{{ product.name }}</p>
-            </div>
-            <div class="mb-3">
-              <label class="text-muted">{{ 'product.details.information.code' | translate }}:</label>
-              <p class="mb-1">{{ product.barcode }}</p>
-            </div>
-            <div class="mb-3">
-              <label class="text-muted">{{ 'product.details.information.price' | translate }}:</label>
-              <p class="mb-1">{{ product.price1 | number: '1.2-2' }}</p>
-            </div>
-            <div class="mb-3">
-              <label class="text-muted">{{ 'product.details.information.cost' | translate }}:</label>
-              <p class="mb-1">{{ product.cost | number: '1.2-2' }}</p>
+            <div class="list-group list-group-flush">
+              <div class="list-group-item px-0 py-2">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="d-flex align-items-center gap-2">
+                    <i class="fas fa-tag text-primary"></i>
+                    <span class="text-muted">{{ 'products.fields.name' | translate }}</span>
+                  </div>
+                  <strong>{{ product.name }}</strong>
+                </div>
+              </div>
+              <div class="list-group-item px-0 py-2">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="d-flex align-items-center gap-2">
+                    <i class="fas fa-barcode text-primary"></i>
+                    <span class="text-muted">{{ 'products.fields.barcode' | translate }}</span>
+                  </div>
+                  <strong>{{ product.barcode }}</strong>
+                </div>
+              </div>
+              <div class="list-group-item px-0 py-2">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="d-flex align-items-center gap-2">
+                    <i class="fas fa-dollar-sign text-primary"></i>
+                    <span class="text-muted">{{ 'products.fields.price' | translate }}</span>
+                  </div>
+                  <strong class="text-success">{{ getPrice() | currency: 'EGP' }}</strong>
+                </div>
+              </div>
+              <div class="list-group-item px-0 py-2">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="d-flex align-items-center gap-2">
+                    <i class="fas fa-shopping-cart text-primary"></i>
+                    <span class="text-muted">{{ 'products.fields.cost' | translate }}</span>
+                  </div>
+                  <strong>{{ getCost() | currency: 'EGP' }}</strong>
+                </div>
+              </div>
+              <div class="list-group-item px-0 py-2">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="d-flex align-items-center gap-2">
+                    <i class="fas fa-percentage text-primary"></i>
+                    <span class="text-muted">{{ 'products.fields.margin' | translate }}</span>
+                  </div>
+                  <strong class="text-info">{{ getMargin() | number: '1.0-2' }}%</strong>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -49,55 +93,78 @@
 
       <!-- Analysis Data -->
       <div class="col-md-6" *ngIf="productAnalysis">
-        <div class="card">
+        <div class="card h-100">
+          <div class="card-header bg-light">
+            <div class="d-flex align-items-center gap-2">
+              <i class="fas fa-chart-pie text-primary"></i>
+              <h5 class="card-title mb-0">{{ 'products.details.analysis' | translate }}</h5>
+            </div>
+          </div>
           <div class="card-body">
-            <h5 class="card-title">{{ 'product.details.analysis.title' | translate }}</h5>
             <div class="row g-3">
               <div class="col-sm-6">
-                <div class="card bg-light">
-                  <div class="card-body">
-                    <h6 class="card-subtitle mb-2 text-muted">{{ 'product.details.analysis.totalSales' | translate }}</h6>
-                    <h4 class="mb-0">{{ productAnalysis.totalSales | number: '1.2-2' }}</h4>
+                <div class="card bg-light border-0">
+                  <div class="card-body p-3">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                      <i class="fas fa-money-bill-wave text-success"></i>
+                      <h6 class="card-subtitle text-muted mb-0">{{ 'products.fields.totalSales' | translate }}</h6>
+                    </div>
+                    <h4 class="mb-0">{{ productAnalysis.totalSales | currency: 'EGP' }}</h4>
                   </div>
                 </div>
               </div>
               <div class="col-sm-6">
-                <div class="card bg-light">
-                  <div class="card-body">
-                    <h6 class="card-subtitle mb-2 text-muted">{{ 'product.details.analysis.netSales' | translate }}</h6>
-                    <h4 class="mb-0">{{ productAnalysis.netSales | number: '1.2-2' }}</h4>
+                <div class="card bg-light border-0">
+                  <div class="card-body p-3">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                      <i class="fas fa-hand-holding-usd text-primary"></i>
+                      <h6 class="card-subtitle text-muted mb-0">{{ 'products.fields.netSales' | translate }}</h6>
+                    </div>
+                    <h4 class="mb-0">{{ productAnalysis.netSales | currency: 'EGP' }}</h4>
                   </div>
                 </div>
               </div>
               <div class="col-sm-6">
-                <div class="card bg-light">
-                  <div class="card-body">
-                    <h6 class="card-subtitle mb-2 text-muted">{{ 'product.details.analysis.totalProfit' | translate }}</h6>
-                    <h4 class="mb-0">{{ productAnalysis.totalProfit | number: '1.2-2' }}</h4>
+                <div class="card bg-light border-0">
+                  <div class="card-body p-3">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                      <i class="fas fa-chart-line text-info"></i>
+                      <h6 class="card-subtitle text-muted mb-0">{{ 'products.fields.totalProfit' | translate }}</h6>
+                    </div>
+                    <h4 class="mb-0">{{ productAnalysis.totalProfit | currency: 'EGP' }}</h4>
                   </div>
                 </div>
               </div>
               <div class="col-sm-6">
-                <div class="card bg-light">
-                  <div class="card-body">
-                    <h6 class="card-subtitle mb-2 text-muted">{{ 'product.details.analysis.totalDiscounts' | translate }}</h6>
-                    <h4 class="mb-0">{{ productAnalysis.totalDiscount | number: '1.2-2' }}</h4>
+                <div class="card bg-light border-0">
+                  <div class="card-body p-3">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                      <i class="fas fa-tags text-warning"></i>
+                      <h6 class="card-subtitle text-muted mb-0">{{ 'products.fields.totalDiscounts' | translate }}</h6>
+                    </div>
+                    <h4 class="mb-0">{{ productAnalysis.totalDiscount | currency: 'EGP' }}</h4>
                   </div>
                 </div>
               </div>
               <div class="col-sm-6">
-                <div class="card bg-light">
-                  <div class="card-body">
-                    <h6 class="card-subtitle mb-2 text-muted">{{ 'product.details.analysis.quantityInOut' | translate }}</h6>
+                <div class="card bg-light border-0">
+                  <div class="card-body p-3">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                      <i class="fas fa-exchange-alt text-primary"></i>
+                      <h6 class="card-subtitle text-muted mb-0">{{ 'products.fields.quantityInOut' | translate }}</h6>
+                    </div>
                     <h4 class="mb-0">{{ productAnalysis.totalQtyIn | number }} / {{ productAnalysis.totalQtyOut | number }}</h4>
                   </div>
                 </div>
               </div>
               <div class="col-sm-6">
-                <div class="card bg-light">
-                  <div class="card-body">
-                    <h6 class="card-subtitle mb-2 text-muted">{{ 'product.details.analysis.totalCost' | translate }}</h6>
-                    <h4 class="mb-0">{{ productAnalysis.totalCost | number: '1.2-2' }}</h4>
+                <div class="card bg-light border-0">
+                  <div class="card-body p-3">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                      <i class="fas fa-shopping-cart text-danger"></i>
+                      <h6 class="card-subtitle text-muted mb-0">{{ 'products.fields.totalCost' | translate }}</h6>
+                    </div>
+                    <h4 class="mb-0">{{ productAnalysis.totalCost | currency: 'EGP' }}</h4>
                   </div>
                 </div>
               </div>
@@ -108,42 +175,48 @@
     </div>
 
     <!-- Chart Section -->
-    <div class="row mt-4">
-      <div class="col-12">
-        <div class="card">
-          <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-              <h5 class="card-title mb-0">{{ 'product.details.chart.title' | translate }}</h5>
-              <div class="btn-group">
-                <button
-                  *ngFor="let range of dateRanges"
-                  class="btn btn-outline-primary"
-                  [class.active]="selectedRange === range.value"
-                  (click)="onRangeChange(range.value)"
-                >
-                  {{ 'product.details.chart.periods.' + range.value | translate }}
-                </button>
-              </div>
-            </div>
-
-            <!-- Chart content -->
-            <div *ngIf="loadingChart" class="text-center py-5">
-              <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
-              </div>
-            </div>
-
-            <div *ngIf="!loadingChart" class="chart-container" style="position: relative; height: 400px; width: 100%">
-              <canvas #chartCanvas></canvas>
-            </div>
-
-            <div *ngIf="!loadingChart && !chartData?.result?.length" class="text-center py-5">
-              <div class="text-muted">
-                <i class="fas fa-chart-line fa-3x mb-3"></i>
-                <p>{{ 'product.details.chart.noData' | translate }}</p>
-              </div>
+    <div class="card mb-4">
+      <div class="card-header bg-light">
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="d-flex align-items-center gap-2">
+            <i class="fas fa-chart-line text-primary"></i>
+            <h5 class="card-title mb-0">{{ 'products.details.chartDetails.title' | translate }}</h5>
+          </div>
+          <div class="btn-group">
+            <button
+              *ngFor="let range of dateRanges"
+              class="btn btn-outline-primary btn-sm"
+              [class.active]="selectedRange === range.value"
+              (click)="onRangeChange(range.value)"
+            >
+              {{ 'products.details.chartDetails.periods.' + range.value | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="position-relative" style="height: 400px">
+          <!-- Loading State -->
+          <div
+            *ngIf="loadingChart"
+            class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-light bg-opacity-75"
+          >
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">{{ 'common.loading' | translate }}</span>
             </div>
           </div>
+
+          <!-- No Data State -->
+          <div
+            *ngIf="!loadingChart && !chartData?.result?.length"
+            class="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column align-items-center justify-content-center"
+          >
+            <i class="fas fa-chart-area fa-3x text-muted mb-3"></i>
+            <p class="text-muted">{{ 'common.noData' | translate }}</p>
+          </div>
+
+          <!-- Chart Canvas -->
+          <canvas #chartCanvas></canvas>
         </div>
       </div>
     </div>

@@ -2,7 +2,29 @@
   "products": {
     "title": "المنتجات",
     "details": {
-      "title": "تفاصيل المنتج"
+      "title": "تفاصيل المنتج",
+      "basicInfo": "المعلومات الأساسية",
+      "analysis": "التحليل",
+      "chart": "مخطط المبيعات",
+      "info": "معلومات المنتج",
+      "chartDetails": {
+        "title": "تحليل المبيعات",
+        "labels": {
+          "salesAmount": "قيمة المبيعات",
+          "quantitySold": "الكمية المباعة",
+          "averagePrice": "متوسط السعر"
+        },
+        "tooltip": {
+          "sales": "المبيعات: ",
+          "quantity": "الكمية: ",
+          "average": "المتوسط: "
+        },
+        "periods": {
+          "week": "الأسبوع الماضي",
+          "month": "الشهر الماضي",
+          "year": "السنة الماضية"
+        }
+      }
     },
     "print": {
       "title": "خيارات",
@@ -17,7 +39,7 @@
       "sections": {
         "basic": "المعلومات الأساسية",
         "pricing": "معلومات التسعير",
-        "inventory": "كميات المخازن",
+        "inventory": "كميات المخزن",
         "units": "وحدات المنتج"
       },
       "actions": {
@@ -33,12 +55,19 @@
       "category": "الفئة",
       "price": "السعر",
       "cost": "التكلفة",
+      "margin": "هامش الربح",
       "quantity": "الكمية",
       "checkQuantity": "فحص الكمية",
       "store": "المخزن",
       "unitName": "اسم الوحدة",
       "pieces": "القطع",
-      "basic": "وحدة أساسية"
+      "basic": "الوحدة الأساسية",
+      "totalSales": "إجمالي المبيعات",
+      "netSales": "صافي المبيعات",
+      "totalProfit": "إجمالي الربح",
+      "totalDiscounts": "إجمالي الخصومات",
+      "quantityInOut": "الكمية الداخلة/الخارجة",
+      "totalCost": "إجمالي التكلفة"
     },
     "validation": {
       "nameRequired": "الاسم مطلوب",
@@ -62,7 +91,7 @@
       "deleteSuccess": "تم حذف المنتج بنجاح",
       "deleteError": "خطأ في حذف المنتج",
       "loadStoresError": "خطأ في تحميل المخازن",
-      "loadStoreItemsError": "خطأ في تحميل كميات المخزن",
+      "loadStoreItemsError": "خطأ في تحميل عناصر المخزن",
       "updateStoreSuccess": "تم تحديث كمية المخزن بنجاح",
       "updateStoreError": "خطأ في تحديث كمية المخزن",
       "noStores": "لا توجد مخازن متاحة",

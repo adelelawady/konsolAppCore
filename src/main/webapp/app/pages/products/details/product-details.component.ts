@@ -182,7 +182,7 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
           labels: chartData.map(item => this.formatChartDate(item.date)),
           datasets: [
             {
-              label: this.translateService.instant('product.details.chart.labels.salesAmount'),
+              label: this.translateService.instant('products.details.chartDetails.labels.salesAmount'),
               data: chartData.map(item => item.totalSales),
               borderColor: 'rgb(75, 192, 192)',
               backgroundColor: 'rgba(75, 192, 192, 0.1)',
@@ -192,7 +192,7 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
               pointHoverRadius: 6,
             },
             {
-              label: this.translateService.instant('product.details.chart.labels.quantitySold'),
+              label: this.translateService.instant('products.details.chartDetails.labels.quantitySold'),
               data: chartData.map(item => item.totalQty),
               borderColor: 'rgb(255, 99, 132)',
               backgroundColor: 'rgba(255, 99, 132, 0.1)',
@@ -238,8 +238,12 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
               callbacks: {
                 label: context => {
                   const value = context.raw as number;
-                  const label = context.dataset.label || '';
-                  return `${label}: ${value.toLocaleString()}`;
+                  const datasetLabel = context.dataset.label || '';
+                  const translationKey = datasetLabel.includes('Sales')
+                    ? 'products.details.chartDetails.tooltip.sales'
+                    : 'products.details.chartDetails.tooltip.quantity';
+                  const prefix = this.translateService.instant(translationKey);
+                  return `${prefix}${value.toLocaleString()}`;
                 },
               },
             },
@@ -273,5 +277,21 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
           console.error('Error loading product analysis:', error);
         },
       });
+  }
+
+  // Helper methods for safe calculations
+  getPrice(): number {
+    return Number(this.product?.price1) || 0;
+  }
+
+  getCost(): number {
+    return Number(this.product?.cost) || 0;
+  }
+
+  getMargin(): number {
+    const price = this.getPrice();
+    const cost = this.getCost();
+    if (cost === 0) return 0;
+    return ((price - cost) / cost) * 100;
   }
 }

@@ -2,7 +2,29 @@
   "products": {
     "title": "Products",
     "details": {
-      "title": "Product Details"
+      "title": "Product Details",
+      "basicInfo": "Basic Information",
+      "analysis": "Analysis",
+      "chart": "Sales Chart",
+      "info": "Product Information",
+      "chartDetails": {
+        "title": "Sales Analysis",
+        "labels": {
+          "salesAmount": "Sales Amount",
+          "quantitySold": "Quantity Sold",
+          "averagePrice": "Average Price"
+        },
+        "tooltip": {
+          "sales": "Sales: ",
+          "quantity": "Quantity: ",
+          "average": "Average: "
+        },
+        "periods": {
+          "week": "Last Week",
+          "month": "Last Month",
+          "year": "Last Year"
+        }
+      }
     },
     "print": {
       "title": "Options",
@@ -33,12 +55,19 @@
       "category": "Category",
       "price": "Price",
       "cost": "Cost",
+      "margin": "Margin",
       "quantity": "Quantity",
       "checkQuantity": "Check Quantity",
       "store": "Store",
       "unitName": "Unit Name",
       "pieces": "Pieces",
-      "basic": "Basic Unit"
+      "basic": "Basic Unit",
+      "totalSales": "Total Sales",
+      "netSales": "Net Sales",
+      "totalProfit": "Total Profit",
+      "totalDiscounts": "Total Discounts",
+      "quantityInOut": "Quantity In/Out",
+      "totalCost": "Total Cost"
     },
     "validation": {
       "nameRequired": "Name is required",
