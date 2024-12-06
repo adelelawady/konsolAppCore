@@ -9,7 +9,7 @@ import { ItemResourceService } from '../../core/konsolApi/api/api';
 const routes: Routes = [
   {
     path: '',
-    component: ProductsComponent
+    component: ProductsComponent,
   },
   {
     path: ':id/details',
@@ -21,13 +21,13 @@ const routes: Routes = [
           throw new Error('No ID provided');
         }
         return inject(ItemResourceService).getItem(id);
-      }
-    }
-  }
+      },
+    },
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class ProductsRoutingModule { } 
+export class ProductsRoutingModule {}

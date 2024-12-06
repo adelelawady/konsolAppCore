@@ -13,10 +13,7 @@ export class ProductDetailsComponent implements OnInit {
   productAnalysis?: ItemAnalysisDTO;
   isLoading = false;
 
-  constructor(
-    private route: ActivatedRoute,
-    private itemService: ItemResourceService
-  ) {}
+  constructor(private route: ActivatedRoute, private itemService: ItemResourceService) {}
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
@@ -29,7 +26,7 @@ export class ProductDetailsComponent implements OnInit {
 
   private loadProductAnalysis(id: string): void {
     this.isLoading = true;
-    
+
     const searchDTO: ItemAnalysisSearchDTO = {
       itemId: id,
       // You can optionally add these parameters
@@ -38,15 +35,16 @@ export class ProductDetailsComponent implements OnInit {
       // endDate: undefined
     };
 
-    this.itemService.getItemsAnalysis(id,searchDTO)
-      .pipe(finalize(() => this.isLoading = false))
+    this.itemService
+      .getItemsAnalysis(id, searchDTO)
+      .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: (analysis: ItemAnalysisDTO) => {
           this.productAnalysis = analysis;
         },
         error: (error: any) => {
           console.error('Error loading product analysis:', error);
-        }
+        },
       });
   }
-} 
+}
