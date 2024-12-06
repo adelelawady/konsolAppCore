@@ -30,12 +30,6 @@ public class testCMD implements CommandLineRunner {
         System.out.println(bankService.calculateBankBalance("674ffcaab0c83957e9623138"));
 
         itemService.analyzeItem("674ffceb8c68a169aa4c8adf", null, null, null);
-
-        itemService.getSalesChartData(
-            "674ffceb8c68a169aa4c8adf",
-            Date.from(Instant.parse("2024-12-03T06:56:17.411+00:00")),
-            Date.from(Instant.parse("2024-12-08T06:56:17.411+00:00"))
-        );
         //getSalesChartData
 
     }

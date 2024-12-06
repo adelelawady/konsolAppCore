@@ -28,7 +28,9 @@ model/bankDTO.ts
 model/bankTransactionsContainer.ts
 model/bankTransactionsDTO.ts
 model/categoryItem.ts
+model/chartDataContainer.ts
 model/chartDataDTO.ts
+model/chartSearchDTO.ts
 model/contactInfo.ts
 model/createAccountUserDTO.ts
 model/createInvoiceItemDTO.ts
@@ -48,6 +50,7 @@ model/invoiceViewDTOContainer.ts
 model/invoiceViewSimpleDTO.ts
 model/invoicesSearchModel.ts
 model/itemAnalysisDTO.ts
+model/itemAnalysisSearchDTO.ts
 model/itemDTO.ts
 model/itemSimpleDTO.ts
 model/itemUnitDTO.ts

@@ -21,6 +21,8 @@ import com.mongodb.client.DistinctIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.bson.Document;
@@ -553,7 +555,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemAnalysisDTO analyzeItem(String itemId, String storeId, Date startDate, Date endDate) {
+    public ItemAnalysisDTO analyzeItem(String itemId, String storeId, Instant startDate, Instant endDate) {
         if (itemId == null || itemId.trim().isEmpty()) {
             throw new IllegalArgumentException("Item ID cannot be null or empty");
         }
@@ -648,7 +650,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ChartDataDTO> getSalesChartData(String itemId, Date startDate, Date endDate) {
+    public ChartDataContainer getSalesChartData(String itemId, Instant startDate, Instant endDate) {
         if (itemId == null || itemId.trim().isEmpty()) {
             throw new IllegalArgumentException("Item ID cannot be null or empty");
         }
@@ -694,19 +696,21 @@ public class ItemServiceImpl implements ItemService {
             MongoCollection<Document> collection = mongoTemplate.getCollection("invoice_items");
             AggregateIterable<Document> result = collection.aggregate(pipeline);
 
-            List<ChartDataDTO> chartDataList = new ArrayList<>();
+            List<com.konsol.core.service.api.dto.ChartDataDTO> chartDataList = new ArrayList<>();
             for (Document doc : result) {
-                ChartDataDTO chartData = new ChartDataDTO();
-                chartData.setDate(doc.getString("_id"));
+                com.konsol.core.service.api.dto.ChartDataDTO chartData = new com.konsol.core.service.api.dto.ChartDataDTO();
+                chartData.setDate(LocalDate.parse(doc.getString("_id")));
                 chartData.setTotalSales(safeGetDouble(doc, "totalSales"));
                 chartData.setTotalQty(safeGetDouble(doc, "totalQty"));
                 chartData.setAvgPrice(safeGetDouble(doc, "avgPrice"));
                 chartDataList.add(chartData);
             }
-
+            ChartDataContainer chartDataContainer = new ChartDataContainer();
+            chartDataContainer.setResult(chartDataList);
+            chartDataContainer.setTotal(BigDecimal.valueOf(chartDataList.size()));
             log.info("Item Chart DTO: {}", chartDataList);
             // Return the result to be used for the chart rendering
-            return chartDataList;
+            return chartDataContainer;
         } catch (Exception e) {
             log.error("Error generating sales chart data for item ID: {}", itemId, e);
             throw new RuntimeException("Failed to generate sales chart data", e);

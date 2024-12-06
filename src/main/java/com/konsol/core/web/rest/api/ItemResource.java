@@ -7,6 +7,7 @@ import com.konsol.core.security.AuthoritiesConstants;
 import com.konsol.core.service.ItemService;
 import com.konsol.core.service.PkService;
 import com.konsol.core.service.api.dto.*;
+import com.konsol.core.service.mapper.sup.ItemAnalysisMapper;
 import com.konsol.core.web.api.ItemsApi;
 import com.konsol.core.web.api.ItemsApiDelegate;
 import com.konsol.core.web.rest.errors.BadRequestAlertException;
@@ -47,9 +48,12 @@ public class ItemResource implements ItemsApiDelegate {
 
     private final ItemRepository itemRepository;
 
-    public ItemResource(ItemService itemService, ItemRepository itemRepository) {
+    private final ItemAnalysisMapper itemAnalysisMapper;
+
+    public ItemResource(ItemService itemService, ItemRepository itemRepository, ItemAnalysisMapper itemAnalysisMapper) {
         this.itemService = itemService;
         this.itemRepository = itemRepository;
+        this.itemAnalysisMapper = itemAnalysisMapper;
     }
 
     /**
@@ -364,5 +368,30 @@ public class ItemResource implements ItemsApiDelegate {
     @Override
     public ResponseEntity<List<ItemUnitDTO>> getItemUnits(String id) {
         return ResponseEntity.ok().body(itemService.getItemUnits(id));
+    }
+
+    @Override
+    public ResponseEntity<ItemAnalysisDTO> getItemsAnalysis(String id, ItemAnalysisSearchDTO itemAnalysisSearchDTO) {
+        return ResponseEntity.ok(
+            itemAnalysisMapper.toDto(
+                itemService.analyzeItem(
+                    itemAnalysisSearchDTO.getItemId(),
+                    itemAnalysisSearchDTO.getStoreId(),
+                    itemAnalysisSearchDTO.getStartDate().toInstant(),
+                    itemAnalysisSearchDTO.getEndDate().toInstant()
+                )
+            )
+        );
+    }
+
+    @Override
+    public ResponseEntity<ChartDataContainer> getItemCharts(String id, ChartSearchDTO chartSearchDTO) {
+        return ResponseEntity.ok(
+            itemService.getSalesChartData(
+                chartSearchDTO.getItemId(),
+                chartSearchDTO.getStartDate().toInstant(),
+                chartSearchDTO.getEndDate().toInstant()
+            )
+        );
     }
 }

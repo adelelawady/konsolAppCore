@@ -1661,6 +1661,56 @@ paths:
               schema:
                 $ref: '#/components/schemas/BankBalanceDTO'
       operationId: getBankAnalysis
+  '/items/{id}/analysis':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    post:
+      summary: ''
+      operationId: getItemsAnalysis
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemAnalysisDTO'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemAnalysisSearchDTO'
+      tags:
+        - item-resource
+      description: 'get all item analysis by store , or dates '
+  '/items/{id}/charts':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    post:
+      summary: ''
+      operationId: getItemCharts
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChartDataContainer'
+      tags:
+        - item-resource
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChartSearchDTO'
+        description: ''
 components:
   schemas:
     ChartDataDTO:
@@ -3482,3 +3532,65 @@ components:
           type: number
           x-stoplight:
             id: 8tsb7yw3o2fos
+    ItemAnalysisSearchDTO:
+      title: ItemAnalysisSearchDTO
+      x-stoplight:
+        id: bk5auh8580ff8
+      type: object
+      properties:
+        itemId:
+          type: string
+          x-stoplight:
+            id: xrlcxdyjix3lj
+        storeId:
+          type: string
+          x-stoplight:
+            id: o175gqgmqtzsu
+        startDate:
+          type: string
+          x-stoplight:
+            id: 2txw30e0682fo
+          format: date-time
+        endDate:
+          type: string
+          x-stoplight:
+            id: mmom1kn5a3zov
+          format: date-time
+    ChartDataContainer:
+      title: ChartDataContainer
+      x-stoplight:
+        id: hdwojcgurewv1
+      type: object
+      properties:
+        result:
+          type: array
+          x-stoplight:
+            id: elfy5r65tjlhl
+          items:
+            $ref: '#/components/schemas/ChartDataDTO'
+        total:
+          type: number
+          x-stoplight:
+            id: vraqqzw8wqy7f
+    ChartSearchDTO:
+      title: ChartSearchDTO
+      x-stoplight:
+        id: ecs2mybsvs888
+      type: object
+      properties:
+        itemId:
+          type: string
+          x-stoplight:
+            id: 87dh9mio2za0i
+        startDate:
+          type: string
+          x-stoplight:
+            id: ss03k97cvljto
+          format: date-time
+        endDate:
+          type: string
+          x-stoplight:
+            id: zi7rxalhp46iy
+          format: date-time
+      required:
+        - itemId
