@@ -78,6 +78,9 @@ export class CreateMoneyModalComponent implements OnInit {
 
       if (this.isEdit && this.money?.id) {
         moneyDTO.id = this.money?.id;
+        moneyDTO.bank = formValue.bank;
+        moneyDTO.bank.name = 'BankName';
+        moneyDTO.account = formValue.account;
         this.moneyService.updateMoney(this.money.id, moneyDTO).subscribe(
           response => {
             this.loading = false;
