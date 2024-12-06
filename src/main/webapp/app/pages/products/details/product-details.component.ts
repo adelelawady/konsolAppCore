@@ -3,8 +3,21 @@ import { ActivatedRoute } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 import { ItemResourceService } from '../../../core/konsolApi/api/itemResource.service';
 import { ItemDTO, ItemAnalysisDTO, ChartDataContainer, ChartSearchDTO, ItemAnalysisSearchDTO } from '../../../core/konsolApi';
-import { Chart, ChartConfiguration } from 'chart.js';
+import {
+  Chart,
+  ChartConfiguration,
+  LineController,
+  LineElement,
+  PointElement,
+  LinearScale,
+  CategoryScale,
+  Legend,
+  Tooltip,
+} from 'chart.js';
 const dateFns = require('date-fns');
+
+// Register required components
+Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryScale, Legend, Tooltip);
 
 @Component({
   selector: 'app-product-details',
@@ -71,8 +84,8 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
     }
 
     return {
-      startDate: dateFns.format(dateFns.startOfDay(startDate), 'yyyy-MM-dd'),
-      endDate: dateFns.format(endDate, 'yyyy-MM-dd'),
+      startDate: dateFns.startOfDay(startDate).toISOString(),
+      endDate: endDate.toISOString(),
     };
   }
 
