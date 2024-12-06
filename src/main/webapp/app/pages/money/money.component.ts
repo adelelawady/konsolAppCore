@@ -20,6 +20,9 @@ export class MoneyComponent implements OnInit {
   pageSize = 10;
   searchModel: MoniesSearchModel = {};
   columns: TableColumn[] = [];
+  selectedKind: string | null = null;
+  dateFrom: string | null = null;
+  dateTo: string | null = null;
 
   constructor(private moneyService: MoneyResourceService, private modalService: NgbModal, private translateService: TranslateService) {}
 
@@ -47,23 +50,35 @@ export class MoneyComponent implements OnInit {
 
   loadMonies(): void {
     this.loading = true;
-    this.moneyService
-      .moniesViewSearchPaginate({
-        ...this.searchModel,
-        page: this.page,
-        size: this.pageSize,
-      })
-      .subscribe(
-        response => {
-          this.monies = response.result || [];
-          this.totalItems = response.total || 0;
-          this.loading = false;
-        },
-        error => {
-          console.error('Error loading monies:', error);
-          this.loading = false;
-        }
-      );
+    const searchParams: any = {
+      ...this.searchModel,
+      page: this.page,
+      size: this.pageSize,
+    };
+
+    if (this.selectedKind) {
+      searchParams.kind = this.selectedKind;
+    }
+
+    if (this.dateFrom) {
+      searchParams.dateFrom = this.dateFrom;
+    }
+
+    if (this.dateTo) {
+      searchParams.dateTo = this.dateTo;
+    }
+
+    this.moneyService.moniesViewSearchPaginate(searchParams).subscribe(
+      response => {
+        this.monies = response.result || [];
+        this.totalItems = response.total || 0;
+        this.loading = false;
+      },
+      error => {
+        console.error('Error loading monies:', error);
+        this.loading = false;
+      }
+    );
   }
 
   openCreateModal(money?: MoneyDTO): void {
@@ -124,6 +139,25 @@ export class MoneyComponent implements OnInit {
       );
     }
   }
+
+  onKindChange(kind: any): void {
+    this.selectedKind = kind.target?.value;
+    this.page = 0;
+    this.loadMonies();
+  }
+
+  onDateFromChange(event: any): void {
+    this.dateFrom = event.target?.value;
+    this.page = 0;
+    this.loadMonies();
+  }
+
+  onDateToChange(event: any): void {
+    this.dateTo = event.target?.value;
+    this.page = 0;
+    this.loadMonies();
+  }
+
   private formatDate(date: string): string {
     if (!date) return '';
     try {

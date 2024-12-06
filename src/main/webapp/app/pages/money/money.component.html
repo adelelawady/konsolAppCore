@@ -8,6 +8,27 @@
     </div>
 
     <div class="card-body">
+      <div class="d-flex align-items-center mb-3">
+        <div class="me-3">
+          <select class="form-select" (change)="onKindChange($event)">
+            <option value="">{{ 'konsolCoreApp.money.fields.type' | translate }}</option>
+            <option value="PAYMENT">{{ 'konsolCoreApp.money.types.payment' | translate }}</option>
+            <option value="RECEIPT">{{ 'konsolCoreApp.money.types.receipt' | translate }}</option>
+          </select>
+        </div>
+        <div class="me-3">
+          <div class="input-group">
+            <span class="input-group-text">{{ 'konsolCoreApp.money.search.dateFrom' | translate }}</span>
+            <input type="date" class="form-control" (change)="onDateFromChange($event)" [value]="dateFrom" />
+          </div>
+        </div>
+        <div class="me-3">
+          <div class="input-group">
+            <span class="input-group-text">{{ 'konsolCoreApp.money.search.dateTo' | translate }}</span>
+            <input type="date" class="form-control" (change)="onDateToChange($event)" [value]="dateTo" />
+          </div>
+        </div>
+      </div>
       <app-data-table
         [columns]="columns"
         [data]="monies"
