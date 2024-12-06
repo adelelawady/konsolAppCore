@@ -23,6 +23,7 @@ export class MoneyComponent implements OnInit {
   selectedKind: string | null = null;
   dateFrom: string | null = null;
   dateTo: string | null = null;
+  selectedAccount: any | null = null;
 
   constructor(private moneyService: MoneyResourceService, private modalService: NgbModal, private translateService: TranslateService) {}
 
@@ -35,9 +36,12 @@ export class MoneyComponent implements OnInit {
     this.columns = [
       { field: 'pk', header: 'konsolCoreApp.money.fields.id', sortable: true },
       { field: 'kind', header: 'konsolCoreApp.money.fields.type', sortable: true },
+      { field: 'account', header: 'konsolCoreApp.money.fields.account', format: (acc: any) => acc.name, sortable: true },
       { field: 'moneyIn', header: 'konsolCoreApp.money.fields.moneyIn', sortable: true },
       { field: 'moneyOut', header: 'konsolCoreApp.money.fields.moneyOut', sortable: true },
+
       { field: 'details', header: 'konsolCoreApp.money.fields.details', sortable: true },
+
       {
         field: 'created_date',
         header: 'konsolCoreApp.money.fields.date',
@@ -66,6 +70,10 @@ export class MoneyComponent implements OnInit {
 
     if (this.dateTo && this.dateTo != '') {
       searchParams.dateTo = this.formatDateForApi(this.dateTo);
+    }
+
+    if (this.selectedAccount?.id) {
+      searchParams.accountId = this.selectedAccount.id;
     }
 
     this.moneyService.moniesViewSearchPaginate(searchParams).subscribe(
@@ -158,6 +166,12 @@ export class MoneyComponent implements OnInit {
     const date = event.target?.value;
     this.dateTo = date;
     this.searchModel.dateTo = date;
+    this.page = 0;
+    this.loadMonies();
+  }
+
+  onAccountSelect(account: any): void {
+    this.selectedAccount = account;
     this.page = 0;
     this.loadMonies();
   }
