@@ -1,14 +1,19 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
-
-import { SharedModule } from 'app/shared/shared.module';
+import { SharedModule } from '../../shared/shared.module';
+import { ProductsRoutingModule } from './products-routing.module';
 import { ProductsComponent } from './products.component';
+import { ProductDetailsComponent } from './details/product-details.component';
 import { AddProductComponent } from './add-product/add-product.component';
 
 @NgModule({
-  declarations: [ProductsComponent, AddProductComponent],
-  imports: [CommonModule, FormsModule, TranslateModule, SharedModule],
+  imports: [
+    SharedModule,
+    ProductsRoutingModule
+  ],
+  declarations: [
+    ProductsComponent,
+    AddProductComponent,
+    ProductDetailsComponent
+  ]
 })
-export class ProductsModule {}
+export class ProductsModule { }
