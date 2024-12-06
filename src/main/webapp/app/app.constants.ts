@@ -6,5 +6,5 @@ declare const __DEBUG_INFO_ENABLED__: boolean;
 declare const __VERSION__: string;
 
 // Use the webpack injected version in development, fallback to hardcoded version if needed
-export const VERSION = __VERSION__ || '1.0.0';
+export const VERSION = __VERSION__ || '2.0';
 export const DEBUG_INFO_ENABLED = __DEBUG_INFO_ENABLED__;

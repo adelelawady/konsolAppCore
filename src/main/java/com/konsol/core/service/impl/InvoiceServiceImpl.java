@@ -1,7 +1,6 @@
-package com.konsol.core.service.impl.invoice;
+package com.konsol.core.service.impl;
 
 import com.konsol.core.domain.*;
-import com.konsol.core.domain.enumeration.AccountKind;
 import com.konsol.core.domain.enumeration.InvoiceKind;
 import com.konsol.core.domain.enumeration.PkKind;
 import com.konsol.core.repository.InvoiceItemRepository;
@@ -837,11 +836,11 @@ public class InvoiceServiceImpl implements InvoiceService {
          * item's QTY
          */
 
-        if (settings.getMAIN_SELECTED_BANK_ID() != null && !settings.getMAIN_SELECTED_BANK_ID().isEmpty()) {
+        if (invoice.getBank() == null && settings.getMAIN_SELECTED_BANK_ID() != null && !settings.getMAIN_SELECTED_BANK_ID().isEmpty()) {
             bankService.findOneDomain(settings.getMAIN_SELECTED_BANK_ID()).ifPresent(invoice::setBank);
         }
 
-        if (settings.getMAIN_SELECTED_STORE_ID() != null && !settings.getMAIN_SELECTED_STORE_ID().isEmpty()) {
+        if (invoice.getStore() == null && settings.getMAIN_SELECTED_STORE_ID() != null && !settings.getMAIN_SELECTED_STORE_ID().isEmpty()) {
             storeService.findOneDomain(settings.getMAIN_SELECTED_STORE_ID()).ifPresent(invoice::setStore);
         }
 

@@ -1,8 +1,5 @@
 package com.konsol.core.service.dto;
 
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  *
  *

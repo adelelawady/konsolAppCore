@@ -27,9 +27,9 @@ public class testCMD implements CommandLineRunner {
     public void run(String... args) throws Exception {
         // bankService.processBankTransactions("674ffcaab0c83957e9623138");
 
-        System.out.println(bankService.calculateBankBalance("674ffcaab0c83957e9623138"));
+        //System.out.println(bankService.calculateBankBalance("674ffcaab0c83957e9623138"));
 
-        itemService.analyzeItem("674ffceb8c68a169aa4c8adf", null, null, null);
+        //itemService.analyzeItem("674ffceb8c68a169aa4c8adf", null, null, null);
         //getSalesChartData
 
     }

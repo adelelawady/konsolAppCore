@@ -74,7 +74,7 @@ public class UserJWTController implements AuthenticateApiDelegate {
      * @return the login if the user is authenticated.
      */
     @Override
-    @GetMapping("/authenticate")
+    // @GetMapping("/authenticate")
     public ResponseEntity<String> isAuthenticated() {
         log.debug("REST request to check if the current user is authenticated");
         return ResponseEntity.ok(request.getRemoteUser());

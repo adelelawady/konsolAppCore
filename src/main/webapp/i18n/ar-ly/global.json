@@ -216,7 +216,7 @@
         "button": "إنشاء حساب جديد"
       }
     },
-    "footer": "هنا يضع الفووتر",
+
     "navigation": {
       "mainPages": "الصفحات الرئيسية",
       "mainPagesSubtitle": "صفحات النظام الأساسية",
@@ -476,6 +476,10 @@
     "permissions": {
       "insufficient": "صلاحيات غير كافية",
       "notAuthorized": "غير مصرح لك بتنفيذ هذا الإجراء"
+    },
+
+    "footer": {
+      "copyright": "حقوق النشر {{ year }} كونسول كور. جميع الحقوق محفوظة."
     }
   }
 }

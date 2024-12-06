@@ -373,7 +373,7 @@
       "notAuthorized": "Not authorized to perform this action"
     }
   },
-  "footer": "This is your footer",
+
   "products": {
     "title": "Products",
     "fields": {
@@ -432,6 +432,9 @@
       "itemsPerPage": "items per page",
       "previous": "Previous",
       "next": "Next"
+    },
+    "footer": {
+      "copyright": "Copyright {{ year }} KonsolCore. All rights reserved."
     }
   }
 }

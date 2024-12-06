@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.PaginationUtil;
 
-//@RestController
-//@RequestMapping("/api")
-@Service
+@RestController
+@RequestMapping("/api")
+//@Service
 public class PublicUserResource implements UsersApiDelegate {
 
     private static final List<String> ALLOWED_ORDERED_PROPERTIES = Collections.unmodifiableList(
@@ -41,8 +41,8 @@ public class PublicUserResource implements UsersApiDelegate {
      *
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body all users.
      */
-    //@GetMapping("/users")
-    @Override
+    @GetMapping("/users")
+    //@Override
     public ResponseEntity<List<UserDTO>> getAllPublicUsers(Integer pager, Integer size, List<String> sort) {
         Pageable pageable = PageRequest.of(pager, size);
         log.debug("REST request to get all public User names");

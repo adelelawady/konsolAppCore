@@ -2,7 +2,6 @@ package com.konsol.core.web.rest;
 
 import com.konsol.core.domain.User;
 import com.konsol.core.repository.UserRepository;
-import com.konsol.core.security.AuthoritiesConstants;
 import com.konsol.core.security.SecurityUtils;
 import com.konsol.core.service.MailService;
 import com.konsol.core.service.UserService;
@@ -19,7 +18,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
@@ -87,9 +85,6 @@ public class AccountResource implements AccountApiDelegate {
      * @throws RuntimeException {@code 500 (Internal Server Error)} if the user login wasn't found.
      */
     @Override
-    @PreAuthorize(
-        "hasAuthority(\"" + AuthoritiesConstants.USER + "||" + AuthoritiesConstants.ADMIN + "||" + AuthoritiesConstants.SUPER_ADMIN + "\")"
-    )
     public ResponseEntity<Void> saveAccount(@Valid @RequestBody AdminUserDTO userDTO) {
         String userLogin = SecurityUtils
             .getCurrentUserLogin()
@@ -119,9 +114,6 @@ public class AccountResource implements AccountApiDelegate {
      * @throws InvalidPasswordException {@code 400 (Bad Request)} if the new password is incorrect.
      */
     @Override
-    @PreAuthorize(
-        "hasAuthority(\"" + AuthoritiesConstants.USER + "||" + AuthoritiesConstants.ADMIN + "||" + AuthoritiesConstants.SUPER_ADMIN + "\")"
-    )
     public ResponseEntity<Void> changePassword(@RequestBody PasswordChangeDTO passwordChangeDto) {
         if (isPasswordLengthInvalid(passwordChangeDto.getNewPassword())) {
             throw new InvalidPasswordException();

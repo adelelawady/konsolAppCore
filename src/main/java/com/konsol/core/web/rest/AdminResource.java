@@ -124,7 +124,7 @@ public class AdminResource implements AdminApiDelegate {
      */
     //@PostMapping("/users")
     @Override
-    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "||" + AuthoritiesConstants.SUPER_ADMIN + "\")")
+    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.ADMIN + "\" , \"" + AuthoritiesConstants.SUPER_ADMIN + "\")")
     public ResponseEntity<com.konsol.core.service.api.dto.User> createUser(@Valid @RequestBody AdminUserDTO userDTO) {
         log.debug("REST request to save User : {}", userDTO);
 
@@ -159,7 +159,7 @@ public class AdminResource implements AdminApiDelegate {
      */
     //@PutMapping("/users")
     @Override
-    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "||" + AuthoritiesConstants.SUPER_ADMIN + "\")")
+    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.ADMIN + "\" , \"" + AuthoritiesConstants.SUPER_ADMIN + "\")")
     public ResponseEntity<AdminUserDTO> updateUser(@Valid @RequestBody AdminUserDTO userDTO) {
         log.debug("REST request to update User : {}", userDTO);
         Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
@@ -184,8 +184,7 @@ public class AdminResource implements AdminApiDelegate {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body all users.
      */
     @Override
-    //@GetMapping("/users")
-    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "||" + AuthoritiesConstants.SUPER_ADMIN + "\")")
+    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.ADMIN + "\" , \"" + AuthoritiesConstants.SUPER_ADMIN + "\")")
     public ResponseEntity<List<AdminUserDTO>> getAllUsers(Integer pager, Integer size, List<String> sort) {
         log.debug("REST request to get all User for an admin");
         Pageable pageable = PageRequest.of(pager, size);
@@ -210,7 +209,7 @@ public class AdminResource implements AdminApiDelegate {
      */
     //@GetMapping("/users/{login}")
     @Override
-    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "||" + AuthoritiesConstants.SUPER_ADMIN + "\")")
+    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.ADMIN + "\" , \"" + AuthoritiesConstants.SUPER_ADMIN + "\")")
     public ResponseEntity<AdminUserDTO> getUser(@PathVariable @Pattern(regexp = Constants.LOGIN_REGEX) String login) {
         log.debug("REST request to get User : {}", login);
         return ResponseUtil.wrapOrNotFound(userService.getUserWithAuthoritiesByLogin(login).map(userMapper::userToAdminUserDTO));
@@ -224,7 +223,7 @@ public class AdminResource implements AdminApiDelegate {
      */
     //@DeleteMapping("/users/{login}")
     @Override
-    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "||" + AuthoritiesConstants.SUPER_ADMIN + "\")")
+    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.ADMIN + "\" , \"" + AuthoritiesConstants.SUPER_ADMIN + "\")")
     public ResponseEntity<Void> deleteUser(@PathVariable @Pattern(regexp = Constants.LOGIN_REGEX) String login) {
         log.debug("REST request to delete User: {}", login);
         userService.deleteUser(login);

@@ -3,20 +3,22 @@
     <div class="col-lg-auto ms-lg-auto">
       <ul class="list-inline list-inline-dots mb-0">
         <li class="list-inline-item">
-          <a href="javascript:void(0)" class="link-secondary">Documentation</a>
+          <a href="javascript:void(0)" class="link-secondary" jhiTranslate="global.menu.docs">Documentation</a>
         </li>
         <li class="list-inline-item">
-          <a href="javascript:void(0)" class="link-secondary">License</a>
+          <a href="javascript:void(0)" class="link-secondary" jhiTranslate="global.menu.license">License</a>
         </li>
         <li class="list-inline-item">
-          <a href="javascript:void(0)" class="link-secondary">Support</a>
+          <a href="javascript:void(0)" class="link-secondary" jhiTranslate="global.menu.support">Support</a>
         </li>
       </ul>
     </div>
     <div class="col-12 col-lg-auto mt-3 mt-lg-0">
       <ul class="list-inline list-inline-dots mb-0">
         <li class="list-inline-item">
-          Copyright © {{ currentYear }} <a href="." class="link-secondary">KonsolCore</a>. All rights reserved.
+          <span jhiTranslate="global.footer.copyright" [translateValues]="{ year: currentYear }">
+            Copyright {{ currentYear }} <a href="." class="link-secondary">KonsolCore</a>. All rights reserved.
+          </span>
         </li>
         <li class="list-inline-item"><span jhiTranslate="global.version">Version</span>&nbsp;{{ version }}</li>
       </ul>
