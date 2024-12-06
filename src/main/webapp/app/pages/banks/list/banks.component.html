@@ -40,9 +40,8 @@
               </button>
               <ul class="dropdown-menu">
                 <li>
-                  <a class="dropdown-item" [routerLink]="['./', bank.id, 'edit']" *ngIf="bank.id">
+                  <a class="dropdown-item" (click)="editBank(bank)" *ngIf="bank.id">
                     <i class="fa fa-edit"></i>
-
                     <span jhiTranslate="entity.action.edit">Edit</span>
                   </a>
                 </li>

@@ -8,6 +8,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '@ngx-translate/core';
 import { BankCreateModalComponent } from '../create/bank-create-modal.component';
 import { TableColumn } from '../../../shared/components/data-table/table-column.model';
+import { BankFormComponent } from './bank-form.component';
 
 @Component({
   selector: 'jhi-banks',
@@ -195,12 +196,35 @@ export class BanksComponent implements OnInit {
     }
   }
 
-  createNew(): void {
-    const modalRef = this.modalService.open(BankCreateModalComponent, { size: 'lg' });
-    modalRef.closed.subscribe(result => {
-      if (result) {
-        this.loadAll();
+  editBank(bank: BankDTO): void {
+    const modalRef = this.modalService.open(BankFormComponent, { size: 'lg' });
+    modalRef.componentInstance.bank = { ...bank };
+
+    modalRef.result.then(
+      result => {
+        if (result) {
+          this.loadAll();
+        }
+      },
+      () => {
+        // Modal dismissed
       }
-    });
+    );
+  }
+
+  createNew(): void {
+    const modalRef = this.modalService.open(BankFormComponent, { size: 'lg' });
+    modalRef.componentInstance.bank = {};
+
+    modalRef.result.then(
+      result => {
+        if (result) {
+          this.loadAll();
+        }
+      },
+      () => {
+        // Modal dismissed
+      }
+    );
   }
 }
