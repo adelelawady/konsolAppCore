@@ -36,12 +36,13 @@
             </div>
             <div class="dropdown" (click)="$event.stopPropagation()">
               <button class="btn btn-link text-muted p-0" type="button" data-bs-toggle="dropdown">
-                <fa-icon icon="ellipsis-v"></fa-icon>
+                <i class="fa fa-edit"></i>
               </button>
               <ul class="dropdown-menu">
                 <li>
                   <a class="dropdown-item" [routerLink]="['./', bank.id, 'edit']" *ngIf="bank.id">
-                    <fa-icon icon="pencil-alt" class="me-2"></fa-icon>
+                    <i class="fa fa-edit"></i>
+
                     <span jhiTranslate="entity.action.edit">Edit</span>
                   </a>
                 </li>
@@ -71,7 +72,7 @@
         <!-- Bank Analysis Dashboard -->
         <div class="row g-3">
           <div class="col-md-6 col-lg-4">
-            <div class="card highlight-card border-primary" style="border: 2px solid ;">
+            <div class="card highlight-card border-primary" style="border: 2px solid">
               <div class="card-body">
                 <h6 class="card-subtitle mb-2 text-primary">{{ 'banks.analysis.totalBalance' | translate }}</h6>
                 <h4 class="card-title mb-0 text-primary">{{ bankAnalysis.totalBalance | number: '1.2-2' }}</h4>

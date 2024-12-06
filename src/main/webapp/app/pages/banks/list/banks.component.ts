@@ -35,7 +35,6 @@ export class BanksComponent implements OnInit {
     { field: 'details', header: 'banks.transactions.details', type: 'text', sortable: true },
     { field: 'moneyIn', header: 'banks.transactions.moneyIn', type: 'currency', sortable: true },
     { field: 'moneyOut', header: 'banks.transactions.moneyOut', type: 'currency', sortable: true },
-    { field: 'accountName', header: 'banks.transactions.account', type: 'text', sortable: true },
   ];
 
   constructor(
