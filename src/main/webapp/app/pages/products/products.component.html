@@ -169,11 +169,8 @@
                           <i class="fas fa-trash-alt"></i>
                           {{ 'products.actions.delete' | translate }}
                         </button>
-                        <button class="btn btn-sm btn-success d-flex align-items-center gap-2">
-                          <i class="fas fa-print"></i>
-                          {{ 'products.actions.print' | translate }}
-                        </button>
-                        <button class="btn btn-link" [routerLink]="['/products', selectedItem.id, 'details']">
+
+                        <button class="btn btn-sm d-flex align-items-center gap-2" [routerLink]="['/products', selectedItem.id, 'details']">
                           <fa-icon icon="eye"></fa-icon>
                         </button>
                       </div>
