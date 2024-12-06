@@ -36,6 +36,14 @@ export class NavigationComponent implements OnInit, OnDestroy {
       description: 'global.navigation.pages.categories.description',
     },
     {
+      title: 'global.navigation.pages.money.title',
+      route: '/money',
+      icon: this.getSvgIcon('cash'),
+      color: 'green',
+      translationKey: 'money',
+      description: 'global.navigation.pages.money.description',
+    },
+    {
       title: 'global.navigation.pages.accounts.title',
       route: '/accounts',
       icon: this.getSvgIcon('wallet'),

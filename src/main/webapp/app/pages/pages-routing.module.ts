@@ -7,6 +7,7 @@ import { AccountsComponent } from './accounts/accounts.component';
 import { InventoryComponent } from './inventory/inventory.component';
 import { PurchaseComponent } from './purchase/purchase.component';
 import { SalesComponent } from './sales/sales.component';
+import { MoneyComponent } from './money/money.component';
 
 import { NavigationComponent } from './navigation/navigation.component';
 import { ProductsComponent } from './products/products.component';
@@ -56,6 +57,12 @@ const routes: Routes = [
     path: 'sales/:invoiceId',
     component: SalesComponent,
     canActivate: [UserRouteAccessService],
+  },
+  {
+    path: 'money',
+    component: MoneyComponent,
+    canActivate: [UserRouteAccessService],
+    data: { title: 'Money Transactions' },
   },
 ];
 

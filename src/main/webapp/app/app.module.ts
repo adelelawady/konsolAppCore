@@ -30,6 +30,7 @@ import { ErrorComponent } from './layouts/error/error.component';
 import { ApiModule, Configuration } from './core/konsolApi';
 import { CurrencyConfigService } from './core/config/currency-config.service';
 import { PagesModule } from './pages/pages.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
@@ -40,6 +41,7 @@ import { PagesModule } from './pages/pages.module';
         basePath: 'api',
       });
     }),
+    TranslateModule,
     TranslationModule,
     PagesModule,
     SharedModule,

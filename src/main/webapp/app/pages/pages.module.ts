@@ -12,10 +12,21 @@ import { ProductsModule } from './products/products.module';
 import { AccountsModule } from './accounts/accounts.module';
 import { InvoicesModule } from './invoices/invoices.module';
 import { BanksModule } from './banks/banks.module';
+import { MoneyModule } from './money/money.module';
 
 @NgModule({
   declarations: [InventoryComponent, PurchaseComponent, SalesComponent],
-  imports: [CommonModule, SharedModule, RouterModule, PagesRoutingModule, ProductsModule, AccountsModule, InvoicesModule, BanksModule],
+  imports: [
+    CommonModule,
+    SharedModule,
+    RouterModule,
+    PagesRoutingModule,
+    ProductsModule,
+    AccountsModule,
+    InvoicesModule,
+    BanksModule,
+    MoneyModule,
+  ],
   exports: [],
 })
 export class PagesModule {}
