@@ -19,6 +19,14 @@ const dateFns = require('date-fns');
 // Register required components
 Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryScale, Legend, Tooltip);
 
+// Add interface for chart data
+interface ChartItem {
+  date: string;
+  totalSales: number;
+  totalQty: number;
+  avgPrice: number;
+}
+
 @Component({
   selector: 'app-product-details',
   templateUrl: './product-details.component.html',
@@ -47,14 +55,19 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
       this.product = data['item'];
       if (this.product?.id) {
         this.loadProductAnalysis(this.product.id);
-        this.loadChartData(this.product.id);
       }
     });
   }
 
   ngAfterViewInit(): void {
     if (this.product?.id) {
-      this.loadChartData(this.product.id);
+      setTimeout(() => {
+        // Add null check
+        const id = this.product?.id;
+        if (id) {
+          this.loadChartData(id);
+        }
+      });
     }
   }
 
@@ -113,6 +126,20 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
       });
   }
 
+  private formatChartDate(dateStr: string): string {
+    const date = new Date(dateStr);
+    switch (this.selectedRange) {
+      case 'week':
+        return dateFns.format(date, 'MMM dd');
+      case 'month':
+        return dateFns.format(date, 'MMM dd');
+      case 'year':
+        return dateFns.format(date, 'MMM yyyy');
+      default:
+        return dateFns.format(date, 'MMM dd');
+    }
+  }
+
   private updateChart(): void {
     if (!this.chartData?.result || !this.chartCanvas) {
       return;
@@ -125,28 +152,78 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
     }
 
     const data = this.chartData.result;
+
+    // Group data by date for month and year views
+    let chartData: ChartItem[] = data.map(item => ({
+      date: item.date || '',
+      totalSales: item.totalSales || 0,
+      totalQty: item.totalQty || 0,
+      avgPrice: item.avgPrice || 0,
+    }));
+
+    if (this.selectedRange === 'month' || this.selectedRange === 'year') {
+      const groupedData = new Map<
+        string,
+        {
+          date: string;
+          totalSales: number;
+          totalQty: number;
+          totalAmount: number;
+          count: number;
+        }
+      >();
+
+      chartData.forEach(item => {
+        const date = new Date(item.date);
+        const key = this.selectedRange === 'year' ? dateFns.format(date, 'yyyy-MM') : dateFns.format(date, 'yyyy-MM-dd');
+
+        if (!groupedData.has(key)) {
+          groupedData.set(key, {
+            date: item.date,
+            totalSales: 0,
+            totalQty: 0,
+            totalAmount: 0,
+            count: 0,
+          });
+        }
+
+        const group = groupedData.get(key)!;
+        group.totalSales += item.totalSales;
+        group.totalQty += item.totalQty;
+        group.totalAmount += item.totalSales * item.avgPrice;
+        group.count++;
+      });
+
+      chartData = Array.from(groupedData.values()).map(group => ({
+        date: group.date,
+        totalSales: group.totalSales,
+        totalQty: group.totalQty,
+        avgPrice: group.totalAmount / (group.totalSales || 1),
+      }));
+    }
+
     const config: ChartConfiguration<'line'> = {
       type: 'line',
       data: {
-        labels: data.map(item => item.date),
+        labels: chartData.map(item => this.formatChartDate(item.date)),
         datasets: [
           {
             label: 'Sales Amount',
-            data: data.map(item => item.totalSales || 0),
+            data: chartData.map(item => item.totalSales),
             borderColor: 'rgb(75, 192, 192)',
             tension: 0.1,
             fill: false,
           },
           {
             label: 'Quantity Sold',
-            data: data.map(item => item.totalQty || 0),
+            data: chartData.map(item => item.totalQty),
             borderColor: 'rgb(255, 99, 132)',
             tension: 0.1,
             fill: false,
           },
           {
             label: 'Average Price',
-            data: data.map(item => item.avgPrice || 0),
+            data: chartData.map(item => item.avgPrice),
             borderColor: 'rgb(54, 162, 235)',
             tension: 0.1,
             fill: false,
@@ -163,11 +240,34 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
           tooltip: {
             mode: 'index',
             intersect: false,
+            callbacks: {
+              label: context => {
+                let label = context.dataset.label || '';
+                if (label) {
+                  label += ': ';
+                }
+                if (context.parsed.y !== null) {
+                  label +=
+                    context.dataset.label?.includes('Price') || context.dataset.label?.includes('Amount')
+                      ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'EGP' }).format(context.parsed.y)
+                      : new Intl.NumberFormat('en-US').format(context.parsed.y);
+                }
+                return label;
+              },
+            },
           },
         },
         scales: {
           y: {
             beginAtZero: true,
+            ticks: {
+              callback: value => {
+                return new Intl.NumberFormat('en-US', {
+                  notation: 'compact',
+                  compactDisplay: 'short',
+                }).format(value as number);
+              },
+            },
           },
           x: {
             display: true,
