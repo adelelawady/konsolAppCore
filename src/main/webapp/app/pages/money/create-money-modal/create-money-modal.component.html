@@ -1,59 +1,67 @@
 <div class="modal-header">
-  <h4 class="modal-title">{{ (isEdit ? 'money.edit.title' : 'money.create.title') | translate }}</h4>
-  <button type="button" class="close" aria-label="Close" (click)="dismiss()">
-    <span aria-hidden="true">&times;</span>
-  </button>
+  <h4 class="modal-title">{{ (isEdit ? 'konsolCoreApp.money.edit.title' : 'konsolCoreApp.money.create.title') | translate }}</h4>
+  <button type="button" class="btn-close" (click)="dismiss()"></button>
 </div>
 
-<form [formGroup]="moneyForm" (ngSubmit)="onSubmit()">
-  <div class="modal-body">
-    <div class="form-group">
-      <label for="kind">{{ 'money.fields.type' | translate }}</label>
-      <select class="form-control" id="kind" formControlName="kind">
-        <option value="PAYMENT">{{ 'money.types.payment' | translate }}</option>
-        <option value="RECEIPT">{{ 'money.types.receipt' | translate }}</option>
+<div class="modal-body">
+  <form [formGroup]="moneyForm" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label class="form-label">{{ 'konsolCoreApp.money.fields.type' | translate }}</label>
+      <select class="form-select" id="kind" formControlName="kind">
+        <option value="PAYMENT">{{ 'konsolCoreApp.money.types.payment' | translate }}</option>
+        <option value="RECEIPT">{{ 'konsolCoreApp.money.types.receipt' | translate }}</option>
       </select>
-      <div *ngIf="moneyForm.get('kind')?.invalid && moneyForm.get('kind')?.touched" class="text-danger">
-        <small>{{ 'money.validation.typeRequired' | translate }}</small>
+      <div class="invalid-feedback" *ngIf="moneyForm.get('kind')?.errors?.['required']">
+        {{ 'konsolCoreApp.money.validation.typeRequired' | translate }}
       </div>
     </div>
 
-    <div class="form-group">
-      <label>{{ 'money.fields.account' | translate }}</label>
+    <div class="mb-3">
+      <label class="form-label">{{ 'konsolCoreApp.money.fields.account' | translate }}</label>
       <jhi-account-selector
         [selectedAccountId]="moneyForm.get('account')?.value?.id"
         (accountSelected)="onAccountSelect($event)"
       ></jhi-account-selector>
-      <div *ngIf="moneyForm.get('account')?.invalid && moneyForm.get('account')?.touched" class="text-danger">
-        <small>{{ 'money.validation.accountRequired' | translate }}</small>
+      <div class="invalid-feedback" *ngIf="moneyForm.get('account')?.errors?.['required']">
+        {{ 'konsolCoreApp.money.validation.accountRequired' | translate }}
       </div>
     </div>
 
-    <div class="form-group">
-      <label for="amount">{{ 'money.fields.amount' | translate }}</label>
-      <input type="number" class="form-control" id="amount" formControlName="amount" step="0.01" />
-      <div *ngIf="moneyForm.get('amount')?.invalid && moneyForm.get('amount')?.touched" class="text-danger">
-        <small *ngIf="moneyForm.get('amount')?.errors?.required">{{ 'money.validation.amountRequired' | translate }}</small>
-        <small *ngIf="moneyForm.get('amount')?.errors?.min">{{ 'money.validation.amountMin' | translate }}</small>
+    <div class="mb-3">
+      <label class="form-label">{{ 'konsolCoreApp.money.fields.amount' | translate }}</label>
+      <input type="number" class="form-control" id="amount" formControlName="amount" min="0" step="0.01" />
+      <div class="invalid-feedback" *ngIf="moneyForm.get('amount')?.errors?.['required']">
+        {{ 'konsolCoreApp.money.validation.amountRequired' | translate }}
+      </div>
+      <div class="invalid-feedback" *ngIf="moneyForm.get('amount')?.errors?.['min']">
+        {{ 'konsolCoreApp.money.validation.amountMin' | translate }}
       </div>
     </div>
 
-    <div class="form-group">
-      <label for="details">{{ 'money.fields.details' | translate }}</label>
+    <div class="mb-3">
+      <label class="form-label">{{ 'konsolCoreApp.money.fields.bank' | translate }}</label>
+      <app-bank-selector [selectedBank]="moneyForm.get('bank')?.value" (bankSelected)="onBankSelect($event)"></app-bank-selector>
+      <div class="invalid-feedback" *ngIf="moneyForm.get('bank')?.errors?.['required']">
+        {{ 'konsolCoreApp.money.validation.bankRequired' | translate }}
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">{{ 'konsolCoreApp.money.fields.details' | translate }}</label>
       <textarea class="form-control" id="details" formControlName="details" rows="3"></textarea>
-      <div *ngIf="moneyForm.get('details')?.invalid && moneyForm.get('details')?.touched" class="text-danger">
-        <small>{{ 'money.validation.detailsRequired' | translate }}</small>
+      <div class="invalid-feedback" *ngIf="moneyForm.get('details')?.errors?.['required']">
+        {{ 'konsolCoreApp.money.validation.detailsRequired' | translate }}
       </div>
     </div>
-  </div>
+  </form>
+</div>
 
-  <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" (click)="dismiss()">
-      {{ 'common.cancel' | translate }}
-    </button>
-    <button type="submit" class="btn btn-primary" [disabled]="moneyForm.invalid || loading">
-      <i class="fas fa-spinner fa-spin" *ngIf="loading"></i>
-      {{ (isEdit ? 'common.save' : 'common.create') | translate }}
-    </button>
-  </div>
-</form>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="dismiss()">
+    {{ 'konsolCoreApp.money.actions.cancel' | translate }}
+  </button>
+  <button (click)="onSubmit()" type="submit" class="btn btn-primary" [disabled]="moneyForm.invalid || loading">
+    <i class="fas fa-spinner fa-spin" *ngIf="loading"></i>
+    {{ 'konsolCoreApp.money.actions.save' | translate }}
+  </button>
+</div>

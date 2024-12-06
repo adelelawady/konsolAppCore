@@ -21,6 +21,7 @@ export class CreateMoneyModalComponent implements OnInit {
       details: ['', Validators.required],
       amount: [0, Validators.required],
       account: ['', Validators.required],
+      bank: ['', Validators.required],
     });
   }
 
@@ -30,7 +31,7 @@ export class CreateMoneyModalComponent implements OnInit {
       this.moneyForm.patchValue({
         kind: this.money.kind,
         details: this.money.details,
-
+        bank: this.money.bank,
         account: this.money.account,
       });
 
@@ -47,9 +48,14 @@ export class CreateMoneyModalComponent implements OnInit {
   }
 
   onAccountSelect(account: any): void {
-    console.log(account);
     this.moneyForm.patchValue({
       account,
+    });
+  }
+
+  onBankSelect(bank: any): void {
+    this.moneyForm.patchValue({
+      bank,
     });
   }
 
@@ -57,10 +63,11 @@ export class CreateMoneyModalComponent implements OnInit {
     if (this.moneyForm.valid) {
       this.loading = true;
       const formValue = this.moneyForm.value;
-      const moneyDTO: CreateMoneyDTO = {
+      const moneyDTO: any = {
         kind: formValue.kind,
         details: formValue.details,
         accountId: formValue.account?.id,
+        bankId: formValue.bank?.id,
       };
 
       if (formValue.kind == 'PAYMENT') {
@@ -70,6 +77,7 @@ export class CreateMoneyModalComponent implements OnInit {
       }
 
       if (this.isEdit && this.money?.id) {
+        moneyDTO.id = this.money?.id;
         this.moneyService.updateMoney(this.money.id, moneyDTO).subscribe(
           response => {
             this.loading = false;

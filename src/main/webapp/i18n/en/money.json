@@ -2,29 +2,63 @@
   "konsolCoreApp": {
     "money": {
       "home": {
-        "title": "Monies",
+        "title": "Money Transactions",
         "refreshListLabel": "Refresh list",
-        "createLabel": "Create a new Money",
-        "createOrEditLabel": "Create or edit a Money",
-        "notFound": "No Monies found"
+        "createLabel": "Create Transaction",
+        "createOrEditLabel": "Create or Edit Transaction",
+        "notFound": "No transactions found"
       },
-      "created": "A new Money is created with identifier {{ param }}",
-      "updated": "A Money is updated with identifier {{ param }}",
-      "deleted": "A Money is deleted with identifier {{ param }}",
+      "created": "Transaction created successfully",
+      "updated": "Transaction updated successfully",
+      "deleted": "Transaction deleted successfully",
       "delete": {
-        "question": "Are you sure you want to delete Money {{ id }}?"
+        "question": "Are you sure you want to delete this transaction?"
       },
       "detail": {
-        "title": "Money"
+        "title": "Transaction Details"
       },
-      "pk": "Pk",
-      "id": "Id",
-      "kind": "Kind",
-      "moneyIn": "Money In",
-      "moneyOut": "Money Out",
-      "bank": "Bank",
-      "item": "Item",
-      "account": "Account"
+      "fields": {
+        "id": "ID",
+        "type": "Type",
+        "details": "Details",
+        "date": "Date",
+        "account": "Account",
+        "amount": "Amount",
+        "moneyIn": "Money In",
+        "moneyOut": "Money Out"
+      },
+      "types": {
+        "payment": "Payment",
+        "receipt": "Receipt"
+      },
+      "actions": {
+        "create": "Create Transaction",
+        "edit": "Edit Transaction",
+        "delete": "Delete Transaction",
+        "save": "Save",
+        "cancel": "Cancel"
+      },
+      "create": {
+        "title": "Create Transaction"
+      },
+      "edit": {
+        "title": "Edit Transaction"
+      },
+      "delete": {
+        "confirm": "Are you sure you want to delete this transaction?"
+      },
+      "validation": {
+        "typeRequired": "Type is required",
+        "accountRequired": "Account is required",
+        "detailsRequired": "Details are required",
+        "amountRequired": "Amount is required",
+        "amountMin": "Amount must be greater than 0",
+        "dateRequired": "Date is required"
+      },
+      "table": {
+        "emptyMessage": "No transactions found",
+        "loading": "Loading transactions..."
+      }
     }
   }
 }

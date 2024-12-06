@@ -9,7 +9,7 @@ import { BankDTO } from 'app/core/konsolApi/model/bankDTO';
 })
 export class BankSelectorComponent implements OnInit, OnChanges {
   @Output() bankSelected = new EventEmitter<BankDTO>();
-  @Input() selectedBank: BankDTO | null = null;
+  @Input() selectedBank: any | null = null;
 
   banks: BankDTO[] = [];
   loading = false;

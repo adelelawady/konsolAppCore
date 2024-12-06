@@ -2,29 +2,66 @@
   "konsolCoreApp": {
     "money": {
       "home": {
-        "title": "Monies",
-        "refreshListLabel": "Refresh list",
-        "createLabel": "Create a new Money",
-        "createOrEditLabel": "Create or edit a Money",
-        "notFound": "No Monies found"
+        "title": "المعاملات المالية",
+        "refreshListLabel": "تحديث القائمة",
+        "createLabel": "إنشاء معاملة جديدة",
+        "createOrEditLabel": "إنشاء أو تعديل معاملة",
+        "notFound": "لم يتم العثور على معاملات"
       },
-      "created": "A new Money is created with identifier {{ param }}",
-      "updated": "A Money is updated with identifier {{ param }}",
-      "deleted": "A Money is deleted with identifier {{ param }}",
+      "created": "تم إنشاء المعاملة بنجاح",
+      "updated": "تم تحديث المعاملة بنجاح",
+      "deleted": "تم حذف المعاملة بنجاح",
       "delete": {
-        "question": "Are you sure you want to delete Money {{ id }}?"
+        "question": "هل أنت متأكد من حذف هذه المعاملة؟"
       },
       "detail": {
-        "title": "Money"
+        "title": "تفاصيل المعاملة"
       },
-      "pk": "Pk",
-      "id": "Id",
-      "kind": "Kind",
-      "moneyIn": "Money In",
-      "moneyOut": "Money Out",
-      "bank": "Bank",
-      "item": "Item",
-      "account": "Account"
+      "fields": {
+        "id": "الرقم التعريفي",
+        "type": "النوع",
+        "details": "التفاصيل",
+        "date": "التاريخ",
+        "account": "الحساب",
+        "amount": "المبلغ",
+        "moneyIn": "وارد",
+        "moneyOut": "منصرف"
+      },
+      "types": {
+        "payment": "دفع",
+        "receipt": "قبض"
+      },
+      "actions": {
+        "create": "إنشاء معاملة",
+        "edit": "تعديل",
+        "delete": "حذف",
+        "save": "حفظ",
+        "cancel": "إلغاء"
+      },
+      "create": {
+        "title": "إنشاء معاملة جديدة"
+      },
+      "edit": {
+        "title": "تعديل معاملة"
+      },
+      "delete": {
+        "confirm": "هل أنت متأكد من حذف هذه المعاملة؟"
+      },
+      "validation": {
+        "typeRequired": "نوع المعاملة مطلوب",
+        "accountRequired": "الحساب مطلوب",
+        "detailsRequired": "التفاصيل مطلوبة",
+        "amountRequired": "المبلغ مطلوب",
+        "amountMin": "يجب أن يكون المبلغ أكبر من 0",
+        "dateRequired": "التاريخ مطلوب"
+      },
+      "table": {
+        "emptyMessage": "لم يتم العثور على معاملات",
+        "loading": "جاري تحميل المعاملات..."
+      },
+      "common": {
+        "actions": "الإجراءات"
+      }
     }
   }
 }

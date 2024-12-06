@@ -6,6 +6,7 @@ import { MoniesSearchModel } from '../../core/konsolApi/model/moniesSearchModel'
 import { CreateMoneyModalComponent } from './create-money-modal/create-money-modal.component';
 import { TranslateService } from '@ngx-translate/core';
 import { TableColumn } from '../../shared/components/data-table/table-column.model';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-money',
@@ -18,20 +19,30 @@ export class MoneyComponent implements OnInit {
   page = 0;
   pageSize = 10;
   searchModel: MoniesSearchModel = {};
-  columns: TableColumn[] = [
-    { field: 'id', header: 'money.fields.id', sortable: true },
-    { field: 'kind', header: 'money.fields.type', sortable: true },
-    { field: 'moneyIn', header: 'money.fields.moneyIn', sortable: true },
-    { field: 'moneyOut', header: 'money.fields.moneyOut', sortable: true },
-    { field: 'details', header: 'money.fields.details', sortable: true },
-    { field: 'created_date', header: 'money.fields.date', sortable: true },
-    { field: 'actions', header: 'common.actions', type: 'actions', sortable: false },
-  ];
+  columns: TableColumn[] = [];
 
   constructor(private moneyService: MoneyResourceService, private modalService: NgbModal, private translateService: TranslateService) {}
 
   ngOnInit(): void {
+    this.initializeColumns();
     this.loadMonies();
+  }
+
+  private initializeColumns(): void {
+    this.columns = [
+      { field: 'pk', header: 'konsolCoreApp.money.fields.id', sortable: true },
+      { field: 'kind', header: 'konsolCoreApp.money.fields.type', sortable: true },
+      { field: 'moneyIn', header: 'konsolCoreApp.money.fields.moneyIn', sortable: true },
+      { field: 'moneyOut', header: 'konsolCoreApp.money.fields.moneyOut', sortable: true },
+      { field: 'details', header: 'konsolCoreApp.money.fields.details', sortable: true },
+      {
+        field: 'created_date',
+        header: 'konsolCoreApp.money.fields.date',
+        format: (value: string) => this.formatDate(value),
+        sortable: true,
+      },
+      { field: 'actions', header: 'konsolCoreApp.money.common.actions', type: 'actions', sortable: false },
+    ];
   }
 
   loadMonies(): void {
@@ -111,6 +122,15 @@ export class MoneyComponent implements OnInit {
           console.error('Error deleting money:', error);
         }
       );
+    }
+  }
+  private formatDate(date: string): string {
+    if (!date) return '';
+    try {
+      return formatDate(date, 'yyyy-MM-dd HH:mm', 'en-US');
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return date;
     }
   }
 }
