@@ -161,6 +161,10 @@
         "receipt": {
           "title": "Receipt",
           "description": "Receipt management"
+        },
+        "money": {
+          "title": "Money Transactions",
+          "description": "Manage financial transactions and payments"
         }
       }
     },

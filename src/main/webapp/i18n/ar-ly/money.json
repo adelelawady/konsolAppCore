@@ -25,7 +25,8 @@
         "account": "الحساب",
         "amount": "المبلغ",
         "moneyIn": "وارد",
-        "moneyOut": "منصرف"
+        "moneyOut": "منصرف",
+        "bank": "البنك"
       },
       "types": {
         "payment": "دفع",
@@ -53,7 +54,8 @@
         "detailsRequired": "التفاصيل مطلوبة",
         "amountRequired": "المبلغ مطلوب",
         "amountMin": "يجب أن يكون المبلغ أكبر من 0",
-        "dateRequired": "التاريخ مطلوب"
+        "dateRequired": "التاريخ مطلوب",
+        "bankRequired": "البنك مطلوب"
       },
       "table": {
         "emptyMessage": "لم يتم العثور على معاملات",
