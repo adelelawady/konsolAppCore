@@ -3,22 +3,12 @@ import { ActivatedRoute } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 import { ItemResourceService } from '../../../core/konsolApi/api/itemResource.service';
 import { ItemDTO, ItemAnalysisDTO, ChartDataContainer, ChartSearchDTO, ItemAnalysisSearchDTO } from '../../../core/konsolApi';
-import {
-  Chart,
-  ChartConfiguration,
-  LineController,
-  LineElement,
-  PointElement,
-  LinearScale,
-  CategoryScale,
-  Legend,
-  Tooltip,
-} from 'chart.js';
+import { Chart, ChartConfiguration, registerables } from 'chart.js';
 import { TranslateService } from '@ngx-translate/core';
 const dateFns = require('date-fns');
 
-// Register required components
-Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryScale, Legend, Tooltip);
+// Register all Chart.js components
+Chart.register(...registerables);
 
 // Add interface for chart data
 interface ChartItem {
@@ -62,13 +52,13 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     if (this.product?.id) {
+      // Wait for the next tick to ensure canvas is ready
       setTimeout(() => {
-        // Add null check
         const id = this.product?.id;
         if (id) {
           this.loadChartData(id);
         }
-      });
+      }, 0);
     }
   }
 
@@ -118,8 +108,15 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
       .pipe(finalize(() => (this.loadingChart = false)))
       .subscribe({
         next: (data: ChartDataContainer) => {
-          this.chartData = data;
-          this.updateChart();
+          console.log('Raw Chart Data:', data);
+          if (data?.result?.length) {
+            this.chartData = data;
+            setTimeout(() => {
+              this.updateChart();
+            }, 0);
+          } else {
+            console.warn('No chart data available');
+          }
         },
         error: (error: any) => {
           console.error('Error loading chart data:', error);
@@ -142,151 +139,160 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
   }
 
   private updateChart(): void {
-    if (!this.chartData?.result || !this.chartCanvas) {
+    if (!this.chartData?.result?.length || !this.chartCanvas) {
+      console.warn('Missing chart data or canvas');
       return;
     }
 
-    const ctx = this.chartCanvas.nativeElement.getContext('2d');
+    try {
+      const ctx = this.chartCanvas.nativeElement.getContext('2d');
+      if (!ctx) {
+        console.error('Could not get canvas context');
+        return;
+      }
 
-    if (this.chart) {
-      this.chart.destroy();
-    }
+      if (this.chart) {
+        this.chart.destroy();
+      }
 
-    const data = this.chartData.result;
+      // Simplify data processing with type safety
+      const chartData = this.chartData.result
+        .filter((item): item is typeof item & { date: string } => {
+          return typeof item.date === 'string';
+        })
+        .map(item => ({
+          date: item.date,
+          totalSales: Number(item.totalSales) || 0,
+          totalQty: Number(item.totalQty) || 0,
+          avgPrice: Number(item.avgPrice) || 0,
+        }));
 
-    // Group data by date for month and year views
-    let chartData: ChartItem[] = data.map(item => ({
-      date: item.date || '',
-      totalSales: item.totalSales || 0,
-      totalQty: item.totalQty || 0,
-      avgPrice: item.avgPrice || 0,
-    }));
-
-    if (this.selectedRange === 'month' || this.selectedRange === 'year') {
-      const groupedData = new Map<
-        string,
-        {
-          date: string;
-          totalSales: number;
-          totalQty: number;
-          totalAmount: number;
-          count: number;
-        }
-      >();
-
-      chartData.forEach(item => {
-        const date = new Date(item.date);
-        const key = this.selectedRange === 'year' ? dateFns.format(date, 'yyyy-MM') : dateFns.format(date, 'yyyy-MM-dd');
-
-        if (!groupedData.has(key)) {
-          groupedData.set(key, {
-            date: item.date,
-            totalSales: 0,
-            totalQty: 0,
-            totalAmount: 0,
-            count: 0,
-          });
-        }
-
-        const group = groupedData.get(key)!;
-        group.totalSales += item.totalSales;
-        group.totalQty += item.totalQty;
-        group.totalAmount += item.totalSales * item.avgPrice;
-        group.count++;
+      // Sort by date with type safety
+      chartData.sort((a, b) => {
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
+        return dateA.getTime() - dateB.getTime();
       });
 
-      chartData = Array.from(groupedData.values()).map(group => ({
-        date: group.date,
-        totalSales: group.totalSales,
-        totalQty: group.totalQty,
-        avgPrice: group.totalAmount / (group.totalSales || 1),
-      }));
-    }
-
-    const config: ChartConfiguration<'line'> = {
-      type: 'line',
-      data: {
-        labels: chartData.map(item => this.formatChartDate(item.date)),
-        datasets: [
-          {
-            label: 'Sales Amount',
-            data: chartData.map(item => item.totalSales),
-            borderColor: 'rgb(75, 192, 192)',
-            tension: 0.1,
-            fill: false,
-          },
-          {
-            label: 'Quantity Sold',
-            data: chartData.map(item => item.totalQty),
-            borderColor: 'rgb(255, 99, 132)',
-            tension: 0.1,
-            fill: false,
-          },
-          {
-            label: 'Average Price',
-            data: chartData.map(item => item.avgPrice),
-            borderColor: 'rgb(54, 162, 235)',
-            tension: 0.1,
-            fill: false,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            position: 'top',
-          },
-          tooltip: {
-            mode: 'index',
-            intersect: false,
-            callbacks: {
-              label: context => {
-                let label = context.dataset.label || '';
-                if (label) {
-                  label += ': ';
-                }
-                if (context.parsed.y !== null) {
-                  label +=
-                    context.dataset.label?.includes('Price') || context.dataset.label?.includes('Amount')
-                      ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'EGP' }).format(context.parsed.y)
-                      : new Intl.NumberFormat('en-US').format(context.parsed.y);
-                }
-                return label;
-              },
+      const config: ChartConfiguration<'line'> = {
+        type: 'line',
+        data: {
+          labels: chartData.map(item => this.formatChartDate(item.date)),
+          datasets: [
+            {
+              label: this.translateService.instant('product.details.chart.labels.salesAmount'),
+              data: chartData.map(item => item.totalSales),
+              borderColor: 'rgb(75, 192, 192)',
+              backgroundColor: 'rgba(75, 192, 192, 0.1)',
+              tension: 0.1,
+              fill: true,
+              pointRadius: 4,
+              pointHoverRadius: 6,
             },
-          },
+            {
+              label: this.translateService.instant('product.details.chart.labels.quantitySold'),
+              data: chartData.map(item => item.totalQty),
+              borderColor: 'rgb(255, 99, 132)',
+              backgroundColor: 'rgba(255, 99, 132, 0.1)',
+              tension: 0.1,
+              fill: true,
+              pointRadius: 4,
+              pointHoverRadius: 6,
+            },
+            {
+              label: this.translateService.instant('product.details.chart.labels.averagePrice'),
+              data: chartData.map(item => item.avgPrice),
+              borderColor: 'rgb(54, 162, 235)',
+              backgroundColor: 'rgba(54, 162, 235, 0.1)',
+              tension: 0.1,
+              fill: true,
+              pointRadius: 4,
+              pointHoverRadius: 6,
+            },
+          ],
         },
-        scales: {
-          y: {
-            beginAtZero: true,
-            ticks: {
-              callback: value => {
-                return new Intl.NumberFormat('en-US', {
-                  notation: 'compact',
-                  compactDisplay: 'short',
-                }).format(value as number);
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: {
+            duration: 750,
+            easing: 'easeInOutQuart',
+          },
+          plugins: {
+            legend: {
+              position: 'top',
+              labels: {
+                padding: 20,
+                usePointStyle: true,
+              },
+            },
+            tooltip: {
+              mode: 'index',
+              intersect: false,
+              padding: 10,
+              callbacks: {
+                label: context => {
+                  let label = context.dataset.label || '';
+                  if (label) {
+                    label += ': ';
+                  }
+                  if (context.parsed.y !== null) {
+                    label +=
+                      context.dataset.label?.includes('Price') || context.dataset.label?.includes('Amount')
+                        ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'EGP' }).format(context.parsed.y)
+                        : new Intl.NumberFormat('en-US').format(context.parsed.y);
+                  }
+                  return label;
+                },
               },
             },
           },
-          x: {
-            display: true,
-            title: {
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: {
+                display: false,
+                // borderWidth: 0,
+              },
+              ticks: {
+                padding: 10,
+                callback: value => {
+                  return new Intl.NumberFormat('en-US', {
+                    notation: 'compact',
+                    compactDisplay: 'short',
+                  }).format(value as number);
+                },
+              },
+            },
+            x: {
               display: true,
-              text: 'Date',
+              grid: {
+                display: false,
+                //  borderWidth: 0,
+              },
+              ticks: {
+                padding: 10,
+              },
+              title: {
+                display: true,
+                text: this.translateService.instant('product.details.chart.labels.date'),
+                padding: { top: 10 },
+              },
             },
           },
+          interaction: {
+            mode: 'nearest',
+            axis: 'x',
+            intersect: false,
+          },
         },
-        interaction: {
-          mode: 'nearest',
-          axis: 'x',
-          intersect: false,
-        },
-      },
-    };
+      };
 
-    this.chart = new Chart(ctx, config);
+      this.chart = new Chart(ctx, config);
+      console.log('Chart created successfully');
+    } catch (error) {
+      console.error('Error creating chart:', error);
+    }
   }
 
   private loadProductAnalysis(id: string): void {
