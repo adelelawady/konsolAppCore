@@ -24,8 +24,8 @@ const routes: Routes = [
   },
   {
     path: 'products',
-    component: ProductsComponent,
-    canActivate: [UserRouteAccessService],
+    loadChildren: () => import('./products/products.module').then(m => m.ProductsModule),
+    data: { title: 'Products' },
   },
   {
     path: 'accounts',
