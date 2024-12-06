@@ -1,17 +1,25 @@
 <div class="data-table-container">
-  <!-- Search Bar -->
-  <div class="mb-3" *ngIf="showSearch">
-    <div class="input-icon">
-      <span class="input-icon-addon">
-        <i class="ti ti-search"></i>
-      </span>
-      <input
-        type="text"
-        class="form-control"
-        [placeholder]="'dataTable.search' | translate"
-        [(ngModel)]="searchText"
-        (ngModelChange)="onSearch($event)"
-      />
+  <!-- Search Bar and Export Button -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="flex-grow-1" *ngIf="showSearch">
+      <div class="input-icon">
+        <span class="input-icon-addon">
+          <i class="ti ti-search"></i>
+        </span>
+        <input
+          type="text"
+          class="form-control"
+          [placeholder]="'dataTable.search' | translate"
+          [(ngModel)]="searchText"
+          (ngModelChange)="onSearch($event)"
+        />
+      </div>
+    </div>
+    <div class="ms-3">
+      <button class="btn btn-outline-primary" (click)="exportToPDF()" [title]="'global.dataTable.exportPDF' | translate">
+        <i class="ti ti-file-export me-1"></i>
+        {{ 'global.dataTable.actions.export' | translate }}
+      </button>
     </div>
   </div>
 

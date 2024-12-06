@@ -283,8 +283,10 @@
       },
       "actions": {
         "edit": "Edit",
-        "delete": "Delete"
-      }
+        "delete": "Delete",
+        "export": "Export"
+      },
+      "exportPDF": "Export as PDF"
     },
     "loading": "Loading...",
     "error": {

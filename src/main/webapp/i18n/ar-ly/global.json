@@ -280,7 +280,9 @@
       },
       "actions": {
         "edit": "تعديل",
-        "delete": "حذف"
+        "delete": "حذف",
+        "export": "تصدير",
+        "exportPDF": "تصدير كملف PDF"
       }
     },
     "products": {
@@ -358,7 +360,9 @@
     "noData": "لا توجد بيانات",
     "actions": {
       "edit": "تعديل",
-      "delete": "حذف"
+      "delete": "حذف",
+      "export": "تصدير",
+      "exportPDF": "تصدير كملف PDF"
     },
     "pagination": {
       "showing": "عرض",

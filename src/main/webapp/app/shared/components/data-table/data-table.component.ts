@@ -13,6 +13,8 @@ import {
 import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 export interface TableColumn {
   field: string;
@@ -232,5 +234,52 @@ export class DataTableComponent implements OnInit, OnChanges {
       default:
         return null;
     }
+  }
+
+  exportToPDF(): void {
+    const doc = new jsPDF();
+
+    const tableData = this.data.map(row =>
+      this.columns
+        .filter(col => col.type !== 'actions')
+        .map(col => {
+          const value = row[col.field];
+          if (col.format && typeof col.format === 'function') {
+            return col.format(value);
+          }
+          return value;
+        })
+    );
+
+    const headers = this.columns.filter(col => col.type !== 'actions').map(col => this.translateService.instant(col.header));
+
+    // Add title
+    doc.setFontSize(16);
+    doc.text(this.translateService.instant('global.title'), 14, 15);
+
+    // Add export date
+    doc.setFontSize(8);
+    doc.text(new Date().toLocaleString(), doc.internal.pageSize.width - 40, 10);
+
+    autoTable(doc, {
+      head: [headers],
+      body: tableData,
+      theme: 'grid',
+      styles: {
+        fontSize: 8,
+        cellPadding: 2,
+        overflow: 'linebreak',
+        halign: 'left',
+      },
+      headStyles: {
+        fillColor: [41, 128, 185],
+        textColor: 255,
+        fontSize: 9,
+        fontStyle: 'bold',
+      },
+      margin: { top: 20 },
+    });
+
+    doc.save('table-export.pdf');
   }
 }
