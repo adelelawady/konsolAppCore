@@ -1,0 +1,14 @@
+<div *ngIf="productAnalysis" class="product-details">
+  <h1>Product Details</h1>
+  <p><strong>ID:</strong> {{ productAnalysis.id }}</p>
+  <p><strong>Name:</strong> {{ productAnalysis.name }}</p>
+  <p><strong>Description:</strong> {{ productAnalysis.description }}</p>
+  <h2>Statistics</h2>
+  <p><strong>Sales:</strong> {{ productAnalysis.sales }}</p>
+  <p><strong>Returns:</strong> {{ productAnalysis.returns }}</p>
+  <!-- Add more statistics as needed -->
+</div>
+
+<div *ngIf="!productAnalysis">
+  <p>Loading product details...</p>
+</div>

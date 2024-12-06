@@ -12,6 +12,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { finalize } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'jhi-products',
@@ -86,7 +87,8 @@ export class ProductsComponent implements OnInit {
     private itemService: ItemResourceService,
     private storeService: StoreResourceService,
     private toastr: ToastrService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private router: Router
   ) {
     // Setup search debounce
     this.searchSubject.pipe(debounceTime(300), distinctUntilChanged()).subscribe(term => {
@@ -331,5 +333,9 @@ export class ProductsComponent implements OnInit {
 
   getTotalQuantity(): number {
     return this.storeItems.reduce((total, item) => total + (item.qty || 0), 0);
+  }
+
+  viewProductDetails(productId: string): void {
+    this.router.navigate(['/products', productId]);
   }
 }
