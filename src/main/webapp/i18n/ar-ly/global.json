@@ -1,5 +1,8 @@
 {
   "global": {
+    "footer": {
+      "copyright": "حقوق النشر {{ year }} كونسول كور. جميع الحقوق محفوظة."
+    },
     "itemSearch": {
       "placeholder": "البحث عن المنتجات...",
       "noResults": "لا توجد نتائج",
@@ -482,10 +485,6 @@
     "permissions": {
       "insufficient": "صلاحيات غير كافية",
       "notAuthorized": "غير مصرح لك بتنفيذ هذا الإجراء"
-    },
-
-    "footer": {
-      "copyright": "حقوق النشر {{ year }} كونسول كور. جميع الحقوق محفوظة."
     }
   }
 }

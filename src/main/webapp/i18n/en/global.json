@@ -1,5 +1,8 @@
 {
   "global": {
+    "footer": {
+      "copyright": "Copyright {{ year }} KonsolCore. All rights reserved."
+    },
     "itemSearch": {
       "placeholder": "Search products...",
       "noResults": "No results found",
@@ -435,9 +438,6 @@
       "itemsPerPage": "items per page",
       "previous": "Previous",
       "next": "Next"
-    },
-    "footer": {
-      "copyright": "Copyright {{ year }} KonsolCore. All rights reserved."
     }
   }
 }
