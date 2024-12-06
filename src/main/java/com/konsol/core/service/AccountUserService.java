@@ -65,7 +65,7 @@ public interface AccountUserService {
      * search accountUser daftar
      * @param accountUserSearchModel model holds all search model fields
      * @return AccountUserContainer List of Account User [result]
-]     */
+     */
     AccountUserContainer accountUserSearchPaginate(AccountUserSearchModel accountUserSearchModel);
 
     void addAccountBalance(String accountId, BigDecimal value);

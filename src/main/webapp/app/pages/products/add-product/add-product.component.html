@@ -2,7 +2,8 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">
+        <h5 class="modal-title d-flex align-items-center gap-2">
+          <i class="fas fa-box text-primary"></i>
           {{ (isEditMode ? 'products.modal.edit' : 'products.modal.add') | translate }}
         </h5>
         <button type="button" class="btn-close" (click)="closeModal()"></button>
@@ -14,8 +15,11 @@
             <!-- Basic Information -->
             <div class="col-md-6">
               <div class="card">
-                <div class="card-header">
-                  <h4 class="card-title mb-0">{{ 'products.modal.sections.basic' | translate }}</h4>
+                <div class="card-header bg-light">
+                  <div class="d-flex align-items-center gap-2">
+                    <i class="fas fa-info-circle text-primary"></i>
+                    <h4 class="card-title mb-0">{{ 'products.modal.sections.basic' | translate }}</h4>
+                  </div>
                 </div>
                 <div class="card-body">
                   <div class="mb-3">
@@ -37,8 +41,11 @@
             <!-- Pricing Information -->
             <div class="col-md-6">
               <div class="card">
-                <div class="card-header">
-                  <h4 class="card-title mb-0">{{ 'products.modal.sections.pricing' | translate }}</h4>
+                <div class="card-header bg-light">
+                  <div class="d-flex align-items-center gap-2">
+                    <i class="fas fa-tags text-primary"></i>
+                    <h4 class="card-title mb-0">{{ 'products.modal.sections.pricing' | translate }}</h4>
+                  </div>
                 </div>
                 <div class="card-body">
                   <div class="mb-3">
@@ -58,7 +65,8 @@
                   <div class="mb-3">
                     <div class="form-check form-switch">
                       <input class="form-check-input" type="checkbox" role="switch" id="checkQty" formControlName="checkQty" />
-                      <label class="form-check-label" for="checkQty">
+                      <label class="form-check-label d-flex align-items-center gap-2" for="checkQty">
+                        <i class="fas fa-box-check text-muted"></i>
                         {{ 'products.fields.checkQuantity' | translate }}
                       </label>
                     </div>
@@ -74,18 +82,23 @@
                   <ul class="nav nav-tabs card-header-tabs">
                     <li class="nav-item">
                       <a
-                        class="nav-link"
+                        class="nav-link d-flex align-items-center gap-2"
                         [class.active]="activeTab === 'quantities'"
                         (click)="activeTab = 'quantities'"
                         href="javascript:void(0)"
                       >
-                        <i class="bi bi-boxes me-1"></i>
+                        <i class="fas fa-boxes"></i>
                         {{ 'products.modal.sections.inventory' | translate }}
                       </a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" [class.active]="activeTab === 'units'" (click)="activeTab = 'units'" href="javascript:void(0)">
-                        <i class="bi bi-rulers me-1"></i>
+                      <a
+                        class="nav-link d-flex align-items-center gap-2"
+                        [class.active]="activeTab === 'units'"
+                        (click)="activeTab = 'units'"
+                        href="javascript:void(0)"
+                      >
+                        <i class="fas fa-ruler-combined"></i>
                         {{ 'products.modal.sections.units' | translate }}
                       </a>
                     </li>
@@ -122,8 +135,8 @@
                   <!-- Item Units Tab -->
                   <div [class.d-none]="activeTab !== 'units'">
                     <div class="d-flex justify-content-end mb-3">
-                      <button type="button" class="btn btn-primary btn-sm" (click)="addItemUnit()">
-                        <i class="bi bi-plus-lg me-1"></i>
+                      <button type="button" class="btn btn-primary btn-sm d-flex align-items-center gap-2" (click)="addItemUnit()">
+                        <i class="fas fa-plus-circle"></i>
                         {{ 'products.modal.actions.addUnit' | translate }}
                       </button>
                     </div>
@@ -191,7 +204,7 @@
 
                             <td>
                               <button type="button" class="btn btn-icon btn-sm btn-ghost-danger" (click)="removeItemUnit(i)">
-                                <fa-icon icon="times"></fa-icon>
+                                <i class="fas fa-times"></i>
                               </button>
                             </td>
                           </tr>
@@ -206,10 +219,12 @@
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-link" (click)="closeModal()">
+          <button type="button" class="btn btn-link d-flex align-items-center gap-2" (click)="closeModal()">
+            <i class="fas fa-times"></i>
             {{ 'products.modal.actions.cancel' | translate }}
           </button>
-          <button type="submit" class="btn btn-primary" [disabled]="form.invalid || loading">
+          <button type="submit" class="btn btn-primary d-flex align-items-center gap-2" [disabled]="!form.valid || loading">
+            <i class="fas fa-save"></i>
             <span class="spinner-border spinner-border-sm me-1" *ngIf="loading"></span>
             {{ (isEditMode ? 'products.modal.actions.update' : 'products.modal.actions.save') | translate }}
           </button>

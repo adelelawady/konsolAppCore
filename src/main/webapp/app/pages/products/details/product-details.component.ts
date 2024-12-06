@@ -139,42 +139,44 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
   }
 
   private updateChart(): void {
-    if (!this.chartData?.result?.length || !this.chartCanvas) {
-      console.warn('Missing chart data or canvas');
+    if (!this.chartCanvas) {
+      console.warn('Canvas element not found');
+      return;
+    }
+
+    const ctx = this.chartCanvas.nativeElement.getContext('2d');
+    if (!ctx) {
+      console.error('Could not get canvas context');
+      return;
+    }
+
+    // Destroy existing chart if it exists
+    if (this.chart) {
+      this.chart.destroy();
+    }
+
+    // Ensure we have data to display
+    if (!this.chartData?.result?.length) {
+      console.warn('No chart data available');
       return;
     }
 
     try {
-      const ctx = this.chartCanvas.nativeElement.getContext('2d');
-      if (!ctx) {
-        console.error('Could not get canvas context');
-        return;
-      }
-
-      if (this.chart) {
-        this.chart.destroy();
-      }
-
-      // Simplify data processing with type safety
+      // Process and sort data
       const chartData = this.chartData.result
         .filter((item): item is typeof item & { date: string } => {
-          return typeof item.date === 'string';
+          return typeof item.date === 'string' && item.date !== null;
         })
         .map(item => ({
           date: item.date,
           totalSales: Number(item.totalSales) || 0,
           totalQty: Number(item.totalQty) || 0,
           avgPrice: Number(item.avgPrice) || 0,
-        }));
+        }))
+        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-      // Sort by date with type safety
-      chartData.sort((a, b) => {
-        const dateA = new Date(a.date);
-        const dateB = new Date(b.date);
-        return dateA.getTime() - dateB.getTime();
-      });
-
-      const config: ChartConfiguration<'line'> = {
+      // Create new chart
+      this.chart = new Chart(ctx, {
         type: 'line',
         data: {
           labels: chartData.map(item => this.formatChartDate(item.date)),
@@ -199,97 +201,51 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
               pointRadius: 4,
               pointHoverRadius: 6,
             },
-            {
-              label: this.translateService.instant('product.details.chart.labels.averagePrice'),
-              data: chartData.map(item => item.avgPrice),
-              borderColor: 'rgb(54, 162, 235)',
-              backgroundColor: 'rgba(54, 162, 235, 0.1)',
-              tension: 0.1,
-              fill: true,
-              pointRadius: 4,
-              pointHoverRadius: 6,
-            },
           ],
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          animation: {
-            duration: 750,
-            easing: 'easeInOutQuart',
+          interaction: {
+            intersect: false,
+            mode: 'index',
+          },
+          scales: {
+            x: {
+              grid: {
+                display: false,
+              },
+            },
+            y: {
+              beginAtZero: true,
+              grid: {
+                color: 'rgba(0, 0, 0, 0.1)',
+              },
+            },
           },
           plugins: {
             legend: {
               position: 'top',
-              labels: {
-                padding: 20,
-                usePointStyle: true,
-              },
             },
             tooltip: {
-              mode: 'index',
-              intersect: false,
+              backgroundColor: 'rgba(255, 255, 255, 0.9)',
+              titleColor: '#000',
+              bodyColor: '#666',
+              borderColor: 'rgba(0, 0, 0, 0.1)',
+              borderWidth: 1,
               padding: 10,
+              displayColors: true,
               callbacks: {
                 label: context => {
-                  let label = context.dataset.label || '';
-                  if (label) {
-                    label += ': ';
-                  }
-                  if (context.parsed.y !== null) {
-                    label +=
-                      context.dataset.label?.includes('Price') || context.dataset.label?.includes('Amount')
-                        ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'EGP' }).format(context.parsed.y)
-                        : new Intl.NumberFormat('en-US').format(context.parsed.y);
-                  }
-                  return label;
+                  const value = context.raw as number;
+                  const label = context.dataset.label || '';
+                  return `${label}: ${value.toLocaleString()}`;
                 },
               },
             },
-          },
-          scales: {
-            y: {
-              beginAtZero: true,
-              grid: {
-                display: false,
-                // borderWidth: 0,
-              },
-              ticks: {
-                padding: 10,
-                callback: value => {
-                  return new Intl.NumberFormat('en-US', {
-                    notation: 'compact',
-                    compactDisplay: 'short',
-                  }).format(value as number);
-                },
-              },
-            },
-            x: {
-              display: true,
-              grid: {
-                display: false,
-                //  borderWidth: 0,
-              },
-              ticks: {
-                padding: 10,
-              },
-              title: {
-                display: true,
-                text: this.translateService.instant('product.details.chart.labels.date'),
-                padding: { top: 10 },
-              },
-            },
-          },
-          interaction: {
-            mode: 'nearest',
-            axis: 'x',
-            intersect: false,
           },
         },
-      };
-
-      this.chart = new Chart(ctx, config);
-      console.log('Chart created successfully');
+      });
     } catch (error) {
       console.error('Error creating chart:', error);
     }
