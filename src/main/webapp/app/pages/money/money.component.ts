@@ -60,12 +60,12 @@ export class MoneyComponent implements OnInit {
       searchParams.kind = this.selectedKind;
     }
 
-    if (this.dateFrom) {
-      searchParams.dateFrom = this.dateFrom;
+    if (this.dateFrom && this.dateFrom != '') {
+      searchParams.dateFrom = this.formatDateForApi(this.dateFrom);
     }
 
-    if (this.dateTo) {
-      searchParams.dateTo = this.dateTo;
+    if (this.dateTo && this.dateTo != '') {
+      searchParams.dateTo = this.formatDateForApi(this.dateTo);
     }
 
     this.moneyService.moniesViewSearchPaginate(searchParams).subscribe(
@@ -147,13 +147,17 @@ export class MoneyComponent implements OnInit {
   }
 
   onDateFromChange(event: any): void {
-    this.dateFrom = event.target?.value;
+    const date = event.target?.value;
+    this.dateFrom = date;
+    this.searchModel.dateFrom = date;
     this.page = 0;
     this.loadMonies();
   }
 
   onDateToChange(event: any): void {
-    this.dateTo = event.target?.value;
+    const date = event.target?.value;
+    this.dateTo = date;
+    this.searchModel.dateTo = date;
     this.page = 0;
     this.loadMonies();
   }
@@ -161,9 +165,29 @@ export class MoneyComponent implements OnInit {
   private formatDate(date: string): string {
     if (!date) return '';
     try {
-      return formatDate(date, 'yyyy-MM-dd HH:mm', 'en-US');
+      return formatDate(date, 'yyyy-MM-dd', 'en');
     } catch (error) {
       console.error('Error formatting date:', error);
+      return date;
+    }
+  }
+
+  private formatDateForApi(date: string): string {
+    if (!date) return '';
+    try {
+      // Convert the date to ISO format with time
+      const d = new Date(date);
+      // Set to start of day for dateFrom
+      if (this.searchModel.dateFrom === date) {
+        d.setHours(0, 0, 0, 0);
+      }
+      // Set to end of day for dateTo
+      if (this.searchModel.dateTo === date) {
+        d.setHours(23, 59, 59, 999);
+      }
+      return d.toISOString();
+    } catch (error) {
+      console.error('Error formatting date for API:', error);
       return date;
     }
   }

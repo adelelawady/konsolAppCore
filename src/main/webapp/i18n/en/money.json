@@ -63,6 +63,10 @@
       },
       "common": {
         "actions": "Actions"
+      },
+      "search": {
+        "dateFrom": "From Date",
+        "dateTo": "To Date"
       }
     }
   }

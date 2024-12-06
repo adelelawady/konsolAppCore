@@ -595,7 +595,14 @@ import org.bson.Document;
         }
 
         // DATE
-        if (moniesSearchModel.getDateFrom() != null && moniesSearchModel.getDateTo() != null) {
+        if (
+            moniesSearchModel.getDateFrom() != null &&
+            moniesSearchModel.getDateTo() != null &&
+            !moniesSearchModel.getDateFrom().isEmpty() &&
+            !moniesSearchModel.getDateFrom().isBlank() &&
+            !moniesSearchModel.getDateTo().isEmpty() &&
+            !moniesSearchModel.getDateTo().isBlank()
+        ) {
             OffsetDateTime from = OffsetDateTime.parse(moniesSearchModel.getDateFrom());
             OffsetDateTime to = OffsetDateTime.parse(moniesSearchModel.getDateTo());
 

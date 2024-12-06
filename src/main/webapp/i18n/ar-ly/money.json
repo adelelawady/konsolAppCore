@@ -63,6 +63,10 @@
       },
       "common": {
         "actions": "الإجراءات"
+      },
+      "search": {
+        "dateFrom": "من تاريخ",
+        "dateTo": "إلى تاريخ"
       }
     }
   }
