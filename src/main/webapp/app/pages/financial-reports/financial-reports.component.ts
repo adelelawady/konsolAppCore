@@ -257,7 +257,7 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
         netCost: this.dashboardData.salesMetrics?.netCost || 0,
         netProfit: this.dashboardData.salesMetrics?.netProfit || 0,
         dailyRevenue: this.dashboardData.salesMetrics?.dailyRevenue || 0,
-        monthlyRevenue: this.dashboardData.salesMetrics?.monthlyRevenue || 0
+        monthlyRevenue: this.dashboardData.salesMetrics?.monthlyRevenue || 0,
       };
 
       // Update performance indicators
@@ -267,7 +267,7 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
         operatingExpensesRatio: this.dashboardData.performanceIndicators?.operatingExpensesRatio || 0,
         currentRatio: this.dashboardData.performanceIndicators?.currentRatio || 0,
         quickRatio: this.dashboardData.performanceIndicators?.quickRatio || 0,
-        revenueGrowth: this.dashboardData.performanceIndicators?.revenueGrowth || 0
+        revenueGrowth: this.dashboardData.performanceIndicators?.revenueGrowth || 0,
       };
 
       // Update cash flow metrics
@@ -275,23 +275,21 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
         totalMoneyIn: this.dashboardData.cashFlowMetrics?.totalMoneyIn || 0,
         totalMoneyOut: this.dashboardData.cashFlowMetrics?.totalMoneyOut || 0,
         currentCashPosition: this.dashboardData.cashFlowMetrics?.currentCashPosition || 0,
-        bankBalances: this.dashboardData.cashFlowMetrics?.bankBalances || {}
+        bankBalances: this.dashboardData.cashFlowMetrics?.bankBalances || {},
       };
 
       // Update all charts
       this.updateBankBalanceChart();
       this.updateCashFlowTrend();
 
-
-
-       // Update invoice analysis
-       this.invoiceAnalysis = {
+      // Update invoice analysis
+      this.invoiceAnalysis = {
         averageDiscount: this.dashboardData.invoiceAnalysis?.averageDiscount || 0,
         averageDiscountPercentage: this.dashboardData.invoiceAnalysis?.averageDiscountPercentage || 0,
         totalAdditions: this.dashboardData.invoiceAnalysis?.totalAdditions || 0,
         totalExpenses: this.dashboardData.invoiceAnalysis?.totalExpenses || 0,
         deferredInvoicesCount: this.dashboardData.invoiceAnalysis?.deferredInvoicesCount || 0,
-        expensesByType: this.dashboardData.invoiceAnalysis?.expensesByType || {}
+        expensesByType: this.dashboardData.invoiceAnalysis?.expensesByType || {},
       };
 
       // Update item analysis
@@ -302,14 +300,14 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
           topSellingItemName: analysis.topSellingItemName || '',
           itemCategoryDistribution: analysis.itemCategoryDistribution || {},
           itemProfitMargins: analysis.itemProfitMargins || [],
-          topSellingItems: analysis.topSellingItems || []
+          topSellingItems: analysis.topSellingItems || [],
         };
       }
 
-       // Update store and account analysis
-       this.storeAccountAnalysis = {
+      // Update store and account analysis
+      this.storeAccountAnalysis = {
         storeMetrics: this.dashboardData.storeAccountAnalysis?.storeMetrics || [],
-        accountMetrics: this.dashboardData.storeAccountAnalysis?.accountMetrics || []
+        accountMetrics: this.dashboardData.storeAccountAnalysis?.accountMetrics || [],
       };
     }
   }
@@ -323,7 +321,7 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
           trigger: 'axis',
           formatter: (params: any) => {
             const data = Array.isArray(params) ? params[0] : params;
-            return `${data.name}<br/>${data.seriesName}: ₺${data.value}`;
+            return `${data.name}<br/>${data.seriesName}: $${data.value}`;
           },
         },
         xAxis: {
@@ -339,9 +337,9 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
         },
         yAxis: {
           type: 'value',
-          name: 'Revenue (₺)',
+          name: 'Revenue ($)',
           axisLabel: {
-            formatter: '₺{value}',
+            formatter: '${value}',
           },
         },
         series:
@@ -367,7 +365,7 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
             type: 'shadow',
           },
           formatter: (params: any) => {
-            return params.map((param: any) => `${param.seriesName}: ₺${param.value}`).join('<br/>');
+            return params.map((param: any) => `${param.seriesName}: $${param.value}`).join('<br/>');
           },
         },
         legend: {
@@ -383,9 +381,9 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
         },
         yAxis: {
           type: 'value',
-          name: 'Amount (₺)',
+          name: 'Amount ($)',
           axisLabel: {
-            formatter: '₺{value}',
+            formatter: '${value}',
           },
         },
         series:
@@ -455,13 +453,13 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
         ...this.getDefaultChartOptions('Top Items by Revenue'),
         tooltip: {
           trigger: 'axis',
-          formatter: revenueData.options?.tooltip?.formatter || '{b}<br/>Revenue: ₺{c}',
+          formatter: revenueData.options?.tooltip?.formatter || '{b}<br/>Revenue: ${c}',
         },
         xAxis: {
           type: 'value',
-          name: 'Revenue (₺)',
+          name: 'Revenue ($)',
           axisLabel: {
-            formatter: '₺{value}',
+            formatter: '${value}',
           },
         },
         yAxis: {
@@ -480,7 +478,7 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
             label: {
               show: true,
               position: 'right',
-              formatter: '₺{c}',
+              formatter: '${c}',
             },
           },
         ],
@@ -497,49 +495,52 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
           axisPointer: {
             type: 'cross',
             label: {
-              backgroundColor: '#6a7985'
-            }
+              backgroundColor: '#6a7985',
+            },
           },
           formatter: (params: any) => {
             const data = Array.isArray(params) ? params[0] : params;
-            return `${data.name}<br/>${data.seriesName}: ₺${data.value}`;
-          }
+            const value = data.value || 0;
+            return `${data.name}<br/>${data.seriesName}: ${value.toLocaleString('tr-TR', { style: 'currency', currency: 'USD' })}`;
+          },
         },
         legend: {
-          data: ['Net Cash Flow']
+          data: ['Net Cash Flow'],
         },
         grid: {
           left: '3%',
           right: '4%',
           bottom: '3%',
-          containLabel: true
+          containLabel: true,
         },
         xAxis: {
           type: 'category',
           boundaryGap: false,
-          data: cashFlowData.labels || []
+          data: cashFlowData.labels || [],
         },
         yAxis: {
           type: 'value',
           axisLabel: {
-            formatter: '₺{value}'
-          }
+            formatter: (value: number) => value.toLocaleString('tr-TR', { style: 'currency', currency: 'TRY' }),
+          },
         },
-        series: [{
-          name: 'Net Cash Flow',
-          type: 'line',
-          data: cashFlowData.series[0].data || [],
-          areaStyle: {
-            opacity: 0.3
+        series: [
+          {
+            name: 'Net Cash Flow',
+            type: 'line',
+            data: cashFlowData.series[0].data || [],
+            areaStyle: {
+              opacity: 0.3,
+            },
+            lineStyle: {
+              width: 2,
+            },
+            itemStyle: {
+              color: '#2f4554',
+            },
+            smooth: true,
           },
-          lineStyle: {
-            width: 2
-          },
-          itemStyle: {
-            color: '#2f4554'
-          },
-          smooth: true
-        }]
+        ],
       };
     }
   }
@@ -558,9 +559,9 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
         },
         yAxis: {
           type: 'value',
-          name: 'Balance (₺)',
+          name: 'Balance ($)',
           axisLabel: {
-            formatter: '₺{value}',
+            formatter: '${value}',
           },
         },
         series: [
@@ -573,7 +574,7 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
             label: {
               show: true,
               position: 'top',
-              formatter: '₺{c}',
+              formatter: '${c}',
             },
           },
         ],
@@ -731,9 +732,7 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   private updateBankBalanceChart(): void {
-    const bankBalanceData = this.dashboardData?.cashFlowCharts?.find(
-      (chart: any) => chart.title === 'Bank Balance Distribution'
-    );
+    const bankBalanceData = this.dashboardData?.cashFlowCharts?.find((chart: any) => chart.title === 'Bank Balance Distribution');
 
     if (bankBalanceData) {
       this.bankBalanceOption = {
@@ -742,48 +741,52 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
           formatter: (params: any) => {
             const value = params.value || 0;
             const percent = params.percent || 0;
-            return `${params.name}<br/>Balance: ₺${value.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}<br/>Percentage: ${percent}%`;
-          }
+            return `${params.name}<br/>Balance: ${value.toLocaleString('tr-TR', {
+              style: 'currency',
+              currency: 'TRY',
+            })}<br/>Percentage: ${percent}%`;
+          },
         },
         legend: {
           orient: 'vertical',
           right: 10,
-          top: 'center'
+          top: 'center',
         },
-        series: [{
-          name: 'Bank Balances',
-          type: 'pie',
-          radius: ['40%', '70%'],
-          avoidLabelOverlap: true,
-          itemStyle: {
-            borderRadius: 10,
-            borderColor: '#fff',
-            borderWidth: 2
-          },
-          label: {
-            show: true,
-            formatter: '{b}: {d}%'
-          },
-          emphasis: {
+        series: [
+          {
+            name: 'Bank Balances',
+            type: 'pie',
+            radius: ['40%', '70%'],
+            avoidLabelOverlap: true,
+            itemStyle: {
+              borderRadius: 10,
+              borderColor: '#fff',
+              borderWidth: 2,
+            },
             label: {
               show: true,
-              fontSize: '16',
-              fontWeight: 'bold'
-            }
+              formatter: '{b}: {d}%',
+            },
+            emphasis: {
+              label: {
+                show: true,
+                fontSize: '16',
+                fontWeight: 'bold',
+              },
+            },
+            labelLine: {
+              show: true,
+            },
+            data: bankBalanceData.series[0].data.map((value: number, index: number) => ({
+              value,
+              name: bankBalanceData.labels[index],
+            })),
           },
-          labelLine: {
-            show: true
-          },
-          data: bankBalanceData.series[0].data.map((value: number, index: number) => ({
-            value,
-            name: bankBalanceData.labels[index]
-          }))
-        }]
+        ],
       };
     }
   }
 
-  
   setDateRange(range: any): void {
     this.selectedDateRange = range.target.value;
     const now = new Date();
