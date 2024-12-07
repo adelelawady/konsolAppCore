@@ -122,7 +122,7 @@ public class FinancialDashboardServiceImpl implements FinancialDashboardService 
         charts.add(getDailySalesTrend(startDate, endDate));
         charts.add(getMonthlySalesTrend(startDate, endDate));
         charts.add(getSalesVsCostsComparison(startDate, endDate));
-        charts.add(getProfitMarginDistribution());
+        charts.add(getProfitMarginDistribution(startDate, endDate));
         return charts;
     }
 
@@ -241,14 +241,13 @@ public class FinancialDashboardServiceImpl implements FinancialDashboardService 
     }
 
     @Override
-    public FinancialChartDTO getProfitMarginDistribution() {
+    public FinancialChartDTO getProfitMarginDistribution(LocalDateTime startDate, LocalDateTime endDate) {
         FinancialChartDTO chart = new FinancialChartDTO();
         chart.setChartType("pie");
         chart.setTitle("Profit Margin Distribution");
 
         // Get all invoices from the last month
-        LocalDateTime endDate = LocalDateTime.now();
-        LocalDateTime startDate = endDate.minusMonths(1);
+
         List<Invoice> invoices = invoiceRepository.findByCreatedDateBetween(startDate, endDate);
 
         // Calculate profit margins and group them into ranges
@@ -340,10 +339,9 @@ public class FinancialDashboardServiceImpl implements FinancialDashboardService 
 
         // Calculate profit margins and convert to ItemProfitabilityDTO list
         List<ItemProfitabilityDTO> profitabilityList = itemGroups
-            .entrySet()
+            .values()
             .stream()
-            .map(entry -> {
-                List<InvoiceItem> items = entry.getValue();
+            .map(items -> {
                 Item item = items.get(0).getItem(); // Get item details from first invoice item
 
                 BigDecimal totalRevenue = items
@@ -1535,7 +1533,7 @@ public class FinancialDashboardServiceImpl implements FinancialDashboardService 
             if (money.getKind() == MoneyKind.RECEIPT) {
                 monthlyComparison.get(monthKey).merge(MoneyKind.RECEIPT, money.getMoneyOut(), BigDecimal::add);
             } else {
-                monthlyComparison.get(monthKey).merge(MoneyKind.PAYMENT, money.getMoneyIn() , BigDecimal::add);
+                monthlyComparison.get(monthKey).merge(MoneyKind.PAYMENT, money.getMoneyIn(), BigDecimal::add);
             }
         });
 

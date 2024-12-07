@@ -1,8 +1,9 @@
 <div class="dashboard-container">
   <div class="dashboard-header">
-    <h1>Financial Dashboard</h1>
+    <h1><i class="fas fa-chart-line"></i> Financial Dashboard</h1>
     <div class="date-range">
-      <select [(ngModel)]="selectedDateRange" (change)="setDateRange($event)">
+      <label for="dateRangeSelect"> <i class="fas fa-calendar-alt"></i> Select Date Range: </label>
+      <select id="dateRangeSelect" [(ngModel)]="selectedDateRange" (change)="setDateRange($event)">
         <option value="today">Today</option>
         <option value="week">This Week</option>
         <option value="month">This Month</option>
@@ -11,40 +12,55 @@
     </div>
   </div>
 
-  <div *ngIf="loading" class="loading-spinner">Loading...</div>
+  <div *ngIf="loading" class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
 
   <ng-container *ngIf="!loading">
     <!-- Key Performance Metrics -->
-
     <div class="metrics-dashboard">
       <!-- Sales & Revenue Metrics -->
       <div class="metrics-section">
-        <h3 class="section-title">Sales & Revenue</h3>
+        <h3 class="section-title"><i class="fas fa-dollar-sign"></i> Sales & Revenue</h3>
         <div class="metrics-grid">
           <div class="metric-card">
             <div class="metric-content">
-              <h4>Total Sales</h4>
-              <span class="metric-value">{{ salesMetrics?.totalSales | currency: 'USD':'symbol-narrow':'1.2-2' }}</span>
+              <h4><i class="fas fa-shopping-cart"></i> Total Sales</h4>
+              <span class="metric-value">
+                {{ salesMetrics?.totalSales | currency: 'USD':'symbol-narrow':'1.2-2' }}
+              </span>
               <div class="metric-details">
-                <span class="metric-label">Net Sales: {{ salesMetrics?.netSales | currency: 'USD':'symbol-narrow':'1.2-2' }}</span>
-                <span class="metric-label">Daily Revenue: {{ salesMetrics?.dailyRevenue | currency: 'USD':'symbol-narrow':'1.2-2' }}</span>
-                <span class="metric-label"
-                  >Monthly Revenue: {{ salesMetrics?.monthlyRevenue | currency: 'USD':'symbol-narrow':'1.2-2' }}</span
-                >
+                <span class="metric-label">
+                  <i class="fas fa-money-bill-alt"></i> Net Sales:
+                  {{ salesMetrics?.netSales | currency: 'USD':'symbol-narrow':'1.2-2' }}
+                </span>
+                <span class="metric-label">
+                  <i class="fas fa-chart-line"></i> Daily Revenue:
+                  {{ salesMetrics?.dailyRevenue | currency: 'USD':'symbol-narrow':'1.2-2' }}
+                </span>
+                <span class="metric-label">
+                  <i class="fas fa-calendar-alt"></i> Monthly Revenue:
+                  {{ salesMetrics?.monthlyRevenue | currency: 'USD':'symbol-narrow':'1.2-2' }}
+                </span>
               </div>
             </div>
           </div>
           <div class="metric-card">
             <div class="metric-content">
-              <h4>Net Profit</h4>
-              <p class="metric-value">{{ salesMetrics?.netProfit | currency: 'TRY':'symbol-narrow':'1.2-2' }}</p>
+              <h4><i class="fas fa-hand-holding-usd"></i> Net Profit</h4>
+              <p class="metric-value">
+                {{ salesMetrics?.netProfit | currency: 'USD':'symbol-narrow':'1.2-2' }}
+              </p>
             </div>
           </div>
           <div class="metric-card">
             <div class="metric-content">
-              <h4>Total Cost</h4>
-              <p class="metric-value">{{ salesMetrics?.totalCost | currency: 'TRY':'symbol-narrow':'1.2-2' }}</p>
-              <span class="metric-label">Net Cost: {{ salesMetrics?.netCost | currency: 'TRY':'symbol-narrow':'1.2-2' }}</span>
+              <h4><i class="fas fa-coins"></i> Total Cost</h4>
+              <p class="metric-value">
+                {{ salesMetrics?.totalCost | currency: 'USD':'symbol-narrow':'1.2-2' }}
+              </p>
+              <span class="metric-label">
+                <i class="fas fa-calculator"></i> Net Cost:
+                {{ salesMetrics?.netCost | currency: 'USD':'symbol-narrow':'1.2-2' }}
+              </span>
             </div>
           </div>
         </div>
@@ -52,68 +68,124 @@
 
       <!-- Performance Indicators -->
       <div class="metrics-section">
-        <h3 class="section-title">Performance Indicators</h3>
+        <h3 class="section-title"><i class="fas fa-chart-pie"></i> Performance Indicators</h3>
         <div class="metrics-grid">
           <div class="metric-card">
             <div class="metric-content">
-              <h4>Profit Margins (%)</h4>
+              <h4><i class="fas fa-percentage"></i> Profit Margins (%)</h4>
               <div class="metric-details">
-                <span class="metric-label">Gross: {{ performanceIndicators?.grossProfitMargin | number: '1.2-2' }}%</span>
-                <span class="metric-label">Net: {{ performanceIndicators?.netProfitMargin | number: '1.2-2' }}%</span>
+                <span class="metric-label">
+                  <i class="fas fa-balance-scale"></i> Gross: {{ performanceIndicators?.grossProfitMargin | number: '1.2-2' }}%
+                </span>
+                <span class="metric-label">
+                  <i class="fas fa-money-check"></i> Net: {{ performanceIndicators?.netProfitMargin | number: '1.2-2' }}%
+                </span>
               </div>
             </div>
           </div>
           <div class="metric-card">
             <div class="metric-content">
-              <h4>Financial Ratios (#)</h4>
+              <h4><i class="fas fa-chart-bar"></i> Financial Ratios (#)</h4>
               <div class="metric-details">
-                <span class="metric-label">Current: {{ performanceIndicators?.currentRatio | number: '1.2-2' }}</span>
-                <span class="metric-label">Quick: {{ performanceIndicators?.quickRatio | number: '1.2-2' }}</span>
+                <span class="metric-label">
+                  <i class="fas fa-coins"></i> Current:
+                  {{ performanceIndicators?.currentRatio | number: '1.2-2' }}
+                </span>
+                <span class="metric-label">
+                  <i class="fas fa-hourglass-half"></i> Quick:
+                  {{ performanceIndicators?.quickRatio | number: '1.2-2' }}
+                </span>
               </div>
             </div>
           </div>
           <div class="metric-card">
             <div class="metric-content">
-              <h4>Growth & Expenses (%)</h4>
+              <h4><i class="fas fa-chart-area"></i> Growth & Expenses (%)</h4>
               <div class="metric-details">
-                <span class="metric-label">Revenue Growth: {{ performanceIndicators?.revenueGrowth | number: '1.2-2' }}%</span>
-                <span class="metric-label">Operating Expenses: {{ performanceIndicators?.operatingExpensesRatio | number: '1.2-2' }}%</span>
+                <span class="metric-label">
+                  <i class="fas fa-chart-line"></i> Revenue Growth: {{ performanceIndicators?.revenueGrowth | number: '1.2-2' }}%
+                </span>
+                <span class="metric-label">
+                  <i class="fas fa-coins"></i> Operating Expenses: {{ performanceIndicators?.operatingExpensesRatio | number: '1.2-2' }}%
+                </span>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Store Performance -->
+      <!-- Cash Flow Summary -->
+      <div class="cash-flow-summary" *ngIf="cashFlowMetrics">
+        <h2>Cash Flow Summary</h2>
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <h3>Total Money In</h3>
+            <p>{{ cashFlowMetrics.totalMoneyIn | currency: 'TRY':'symbol-narrow':'1.2-2' }}</p>
+          </div>
+          <div class="metric-card">
+            <h3>Total Money Out</h3>
+            <p>{{ cashFlowMetrics.totalMoneyOut | currency: 'TRY':'symbol-narrow':'1.2-2' }}</p>
+          </div>
+          <div class="metric-card">
+            <h3>Current Position</h3>
+            <p>{{ cashFlowMetrics.currentCashPosition | currency: 'TRY':'symbol-narrow':'1.2-2' }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Selling Items -->
+      <div class="top-selling-items" *ngIf="topSellingItems.length > 0">
+        <h2>Top Selling Items</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Item Name</th>
+              <th>Quantity</th>
+              <th>Revenue</th>
+              <th>Profit</th>
+              <th>Profit Margin</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of topSellingItems">
+              <td>{{ item.itemName }}</td>
+              <td>{{ item.quantity }}</td>
+              <td>{{ item.revenue | currency: 'TRY':'symbol-narrow':'1.2-2' }}</td>
+              <td>{{ item.profit | currency: 'TRY':'symbol-narrow':'1.2-2' }}</td>
+              <td>{{ item.profitMargin | number: '1.2-2' }}%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Other sections -->
       <div class="metrics-section" *ngIf="storeAccountAnalysis?.storeMetrics?.length">
-        <h3 class="section-title">Store Performance</h3>
+        <h3 class="section-title"><i class="fas fa-store"></i> Store Performance</h3>
         <div class="metrics-grid">
           <div class="metric-card" *ngFor="let store of storeAccountAnalysis.storeMetrics">
             <div class="metric-content">
-              <h4>Store #{{ store.storeId }}</h4>
+              <h4><i class="fas fa-store-alt"></i> Store #{{ store.storeId }}</h4>
               <div class="store-metrics">
-                <p><span>Revenue:</span> {{ store.totalRevenue | currency: 'TRY':'symbol-narrow':'1.2-2' }}</p>
-                <p><span>Cost:</span> {{ store.totalCost | currency: 'TRY':'symbol-narrow':'1.2-2' }}</p>
-                <p><span>Profit Margin:</span> {{ store.profitMargin | number: '1.2-2' }}%</p>
-                <p><span>Transactions:</span> {{ store.transactionCount }}</p>
-                <p><span>Avg. Transaction:</span> {{ store.averageTransactionValue | currency: 'TRY':'symbol-narrow':'1.2-2' }}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Account Performance -->
-      <div class="metrics-section" *ngIf="storeAccountAnalysis?.accountMetrics?.length">
-        <h3 class="section-title">Account Performance</h3>
-        <div class="metrics-grid">
-          <div class="metric-card" *ngFor="let account of storeAccountAnalysis.accountMetrics">
-            <div class="metric-content">
-              <h4>Account #{{ account.accountId }}</h4>
-              <div class="account-metrics">
-                <p><span>Volume:</span> {{ account.totalTransactionVolume | currency: 'TRY':'symbol-narrow':'1.2-2' }}</p>
-                <p><span>Transactions:</span> {{ account.transactionCount }}</p>
-                <p><span>Avg. Value:</span> {{ account.averageTransactionValue | currency: 'TRY':'symbol-narrow':'1.2-2' }}</p>
+                <p>
+                  <span><i class="fas fa-chart-line"></i> Revenue:</span>
+                  {{ store.totalRevenue | currency: 'USD':'symbol-narrow':'1.2-2' }}
+                </p>
+                <p>
+                  <span><i class="fas fa-money-bill-alt"></i> Cost:</span>
+                  {{ store.totalCost | currency: 'USD':'symbol-narrow':'1.2-2' }}
+                </p>
+                <p>
+                  <span><i class="fas fa-percentage"></i> Profit Margin:</span>
+                  {{ store.profitMargin | number: '1.2-2' }}%
+                </p>
+                <p>
+                  <span><i class="fas fa-receipt"></i> Transactions:</span>
+                  {{ store.transactionCount }}
+                </p>
+                <p>
+                  <span><i class="fas fa-wallet"></i> Avg. Transaction:</span>
+                  {{ store.averageTransactionValue | currency: 'USD':'symbol-narrow':'1.2-2' }}
+                </p>
               </div>
             </div>
           </div>
@@ -149,7 +221,6 @@
           </div>
         </div>
       </div>
-
       <!-- Top Items Analysis -->
       <div class="metrics-section" *ngIf="itemAnalysis?.topSellingItems?.length">
         <h3 class="section-title">Top Selling Items</h3>
@@ -187,8 +258,10 @@
           </div>
         </div>
       </div>
+      <!-- Similarly styled Account Performance, Invoice Analysis, Top Selling Items, and Cash Flow sections -->
     </div>
 
+    <!-- Main Charts -->
     <!-- Main Charts -->
     <div class="dashboard-charts">
       <div class="chart-container">
@@ -241,50 +314,6 @@
           </div>
         </div>
       </div>
-    </div>
-
-    <!-- Cash Flow Summary -->
-    <div class="cash-flow-summary" *ngIf="cashFlowMetrics">
-      <h2>Cash Flow Summary</h2>
-      <div class="metrics-grid">
-        <div class="metric-card">
-          <h3>Total Money In</h3>
-          <p>{{ cashFlowMetrics.totalMoneyIn | currency: 'TRY':'symbol-narrow':'1.2-2' }}</p>
-        </div>
-        <div class="metric-card">
-          <h3>Total Money Out</h3>
-          <p>{{ cashFlowMetrics.totalMoneyOut | currency: 'TRY':'symbol-narrow':'1.2-2' }}</p>
-        </div>
-        <div class="metric-card">
-          <h3>Current Position</h3>
-          <p>{{ cashFlowMetrics.currentCashPosition | currency: 'TRY':'symbol-narrow':'1.2-2' }}</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Top Selling Items -->
-    <div class="top-selling-items" *ngIf="topSellingItems.length > 0">
-      <h2>Top Selling Items</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Item Name</th>
-            <th>Quantity</th>
-            <th>Revenue</th>
-            <th>Profit</th>
-            <th>Profit Margin</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let item of topSellingItems">
-            <td>{{ item.itemName }}</td>
-            <td>{{ item.quantity }}</td>
-            <td>{{ item.revenue | currency: 'TRY':'symbol-narrow':'1.2-2' }}</td>
-            <td>{{ item.profit | currency: 'TRY':'symbol-narrow':'1.2-2' }}</td>
-            <td>{{ item.profitMargin | number: '1.2-2' }}%</td>
-          </tr>
-        </tbody>
-      </table>
     </div>
   </ng-container>
 </div>

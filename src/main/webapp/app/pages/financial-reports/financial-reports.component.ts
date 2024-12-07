@@ -801,7 +801,7 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
         break;
       case 'week':
         const weekStart = new Date(today);
-        weekStart.setDate(today.getDate() - today.getDay());
+        weekStart.setDate(today.getDate() - today.getDay() - 7); // Subtract an extra 7 days for one week before today
         this.dateRange = {
           startDate: weekStart,
           endDate: now,

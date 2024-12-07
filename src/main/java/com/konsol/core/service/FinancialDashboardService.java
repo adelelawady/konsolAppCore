@@ -27,7 +27,7 @@ public interface FinancialDashboardService {
     FinancialChartDTO getDailySalesTrend(LocalDateTime startDate, LocalDateTime endDate);
     FinancialChartDTO getMonthlySalesTrend(LocalDateTime startDate, LocalDateTime endDate);
     FinancialChartDTO getSalesVsCostsComparison(LocalDateTime startDate, LocalDateTime endDate);
-    FinancialChartDTO getProfitMarginDistribution();
+    FinancialChartDTO getProfitMarginDistribution(LocalDateTime startDate, LocalDateTime endDate);
 
     /**
      * Cash Flow Methods
