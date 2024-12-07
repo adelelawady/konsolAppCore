@@ -3594,3 +3594,531 @@ components:
           format: date-time
       required:
         - itemId
+    FinancialDashboardDTO:
+      type: object
+      properties:
+        salesMetrics:
+          $ref: '#/components/schemas/SalesMetricsDTO'
+        salesCharts:
+          type: array
+          items:
+            $ref: '#/components/schemas/FinancialChartDTO'
+        cashFlowMetrics:
+          $ref: '#/components/schemas/CashFlowMetricsDTO'
+        cashFlowCharts:
+          type: array
+          items:
+            $ref: '#/components/schemas/FinancialChartDTO'
+        invoiceAnalysis:
+          $ref: '#/components/schemas/InvoiceAnalysisDTO'
+        invoiceCharts:
+          type: array
+          items:
+            $ref: '#/components/schemas/FinancialChartDTO'
+        invoiceItemAnalysis:
+          $ref: '#/components/schemas/InvoiceItemAnalysisDTO'
+        itemSalesCharts:
+          type: array
+          items:
+            $ref: '#/components/schemas/FinancialChartDTO'
+        performanceIndicators:
+          $ref: '#/components/schemas/PerformanceIndicatorsDTO'
+        performanceCharts:
+          type: array
+          items:
+            $ref: '#/components/schemas/FinancialChartDTO'
+        storeAccountAnalysis:
+          $ref: '#/components/schemas/StoreAccountAnalysisDTO'
+        analysisCharts:
+          type: array
+          items:
+            $ref: '#/components/schemas/FinancialChartDTO'
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        storeId:
+          type: string
+        accountId:
+          type: string
+        bankId:
+          type: string
+    SalesMetricsDTO:
+      type: object
+      properties:
+        totalSales:
+          type: number
+          format: decimal
+        netSales:
+          type: number
+          format: decimal
+        totalCost:
+          type: number
+          format: decimal
+        netCost:
+          type: number
+          format: decimal
+        netProfit:
+          type: number
+          format: decimal
+        dailyRevenue:
+          type: number
+          format: decimal
+        monthlyRevenue:
+          type: number
+          format: decimal
+    FinancialChartDTO:
+      type: object
+      description: 'Data Transfer Object for financial dashboard charts and visualizations. Supports various chart types including line, bar, pie, radar, and area charts.'
+      properties:
+        chartId:
+          type: string
+        title:
+          type: string
+        subtitle:
+          type: string
+        chartType:
+          type: string
+        xAxisLabel:
+          type: string
+        yAxisLabel:
+          type: string
+        labels:
+          type: array
+          items:
+            type: string
+        series:
+          type: array
+          items:
+            $ref: '#/components/schemas/SeriesData'
+        options:
+          type: object
+          additionalProperties:
+            type: object
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+        data:
+          type: array
+          items:
+            type: number
+            format: decimal
+    SeriesData:
+      type: object
+      description: Represents a data series in the chart
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        data:
+          type: array
+          items:
+            type: number
+            format: decimal
+        style:
+          type: object
+          additionalProperties:
+            type: object
+        visible:
+          type: boolean
+          default: true
+        yAxisIndex:
+          type: integer
+    CashFlowMetricsDTO:
+      type: object
+      description: Data Transfer Object for cash flow metrics and bank balances
+      properties:
+        totalMoneyIn:
+          type: number
+          format: decimal
+          description: Total incoming cash flow
+        totalMoneyOut:
+          type: number
+          format: decimal
+          description: Total outgoing cash flow
+        bankBalances:
+          type: object
+          additionalProperties:
+            type: number
+            format: decimal
+          description: Map of bank ID to balance
+        currentCashPosition:
+          type: number
+          format: decimal
+          description: Current total cash position across all accounts
+    PerformanceMetricsDTO:
+      type: object
+      properties:
+        totalRevenue:
+          type: number
+          format: decimal
+        averageInvoiceValue:
+          type: number
+          format: decimal
+        grossProfit:
+          type: number
+          format: decimal
+        grossProfitMargin:
+          type: number
+          format: decimal
+        operatingExpenses:
+          type: number
+          format: decimal
+        operatingProfit:
+          type: number
+          format: decimal
+        operatingProfitMargin:
+          type: number
+          format: decimal
+        netProfit:
+          type: number
+          format: decimal
+        netProfitMargin:
+          type: number
+          format: decimal
+        revenueGrowth:
+          type: number
+          format: decimal
+        totalTransactions:
+          type: integer
+        additionalMetrics:
+          type: object
+          additionalProperties:
+            type: number
+            format: decimal
+          description: Map of additional metric names to values
+    InvoiceAnalysisDTO:
+      type: object
+      description: Data Transfer Object for invoice analysis metrics and statistics
+      properties:
+        averageDiscount:
+          type: number
+          format: decimal
+          description: Average discount amount across all invoices
+        averageDiscountPercentage:
+          type: integer
+          description: Average discount percentage across all invoices
+        totalAdditions:
+          type: number
+          format: decimal
+          description: Total additional charges on invoices
+        totalExpenses:
+          type: number
+          format: decimal
+          description: Total expenses across all invoices
+        deferredInvoicesCount:
+          type: integer
+          format: int64
+          description: Number of deferred invoices
+        expensesByType:
+          type: object
+          additionalProperties:
+            type: number
+            format: decimal
+          description: Map of expense types to their total amounts
+    StoreAccountAnalysisDTO:
+      type: object
+      properties:
+        storePerformance:
+          type: object
+          additionalProperties:
+            type: number
+            format: decimal
+          description: Store ID to sales amount
+        accountPerformance:
+          type: object
+          additionalProperties:
+            type: number
+            format: decimal
+          description: Account ID to transaction volume
+        bankTransactions:
+          type: object
+          additionalProperties:
+            type: number
+            format: decimal
+          description: Bank ID to transaction volume
+        storeProfitMargins:
+          type: object
+          additionalProperties:
+            type: number
+            format: decimal
+          description: Store ID to profit margin
+        storeTransactionCounts:
+          type: object
+          additionalProperties:
+            type: integer
+          description: Store ID to number of transactions
+        storeRevenueGrowth:
+          type: object
+          additionalProperties:
+            type: number
+            format: decimal
+          description: Store ID to revenue growth rate
+        accountBalances:
+          type: object
+          additionalProperties:
+            type: number
+            format: decimal
+          description: Account ID to current balance
+        accountCreditLimits:
+          type: object
+          additionalProperties:
+            type: number
+            format: decimal
+          description: Account ID to credit limit
+        topStores:
+          type: array
+          items:
+            $ref: '#/components/schemas/TopPerformerDTO'
+        topAccounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/TopPerformerDTO'
+        storeMetrics:
+          type: array
+          items:
+            $ref: '#/components/schemas/StoreMetricsDTO'
+        accountMetrics:
+          type: array
+          items:
+            $ref: '#/components/schemas/AccountMetricsDTO'
+    StoreMetricsDTO:
+      type: object
+      properties:
+        storeId:
+          type: string
+        storeName:
+          type: string
+        totalRevenue:
+          type: number
+          format: decimal
+        totalCost:
+          type: number
+          format: decimal
+        profitMargin:
+          type: number
+          format: decimal
+        transactionCount:
+          type: integer
+        averageTransactionValue:
+          type: number
+          format: decimal
+        revenueGrowth:
+          type: number
+          format: decimal
+    AccountMetricsDTO:
+      type: object
+      properties:
+        accountId:
+          type: string
+        accountName:
+          type: string
+        totalTransactionVolume:
+          type: number
+          format: decimal
+        transactionCount:
+          type: integer
+        averageTransactionValue:
+          type: number
+          format: decimal
+        currentBalance:
+          type: number
+          format: decimal
+        creditLimit:
+          type: number
+          format: decimal
+        creditUtilization:
+          type: number
+          format: decimal
+    TopPerformerDTO:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        category:
+          type: string
+        totalRevenue:
+          type: number
+          format: decimal
+        totalProfit:
+          type: number
+          format: decimal
+        profitMargin:
+          type: number
+          format: decimal
+        transactionCount:
+          type: integer
+        averageTransactionValue:
+          type: number
+          format: decimal
+        trend:
+          type: array
+          items:
+            $ref: '#/components/schemas/TrendPoint'
+        metrics:
+          type: array
+          items:
+            $ref: '#/components/schemas/MetricValue'
+    TrendPoint:
+      type: object
+      properties:
+        period:
+          type: string
+        value:
+          type: number
+          format: decimal
+        growth:
+          type: number
+          format: decimal
+    MetricValue:
+      type: object
+      properties:
+        name:
+          type: string
+        value:
+          type: number
+          format: decimal
+        unit:
+          type: string
+    InvoiceItemAnalysisDTO:
+      type: object
+      description: Data Transfer Object for detailed invoice item analysis and metrics
+      properties:
+        totalItemsSold:
+          type: number
+          format: decimal
+          description: Total quantity of items sold
+        totalItemRevenue:
+          type: number
+          format: decimal
+          description: Total revenue from all items
+        averageItemPrice:
+          type: number
+          format: decimal
+          description: Average price per item
+        topSellingItemRevenue:
+          type: number
+          format: decimal
+          description: Revenue from the top selling item
+        topSellingItemName:
+          type: string
+          description: Name of the top selling item
+        itemCategoryDistribution:
+          type: object
+          additionalProperties:
+            type: number
+            format: decimal
+          description: Distribution of sales by item category
+        itemProfitMargins:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemProfitabilityDTO'
+          description: List of profit margins by item
+        topSellingItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemSalesDTO'
+          description: List of top selling items with details
+        itemSalesCharts:
+          type: array
+          items:
+            $ref: '#/components/schemas/FinancialChartDTO'
+          description: Charts showing item sales trends
+    ItemProfitabilityDTO:
+      type: object
+      description: Data Transfer Object for item profitability metrics
+      properties:
+        itemId:
+          type: string
+          description: Unique identifier of the item
+        itemName:
+          type: string
+          description: Name of the item
+        totalRevenue:
+          type: number
+          format: decimal
+          description: Total revenue generated by the item
+        totalCost:
+          type: number
+          format: decimal
+          description: Total cost of the item
+        grossProfit:
+          type: number
+          format: decimal
+          description: Gross profit (revenue - cost)
+        profitMargin:
+          type: number
+          format: decimal
+          description: Profit margin percentage
+        salesVolume:
+          type: integer
+          format: int64
+          description: Number of units sold
+        averagePrice:
+          type: number
+          format: decimal
+          description: Average selling price
+        averageCost:
+          type: number
+          format: decimal
+          description: Average cost per unit
+    ItemSalesDTO:
+      type: object
+      description: Data Transfer Object for item sales details
+      properties:
+        itemName:
+          type: string
+          description: Name of the item
+        itemCode:
+          type: string
+          description: Item code/SKU
+        quantity:
+          type: number
+          format: decimal
+          description: Quantity sold
+        revenue:
+          type: number
+          format: decimal
+          description: Total revenue from this item
+        profit:
+          type: number
+          format: decimal
+          description: Total profit from this item
+        profitMargin:
+          type: number
+          format: decimal
+          description: Profit margin percentage
+    PerformanceIndicatorsDTO:
+      type: object
+      description: Data Transfer Object for key financial performance indicators and ratios
+      properties:
+        grossProfitMargin:
+          type: number
+          format: decimal
+          description: Gross profit as a percentage of revenue
+        netProfitMargin:
+          type: number
+          format: decimal
+          description: Net profit as a percentage of revenue
+        operatingExpensesRatio:
+          type: number
+          format: decimal
+          description: Operating expenses as a percentage of revenue
+        currentRatio:
+          type: number
+          format: decimal
+          description: Current assets divided by current liabilities
+        quickRatio:
+          type: number
+          format: decimal
+          description: Quick assets divided by current liabilities
+        revenueGrowth:
+          type: number
+          format: decimal
+          description: Percentage growth in revenue compared to previous period

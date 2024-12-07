@@ -29,6 +29,10 @@ const routes: Routes = [
     data: { title: 'Products' },
   },
   {
+    path: 'financial-reports',
+    loadChildren: () => import('./financial-reports/financial-reports.module').then(m => m.FinancialReportsModule),
+  },
+  {
     path: 'accounts',
     component: AccountsComponent,
     canActivate: [UserRouteAccessService],

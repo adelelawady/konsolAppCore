@@ -699,7 +699,7 @@ import org.bson.Document;
      * @param accountUserSearchModel
      * @return
      */
-    public AccountUserContainer accountUserSearchPaginate(AccountUserSearchModel accountUserSearchModel) {
+    public AccountUserContainer accountUserSearchPaginateQuery(AccountUserSearchModel accountUserSearchModel) {
         List<Document> orConditions = new ArrayList<>();
         Document andCondition = new Document();
 

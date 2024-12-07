@@ -79,7 +79,7 @@ public class Invoice extends AbstractAuditingEntity<String> implements Serializa
 
     @DecimalMin(value = "0")
     @Field("expenses")
-    private BigDecimal expenses;
+    private BigDecimal expenses = new BigDecimal(0);
 
     @Field("expenses_type")
     private String expensesType;

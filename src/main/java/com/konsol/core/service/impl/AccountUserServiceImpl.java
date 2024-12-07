@@ -17,7 +17,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 /**
  * Service Implementation for managing {@link AccountUser}.
@@ -138,7 +137,7 @@ public class AccountUserServiceImpl implements AccountUserService {
      */
     @Override
     public AccountUserContainer accountUserSearchPaginate(AccountUserSearchModel accountUserSearchModel) {
-        return this.mongoQueryService.accountUserSearchPaginate(accountUserSearchModel);
+        return this.mongoQueryService.accountUserSearchPaginateQuery(accountUserSearchModel);
     }
 
     @Override
