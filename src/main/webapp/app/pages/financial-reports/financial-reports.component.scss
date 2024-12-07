@@ -1,0 +1,66 @@
+.dashboard-content {
+  .card {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+    &:hover {
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    }
+  }
+
+  .chart-container {
+    height: 300px;
+    width: 100%;
+  }
+
+  .card-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+  }
+
+  .text-muted {
+    font-size: 0.875rem;
+  }
+
+  .form-label {
+    font-weight: 500;
+    color: #6c757d;
+  }
+
+  .h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0;
+    color: #2c3e50;
+  }
+}
+
+.btn-group {
+  .btn {
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    transition: all 0.2s ease-in-out;
+
+    &:not(:last-child) {
+      margin-right: -1px;
+    }
+
+    &.btn-outline-primary {
+      &:hover {
+        background-color: rgba(var(--bs-primary-rgb), 0.1);
+      }
+    }
+
+    &.btn-primary {
+      position: relative;
+      z-index: 1;
+    }
+  }
+}

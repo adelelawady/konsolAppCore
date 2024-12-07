@@ -3,6 +3,7 @@ package com.konsol.core.service;
 import com.konsol.core.service.api.dto.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -10,7 +11,13 @@ public interface FinancialDashboardService {
     /**
      * Get complete dashboard data with all metrics and charts
      */
-    FinancialDashboardDTO getDashboardData(LocalDateTime startDate, LocalDateTime endDate, String storeId, String accountId, String bankId);
+    FinancialDashboardDTO getDashboardData(
+        OffsetDateTime startDate,
+        OffsetDateTime endDate,
+        String storeId,
+        String accountId,
+        String bankId
+    );
 
     /**
      * Sales and Revenue Methods

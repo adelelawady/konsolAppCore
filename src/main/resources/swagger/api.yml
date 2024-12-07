@@ -1711,6 +1711,24 @@ paths:
             schema:
               $ref: '#/components/schemas/ChartSearchDTO'
         description: ''
+  /financial/dashboard:
+    post:
+      summary: ''
+      operationId: getFinancialDashboard
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FinancialDashboardDTO'
+      tags:
+        - financial-reports
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FinancialSearchDTO'
 components:
   schemas:
     ChartDataDTO:
@@ -3706,6 +3724,7 @@ components:
           items:
             type: number
             format: decimal
+      title: ''
     SeriesData:
       type: object
       description: Represents a data series in the chart
@@ -4122,3 +4141,24 @@ components:
           type: number
           format: decimal
           description: Percentage growth in revenue compared to previous period
+    FinancialSearchDTO:
+      title: FinancialSearchDTO
+      x-stoplight:
+        id: nd3v8zrkql4z9
+      type: object
+      properties:
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        storeId:
+          type: string
+        accountId:
+          type: string
+        bankId:
+          type: string
+      required:
+        - startDate
+        - endDate

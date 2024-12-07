@@ -52,43 +52,42 @@ public class FinancialDashboardServiceImpl implements FinancialDashboardService 
 
     @Override
     public FinancialDashboardDTO getDashboardData(
-        LocalDateTime startDate,
-        LocalDateTime endDate,
+        OffsetDateTime startDate,
+        OffsetDateTime endDate,
         String storeId,
         String accountId,
         String bankId
     ) {
         FinancialDashboardDTO dashboard = new FinancialDashboardDTO();
 
-        OffsetDateTime offsetStartDateTime = startDate.atOffset(ZoneOffset.UTC);
-        OffsetDateTime offsetEndDateTime = endDate.atOffset(ZoneOffset.UTC);
-
         // Set filter parameters
-        dashboard.setStartDate(offsetStartDateTime);
-        dashboard.setEndDate(offsetEndDateTime);
+        dashboard.setStartDate(startDate);
+        dashboard.setEndDate(endDate);
         dashboard.setStoreId(storeId);
         dashboard.setAccountId(accountId);
         dashboard.setBankId(bankId);
 
         // Get all metrics and charts
-        dashboard.setSalesMetrics(getSalesMetrics(startDate, endDate, storeId)); //*
-        dashboard.setSalesCharts(getSalesCharts(startDate, endDate, storeId)); //*
+        dashboard.setSalesMetrics(getSalesMetrics(startDate.toLocalDateTime(), endDate.toLocalDateTime(), storeId)); //*
+        dashboard.setSalesCharts(getSalesCharts(startDate.toLocalDateTime(), endDate.toLocalDateTime(), storeId)); //*
 
         // Get invoice items analysis
-        dashboard.setInvoiceItemAnalysis(getInvoiceItemAnalysis(startDate, endDate, storeId));
-        dashboard.setItemSalesCharts(getItemSalesCharts(startDate, endDate, storeId));
+        dashboard.setInvoiceItemAnalysis(getInvoiceItemAnalysis(startDate.toLocalDateTime(), endDate.toLocalDateTime(), storeId));
+        dashboard.setItemSalesCharts(getItemSalesCharts(startDate.toLocalDateTime(), endDate.toLocalDateTime(), storeId));
 
-        dashboard.setCashFlowMetrics(getCashFlowMetrics(startDate, endDate, bankId));
-        dashboard.setCashFlowCharts(getCashFlowCharts(startDate, endDate, bankId));
+        dashboard.setCashFlowMetrics(getCashFlowMetrics(startDate.toLocalDateTime(), endDate.toLocalDateTime(), bankId));
+        dashboard.setCashFlowCharts(getCashFlowCharts(startDate.toLocalDateTime(), endDate.toLocalDateTime(), bankId));
 
-        dashboard.setInvoiceAnalysis(getInvoiceAnalysis(storeId, startDate, endDate));
-        dashboard.setInvoiceCharts(getInvoiceCharts(startDate, endDate));
+        dashboard.setInvoiceAnalysis(getInvoiceAnalysis(storeId, startDate.toLocalDateTime(), endDate.toLocalDateTime()));
+        dashboard.setInvoiceCharts(getInvoiceCharts(startDate.toLocalDateTime(), endDate.toLocalDateTime()));
 
-        dashboard.setPerformanceIndicators(getPerformanceIndicators(startDate, endDate));
-        dashboard.setPerformanceCharts(getPerformanceCharts(startDate, endDate));
+        dashboard.setPerformanceIndicators(getPerformanceIndicators(startDate.toLocalDateTime(), endDate.toLocalDateTime()));
+        dashboard.setPerformanceCharts(getPerformanceCharts(startDate.toLocalDateTime(), endDate.toLocalDateTime()));
 
-        dashboard.setStoreAccountAnalysis(getStoreAccountAnalysis(startDate, endDate, storeId, accountId));
-        dashboard.setAnalysisCharts(getStoreAccountCharts(startDate, endDate, storeId, accountId));
+        dashboard.setStoreAccountAnalysis(
+            getStoreAccountAnalysis(startDate.toLocalDateTime(), endDate.toLocalDateTime(), storeId, accountId)
+        );
+        dashboard.setAnalysisCharts(getStoreAccountCharts(startDate.toLocalDateTime(), endDate.toLocalDateTime(), storeId, accountId));
 
         return dashboard;
     }

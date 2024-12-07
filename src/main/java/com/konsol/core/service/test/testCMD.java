@@ -35,7 +35,7 @@ public class testCMD implements CommandLineRunner {
     public void run(String... args) throws Exception {
         LocalDateTime startDate = LocalDateTime.now().minusDays(2);
         LocalDateTime endDate = LocalDateTime.now().plusDays(2);
-
+        /*
         FinancialDashboardDTO financialDashboardDTO = financialDashboardService.getDashboardData(
             startDate,
             endDate,
@@ -44,6 +44,8 @@ public class testCMD implements CommandLineRunner {
             "674ffcaab0c83957e9623138"
         );
 
-        log.debug("financialDashboardDTO : {}", financialDashboardDTO);
+         */
+
+        // log.debug("financialDashboardDTO : {}", financialDashboardDTO);
     }
 }

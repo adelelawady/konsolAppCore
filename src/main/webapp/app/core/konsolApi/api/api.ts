@@ -4,6 +4,8 @@ export * from './accountUserResource.service';
 import { AccountUserResourceService } from './accountUserResource.service';
 export * from './bankResource.service';
 import { BankResourceService } from './bankResource.service';
+export * from './financialReports.service';
+import { FinancialReportsService } from './financialReports.service';
 export * from './gLOBAL.service';
 import { GLOBALService } from './gLOBAL.service';
 export * from './invoiceResource.service';
@@ -22,4 +24,18 @@ export * from './userJwtController.service';
 import { UserJwtControllerService } from './userJwtController.service';
 export * from './userResource.service';
 import { UserResourceService } from './userResource.service';
-export const APIS = [AccountResourceService, AccountUserResourceService, BankResourceService, GLOBALService, InvoiceResourceService, ItemResourceService, MoneyResourceService, PublicUserResourceService, ServerSettingsService, StoreResourceService, UserJwtControllerService, UserResourceService];
+export const APIS = [
+  AccountResourceService,
+  AccountUserResourceService,
+  BankResourceService,
+  FinancialReportsService,
+  GLOBALService,
+  InvoiceResourceService,
+  ItemResourceService,
+  MoneyResourceService,
+  PublicUserResourceService,
+  ServerSettingsService,
+  StoreResourceService,
+  UserJwtControllerService,
+  UserResourceService,
+];
