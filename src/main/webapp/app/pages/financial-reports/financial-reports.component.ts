@@ -40,8 +40,8 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
   marginTrendsOption: EChartsOption = {};
   profitBreakdownOption: EChartsOption = {};
 
-  cashFlowTrendOption: any;
-  bankBalanceOption: any;
+  cashFlowTrendOption: EChartsOption = {};
+  bankBalanceOption: EChartsOption = {};
   optionsX: EChartsOption = {};
 
   loading = true;
@@ -63,6 +63,10 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
     profitBreakdown: undefined,
     topItemsByQuantity: undefined,
   };
+
+  storeAccountAnalysis: any;
+  itemAnalysis: any;
+  invoiceAnalysis: any;
 
   constructor(private financialReportsService: FinancialReportsService, private cdr: ChangeDetectorRef) {}
 
@@ -247,49 +251,65 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
     if (this.dashboardData) {
       // Update sales metrics
       this.salesMetrics = {
-        totalSales: this.dashboardData.totalSales || 0,
-        netProfit: this.dashboardData.netProfit || 0,
+        totalSales: this.dashboardData.salesMetrics?.totalSales || 0,
+        netSales: this.dashboardData.salesMetrics?.netSales || 0,
+        totalCost: this.dashboardData.salesMetrics?.totalCost || 0,
+        netCost: this.dashboardData.salesMetrics?.netCost || 0,
+        netProfit: this.dashboardData.salesMetrics?.netProfit || 0,
+        dailyRevenue: this.dashboardData.salesMetrics?.dailyRevenue || 0,
+        monthlyRevenue: this.dashboardData.salesMetrics?.monthlyRevenue || 0
       };
 
       // Update performance indicators
       this.performanceIndicators = {
-        netProfitMargin: (this.dashboardData.netProfit / this.dashboardData.totalSales) * 100 || 0,
-        currentRatio: this.dashboardData.currentRatio || 0,
+        grossProfitMargin: this.dashboardData.performanceIndicators?.grossProfitMargin || 0,
+        netProfitMargin: this.dashboardData.performanceIndicators?.netProfitMargin || 0,
+        operatingExpensesRatio: this.dashboardData.performanceIndicators?.operatingExpensesRatio || 0,
+        currentRatio: this.dashboardData.performanceIndicators?.currentRatio || 0,
+        quickRatio: this.dashboardData.performanceIndicators?.quickRatio || 0,
+        revenueGrowth: this.dashboardData.performanceIndicators?.revenueGrowth || 0
       };
-
-      // Update store metrics
-      this.storeMetrics = {
-        totalRevenue: this.dashboardData.totalRevenue || 0,
-        transactionCount: this.dashboardData.transactionCount || 0,
-        averageTransactionValue: this.dashboardData.averageTransactionValue || 0,
-        profitMargin: this.dashboardData.profitMargin || 0,
-      };
-
-      // Update top selling items
-      if (this.dashboardData?.invoiceItemAnalysis) {
-        const analysis = this.dashboardData.invoiceItemAnalysis;
-
-        // Update sales metrics
-        this.salesMetrics = {
-          totalSales: analysis.topSellingItemRevenue || 0,
-          netProfit: analysis.itemProfitMargins?.[0]?.grossProfit || 0,
-        };
-
-        // Update performance indicators
-        this.performanceIndicators = {
-          netProfitMargin: analysis.itemProfitMargins?.[0]?.profitMargin || 0,
-          currentRatio: analysis.itemProfitMargins?.[0]?.averagePrice || 0,
-        };
-
-        // Update top selling items directly from the data
-        this.topSellingItems = analysis.topSellingItems || [];
-      }
 
       // Update cash flow metrics
       this.cashFlowMetrics = {
-        totalMoneyIn: this.dashboardData.totalMoneyIn || 0,
-        totalMoneyOut: this.dashboardData.totalMoneyOut || 0,
-        currentCashPosition: this.dashboardData.currentCashPosition || 0,
+        totalMoneyIn: this.dashboardData.cashFlowMetrics?.totalMoneyIn || 0,
+        totalMoneyOut: this.dashboardData.cashFlowMetrics?.totalMoneyOut || 0,
+        currentCashPosition: this.dashboardData.cashFlowMetrics?.currentCashPosition || 0,
+        bankBalances: this.dashboardData.cashFlowMetrics?.bankBalances || {}
+      };
+
+      // Update all charts
+      this.updateBankBalanceChart();
+      this.updateCashFlowTrend();
+
+
+
+       // Update invoice analysis
+       this.invoiceAnalysis = {
+        averageDiscount: this.dashboardData.invoiceAnalysis?.averageDiscount || 0,
+        averageDiscountPercentage: this.dashboardData.invoiceAnalysis?.averageDiscountPercentage || 0,
+        totalAdditions: this.dashboardData.invoiceAnalysis?.totalAdditions || 0,
+        totalExpenses: this.dashboardData.invoiceAnalysis?.totalExpenses || 0,
+        deferredInvoicesCount: this.dashboardData.invoiceAnalysis?.deferredInvoicesCount || 0,
+        expensesByType: this.dashboardData.invoiceAnalysis?.expensesByType || {}
+      };
+
+      // Update item analysis
+      if (this.dashboardData.invoiceItemAnalysis) {
+        const analysis = this.dashboardData.invoiceItemAnalysis;
+        this.itemAnalysis = {
+          topSellingItemRevenue: analysis.topSellingItemRevenue || 0,
+          topSellingItemName: analysis.topSellingItemName || '',
+          itemCategoryDistribution: analysis.itemCategoryDistribution || {},
+          itemProfitMargins: analysis.itemProfitMargins || [],
+          topSellingItems: analysis.topSellingItems || []
+        };
+      }
+
+       // Update store and account analysis
+       this.storeAccountAnalysis = {
+        storeMetrics: this.dashboardData.storeAccountAnalysis?.storeMetrics || [],
+        accountMetrics: this.dashboardData.storeAccountAnalysis?.accountMetrics || []
       };
     }
   }
@@ -425,58 +445,6 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
       };
     }
   }
-  /*
-  private updateTopItemsByRevenue(): void {
-    const topItemsData = this.dashboardData?.itemSalesCharts?.find((chart:any) => chart.title.includes('Top 10 Items by Revenue'));
-    if (topItemsData) {
-      this.topItemsByRevenueOption = {
-        ...this.getDefaultChartOptions('Top Items by Revenue'),
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            type: 'shadow'
-          },
-          formatter: (params: any) => {
-            const data = Array.isArray(params) ? params[0] : params;
-            return `${data.name}<br/>Revenue: ₺${data.value}`;
-          }
-        },
-        grid: {
-          left: '15%',
-          right: '10%'
-        },
-        xAxis: {
-          type: 'value',
-          name: 'Revenue (₺)',
-          axisLabel: {
-            formatter: '₺{value}'
-          }
-        },
-        yAxis: {
-          type: 'category',
-          data: topItemsData.labels || [],
-          inverse: true,
-          axisLabel: {
-            width: 120,
-            overflow: 'truncate'
-          }
-        },
-        series: [{
-          type: 'bar',
-          data: topItemsData.series?.[0]?.data || [],
-          label: {
-            show: true,
-            position: 'right',
-            formatter: '₺{c}'
-          },
-          itemStyle: {
-            color: '#2f4554'
-          }
-        }]
-      };
-    }
-  }
-*/
 
   private updateTopItemsByRevenue(): void {
     const revenueData: any = this.dashboardData?.invoiceItemAnalysis?.itemSalesCharts?.find(
@@ -519,39 +487,59 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
       };
     }
   }
+
   private updateCashFlowTrend(): void {
     const cashFlowData: any = this.dashboardData?.cashFlowCharts?.find((chart: any) => chart.chartType === 'line');
     if (cashFlowData) {
       this.cashFlowTrendOption = {
-        ...this.getDefaultChartOptions('Cash Flow Trend'),
         tooltip: {
           trigger: 'axis',
-          formatter: (params: any) => {
-            return params.map((param: any) => `${param.seriesName}: ₺${param.value.toLocaleString()}`).join('<br/>');
+          axisPointer: {
+            type: 'cross',
+            label: {
+              backgroundColor: '#6a7985'
+            }
           },
+          formatter: (params: any) => {
+            const data = Array.isArray(params) ? params[0] : params;
+            return `${data.name}<br/>${data.seriesName}: ₺${data.value}`;
+          }
         },
         legend: {
-          data: ['Money In', 'Money Out', 'Net Flow'],
+          data: ['Net Cash Flow']
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
         },
         xAxis: {
           type: 'category',
-          data: cashFlowData.xAxisData || [],
-          name: 'Date',
+          boundaryGap: false,
+          data: cashFlowData.labels || []
         },
         yAxis: {
           type: 'value',
-          name: 'Amount (₺)',
           axisLabel: {
-            formatter: '₺{value}',
-          },
+            formatter: '₺{value}'
+          }
         },
-        series: cashFlowData.series?.map((series: any) => ({
-          name: series.name,
+        series: [{
+          name: 'Net Cash Flow',
           type: 'line',
-          data: series.data,
-          smooth: true,
-          areaStyle: {},
-        })),
+          data: cashFlowData.series[0].data || [],
+          areaStyle: {
+            opacity: 0.3
+          },
+          lineStyle: {
+            width: 2
+          },
+          itemStyle: {
+            color: '#2f4554'
+          },
+          smooth: true
+        }]
       };
     }
   }
@@ -563,12 +551,10 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
         ...this.getDefaultChartOptions('Bank Balance'),
         tooltip: {
           trigger: 'axis',
-          formatter: '{b}: ₺{c}',
         },
         xAxis: {
           type: 'category',
           data: balanceData.xAxisData || [],
-          name: 'Account',
         },
         yAxis: {
           type: 'value',
@@ -744,6 +730,60 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
     }
   }
 
+  private updateBankBalanceChart(): void {
+    const bankBalanceData = this.dashboardData?.cashFlowCharts?.find(
+      (chart: any) => chart.title === 'Bank Balance Distribution'
+    );
+
+    if (bankBalanceData) {
+      this.bankBalanceOption = {
+        tooltip: {
+          trigger: 'item',
+          formatter: (params: any) => {
+            const value = params.value || 0;
+            const percent = params.percent || 0;
+            return `${params.name}<br/>Balance: ₺${value.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}<br/>Percentage: ${percent}%`;
+          }
+        },
+        legend: {
+          orient: 'vertical',
+          right: 10,
+          top: 'center'
+        },
+        series: [{
+          name: 'Bank Balances',
+          type: 'pie',
+          radius: ['40%', '70%'],
+          avoidLabelOverlap: true,
+          itemStyle: {
+            borderRadius: 10,
+            borderColor: '#fff',
+            borderWidth: 2
+          },
+          label: {
+            show: true,
+            formatter: '{b}: {d}%'
+          },
+          emphasis: {
+            label: {
+              show: true,
+              fontSize: '16',
+              fontWeight: 'bold'
+            }
+          },
+          labelLine: {
+            show: true
+          },
+          data: bankBalanceData.series[0].data.map((value: number, index: number) => ({
+            value,
+            name: bankBalanceData.labels[index]
+          }))
+        }]
+      };
+    }
+  }
+
+  
   setDateRange(range: any): void {
     this.selectedDateRange = range.target.value;
     const now = new Date();

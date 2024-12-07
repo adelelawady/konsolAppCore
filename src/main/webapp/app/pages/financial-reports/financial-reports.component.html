@@ -15,24 +15,183 @@
 
   <ng-container *ngIf="!loading">
     <!-- Key Performance Metrics -->
-    <div class="dashboard-metrics">
-      <div class="metric-card">
-        <h3>Total Sales</h3>
-        <p>₺{{ salesMetrics?.totalSales | number: '1.2-2' || '0.00' }}</p>
+
+
+    <div class="metrics-dashboard">
+      <!-- Sales & Revenue Metrics -->
+      <div class="metrics-section">
+        <h3 class="section-title">Sales & Revenue</h3>
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-icon revenue-icon">₺</div>
+            <div class="metric-content">
+              <h4>Total Sales</h4>
+              <p class="metric-value">₺{{ salesMetrics?.totalSales | number:'1.2-2' }}</p>
+              <div class="metric-details">
+                <span class="metric-label">Net Sales: ₺{{ salesMetrics?.netSales | number:'1.2-2' }}</span>
+                <span class="metric-label">Daily Revenue: ₺{{ salesMetrics?.dailyRevenue | number:'1.2-2' }}</span>
+                <span class="metric-label">Monthly Revenue: ₺{{ salesMetrics?.monthlyRevenue | number:'1.2-2' }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-icon profit-icon">₺</div>
+            <div class="metric-content">
+              <h4>Net Profit</h4>
+              <p class="metric-value">₺{{ salesMetrics?.netProfit | number:'1.2-2' }}</p>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-icon cost-icon">₺</div>
+            <div class="metric-content">
+              <h4>Total Cost</h4>
+              <p class="metric-value">₺{{ salesMetrics?.totalCost | number:'1.2-2' }}</p>
+              <span class="metric-label">Net Cost: ₺{{ salesMetrics?.netCost | number:'1.2-2' }}</span>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="metric-card">
-        <h3>Net Profit</h3>
-        <p>₺{{ salesMetrics?.netProfit | number: '1.2-2' || '0.00' }}</p>
+    
+      <!-- Performance Indicators -->
+      <div class="metrics-section">
+        <h3 class="section-title">Performance Indicators</h3>
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-icon margin-icon">%</div>
+            <div class="metric-content">
+              <h4>Profit Margins</h4>
+              <div class="metric-details">
+                <span class="metric-label">Gross: {{ performanceIndicators?.grossProfitMargin | number:'1.2-2' }}%</span>
+                <span class="metric-label">Net: {{ performanceIndicators?.netProfitMargin | number:'1.2-2' }}%</span>
+              </div>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-icon ratio-icon">#</div>
+            <div class="metric-content">
+              <h4>Financial Ratios</h4>
+              <div class="metric-details">
+                <span class="metric-label">Current: {{ performanceIndicators?.currentRatio | number:'1.2-2' }}</span>
+                <span class="metric-label">Quick: {{ performanceIndicators?.quickRatio | number:'1.2-2' }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-icon growth-icon">%</div>
+            <div class="metric-content">
+              <h4>Growth & Expenses</h4>
+              <div class="metric-details">
+                <span class="metric-label">Revenue Growth: {{ performanceIndicators?.revenueGrowth | number:'1.2-2' }}%</span>
+                <span class="metric-label">Operating Expenses: {{ performanceIndicators?.operatingExpensesRatio | number:'1.2-2' }}%</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="metric-card">
-        <h3>Profit Margin</h3>
-        <p>{{ performanceIndicators?.netProfitMargin | number: '1.2-2' || '0.00' }}%</p>
+    
+      <!-- Store Performance -->
+      <div class="metrics-section" *ngIf="storeAccountAnalysis?.storeMetrics?.length">
+        <h3 class="section-title">Store Performance</h3>
+        <div class="metrics-grid">
+          <div class="metric-card" *ngFor="let store of storeAccountAnalysis.storeMetrics">
+            <div class="metric-content">
+              <h4>Store #{{ store.storeId }}</h4>
+              <div class="store-metrics">
+                <p><span>Revenue:</span> ₺{{ store.totalRevenue | number:'1.2-2' }}</p>
+                <p><span>Cost:</span> ₺{{ store.totalCost | number:'1.2-2' }}</p>
+                <p><span>Profit Margin:</span> {{ store.profitMargin | number:'1.2-2' }}%</p>
+                <p><span>Transactions:</span> {{ store.transactionCount }}</p>
+                <p><span>Avg. Transaction:</span> ₺{{ store.averageTransactionValue | number:'1.2-2' }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="metric-card">
-        <h3>Current Ratio</h3>
-        <p>{{ performanceIndicators?.currentRatio | number: '1.2-2' || '0.00' }}</p>
+    
+      <!-- Account Performance -->
+      <div class="metrics-section" *ngIf="storeAccountAnalysis?.accountMetrics?.length">
+        <h3 class="section-title">Account Performance</h3>
+        <div class="metrics-grid">
+          <div class="metric-card" *ngFor="let account of storeAccountAnalysis.accountMetrics">
+            <div class="metric-content">
+              <h4>Account #{{ account.accountId }}</h4>
+              <div class="account-metrics">
+                <p><span>Volume:</span> ₺{{ account.totalTransactionVolume | number:'1.2-2' }}</p>
+                <p><span>Transactions:</span> {{ account.transactionCount }}</p>
+                <p><span>Avg. Value:</span> ₺{{ account.averageTransactionValue | number:'1.2-2' }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+      <!-- Invoice Analysis -->
+      <div class="metrics-section">
+        <h3 class="section-title">Invoice Analysis</h3>
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-icon discount-icon">%</div>
+            <div class="metric-content">
+              <h4>Discounts</h4>
+              <div class="metric-details">
+                <span class="metric-label">Average: ₺{{ invoiceAnalysis?.averageDiscount | number:'1.2-2' }}</span>
+                <span class="metric-label">Percentage: {{ invoiceAnalysis?.averageDiscountPercentage | number:'1.2-2' }}%</span>
+              </div>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-icon expense-icon">₺</div>
+            <div class="metric-content">
+              <h4>Expenses</h4>
+              <p class="metric-value">₺{{ invoiceAnalysis?.totalExpenses | number:'1.2-2' }}</p>
+              <div class="metric-details">
+                <span class="metric-label">Total Additions: ₺{{ invoiceAnalysis?.totalAdditions | number:'1.2-2' }}</span>
+                <span class="metric-label">Deferred Count: {{ invoiceAnalysis?.deferredInvoicesCount }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+      <!-- Top Items Analysis -->
+      <div class="metrics-section" *ngIf="itemAnalysis?.topSellingItems?.length">
+        <h3 class="section-title">Top Selling Items</h3>
+        <div class="metrics-grid">
+          <div class="metric-card" *ngFor="let item of itemAnalysis.topSellingItems">
+            <div class="metric-content">
+              <h4>{{ item.itemName }}</h4>
+              <div class="item-metrics">
+                <p><span>Quantity:</span> {{ item.quantity }}</p>
+                <p><span>Revenue:</span> ₺{{ item.revenue | number:'1.2-2' }}</p>
+                <p><span>Profit:</span> ₺{{ item.profit | number:'1.2-2' }}</p>
+                <p><span>Margin:</span> {{ item.profitMargin | number:'1.2-2' }}%</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+      <!-- Cash Flow Metrics -->
+      <div class="metrics-section">
+        <h3 class="section-title">Cash Flow</h3>
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-icon money-in-icon">₺</div>
+            <div class="metric-content">
+              <h4>Money Flow</h4>
+              <div class="metric-details">
+                <span class="metric-label">Money In: ₺{{ cashFlowMetrics?.totalMoneyIn | number:'1.2-2' }}</span>
+                <span class="metric-label">Money Out: ₺{{ cashFlowMetrics?.totalMoneyOut | number:'1.2-2' }}</span>
+                <span class="metric-label">Current Position: ₺{{ cashFlowMetrics?.currentCashPosition | number:'1.2-2' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
+
+
+
 
     <!-- Main Charts -->
     <div class="dashboard-charts">
@@ -55,6 +214,7 @@
         <div #cashFlowTrendChart class="chart" echarts [options]="cashFlowTrendOption" [loading]="loading"></div>
       </div>
       <div class="chart-container">
+        <h3>Bank Balance Distribution</h3>
         <div #bankBalanceChart class="chart" echarts [options]="bankBalanceOption" [loading]="loading"></div>
       </div>
     </div>

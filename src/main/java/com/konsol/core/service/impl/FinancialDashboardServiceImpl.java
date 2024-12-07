@@ -1420,13 +1420,13 @@ public class FinancialDashboardServiceImpl implements FinancialDashboardService 
         BigDecimal moneyIn = moneyTransactions
             .stream()
             .filter(m -> m.getKind() == MoneyKind.RECEIPT)
-            .map(Money::getMoneyIn)
+            .map(Money::getMoneyOut)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         BigDecimal moneyOut = moneyTransactions
             .stream()
             .filter(m -> m.getKind() == MoneyKind.PAYMENT)
-            .map(Money::getMoneyOut)
+            .map(Money::getMoneyIn)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         // Get bank balances
@@ -1500,7 +1500,7 @@ public class FinancialDashboardServiceImpl implements FinancialDashboardService 
 
         transactions.forEach(money -> {
             String dateKey = LocalDateTime.ofInstant(money.getCreatedDate(), ZoneId.systemDefault()).format(DateTimeFormatter.ISO_DATE);
-            BigDecimal amount = money.getKind() == MoneyKind.RECEIPT ? money.getMoneyIn() : money.getMoneyOut().negate();
+            BigDecimal amount = money.getKind() == MoneyKind.RECEIPT ? money.getMoneyOut() : money.getMoneyIn().negate();
             dailyNet.merge(dateKey, amount, BigDecimal::add);
         });
 
@@ -1533,9 +1533,9 @@ public class FinancialDashboardServiceImpl implements FinancialDashboardService 
                 .format(DateTimeFormatter.ofPattern("yyyy-MM"));
             monthlyComparison.computeIfAbsent(monthKey, k -> new EnumMap<>(MoneyKind.class));
             if (money.getKind() == MoneyKind.RECEIPT) {
-                monthlyComparison.get(monthKey).merge(MoneyKind.RECEIPT, money.getMoneyIn(), BigDecimal::add);
+                monthlyComparison.get(monthKey).merge(MoneyKind.RECEIPT, money.getMoneyOut(), BigDecimal::add);
             } else {
-                monthlyComparison.get(monthKey).merge(MoneyKind.PAYMENT, money.getMoneyOut(), BigDecimal::add);
+                monthlyComparison.get(monthKey).merge(MoneyKind.PAYMENT, money.getMoneyIn() , BigDecimal::add);
             }
         });
 
@@ -1725,8 +1725,8 @@ public class FinancialDashboardServiceImpl implements FinancialDashboardService 
 
         Map<String, BigDecimal> expenseTypes = expenses
             .stream()
-            .filter(money -> money.getDetails() != null && money.getMoneyOut() != null)
-            .collect(Collectors.groupingBy(Money::getDetails, Collectors.reducing(BigDecimal.ZERO, Money::getMoneyOut, BigDecimal::add)));
+            .filter(money -> money.getDetails() != null && money.getMoneyIn() != null)
+            .collect(Collectors.groupingBy(Money::getDetails, Collectors.reducing(BigDecimal.ZERO, Money::getMoneyIn, BigDecimal::add)));
 
         // Sort by amount descending
         List<Map.Entry<String, BigDecimal>> sortedExpenses = new ArrayList<>(expenseTypes.entrySet());
@@ -1937,7 +1937,7 @@ public class FinancialDashboardServiceImpl implements FinancialDashboardService 
         List<Money> outstandingPayments = moneyRepository.findByKindAndCreatedDateBetween(MoneyKind.PAYMENT, startDate, endDate);
         BigDecimal totalOutstandingPayments = outstandingPayments
             .stream()
-            .map(Money::getMoneyOut)
+            .map(Money::getMoneyIn)
             .filter(Objects::nonNull)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
 
