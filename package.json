@@ -101,7 +101,7 @@
     "echarts": "^5.5.1",
     "jspdf": "^2.5.2",
     "jspdf-autotable": "^3.8.4",
-    "ngx-echarts": "^19.0.0",
+    "ngx-echarts": "^14.0.0",
     "ngx-infinite-scroll": "14.0.0",
     "ngx-toastr": "^13.2.1",
     "ngx-webstorage": "10.0.1",
