@@ -2,6 +2,10 @@
   "accounts": {
     "title": "Accounts Management",
     "subtitle": "Manage your business accounts and contacts",
+    "details": {
+      "title": "Account Details",
+      "back": "Back to Accounts"
+    },
     "table": {
       "empty": "No accounts found",
       "loading": "Loading accounts..."
@@ -14,6 +18,19 @@
       "address2": "Address 2",
       "balanceIn": "Balance In",
       "balanceOut": "Balance Out"
+    },
+    "transactions": {
+      "title": "Account Transactions",
+      "fields": {
+        "pk": "PK",
+        "date": "Date",
+        "type": "Type",
+        "kind": "Kind",
+        "sourcePk": "Source PK",
+        "details": "Details",
+        "moneyIn": "Money In",
+        "moneyOut": "Money Out"
+      }
     },
     "placeholders": {
       "name": "Enter account name",
@@ -49,15 +66,12 @@
     },
     "messages": {
       "noData": "No accounts found",
-      "loadError": "Failed to load accounts",
-      "deleteConfirm": "Are you sure you want to delete this account?",
-      "deleteSuccess": "Account deleted successfully",
-      "deleteError": "Failed to delete account",
       "createSuccess": "Account created successfully",
-      "createError": "Failed to create account",
       "updateSuccess": "Account updated successfully",
-      "updateError": "Failed to update account",
-      "featureComingSoon": "This feature is coming soon"
+      "deleteSuccess": "Account deleted successfully",
+      "deleteError": "Error deleting account",
+      "deleteConfirm": "Are you sure you want to delete this account?",
+      "invalidForm": "Please check the form for errors"
     }
   }
 }

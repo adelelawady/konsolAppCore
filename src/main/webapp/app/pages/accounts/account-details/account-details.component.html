@@ -3,16 +3,50 @@
     <div class="col-12">
       <div class="card">
         <div class="card-header">
-          <h4 class="card-title">Account Details</h4>
+          <h4 class="card-title">{{ 'accounts.details.title' | translate }}</h4>
         </div>
         <div class="card-body">
           <div class="row" *ngIf="account">
             <div class="col-md-6">
-              <p><strong>Account Name:</strong> {{ account.name }}</p>
-              <p><strong>Account Type:</strong> {{ account.kind }}</p>
+              <div class="mb-3">
+                <p>
+                  <strong>{{ 'accounts.fields.name' | translate }}:</strong> {{ account.name }}
+                </p>
+                <p>
+                  <strong>{{ 'accounts.fields.kind' | translate }}:</strong> {{ 'accounts.kind.' + account.kind | translate }}
+                </p>
+                <p>
+                  <strong>{{ 'accounts.fields.phone' | translate }}:</strong> {{ account.phone || '-' }}
+                </p>
+              </div>
             </div>
             <div class="col-md-6">
-              <p><strong>Account ID:</strong> {{ account.id }}</p>
+              <div class="mb-3">
+                <p>
+                  <strong>{{ 'accounts.fields.address' | translate }}:</strong> {{ account.address || '-' }}
+                </p>
+                <p>
+                  <strong>{{ 'accounts.fields.address2' | translate }}:</strong> {{ account.address2 || '-' }}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="row" *ngIf="account">
+            <div class="col-md-6">
+              <div class="card bg-light">
+                <div class="card-body">
+                  <h5 class="card-title text-success">{{ 'accounts.fields.balanceIn' | translate }}</h5>
+                  <p class="card-text h3">{{ account.balanceIn | currency: 'USD':'symbol':'1.2-2' }}</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card bg-light">
+                <div class="card-body">
+                  <h5 class="card-title text-danger">{{ 'accounts.fields.balanceOut' | translate }}</h5>
+                  <p class="card-text h3">{{ account.balanceOut | currency: 'USD':'symbol':'1.2-2' }}</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -24,7 +58,7 @@
     <div class="col-12">
       <div class="card">
         <div class="card-header">
-          <h4 class="card-title">Account Transactions</h4>
+          <h4 class="card-title">{{ 'accounts.transactions.title' | translate }}</h4>
         </div>
         <div class="card-body">
           <app-data-table

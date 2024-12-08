@@ -4,7 +4,7 @@ import { AccountUserResourceService } from '../../../core/konsolApi/api/accountU
 import { AccountTransactionsContainer } from '../../../core/konsolApi/model/accountTransactionsContainer';
 import { PaginationSearchModel } from '../../../core/konsolApi/model/paginationSearchModel';
 import { AccountUserDTO } from '../../../core/konsolApi/model/accountUserDTO';
-import { TableColumn } from 'app/shared/components/data-table/data-table.component';
+import { TableColumn } from 'app/shared/components/data-table/table-column.model';
 
 @Component({
   selector: 'app-account-details',
@@ -19,13 +19,14 @@ export class AccountDetailsComponent implements OnInit {
   currentPage = 0;
   pageSize = 10;
   columns: TableColumn[] = [
-    { field: 'pk', header: 'banks.transactions.pk', type: 'text', sortable: true },
-    { field: 'createdDate', header: 'banks.transactions.date', type: 'date', sortable: true },
-    { field: 'sourceType', header: 'banks.transactions.type', type: 'text', sortable: true },
-    { field: 'sourceKind', header: 'banks.transactions.kind', type: 'text', sortable: true },
-    { field: 'details', header: 'banks.transactions.details', type: 'text', sortable: true },
-    { field: 'moneyIn', header: 'banks.transactions.moneyIn', type: 'currency', sortable: true },
-    { field: 'moneyOut', header: 'banks.transactions.moneyOut', type: 'currency', sortable: true },
+    { field: 'pk', header: 'accounts.transactions.fields.pk', type: 'text', sortable: true },
+    { field: 'createdDate', header: 'accounts.transactions.fields.date', type: 'date', sortable: true },
+    { field: 'sourceType', header: 'accounts.transactions.fields.type', type: 'text', sortable: true },
+    { field: 'sourceKind', header: 'accounts.transactions.fields.kind', type: 'text', sortable: true },
+    { field: 'sourcePk', header: 'accounts.transactions.fields.sourcePk', type: 'text', sortable: true },
+    { field: 'details', header: 'accounts.transactions.fields.details', type: 'text', sortable: true },
+    { field: 'moneyIn', header: 'accounts.transactions.fields.moneyIn', type: 'currency', sortable: true },
+    { field: 'moneyOut', header: 'accounts.transactions.fields.moneyOut', type: 'currency', sortable: true },
   ];
 
   constructor(private route: ActivatedRoute, private accountUserService: AccountUserResourceService) {
@@ -78,23 +79,5 @@ export class AccountDetailsComponent implements OnInit {
   onPageChange(page: number): void {
     this.currentPage = page;
     this.loadTransactions();
-  }
-
-  onSortChange(event: any): void {
-    const searchModel: PaginationSearchModel = {
-      page: 0,
-      size: 10,
-      sortField: event.field,
-      sortOrder: event.order === 1 ? 'asc' : 'desc',
-    };
-
-    this.accountUserService.processAccountTransactions(this.accountId, searchModel).subscribe(
-      data => {
-        this.transactions = data;
-      },
-      error => {
-        console.error('Error loading transactions:', error);
-      }
-    );
   }
 }
