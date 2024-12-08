@@ -4,6 +4,7 @@ import { InvoicesView } from '../invoices-view';
 import { InvoiceResourceService } from 'app/core/konsolApi/api/invoiceResource.service';
 import { InvoiceViewDTO } from 'app/core/konsolApi/model/invoiceViewDTO';
 import { InvoiceViewSimpleDTO } from 'app/core/konsolApi/model/invoiceViewSimpleDTO';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-purchase-invoices',
@@ -12,7 +13,7 @@ import { InvoiceViewSimpleDTO } from 'app/core/konsolApi/model/invoiceViewSimple
 export class PurchaseInvoicesComponent extends InvoicesView {
   type = 'PURCHASE' as const;
 
-  constructor(protected override invoiceService: InvoiceResourceService) {
-    super(invoiceService);
+  constructor(protected override router: Router, protected override invoiceService: InvoiceResourceService) {
+    super(router, invoiceService);
   }
 }

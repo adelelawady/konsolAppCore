@@ -9,6 +9,7 @@ import { InvoiceDTO } from 'app/core/konsolApi/model/invoiceDTO';
 import { InvoiceItemViewDTO } from 'app/core/konsolApi/model/invoiceItemViewDTO';
 import { formatDate } from '@angular/common';
 import { TableColumn } from 'app/shared/components/data-table/data-table.component';
+import { Router } from '@angular/router';
 
 @Directive()
 export abstract class InvoicesView implements OnInit {
@@ -27,6 +28,14 @@ export abstract class InvoicesView implements OnInit {
   searchTerm = '';
   sortField = 'created_date';
   sortDirection: 'asc' | 'desc' = 'desc';
+
+  protected router: Router;
+  protected invoiceService: InvoiceResourceService;
+
+  constructor(router: Router, invoiceService: InvoiceResourceService) {
+    this.router = router;
+    this.invoiceService = invoiceService;
+  }
 
   // Table columns configuration
   columns: TableColumn[] = [
@@ -75,7 +84,7 @@ export abstract class InvoicesView implements OnInit {
     {
       field: 'actions',
       header: 'konsolCoreApp.invoice.actions.title',
-      type: 'template' as const,
+      type: 'actions' as const,
       template: 'actionTemplate',
     },
   ];
@@ -150,8 +159,6 @@ export abstract class InvoicesView implements OnInit {
 
     return [...baseColumns, ...(this.type === 'SALE' ? salesColumns : purchaseColumns)];
   }
-
-  constructor(protected invoiceService: InvoiceResourceService) {}
 
   ngOnInit(): void {
     this.loadInvoices();
@@ -240,7 +247,12 @@ export abstract class InvoicesView implements OnInit {
   onEdit(invoice: InvoiceViewSimpleDTO): void {
     this.selectedInvoice = invoice;
     if (invoice.id) {
-      this.loadInvoiceItems(invoice.id);
+      if (invoice.kind === 'SALE') {
+        this.router.navigate(['/sales', invoice.id]);
+      } else if (invoice.kind === 'PURCHASE') {
+        this.router.navigate(['/purchase', invoice.id]);
+      }
+      // this.router.navigate(['/invoice', invoice.id]);
     }
   }
 

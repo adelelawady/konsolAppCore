@@ -1,0 +1,110 @@
+.invoice-details-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .loading-spinner {
+    display: flex;
+    justify-content: center;
+    padding: 40px;
+  }
+
+  .error-message {
+    color: red;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .invoice-content {
+    .invoice-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+
+      h2 {
+        margin: 0;
+      }
+
+      .invoice-status {
+        padding: 6px 12px;
+        border-radius: 4px;
+        font-weight: 500;
+
+        &.paid {
+          background-color: #e6f4ea;
+          color: #1e7e34;
+        }
+
+        &.pending {
+          background-color: #fff3e0;
+          color: #e65100;
+        }
+
+        &.overdue {
+          background-color: #fdecea;
+          color: #d32f2f;
+        }
+      }
+    }
+
+    .info-section,
+    .items-section,
+    .summary-section {
+      margin-bottom: 20px;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+
+      .info-item {
+        label {
+          display: block;
+          color: rgba(0, 0, 0, 0.54);
+          font-size: 12px;
+          margin-bottom: 4px;
+        }
+      }
+    }
+
+    .items-table {
+      width: 100%;
+
+      th {
+        font-weight: 500;
+        color: rgba(0, 0, 0, 0.87);
+      }
+
+      td,
+      th {
+        padding: 12px;
+      }
+    }
+
+    .summary-section {
+      .summary-grid {
+        display: grid;
+        gap: 10px;
+        justify-content: end;
+
+        .summary-item {
+          display: grid;
+          grid-template-columns: 100px 120px;
+          align-items: center;
+          text-align: right;
+
+          &.total {
+            font-weight: 500;
+            font-size: 1.1em;
+          }
+
+          label {
+            color: rgba(0, 0, 0, 0.54);
+          }
+        }
+      }
+    }
+  }
+}

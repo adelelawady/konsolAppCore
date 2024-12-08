@@ -1,0 +1,17 @@
+<div class="invoice-details-container">
+  <div *ngIf="loading" class="loading-spinner"></div>
+
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
+
+  <div *ngIf="!loading && !error && invoice" class="invoice-content">
+    <!-- Invoice Header -->
+    <div class="invoice-header">
+      <h2>Invoice #{{ invoice.id }}</h2>
+      <div class="invoice-status">
+        {{ invoice.kind }}
+      </div>
+    </div>
+  </div>
+</div>
