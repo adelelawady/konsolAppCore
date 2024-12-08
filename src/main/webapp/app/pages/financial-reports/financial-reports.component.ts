@@ -956,8 +956,9 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
   setDateRange(range: any): void {
     this.selectedDateRange = range.target.value;
     const now = new Date();
+    now.setHours(23, 59, 59, 999); // Set time to 11:59:59.999 PM
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-
+    today.setHours(0, 0, 0, 0); // Set time to 12:00:00.000 AM
     switch (this.selectedDateRange) {
       case 'today':
         this.dateRange = {

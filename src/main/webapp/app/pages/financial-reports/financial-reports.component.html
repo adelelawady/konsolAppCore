@@ -50,7 +50,7 @@
             <div class="metric-content">
               <div class="metric-header">
                 <h4><i class="fas fa-shopping-cart"></i> {{ 'financialReports.metrics.salesRevenue.totalSales' | translate }}</h4>
-                <span class="trend-indicator positive"> <i class="fas fa-arrow-up"></i> 12% </span>
+                <span class="trend-indicator positive d-none"> <i class="fas fa-arrow-up"></i> 12% </span>
               </div>
               <span class="metric-value highlight">
                 {{ salesMetrics?.totalSales | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
