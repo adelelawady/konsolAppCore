@@ -24,6 +24,10 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
   @ViewChild('marginTrendsChart', { static: true }) marginTrendsChart!: ElementRef;
   @ViewChild('profitBreakdownChart', { static: true }) profitBreakdownChart!: ElementRef;
 
+  selectedAccount: any = null;
+  selectedBank: any = null;
+  selectedStore: any = null;
+
   options: EChartsOption = {};
   dashboardData?: any;
   salesMetrics: any;
@@ -876,15 +880,61 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
     this.loadData();
   }
 
+  onAccountSelected(account: any): void {
+    if (!account) {
+      this.selectedAccount = undefined;
+      return;
+    }
+    this.selectedAccount = account;
+    this.loadData();
+  }
+
+  onBankSelected(bank: any): void {
+    if (!bank) {
+      this.selectedBank = undefined;
+      return;
+    }
+    this.selectedBank = bank;
+    this.loadData();
+  }
+
+  onStoreSelected(store: any): void {
+    if (!store) {
+      this.selectedStore = undefined;
+      return;
+    }
+    this.selectedStore = store;
+    this.loadData();
+  }
+
+  resetSelections(): void {
+    this.selectedBank = undefined;
+    this.selectedAccount = undefined;
+    this.selectedStore = undefined;
+    this.loadData();
+  }
+
   private loadData(): void {
     this.loading = true;
     const searchDTO: FinancialSearchDTO = {
       startDate: this.dateRange.startDate.toISOString(),
       endDate: this.dateRange.endDate.toISOString(),
-      // bankId: '674ffcaab0c83957e9623138',
-      // accountId: '675068e4e31429211961ed67',
-      // storeId: '674ffcaab0c83957e9623139',
     };
+
+    // Only add bankId if a bank is selected
+    if (this.selectedBank) {
+      searchDTO.bankId = this.selectedBank.id;
+    }
+
+    // Only add accountId if an account is selected
+    if (this.selectedAccount) {
+      searchDTO.accountId = this.selectedAccount.id;
+    }
+
+    // Only add storeId if a store is selected
+    if (this.selectedStore) {
+      searchDTO.storeId = this.selectedStore.id;
+    }
 
     this.financialReportsService.getFinancialDashboard(searchDTO).subscribe({
       next: (data: FinancialDashboardDTO | undefined) => {

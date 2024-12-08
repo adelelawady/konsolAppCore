@@ -12,6 +12,7 @@
     },
     "loading": "Loading dashboard data...",
     "refresh": "Refresh",
+    "reset": "Reset Filters",
     "metrics": {
       "salesRevenue": {
         "title": "Sales & Revenue",
@@ -134,11 +135,12 @@
     "storePerformance": {
       "title": "Store Performance",
       "metrics": {
+        "store": "Store",
         "revenue": "Revenue",
-        "cost": "Total Cost",
-        "margin": "Profit Margin",
-        "transactions": "Total Transactions",
-        "avgTransaction": "Average Transaction"
+        "cost": "Cost",
+        "profitMargin": "Profit Margin",
+        "transactions": "Transactions",
+        "averageTransaction": "Average Transaction"
       }
     },
     "invoiceAnalysis": {

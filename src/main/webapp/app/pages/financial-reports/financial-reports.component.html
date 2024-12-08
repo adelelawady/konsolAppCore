@@ -12,7 +12,18 @@
             <option value="year">{{ 'financialReports.dateRange.options.year' | translate }}</option>
           </select>
         </div>
-        <button class="refresh-btn"><i class="fas fa-sync-alt"></i> {{ 'financialReports.refresh' | translate }}</button>
+        <app-bank-selector [selectedBank]="selectedBank" (bankSelected)="onBankSelected($event)"></app-bank-selector>
+        <jhi-account-selector
+          [selectedAccountId]="selectedAccount?.id"
+          (accountSelected)="onAccountSelected($event)"
+        ></jhi-account-selector>
+        <app-store-selector [selectedStore]="selectedStore" (storeSelected)="onStoreSelected($event)"></app-store-selector>
+        <button class="reset-btn" (click)="resetSelections()">
+          <i class="fas fa-undo"></i> {{ 'financialReports.reset' | translate }}
+        </button>
+        <button class="refresh-btn" (click)="refreshData()">
+          <i class="fas fa-sync-alt"></i> {{ 'financialReports.refresh' | translate }}
+        </button>
       </div>
     </div>
   </div>

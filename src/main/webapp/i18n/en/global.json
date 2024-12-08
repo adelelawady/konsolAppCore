@@ -168,6 +168,10 @@
         "money": {
           "title": "Money Transactions",
           "description": "Manage financial transactions and payments"
+        },
+        "financial-reports": {
+          "title": "Financial Reports",
+          "description": "View and analyze financial performance metrics and reports"
         }
       }
     },

@@ -12,6 +12,7 @@
     },
     "loading": "جاري تحميل البيانات...",
     "refresh": "تحديث",
+    "reset": "إعادة تعيين",
     "metrics": {
       "salesRevenue": {
         "title": "المبيعات والإيرادات",
@@ -131,10 +132,11 @@
     "storePerformance": {
       "title": "أداء المتجر",
       "metrics": {
+        "store": "المتجر",
         "revenue": "الإيرادات",
-        "cost": "التكلفة الإجمالية",
-        "margin": "هامش الربح",
-        "transactions": "إجمالي المعاملات",
+        "cost": "التكلفة",
+        "profitMargin": "هامش الربح",
+        "transactions": "المعاملات",
         "averageTransaction": "متوسط المعاملة"
       }
     },
