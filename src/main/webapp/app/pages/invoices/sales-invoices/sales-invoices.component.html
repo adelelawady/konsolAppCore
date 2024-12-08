@@ -27,6 +27,14 @@
         (rowClick)="onItemClick($event)"
         [emptyMessage]="'konsolCoreApp.invoice.messages.noData' | translate"
       >
+        <!-- Details Template -->
+        <ng-template #detailsTemplate let-value let-row="row">
+          <div class="d-flex align-items-center justify-content-between">
+            <button class="btn btn-icon btn-sm btn-ghost-primary" (click)="viewInvoice(row); $event.stopPropagation()">
+              <i class="fa fa-eye"></i>
+            </button>
+          </div>
+        </ng-template>
         <ng-template #actionTemplate let-row="row">
           <div class="d-flex align-items-center gap-2">
             <a [routerLink]="['/sales', row.id]" class="btn btn-sm btn-outline-primary">

@@ -87,6 +87,12 @@ export abstract class InvoicesView implements OnInit {
       type: 'actions' as const,
       template: 'actionTemplate',
     },
+    {
+      field: 'view',
+      header: 'konsolCoreApp.invoice.actions.title',
+      type: 'template' as const,
+      templateRef: 'detailsTemplate',
+    },
   ];
 
   get itemColumns(): TableColumn[] {
@@ -299,6 +305,13 @@ export abstract class InvoicesView implements OnInit {
     } catch (error) {
       console.error('Error formatting date:', error);
       return date;
+    }
+  }
+
+  viewInvoice(row: any): void {
+    console.log(row.id);
+    if (row) {
+      this.router.navigate(['/invoices', row.id]);
     }
   }
 }

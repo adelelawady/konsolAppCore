@@ -1,17 +1,195 @@
-<div class="invoice-details-container">
-  <div *ngIf="loading" class="loading-spinner"></div>
-
-  <div *ngIf="error" class="error-message">
-    {{ error }}
-  </div>
-
-  <div *ngIf="!loading && !error && invoice" class="invoice-content">
-    <!-- Invoice Header -->
-    <div class="invoice-header">
-      <h2>Invoice #{{ invoice.id }}</h2>
-      <div class="invoice-status">
-        {{ invoice.kind }}
+<!-- Loading state -->
+<div *ngIf="loading" class="container-xl">
+  <div class="card">
+    <div class="card-body">
+      <div class="d-flex justify-content-center py-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">جاري التحميل...</span>
+        </div>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- Error state -->
+<div *ngIf="error" class="container-xl">
+  <div class="alert alert-danger" role="alert">
+    {{ error }}
+  </div>
+</div>
+
+<!-- Invoice content -->
+<div *ngIf="invoice && !loading" class="container-xl">
+  <div class="card">
+    <!-- Header -->
+    <div class="card-header">
+      <div class="row align-items-center">
+        <div class="col">
+          <div class="card-title">فاتورة رقم #{{ invoice.id }}</div>
+        </div>
+        <div class="col-auto">
+          <span
+            class="badge"
+            [ngClass]="{
+              'bg-green': invoice.kind === 'SALE',
+              'bg-blue': invoice.kind === 'PURCHASE',
+              'bg-yellow': invoice.kind === 'ADJUST',
+              'bg-purple': invoice.kind === 'TRANSFER'
+            }"
+          >
+            {{
+              invoice.kind === 'SALE'
+                ? 'مبيعات'
+                : invoice.kind === 'PURCHASE'
+                ? 'مشتريات'
+                : invoice.kind === 'ADJUST'
+                ? 'تسوية'
+                : invoice.kind === 'TRANSFER'
+                ? 'تحويل'
+                : invoice.kind
+            }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <!-- Invoice Info -->
+      <div class="row mb-4">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-body">
+              <h3 class="card-title">معلومات الحساب</h3>
+              <div class="datagrid">
+                <div class="datagrid-item">
+                  <div class="datagrid-title">الحساب</div>
+                  <div class="datagrid-content">{{ invoice.account?.name || 'غير متوفر' }}</div>
+                </div>
+                <div class="datagrid-item">
+                  <div class="datagrid-title">المخزن</div>
+                  <div class="datagrid-content">{{ invoice.store?.name || 'غير متوفر' }}</div>
+                </div>
+                <div class="datagrid-item">
+                  <div class="datagrid-title">البنك</div>
+                  <div class="datagrid-content">{{ invoice.bank?.name || 'غير متوفر' }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-body">
+              <h3 class="card-title">تفاصيل الفاتورة</h3>
+              <div class="datagrid">
+                <div class="datagrid-item">
+                  <div class="datagrid-title">التاريخ</div>
+                  <div class="datagrid-content">{{ invoice.created_date | date: 'medium' }}</div>
+                </div>
+                <div class="datagrid-item">
+                  <div class="datagrid-title">تم الإنشاء بواسطة</div>
+                  <div class="datagrid-content">{{ invoice.created_by }}</div>
+                </div>
+                <div class="datagrid-item">
+                  <div class="datagrid-title">حالة الدفع</div>
+                  <div class="datagrid-content">
+                    <span class="badge" [ngClass]="invoice.deferred ? 'bg-yellow' : 'bg-green'">
+                      {{ invoice.deferred ? 'آجل' : 'مدفوع' }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Items Table -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">الأصناف</h3>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-vcenter card-table">
+            <thead>
+              <tr>
+                <th>الصنف</th>
+                <th>الوحدة</th>
+                <th class="text-end">الكمية</th>
+                <th class="text-end">سعر الوحدة</th>
+                <th class="text-end">الخصم</th>
+                <th class="text-end">الإجمالي</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of invoice?.invoiceItems">
+                <td>{{ item?.item?.name }}</td>
+                <td>{{ item.unit }}</td>
+                <td class="text-end">{{ invoice.kind === 'SALE' ? item?.unitQtyOut : item?.unitQtyIn }}</td>
+                <td class="text-end">{{ item.netPrice | number: '1.2-2' }}</td>
+                <td class="text-end">{{ item.discount | number: '1.2-2' }}</td>
+                <td class="text-end">{{ item.totalPrice | number: '1.2-2' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Summary -->
+      <div class="row">
+        <div class="col-md-7">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">معلومات إضافية</h3>
+            </div>
+            <div class="card-body">
+              <div class="datagrid">
+                <div class="datagrid-item" *ngIf="invoice.additionsType">
+                  <div class="datagrid-title">نوع الإضافات</div>
+                  <div class="datagrid-content">{{ invoice.additionsType }}</div>
+                </div>
+                <div class="datagrid-item" *ngIf="invoice.expensesType">
+                  <div class="datagrid-title">نوع المصروفات</div>
+                  <div class="datagrid-content">{{ invoice.expensesType }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-5">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">ملخص الفاتورة</h3>
+            </div>
+            <div class="card-body">
+              <div class="datagrid">
+                <div class="datagrid-item">
+                  <div class="datagrid-title">المجموع الفرعي</div>
+                  <div class="datagrid-content">{{ invoice.totalPrice | number: '1.2-2' }}</div>
+                </div>
+                <div class="datagrid-item">
+                  <div class="datagrid-title">الخصم ({{ invoice.discountPer }}%)</div>
+                  <div class="datagrid-content text-danger">-{{ invoice.discount | number: '1.2-2' }}</div>
+                </div>
+                <div class="datagrid-item">
+                  <div class="datagrid-title">الإضافات</div>
+                  <div class="datagrid-content">{{ invoice.additions | number: '1.2-2' }}</div>
+                </div>
+                <div class="datagrid-item">
+                  <div class="datagrid-title">المصروفات</div>
+                  <div class="datagrid-content">{{ invoice.expenses | number: '1.2-2' }}</div>
+                </div>
+                <div class="datagrid-item">
+                  <div class="datagrid-title fw-bold">الصافي</div>
+                  <div class="datagrid-content fw-bold">{{ invoice.netPrice | number: '1.2-2' }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Actions -->
   </div>
 </div>
