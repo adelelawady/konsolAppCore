@@ -31,14 +31,20 @@
       "performanceIndicators": {
         "title": "Performance Indicators",
         "profitMargins": "Profit Margins",
-        "gross": "Gross",
-        "net": "Net",
+        "grossProfitMargin": "Gross Profit Margin",
+        "netProfitMargin": "Net Profit Margin",
+        "currentRatio": "Current Ratio",
+        "quickRatio": "Quick Ratio",
         "financialRatios": "Financial Ratios",
         "current": "Current",
         "quick": "Quick",
         "growthExpenses": "Growth & Expenses",
         "revenueGrowth": "Revenue Growth",
+        "revenueGrowthRate": "Revenue Growth Rate",
         "operatingExpenses": "Operating Expenses",
+        "operatingExpensesRatio": "Operating Expenses Ratio",
+        "operatingExpensesToRevenue": "Operating Expenses to Revenue",
+        "growthRatio": "Growth Ratio",
         "financialMetrics": {
           "title": "Financial Metrics",
           "currentRatio": "Current Ratio",
@@ -69,7 +75,13 @@
       "totalIn": "Total Money In",
       "totalOut": "Total Money Out",
       "position": "Current Position",
-      "moneyInIcon": "₺"
+      "moneyInIcon": "₺",
+      "moneyFlow": {
+        "title": "Money Flow",
+        "moneyIn": "Money In",
+        "moneyOut": "Money Out",
+        "currentPosition": "Current Position"
+      }
     },
     "topItems": {
       "title": "Top Selling Items",
@@ -81,28 +93,45 @@
         "margin": "Profit Margin"
       }
     },
+    "topItemsAnalysis": {
+      "title": "Top Items Analysis",
+      "quantity": "Quantity",
+      "revenue": "Revenue",
+      "profit": "Profit",
+      "margin": "Profit Margin",
+      "itemName": "Item Name",
+      "performance": "Item Performance",
+      "details": {
+        "sold": "Units Sold",
+        "totalRevenue": "Total Revenue",
+        "totalProfit": "Total Profit",
+        "profitMargin": "Profit Margin"
+      }
+    },
     "storePerformance": {
       "title": "Store Performance",
       "metrics": {
         "revenue": "Revenue",
-        "cost": "Cost",
+        "cost": "Total Cost",
         "margin": "Profit Margin",
-        "transactions": "Transactions",
-        "avgTransaction": "Avg. Transaction"
+        "transactions": "Total Transactions",
+        "avgTransaction": "Average Transaction"
       }
     },
     "invoiceAnalysis": {
       "title": "Invoice Analysis",
       "discounts": {
         "title": "Discounts",
-        "average": "Average",
-        "percentage": "Percentage"
+        "average": "Average Discount",
+        "percentage": "Discount Percentage"
       },
       "expenses": {
         "title": "Expenses",
         "total": "Total Expenses",
+        "totalAdditions": "Total Additions",
+        "deferredCount": "Deferred Count",
         "additions": "Total Additions",
-        "deferred": "Deferred Count"
+        "deferred": "Deferred Invoices"
       }
     },
     "buttons": {
@@ -112,6 +141,18 @@
     },
     "currency": {
       "symbol": "$"
+    },
+    "performanceRatios": {
+      "title": "Performance Ratios"
+    },
+    "marginTrends": {
+      "title": "Margin Trends"
+    },
+    "profitBreakdown": {
+      "title": "Profit Breakdown"
+    },
+    "bankBalance": {
+      "title": "Bank Balance"
     }
   }
 }

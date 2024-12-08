@@ -124,12 +124,13 @@
               <h4><i class="fas fa-chart-area"></i> {{ 'financialReports.metrics.performanceIndicators.growthExpenses' | translate }}</h4>
               <div class="metric-details">
                 <span class="metric-label">
-                  <i class="fas fa-chart-line"></i> {{ 'financialReports.metrics.performanceIndicators.revenueGrowth' | translate }}:
-                  {{ performanceIndicators?.revenueGrowth | number: '1.2-2' }}%
+                  <i class="fas fa-chart-line"></i> {{ 'financialReports.metrics.performanceIndicators.revenueGrowthRate' | translate }}:
+                  {{ performanceIndicators?.revenueGrowthRate | number: '1.2-2' }}%
                 </span>
                 <span class="metric-label">
-                  <i class="fas fa-coins"></i> {{ 'financialReports.metrics.performanceIndicators.operatingExpensesRatio' | translate }}:
-                  {{ performanceIndicators?.operatingExpensesRatio | number: '1.2-2' }}%
+                  <i class="fas fa-coins"></i>
+                  {{ 'financialReports.metrics.performanceIndicators.operatingExpensesToRevenue' | translate }}:
+                  {{ performanceIndicators?.operatingExpensesToRevenue | number: '1.2-2' }}%
                 </span>
               </div>
             </div>

@@ -31,6 +31,10 @@
       "performanceIndicators": {
         "title": "مؤشرات الأداء",
         "profitMargins": "هوامش الربح",
+        "grossProfitMargin": "هامش الربح الإجمالي",
+        "netProfitMargin": "هامش الربح الصافي",
+        "currentRatio": "النسبة الحالية",
+        "quickRatio": "النسبة السريعة",
         "gross": "إجمالي",
         "net": "صافي",
         "financialRatios": "النسب المالية",
@@ -38,7 +42,11 @@
         "quick": "السريع",
         "growthExpenses": "النمو والمصروفات",
         "revenueGrowth": "نمو الإيرادات",
+        "revenueGrowthRate": "معدل نمو الإيرادات",
         "operatingExpenses": "المصروفات التشغيلية",
+        "operatingExpensesRatio": "نسبة المصروفات التشغيلية",
+        "operatingExpensesToRevenueRatio": "نسبة المصروفات التشغيلية إلى الإيرادات",
+        "growthRatio": "نسبة النمو",
         "financialMetrics": {
           "title": "المقاييس المالية",
           "currentRatio": "النسبة الحالية",
@@ -57,10 +65,18 @@
       "profitMargin": "توزيع هامش الربح",
       "topItems": "أعلى المنتجات مبيعاً",
       "cashFlow": "اتجاه التدفق النقدي",
-      "bankBalance": "توزيع الرصيد المصرفي",
-      "performanceRatios": "نسب الأداء",
-      "marginTrends": "اتجاهات الهامش",
-      "profitBreakdown": "تفصيل الأرباح",
+      "bankBalance": {
+        "title": "الرصيد المصرفي"
+      },
+      "performanceRatios": {
+        "title": "نسب الأداء"
+      },
+      "marginTrends": {
+        "title": "اتجاهات الهامش"
+      },
+      "profitBreakdown": {
+        "title": "تحليل الربح"
+      },
       "topItemsByQuantity": "أعلى العناصر من حيث الكمية",
       "cashFlowTrend": "اتجاه التدفق النقدي"
     },
@@ -69,7 +85,13 @@
       "totalIn": "إجمالي الوارد",
       "totalOut": "إجمالي الصادر",
       "position": "الموقف الحالي",
-      "moneyInIcon": "₺"
+      "moneyInIcon": "₺",
+      "moneyFlow": {
+        "title": "التدفق النقدي",
+        "moneyIn": "النقد الوارد",
+        "moneyOut": "النقد الصادر",
+        "currentPosition": "الموقف الحالي"
+      }
     },
     "topItems": {
       "title": "أعلى المنتجات مبيعاً",
@@ -81,28 +103,45 @@
         "margin": "هامش الربح"
       }
     },
+    "topItemsAnalysis": {
+      "title": "تحليل المنتجات الأعلى مبيعاً",
+      "quantity": "الكمية",
+      "revenue": "الإيرادات",
+      "profit": "الربح",
+      "margin": "هامش الربح",
+      "itemName": "اسم المنتج",
+      "performance": "أداء المنتج",
+      "details": {
+        "sold": "الوحدات المباعة",
+        "totalRevenue": "إجمالي الإيرادات",
+        "totalProfit": "إجمالي الربح",
+        "profitMargin": "هامش الربح"
+      }
+    },
     "storePerformance": {
       "title": "أداء المتجر",
       "metrics": {
         "revenue": "الإيرادات",
-        "cost": "التكلفة",
+        "cost": "التكلفة الإجمالية",
         "margin": "هامش الربح",
-        "transactions": "المعاملات",
-        "avgTransaction": "متوسط المعاملة"
+        "transactions": "إجمالي المعاملات",
+        "averageTransaction": "متوسط المعاملة"
       }
     },
     "invoiceAnalysis": {
       "title": "تحليل الفواتير",
       "discounts": {
         "title": "الخصومات",
-        "average": "المتوسط",
-        "percentage": "النسبة المئوية"
+        "average": "متوسط الخصم",
+        "percentage": "نسبة الخصم"
       },
       "expenses": {
         "title": "المصروفات",
         "total": "إجمالي المصروفات",
+        "totalAdditions": "إجمالي الإضافات",
+        "deferredCount": "عدد الفواتير المؤجلة",
         "additions": "إجمالي الإضافات",
-        "deferred": "عدد المؤجل"
+        "deferred": "الفواتير المؤجلة"
       }
     },
     "buttons": {
