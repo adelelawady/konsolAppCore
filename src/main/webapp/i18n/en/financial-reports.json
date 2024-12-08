@@ -61,14 +61,37 @@
       "dailySales": "Daily Sales Trend",
       "salesVsCosts": "Sales vs Costs",
       "profitMargin": "Profit Margin Distribution",
-      "topItems": "Top Selling Items",
-      "cashFlow": "Cash Flow Trend",
-      "bankBalance": "Bank Balance Distribution",
-      "performanceRatios": "Performance Ratios",
-      "marginTrends": "Margin Trends",
-      "profitBreakdown": "Profit Breakdown",
+      "topItems": "Top Items by Revenue",
+      "topItemsByRevenue": "Top Items by Revenue",
       "topItemsByQuantity": "Top Items by Quantity",
-      "cashFlowTrend": "Cash Flow Trend"
+      "cashFlow": "Cash Flow Trend",
+      "cashFlowTrend": "Cash Flow Trend",
+      "bankBalance": {
+        "title": "Bank Balance",
+        "trend": "Bank Balance Trend"
+      },
+      "performanceRatios": {
+        "title": "Performance Ratios",
+        "metrics": {
+          "currentRatio": "Current Ratio",
+          "quickRatio": "Quick Ratio",
+          "operatingMargin": "Operating Margin",
+          "netProfitMargin": "Net Profit Margin"
+        }
+      },
+      "marginTrends": {
+        "title": "Margin Trends",
+        "gross": "Gross Margin",
+        "operating": "Operating Margin",
+        "net": "Net Margin"
+      },
+      "profitBreakdown": {
+        "title": "Profit Breakdown",
+        "revenue": "Revenue",
+        "costs": "Costs",
+        "grossProfit": "Gross Profit",
+        "netProfit": "Net Profit"
+      }
     },
     "cashFlow": {
       "title": "Cash Flow Summary",

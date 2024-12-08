@@ -5,6 +5,7 @@ import { FinancialSearchDTO } from 'app/core/konsolApi/model/financialSearchDTO'
 import * as echarts from 'echarts';
 import { EChartsCoreOption, EChartsOption } from 'echarts';
 import { ECBasicOption } from 'echarts/types/dist/shared';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'jhi-financial-reports',
@@ -68,7 +69,11 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
   itemAnalysis: any;
   invoiceAnalysis: any;
 
-  constructor(private financialReportsService: FinancialReportsService, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private financialReportsService: FinancialReportsService,
+    private cdr: ChangeDetectorRef,
+    private translateService: TranslateService
+  ) {}
 
   ngOnDestroy(): void {
     // Dispose of all chart instances
@@ -170,16 +175,22 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
 
   private initializeChartOptions(): void {
     // Set default options for all charts
-    this.dailySalesTrendOption = this.getDefaultChartOptions('Daily Sales Trend');
-    this.salesVsCostsOption = this.getDefaultChartOptions('Sales vs Costs');
-    this.profitMarginDistributionOption = this.getDefaultChartOptions('Profit Margin Distribution');
-    this.topItemsByRevenueOption = this.getDefaultChartOptions('Top Items by Revenue');
+    this.dailySalesTrendOption = this.getDefaultChartOptions('financialReports.charts.dailySales');
+    this.salesVsCostsOption = this.getDefaultChartOptions('financialReports.charts.salesVsCosts');
+    this.profitMarginDistributionOption = this.getDefaultChartOptions('financialReports.charts.profitMargin');
+    this.topItemsByRevenueOption = this.getDefaultChartOptions('financialReports.charts.topItemsByRevenue');
+    this.topItemsByQuantityOption = this.getDefaultChartOptions('financialReports.charts.topItemsByQuantity');
+    this.cashFlowTrendOption = this.getDefaultChartOptions('financialReports.charts.cashFlowTrend');
+    this.bankBalanceOption = this.getDefaultChartOptions('financialReports.charts.bankBalance.title');
+    this.performanceRatiosOption = this.getDefaultChartOptions('financialReports.charts.performanceRatios.title');
+    this.marginTrendsOption = this.getDefaultChartOptions('financialReports.charts.marginTrends.title');
+    this.profitBreakdownOption = this.getDefaultChartOptions('financialReports.charts.profitBreakdown.title');
   }
 
-  private getDefaultChartOptions(title: string): EChartsOption {
+  private getDefaultChartOptions(titleKey: string): EChartsOption {
     return {
       title: {
-        text: title,
+        text: this.translateService.instant(titleKey),
         left: 'center',
       },
       tooltip: {
@@ -316,7 +327,7 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
     const salesData: any = this.dashboardData?.salesCharts?.find((chart: { chartType: string }) => chart.chartType === 'line');
     if (salesData) {
       this.dailySalesTrendOption = {
-        ...this.getDefaultChartOptions('Daily Sales Trend'),
+        ...this.getDefaultChartOptions('financialReports.charts.dailySales'),
         tooltip: {
           trigger: 'axis',
           formatter: (params: any) => {
@@ -358,7 +369,7 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
     const salesVsCostsData: any = this.dashboardData?.salesCharts?.find((chart: any) => chart.title.includes('Sales vs Costs'));
     if (salesVsCostsData) {
       this.salesVsCostsOption = {
-        ...this.getDefaultChartOptions('Sales vs Costs'),
+        ...this.getDefaultChartOptions('financialReports.charts.salesVsCosts'),
         tooltip: {
           trigger: 'axis',
           axisPointer: {
@@ -403,7 +414,7 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
     const profitData = this.dashboardData?.salesCharts?.find((chart: { chartType: string }) => chart.chartType === 'pie');
     if (profitData) {
       this.profitMarginDistributionOption = {
-        ...this.getDefaultChartOptions('Profit Margin Distribution'),
+        ...this.getDefaultChartOptions('financialReports.charts.profitMargin'),
         tooltip: {
           trigger: 'item',
           formatter: '{b}: {c}%',
@@ -450,7 +461,7 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
     );
     if (revenueData) {
       this.topItemsByRevenueOption = {
-        ...this.getDefaultChartOptions('Top Items by Revenue'),
+        ...this.getDefaultChartOptions('financialReports.charts.topItemsByRevenue'),
         tooltip: {
           trigger: 'axis',
           formatter: revenueData.options?.tooltip?.formatter || '{b}<br/>Revenue: ${c}',
@@ -549,7 +560,7 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
     const balanceData: any = this.dashboardData?.bankBalanceCharts?.find((chart: any) => chart.chartType === 'bar');
     if (balanceData) {
       this.bankBalanceOption = {
-        ...this.getDefaultChartOptions('Bank Balance'),
+        ...this.getDefaultChartOptions('financialReports.charts.bankBalance.title'),
         tooltip: {
           trigger: 'axis',
         },
@@ -588,7 +599,7 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
     );
     if (quantityData) {
       this.topItemsByQuantityOption = {
-        ...this.getDefaultChartOptions('Top Items by Quantity'),
+        ...this.getDefaultChartOptions('financialReports.charts.topItemsByQuantity'),
         tooltip: {
           trigger: 'axis',
           formatter: quantityData.options?.tooltip?.formatter || '{b}<br/>Quantity: {c}',
@@ -631,7 +642,7 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
     const ratiosData = this.dashboardData?.performanceCharts?.find((chart: any) => chart.title === 'Performance Ratios');
     if (ratiosData) {
       this.performanceRatiosOption = {
-        ...this.getDefaultChartOptions('Performance Ratios'),
+        ...this.getDefaultChartOptions('financialReports.charts.performanceRatios.title'),
         tooltip: {
           trigger: 'item',
         },
@@ -666,7 +677,7 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
     const trendsData = this.dashboardData?.performanceCharts?.find((chart: any) => chart.title === 'Margin Trends');
     if (trendsData) {
       this.marginTrendsOption = {
-        ...this.getDefaultChartOptions('Margin Trends'),
+        ...this.getDefaultChartOptions('financialReports.charts.marginTrends.title'),
         tooltip: {
           trigger: 'axis',
         },
@@ -698,7 +709,7 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
     const profitData = this.dashboardData?.performanceCharts?.find((chart: any) => chart.title === 'Profit Breakdown');
     if (profitData) {
       this.profitBreakdownOption = {
-        ...this.getDefaultChartOptions('Profit Breakdown'),
+        ...this.getDefaultChartOptions('financialReports.charts.profitBreakdown.title'),
         tooltip: {
           trigger: 'item',
           formatter: '{b}: {c}%',
