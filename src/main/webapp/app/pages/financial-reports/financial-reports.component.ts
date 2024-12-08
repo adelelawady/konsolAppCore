@@ -832,9 +832,9 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
     const searchDTO: FinancialSearchDTO = {
       startDate: this.dateRange.startDate.toISOString(),
       endDate: this.dateRange.endDate.toISOString(),
-      bankId: '674ffcaab0c83957e9623138',
-      accountId: '675068e4e31429211961ed67',
-      storeId: '674ffcaab0c83957e9623139',
+      // bankId: '674ffcaab0c83957e9623138',
+      // accountId: '675068e4e31429211961ed67',
+      // storeId: '674ffcaab0c83957e9623139',
     };
 
     this.financialReportsService.getFinancialDashboard(searchDTO).subscribe({

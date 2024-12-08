@@ -1,65 +1,82 @@
 <div class="dashboard-container">
   <div class="dashboard-header">
-    <h1><i class="fas fa-chart-line"></i> Financial Dashboard</h1>
-    <div class="date-range">
-      <label for="dateRangeSelect"> <i class="fas fa-calendar-alt"></i> Select Date Range: </label>
-      <select id="dateRangeSelect" [(ngModel)]="selectedDateRange" (change)="setDateRange($event)">
-        <option value="today">Today</option>
-        <option value="week">This Week</option>
-        <option value="month">This Month</option>
-        <option value="year">This Year</option>
-      </select>
+    <div class="header-content">
+      <h1><i class="fas fa-chart-line"></i> {{ 'financialReports.title' | translate }}</h1>
+      <div class="header-controls">
+        <div class="date-range">
+          <label for="dateRangeSelect"> <i class="fas fa-calendar-alt"></i> {{ 'financialReports.dateRange.label' | translate }}: </label>
+          <select id="dateRangeSelect" [(ngModel)]="selectedDateRange" (change)="setDateRange($event)" class="form-select">
+            <option value="today">{{ 'financialReports.dateRange.options.today' | translate }}</option>
+            <option value="week">{{ 'financialReports.dateRange.options.week' | translate }}</option>
+            <option value="month">{{ 'financialReports.dateRange.options.month' | translate }}</option>
+            <option value="year">{{ 'financialReports.dateRange.options.year' | translate }}</option>
+          </select>
+        </div>
+        <button class="refresh-btn"><i class="fas fa-sync-alt"></i> {{ 'financialReports.refresh' | translate }}</button>
+      </div>
     </div>
   </div>
 
-  <div *ngIf="loading" class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
+  <div *ngIf="loading" class="loading-overlay">
+    <div class="spinner-container">
+      <i class="fas fa-spinner fa-spin"></i>
+      <span>{{ 'financialReports.loading' | translate }}</span>
+    </div>
+  </div>
 
   <ng-container *ngIf="!loading">
     <!-- Key Performance Metrics -->
     <div class="metrics-dashboard">
       <!-- Sales & Revenue Metrics -->
       <div class="metrics-section">
-        <h3 class="section-title"><i class="fas fa-dollar-sign"></i> Sales & Revenue</h3>
+        <h3 class="section-title">
+          <i class="fas fa-dollar-sign"></i>
+          {{ 'financialReports.metrics.salesRevenue.title' | translate }}
+          <span class="period-label">{{ 'financialReports.metrics.salesRevenue.period' | translate }}</span>
+        </h3>
         <div class="metrics-grid">
-          <div class="metric-card">
+          <div class="metric-card sales-card">
             <div class="metric-content">
-              <h4><i class="fas fa-shopping-cart"></i> Total Sales</h4>
-              <span class="metric-value">
-                {{ salesMetrics?.totalSales | currency: 'USD':'symbol-narrow':'1.2-2' }}
+              <div class="metric-header">
+                <h4><i class="fas fa-shopping-cart"></i> {{ 'financialReports.metrics.salesRevenue.totalSales' | translate }}</h4>
+                <span class="trend-indicator positive"> <i class="fas fa-arrow-up"></i> 12% </span>
+              </div>
+              <span class="metric-value highlight">
+                {{ salesMetrics?.totalSales | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
               </span>
               <div class="metric-details">
                 <span class="metric-label">
-                  <i class="fas fa-money-bill-alt"></i> Net Sales:
-                  {{ salesMetrics?.netSales | currency: 'USD':'symbol-narrow':'1.2-2' }}
+                  <i class="fas fa-money-bill-alt"></i> {{ 'financialReports.metrics.salesRevenue.netSales' | translate }}:
+                  {{ salesMetrics?.netSales | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
                 </span>
                 <span class="metric-label">
-                  <i class="fas fa-chart-line"></i> Daily Revenue:
-                  {{ salesMetrics?.dailyRevenue | currency: 'USD':'symbol-narrow':'1.2-2' }}
+                  <i class="fas fa-chart-line"></i> {{ 'financialReports.metrics.salesRevenue.dailyRevenue' | translate }}:
+                  {{ salesMetrics?.dailyRevenue | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
                 </span>
                 <span class="metric-label">
-                  <i class="fas fa-calendar-alt"></i> Monthly Revenue:
-                  {{ salesMetrics?.monthlyRevenue | currency: 'USD':'symbol-narrow':'1.2-2' }}
+                  <i class="fas fa-calendar-alt"></i> {{ 'financialReports.metrics.salesRevenue.monthlyRevenue' | translate }}:
+                  {{ salesMetrics?.monthlyRevenue | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
                 </span>
               </div>
             </div>
           </div>
           <div class="metric-card">
             <div class="metric-content">
-              <h4><i class="fas fa-hand-holding-usd"></i> Net Profit</h4>
+              <h4><i class="fas fa-hand-holding-usd"></i> {{ 'financialReports.metrics.salesRevenue.netProfit' | translate }}</h4>
               <p class="metric-value">
-                {{ salesMetrics?.netProfit | currency: 'USD':'symbol-narrow':'1.2-2' }}
+                {{ salesMetrics?.netProfit | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
               </p>
             </div>
           </div>
           <div class="metric-card">
             <div class="metric-content">
-              <h4><i class="fas fa-coins"></i> Total Cost</h4>
+              <h4><i class="fas fa-coins"></i> {{ 'financialReports.metrics.salesRevenue.totalCost' | translate }}</h4>
               <p class="metric-value">
-                {{ salesMetrics?.totalCost | currency: 'USD':'symbol-narrow':'1.2-2' }}
+                {{ salesMetrics?.totalCost | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
               </p>
               <span class="metric-label">
-                <i class="fas fa-calculator"></i> Net Cost:
-                {{ salesMetrics?.netCost | currency: 'USD':'symbol-narrow':'1.2-2' }}
+                <i class="fas fa-calculator"></i> {{ 'financialReports.metrics.salesRevenue.netCost' | translate }}:
+                {{ salesMetrics?.netCost | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
               </span>
             </div>
           </div>
@@ -68,31 +85,35 @@
 
       <!-- Performance Indicators -->
       <div class="metrics-section">
-        <h3 class="section-title"><i class="fas fa-chart-pie"></i> Performance Indicators</h3>
+        <h3 class="section-title">
+          <i class="fas fa-chart-pie"></i> {{ 'financialReports.metrics.performanceIndicators.title' | translate }}
+        </h3>
         <div class="metrics-grid">
           <div class="metric-card">
             <div class="metric-content">
-              <h4><i class="fas fa-percentage"></i> Profit Margins (%)</h4>
+              <h4><i class="fas fa-percentage"></i> {{ 'financialReports.metrics.performanceIndicators.profitMargins' | translate }}</h4>
               <div class="metric-details">
                 <span class="metric-label">
-                  <i class="fas fa-balance-scale"></i> Gross: {{ performanceIndicators?.grossProfitMargin | number: '1.2-2' }}%
+                  <i class="fas fa-balance-scale"></i> {{ 'financialReports.metrics.performanceIndicators.grossProfitMargin' | translate }}:
+                  {{ performanceIndicators?.grossProfitMargin | number: '1.2-2' }}%
                 </span>
                 <span class="metric-label">
-                  <i class="fas fa-money-check"></i> Net: {{ performanceIndicators?.netProfitMargin | number: '1.2-2' }}%
+                  <i class="fas fa-money-check"></i> {{ 'financialReports.metrics.performanceIndicators.netProfitMargin' | translate }}:
+                  {{ performanceIndicators?.netProfitMargin | number: '1.2-2' }}%
                 </span>
               </div>
             </div>
           </div>
           <div class="metric-card">
             <div class="metric-content">
-              <h4><i class="fas fa-chart-bar"></i> Financial Ratios (#)</h4>
+              <h4><i class="fas fa-chart-bar"></i> {{ 'financialReports.metrics.performanceIndicators.financialRatios' | translate }}</h4>
               <div class="metric-details">
                 <span class="metric-label">
-                  <i class="fas fa-coins"></i> Current:
+                  <i class="fas fa-coins"></i> {{ 'financialReports.metrics.performanceIndicators.currentRatio' | translate }}:
                   {{ performanceIndicators?.currentRatio | number: '1.2-2' }}
                 </span>
                 <span class="metric-label">
-                  <i class="fas fa-hourglass-half"></i> Quick:
+                  <i class="fas fa-hourglass-half"></i> {{ 'financialReports.metrics.performanceIndicators.quickRatio' | translate }}:
                   {{ performanceIndicators?.quickRatio | number: '1.2-2' }}
                 </span>
               </div>
@@ -100,13 +121,15 @@
           </div>
           <div class="metric-card">
             <div class="metric-content">
-              <h4><i class="fas fa-chart-area"></i> Growth & Expenses (%)</h4>
+              <h4><i class="fas fa-chart-area"></i> {{ 'financialReports.metrics.performanceIndicators.growthExpenses' | translate }}</h4>
               <div class="metric-details">
                 <span class="metric-label">
-                  <i class="fas fa-chart-line"></i> Revenue Growth: {{ performanceIndicators?.revenueGrowth | number: '1.2-2' }}%
+                  <i class="fas fa-chart-line"></i> {{ 'financialReports.metrics.performanceIndicators.revenueGrowth' | translate }}:
+                  {{ performanceIndicators?.revenueGrowth | number: '1.2-2' }}%
                 </span>
                 <span class="metric-label">
-                  <i class="fas fa-coins"></i> Operating Expenses: {{ performanceIndicators?.operatingExpensesRatio | number: '1.2-2' }}%
+                  <i class="fas fa-coins"></i> {{ 'financialReports.metrics.performanceIndicators.operatingExpensesRatio' | translate }}:
+                  {{ performanceIndicators?.operatingExpensesRatio | number: '1.2-2' }}%
                 </span>
               </div>
             </div>
@@ -116,42 +139,44 @@
 
       <!-- Cash Flow Summary -->
       <div class="cash-flow-summary" *ngIf="cashFlowMetrics">
-        <h2>Cash Flow Summary</h2>
+        <h2>{{ 'financialReports.cashFlow.title' | translate }}</h2>
         <div class="metrics-grid">
           <div class="metric-card">
-            <h3>Total Money In</h3>
-            <p>{{ cashFlowMetrics.totalMoneyIn | currency: 'TRY':'symbol-narrow':'1.2-2' }}</p>
+            <h3>{{ 'financialReports.cashFlow.totalIn' | translate }}</h3>
+            <p>{{ cashFlowMetrics.totalMoneyIn | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}</p>
           </div>
           <div class="metric-card">
-            <h3>Total Money Out</h3>
-            <p>{{ cashFlowMetrics.totalMoneyOut | currency: 'TRY':'symbol-narrow':'1.2-2' }}</p>
+            <h3>{{ 'financialReports.cashFlow.totalOut' | translate }}</h3>
+            <p>{{ cashFlowMetrics.totalMoneyOut | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}</p>
           </div>
           <div class="metric-card">
-            <h3>Current Position</h3>
-            <p>{{ cashFlowMetrics.currentCashPosition | currency: 'TRY':'symbol-narrow':'1.2-2' }}</p>
+            <h3>{{ 'financialReports.cashFlow.position' | translate }}</h3>
+            <p>
+              {{ cashFlowMetrics.currentCashPosition | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
+            </p>
           </div>
         </div>
       </div>
 
       <!-- Top Selling Items -->
       <div class="top-selling-items" *ngIf="topSellingItems.length > 0">
-        <h2>Top Selling Items</h2>
+        <h2>{{ 'financialReports.topItems.title' | translate }}</h2>
         <table>
           <thead>
             <tr>
-              <th>Item Name</th>
-              <th>Quantity</th>
-              <th>Revenue</th>
-              <th>Profit</th>
-              <th>Profit Margin</th>
+              <th>{{ 'financialReports.topItems.columns.name' | translate }}</th>
+              <th>{{ 'financialReports.topItems.columns.quantity' | translate }}</th>
+              <th>{{ 'financialReports.topItems.columns.revenue' | translate }}</th>
+              <th>{{ 'financialReports.topItems.columns.profit' | translate }}</th>
+              <th>{{ 'financialReports.topItems.columns.margin' | translate }}</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let item of topSellingItems">
               <td>{{ item.itemName }}</td>
               <td>{{ item.quantity }}</td>
-              <td>{{ item.revenue | currency: 'TRY':'symbol-narrow':'1.2-2' }}</td>
-              <td>{{ item.profit | currency: 'TRY':'symbol-narrow':'1.2-2' }}</td>
+              <td>{{ item.revenue | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}</td>
+              <td>{{ item.profit | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}</td>
               <td>{{ item.profitMargin | number: '1.2-2' }}%</td>
             </tr>
           </tbody>
@@ -160,31 +185,35 @@
 
       <!-- Other sections -->
       <div class="metrics-section" *ngIf="storeAccountAnalysis?.storeMetrics?.length">
-        <h3 class="section-title"><i class="fas fa-store"></i> Store Performance</h3>
+        <h3 class="section-title"><i class="fas fa-store"></i> {{ 'financialReports.storePerformance.title' | translate }}</h3>
         <div class="metrics-grid">
           <div class="metric-card" *ngFor="let store of storeAccountAnalysis.storeMetrics">
             <div class="metric-content">
-              <h4><i class="fas fa-store-alt"></i> Store #{{ store.storeId }}</h4>
+              <h4>
+                <i class="fas fa-store-alt"></i> {{ 'financialReports.storePerformance.metrics.store' | translate }} #{{ store.storeId }}
+              </h4>
               <div class="store-metrics">
                 <p>
-                  <span><i class="fas fa-chart-line"></i> Revenue:</span>
-                  {{ store.totalRevenue | currency: 'USD':'symbol-narrow':'1.2-2' }}
+                  <span><i class="fas fa-chart-line"></i> {{ 'financialReports.storePerformance.metrics.revenue' | translate }}:</span>
+                  {{ store.totalRevenue | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
                 </p>
                 <p>
-                  <span><i class="fas fa-money-bill-alt"></i> Cost:</span>
-                  {{ store.totalCost | currency: 'USD':'symbol-narrow':'1.2-2' }}
+                  <span><i class="fas fa-money-bill-alt"></i> {{ 'financialReports.storePerformance.metrics.cost' | translate }}:</span>
+                  {{ store.totalCost | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
                 </p>
                 <p>
-                  <span><i class="fas fa-percentage"></i> Profit Margin:</span>
+                  <span><i class="fas fa-percentage"></i> {{ 'financialReports.storePerformance.metrics.profitMargin' | translate }}:</span>
                   {{ store.profitMargin | number: '1.2-2' }}%
                 </p>
                 <p>
-                  <span><i class="fas fa-receipt"></i> Transactions:</span>
+                  <span><i class="fas fa-receipt"></i> {{ 'financialReports.storePerformance.metrics.transactions' | translate }}:</span>
                   {{ store.transactionCount }}
                 </p>
                 <p>
-                  <span><i class="fas fa-wallet"></i> Avg. Transaction:</span>
-                  {{ store.averageTransactionValue | currency: 'USD':'symbol-narrow':'1.2-2' }}
+                  <span
+                    ><i class="fas fa-wallet"></i> {{ 'financialReports.storePerformance.metrics.averageTransaction' | translate }}:</span
+                  >
+                  {{ store.averageTransactionValue | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
                 </p>
               </div>
             </div>
@@ -194,28 +223,44 @@
 
       <!-- Invoice Analysis -->
       <div class="metrics-section">
-        <h3 class="section-title">Invoice Analysis</h3>
+        <h3 class="section-title">{{ 'financialReports.invoiceAnalysis.title' | translate }}</h3>
         <div class="metrics-grid">
           <div class="metric-card">
             <div class="metric-icon discount-icon">%</div>
             <div class="metric-content">
-              <h4>Discounts</h4>
+              <h4>{{ 'financialReports.invoiceAnalysis.discounts.title' | translate }}</h4>
               <div class="metric-details">
-                <span class="metric-label">Average: {{ invoiceAnalysis?.averageDiscount | currency: 'TRY':'symbol-narrow':'1.2-2' }}</span>
-                <span class="metric-label">Percentage: {{ invoiceAnalysis?.averageDiscountPercentage | number: '1.2-2' }}%</span>
+                <span class="metric-label"
+                  >{{ 'financialReports.invoiceAnalysis.discounts.average' | translate }}:
+                  {{
+                    invoiceAnalysis?.averageDiscount | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2'
+                  }}</span
+                >
+                <span class="metric-label"
+                  >{{ 'financialReports.invoiceAnalysis.discounts.percentage' | translate }}:
+                  {{ invoiceAnalysis?.averageDiscountPercentage | number: '1.2-2' }}%</span
+                >
               </div>
             </div>
           </div>
           <div class="metric-card">
             <div class="metric-icon expense-icon">₺</div>
             <div class="metric-content">
-              <h4>Expenses</h4>
-              <p class="metric-value">{{ invoiceAnalysis?.totalExpenses | currency: 'TRY':'symbol-narrow':'1.2-2' }}</p>
+              <h4>{{ 'financialReports.invoiceAnalysis.expenses.title' | translate }}</h4>
+              <p class="metric-value">
+                {{ invoiceAnalysis?.totalExpenses | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
+              </p>
               <div class="metric-details">
                 <span class="metric-label"
-                  >Total Additions: {{ invoiceAnalysis?.totalAdditions | currency: 'TRY':'symbol-narrow':'1.2-2' }}</span
+                  >{{ 'financialReports.invoiceAnalysis.expenses.totalAdditions' | translate }}:
+                  {{
+                    invoiceAnalysis?.totalAdditions | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2'
+                  }}</span
                 >
-                <span class="metric-label">Deferred Count: {{ invoiceAnalysis?.deferredInvoicesCount }}</span>
+                <span class="metric-label"
+                  >{{ 'financialReports.invoiceAnalysis.expenses.deferredCount' | translate }}:
+                  {{ invoiceAnalysis?.deferredInvoicesCount }}</span
+                >
               </div>
             </div>
           </div>
@@ -223,16 +268,26 @@
       </div>
       <!-- Top Items Analysis -->
       <div class="metrics-section" *ngIf="itemAnalysis?.topSellingItems?.length">
-        <h3 class="section-title">Top Selling Items</h3>
+        <h3 class="section-title">{{ 'financialReports.topItemsAnalysis.title' | translate }}</h3>
         <div class="metrics-grid">
           <div class="metric-card" *ngFor="let item of itemAnalysis.topSellingItems">
             <div class="metric-content">
               <h4>{{ item.itemName }}</h4>
               <div class="item-metrics">
-                <p><span>Quantity:</span> {{ item.quantity }}</p>
-                <p><span>Revenue:</span> {{ item.revenue | currency: 'TRY':'symbol-narrow':'1.2-2' }}</p>
-                <p><span>Profit:</span> {{ item.profit | currency: 'TRY':'symbol-narrow':'1.2-2' }}</p>
-                <p><span>Margin:</span> {{ item.profitMargin | number: '1.2-2' }}%</p>
+                <p>
+                  <span>{{ 'financialReports.topItemsAnalysis.quantity' | translate }}:</span> {{ item.quantity }}
+                </p>
+                <p>
+                  <span>{{ 'financialReports.topItemsAnalysis.revenue' | translate }}:</span>
+                  {{ item.revenue | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
+                </p>
+                <p>
+                  <span>{{ 'financialReports.topItemsAnalysis.profit' | translate }}:</span>
+                  {{ item.profit | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
+                </p>
+                <p>
+                  <span>{{ 'financialReports.topItemsAnalysis.margin' | translate }}:</span> {{ item.profitMargin | number: '1.2-2' }}%
+                </p>
               </div>
             </div>
           </div>
@@ -241,17 +296,31 @@
 
       <!-- Cash Flow Metrics -->
       <div class="metrics-section">
-        <h3 class="section-title">Cash Flow</h3>
+        <h3 class="section-title">{{ 'financialReports.cashFlow.title' | translate }}</h3>
         <div class="metrics-grid">
           <div class="metric-card">
             <div class="metric-icon money-in-icon">₺</div>
             <div class="metric-content">
-              <h4>Money Flow</h4>
+              <h4>{{ 'financialReports.cashFlow.moneyFlow.title' | translate }}</h4>
               <div class="metric-details">
-                <span class="metric-label">Money In: {{ cashFlowMetrics?.totalMoneyIn | currency: 'TRY':'symbol-narrow':'1.2-2' }}</span>
-                <span class="metric-label">Money Out: {{ cashFlowMetrics?.totalMoneyOut | currency: 'TRY':'symbol-narrow':'1.2-2' }}</span>
                 <span class="metric-label"
-                  >Current Position: {{ cashFlowMetrics?.currentCashPosition | currency: 'TRY':'symbol-narrow':'1.2-2' }}</span
+                  >{{ 'financialReports.cashFlow.moneyFlow.moneyIn' | translate }}:
+                  {{
+                    cashFlowMetrics?.totalMoneyIn | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2'
+                  }}</span
+                >
+                <span class="metric-label"
+                  >{{ 'financialReports.cashFlow.moneyFlow.moneyOut' | translate }}:
+                  {{
+                    cashFlowMetrics?.totalMoneyOut | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2'
+                  }}</span
+                >
+                <span class="metric-label"
+                  >{{ 'financialReports.cashFlow.moneyFlow.currentPosition' | translate }}:
+                  {{
+                    cashFlowMetrics?.currentCashPosition
+                      | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2'
+                  }}</span
                 >
               </div>
             </div>
@@ -283,7 +352,7 @@
         <div #cashFlowTrendChart class="chart" echarts [options]="cashFlowTrendOption" [loading]="loading"></div>
       </div>
       <div class="chart-container">
-        <h3>Bank Balance Distribution</h3>
+        <h3>{{ 'financialReports.bankBalance.title' | translate }}</h3>
         <div #bankBalanceChart class="chart" echarts [options]="bankBalanceOption" [loading]="loading"></div>
       </div>
     </div>
@@ -293,7 +362,7 @@
       <div class="col-md-4">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">Performance Ratios</h5>
+            <h5 class="card-title">{{ 'financialReports.performanceRatios.title' | translate }}</h5>
             <div #performanceRatiosChart class="chart-container" echarts [options]="performanceRatiosOption" [loading]="loading"></div>
           </div>
         </div>
@@ -301,7 +370,7 @@
       <div class="col-md-4">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">Margin Trends</h5>
+            <h5 class="card-title">{{ 'financialReports.marginTrends.title' | translate }}</h5>
             <div #marginTrendsChart class="chart-container" echarts [options]="marginTrendsOption" [loading]="loading"></div>
           </div>
         </div>
@@ -309,7 +378,7 @@
       <div class="col-md-4">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">Profit Breakdown</h5>
+            <h5 class="card-title">{{ 'financialReports.profitBreakdown.title' | translate }}</h5>
             <div #profitBreakdownChart class="chart-container" echarts [options]="profitBreakdownOption" [loading]="loading"></div>
           </div>
         </div>

@@ -1,0 +1,117 @@
+{
+  "financialReports": {
+    "title": "لوحة التحكم المالية",
+    "dateRange": {
+      "label": "النطاق الزمني",
+      "options": {
+        "today": "اليوم",
+        "week": "هذا الأسبوع",
+        "month": "هذا الشهر",
+        "year": "هذه السنة"
+      }
+    },
+    "loading": "جاري تحميل البيانات...",
+    "refresh": "تحديث",
+    "metrics": {
+      "salesRevenue": {
+        "title": "المبيعات والإيرادات",
+        "period": "الفترة الحالية",
+        "totalSales": "إجمالي المبيعات",
+        "netSales": "صافي المبيعات",
+        "dailyRevenue": "الإيرادات اليومية",
+        "monthlyRevenue": "الإيرادات الشهرية",
+        "netProfit": "صافي الربح",
+        "totalCost": "التكلفة الإجمالية",
+        "netCost": "صافي التكلفة",
+        "trend": {
+          "up": "ارتفاع",
+          "down": "انخفاض"
+        }
+      },
+      "performanceIndicators": {
+        "title": "مؤشرات الأداء",
+        "profitMargins": "هوامش الربح",
+        "gross": "إجمالي",
+        "net": "صافي",
+        "financialRatios": "النسب المالية",
+        "current": "الحالي",
+        "quick": "السريع",
+        "growthExpenses": "النمو والمصروفات",
+        "revenueGrowth": "نمو الإيرادات",
+        "operatingExpenses": "المصروفات التشغيلية",
+        "financialMetrics": {
+          "title": "المقاييس المالية",
+          "currentRatio": "النسبة الحالية",
+          "quickRatio": "النسبة السريعة"
+        },
+        "growthMetrics": {
+          "title": "النمو والمصروفات",
+          "revenueGrowth": "نمو الإيرادات",
+          "operatingExpenses": "المصروفات التشغيلية"
+        }
+      }
+    },
+    "charts": {
+      "dailySales": "اتجاه المبيعات اليومية",
+      "salesVsCosts": "المبيعات مقابل التكاليف",
+      "profitMargin": "توزيع هامش الربح",
+      "topItems": "أعلى المنتجات مبيعاً",
+      "cashFlow": "اتجاه التدفق النقدي",
+      "bankBalance": "توزيع الرصيد المصرفي",
+      "performanceRatios": "نسب الأداء",
+      "marginTrends": "اتجاهات الهامش",
+      "profitBreakdown": "تفصيل الأرباح",
+      "topItemsByQuantity": "أعلى العناصر من حيث الكمية",
+      "cashFlowTrend": "اتجاه التدفق النقدي"
+    },
+    "cashFlow": {
+      "title": "ملخص التدفق النقدي",
+      "totalIn": "إجمالي الوارد",
+      "totalOut": "إجمالي الصادر",
+      "position": "الموقف الحالي",
+      "moneyInIcon": "₺"
+    },
+    "topItems": {
+      "title": "أعلى المنتجات مبيعاً",
+      "columns": {
+        "name": "اسم المنتج",
+        "quantity": "الكمية",
+        "revenue": "الإيرادات",
+        "profit": "الربح",
+        "margin": "هامش الربح"
+      }
+    },
+    "storePerformance": {
+      "title": "أداء المتجر",
+      "metrics": {
+        "revenue": "الإيرادات",
+        "cost": "التكلفة",
+        "margin": "هامش الربح",
+        "transactions": "المعاملات",
+        "avgTransaction": "متوسط المعاملة"
+      }
+    },
+    "invoiceAnalysis": {
+      "title": "تحليل الفواتير",
+      "discounts": {
+        "title": "الخصومات",
+        "average": "المتوسط",
+        "percentage": "النسبة المئوية"
+      },
+      "expenses": {
+        "title": "المصروفات",
+        "total": "إجمالي المصروفات",
+        "additions": "إجمالي الإضافات",
+        "deferred": "عدد المؤجل"
+      }
+    },
+    "buttons": {
+      "expand": "توسيع",
+      "download": "تحميل",
+      "refresh": "تحديث البيانات"
+    },
+    "currency": {
+      "symbol": "د.ل"
+    }
+  }
+}

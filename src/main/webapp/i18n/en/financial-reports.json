@@ -1,0 +1,117 @@
+{
+  "financialReports": {
+    "title": "Financial Dashboard",
+    "dateRange": {
+      "label": "Date Range",
+      "options": {
+        "today": "Today",
+        "week": "This Week",
+        "month": "This Month",
+        "year": "This Year"
+      }
+    },
+    "loading": "Loading dashboard data...",
+    "refresh": "Refresh",
+    "metrics": {
+      "salesRevenue": {
+        "title": "Sales & Revenue",
+        "period": "Current Period",
+        "totalSales": "Total Sales",
+        "netSales": "Net Sales",
+        "dailyRevenue": "Daily Revenue",
+        "monthlyRevenue": "Monthly Revenue",
+        "netProfit": "Net Profit",
+        "totalCost": "Total Cost",
+        "netCost": "Net Cost",
+        "trend": {
+          "up": "Up",
+          "down": "Down"
+        }
+      },
+      "performanceIndicators": {
+        "title": "Performance Indicators",
+        "profitMargins": "Profit Margins",
+        "gross": "Gross",
+        "net": "Net",
+        "financialRatios": "Financial Ratios",
+        "current": "Current",
+        "quick": "Quick",
+        "growthExpenses": "Growth & Expenses",
+        "revenueGrowth": "Revenue Growth",
+        "operatingExpenses": "Operating Expenses",
+        "financialMetrics": {
+          "title": "Financial Metrics",
+          "currentRatio": "Current Ratio",
+          "quickRatio": "Quick Ratio"
+        },
+        "growthMetrics": {
+          "title": "Growth & Expenses",
+          "revenueGrowth": "Revenue Growth",
+          "operatingExpenses": "Operating Expenses"
+        }
+      }
+    },
+    "charts": {
+      "dailySales": "Daily Sales Trend",
+      "salesVsCosts": "Sales vs Costs",
+      "profitMargin": "Profit Margin Distribution",
+      "topItems": "Top Selling Items",
+      "cashFlow": "Cash Flow Trend",
+      "bankBalance": "Bank Balance Distribution",
+      "performanceRatios": "Performance Ratios",
+      "marginTrends": "Margin Trends",
+      "profitBreakdown": "Profit Breakdown",
+      "topItemsByQuantity": "Top Items by Quantity",
+      "cashFlowTrend": "Cash Flow Trend"
+    },
+    "cashFlow": {
+      "title": "Cash Flow Summary",
+      "totalIn": "Total Money In",
+      "totalOut": "Total Money Out",
+      "position": "Current Position",
+      "moneyInIcon": "₺"
+    },
+    "topItems": {
+      "title": "Top Selling Items",
+      "columns": {
+        "name": "Item Name",
+        "quantity": "Quantity",
+        "revenue": "Revenue",
+        "profit": "Profit",
+        "margin": "Profit Margin"
+      }
+    },
+    "storePerformance": {
+      "title": "Store Performance",
+      "metrics": {
+        "revenue": "Revenue",
+        "cost": "Cost",
+        "margin": "Profit Margin",
+        "transactions": "Transactions",
+        "avgTransaction": "Avg. Transaction"
+      }
+    },
+    "invoiceAnalysis": {
+      "title": "Invoice Analysis",
+      "discounts": {
+        "title": "Discounts",
+        "average": "Average",
+        "percentage": "Percentage"
+      },
+      "expenses": {
+        "title": "Expenses",
+        "total": "Total Expenses",
+        "additions": "Total Additions",
+        "deferred": "Deferred Count"
+      }
+    },
+    "buttons": {
+      "expand": "Expand",
+      "download": "Download",
+      "refresh": "Refresh Data"
+    },
+    "currency": {
+      "symbol": "$"
+    }
+  }
+}
