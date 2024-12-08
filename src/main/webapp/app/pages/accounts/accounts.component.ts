@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { AccountUserDTO } from '../../core/konsolApi/model/accountUserDTO';
 import { AccountUserContainer } from '../../core/konsolApi/model/accountUserContainer';
 import { AccountUserSearchModel } from '../../core/konsolApi/model/accountUserSearchModel';
@@ -44,7 +45,12 @@ export class AccountsComponent implements OnInit {
   showAddEditModal = false;
   selectedAccount?: AccountUserDTO;
 
-  constructor(private accountUserService: AccountUserResourceService, private toastr: ToastrService, private translate: TranslateService) {}
+  constructor(
+    private accountUserService: AccountUserResourceService,
+    private toastr: ToastrService,
+    private translate: TranslateService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadAccounts();
@@ -99,17 +105,14 @@ export class AccountsComponent implements OnInit {
 
   onPageChange(page: number): void {
     this.currentPage = page;
-    this.loadAccounts({ page });
+    this.loadAccounts();
   }
 
-  onPageSizeChange(size: number): void {
-    this.pageSize = size;
-    this.currentPage = 0;
-    this.loadAccounts({ size });
-  }
-
-  onSort(event: any): void {
-    this.loadAccounts({ sort: event });
+  onRowClick(event: any): void {
+    console.log(event.id);
+    if (event) {
+      this.router.navigate(['/accounts', event.id]);
+    }
   }
 
   onEdit(account: AccountUserDTO): void {
@@ -158,6 +161,11 @@ export class AccountsComponent implements OnInit {
     this.loadAccounts();
     this.showAddEditModal = false;
     this.selectedAccount = undefined;
+  }
+  onPageSizeChange(size: number): void {
+    this.pageSize = size;
+    this.currentPage = 0;
+    this.loadAccounts({ size });
   }
 
   private showError(key: string): void {

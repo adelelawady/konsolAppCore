@@ -5,9 +5,7 @@ import com.konsol.core.domain.User;
 import com.konsol.core.service.api.dto.AdminUserDTO;
 import com.konsol.core.service.api.dto.ManagedUserVM;
 import com.konsol.core.service.dto.AccountUserDTO;
-import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
+import java.time.*;
 import javax.validation.Valid;
 import org.mapstruct.Mapper;
 
@@ -30,5 +28,13 @@ public interface UtilitsMapper {
 
     default String intToString(Integer value) {
         return String.valueOf(value);
+    }
+
+    default LocalDateTime mapLocalDateTime(OffsetDateTime value) {
+        return value.toLocalDateTime();
+    }
+
+    default OffsetDateTime mapOffsetDateTime(LocalDateTime value) {
+        return value.atOffset(ZoneOffset.UTC);
     }
 }

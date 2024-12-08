@@ -1,0 +1,45 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">Account Details</h4>
+        </div>
+        <div class="card-body">
+          <div class="row" *ngIf="account">
+            <div class="col-md-6">
+              <p><strong>Account Name:</strong> {{ account.name }}</p>
+              <p><strong>Account Type:</strong> {{ account.kind }}</p>
+            </div>
+            <div class="col-md-6">
+              <p><strong>Account ID:</strong> {{ account.id }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">Account Transactions</h4>
+        </div>
+        <div class="card-body">
+          <app-data-table
+            [columns]="columns"
+            [data]="transactions?.result"
+            [loading]="loading"
+            [totalItems]="transactions?.total"
+            [showSearch]="false"
+            [showPagination]="true"
+            (pageChange)="onPageChange($event)"
+            (pageSizeChange)="onPageSizeChange($event)"
+          >
+          </app-data-table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

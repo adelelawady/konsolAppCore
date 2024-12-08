@@ -1,4 +1,6 @@
 export * from './accountMetricsDTO';
+export * from './accountTransactionsContainer';
+export * from './accountTransactionsDTO';
 export * from './accountUserContainer';
 export * from './accountUserDTO';
 export * from './accountUserSearchModel';

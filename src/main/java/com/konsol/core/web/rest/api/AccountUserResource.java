@@ -3,10 +3,7 @@ package com.konsol.core.web.rest.api;
 import com.konsol.core.repository.AccountUserRepository;
 import com.konsol.core.security.AuthoritiesConstants;
 import com.konsol.core.service.AccountUserService;
-import com.konsol.core.service.api.dto.AccountUserContainer;
-import com.konsol.core.service.api.dto.AccountUserDTO;
-import com.konsol.core.service.api.dto.AccountUserSearchModel;
-import com.konsol.core.service.api.dto.CreateAccountUserDTO;
+import com.konsol.core.service.api.dto.*;
 import com.konsol.core.web.api.AccountUserApiDelegate;
 import com.konsol.core.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
@@ -23,7 +20,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -210,5 +206,13 @@ public class AccountUserResource implements AccountUserApiDelegate {
     )
     public ResponseEntity<AccountUserContainer> searchAccountUsers(AccountUserSearchModel accountUserSearchModel) {
         return ResponseEntity.ok().body(accountUserService.accountUserSearchPaginate(accountUserSearchModel));
+    }
+
+    @Override
+    public ResponseEntity<com.konsol.core.service.api.dto.AccountTransactionsContainer> processAccountTransactions(
+        String id,
+        PaginationSearchModel paginationSearchModel
+    ) {
+        return ResponseEntity.ok().body(accountUserService.processAccountTransactions(id, paginationSearchModel));
     }
 }

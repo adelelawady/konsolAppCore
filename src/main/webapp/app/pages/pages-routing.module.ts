@@ -11,6 +11,7 @@ import { MoneyComponent } from './money/money.component';
 
 import { NavigationComponent } from './navigation/navigation.component';
 import { ProductsComponent } from './products/products.component';
+import { AccountDetailsComponent } from './accounts/account-details/account-details.component';
 
 const routes: Routes = [
   {
@@ -36,6 +37,13 @@ const routes: Routes = [
     path: 'accounts',
     component: AccountsComponent,
     canActivate: [UserRouteAccessService],
+  },
+  {
+    path: 'accounts/:id',
+    component: AccountDetailsComponent,
+    data: {
+      pageTitle: 'accounts.details.title',
+    },
   },
   {
     path: 'inventory',

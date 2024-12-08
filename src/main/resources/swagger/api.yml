@@ -461,6 +461,36 @@ paths:
         name: id
         in: path
         required: true
+  '/account-user/{id}/transactions':
+    post:
+      tags:
+        - account-user-resource
+      operationId: processAccountTransactions
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaginationSearchModel'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountTransactionsContainer'
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
   /account-user:
     get:
       tags:
@@ -1296,7 +1326,6 @@ paths:
       responses:
         '201':
           description: Created
-      description: ''
     parameters: []
   /admin/users:
     get:
@@ -4162,3 +4191,41 @@ components:
       required:
         - startDate
         - endDate
+    AccountTransactionsDTO:
+      type: object
+      properties:
+        id:
+          type: string
+        pk:
+          type: string
+        accountId:
+          type: string
+        accountName:
+          type: string
+        sourceType:
+          type: string
+        sourceKind:
+          type: string
+        sourceId:
+          type: string
+        sourcePk:
+          type: string
+        moneyIn:
+          type: number
+        moneyOut:
+          type: number
+        details:
+          type: string
+        createdDate:
+          type: string
+          format: date-time
+    AccountTransactionsContainer:
+      type: object
+      properties:
+        result:
+          type: array
+          items:
+            $ref: '#/components/schemas/AccountTransactionsDTO'
+        total:
+          type: integer
+          format: int64

@@ -71,4 +71,16 @@ public interface AccountUserService {
     void addAccountBalance(String accountId, BigDecimal value);
 
     void subtractAccountBalance(String accountId, BigDecimal value);
+
+    /**
+     * Load account movements for a specific account user.
+     *
+     * @param accountId the id of the account user.
+     * @param paginationSearchModel pagination and search parameters
+     * @return list of account movements.
+     */
+    com.konsol.core.service.api.dto.AccountTransactionsContainer processAccountTransactions(
+        String accountId,
+        PaginationSearchModel paginationSearchModel
+    );
 }

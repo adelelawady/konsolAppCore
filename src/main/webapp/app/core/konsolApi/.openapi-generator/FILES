@@ -20,6 +20,8 @@ encoder.ts
 git_push.sh
 index.ts
 model/accountMetricsDTO.ts
+model/accountTransactionsContainer.ts
+model/accountTransactionsDTO.ts
 model/accountUserContainer.ts
 model/accountUserDTO.ts
 model/accountUserSearchModel.ts
