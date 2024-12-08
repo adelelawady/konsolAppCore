@@ -45,7 +45,9 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
   bankBalanceOption: EChartsOption = {};
   optionsX: EChartsOption = {};
 
-  loading = true;
+  loading = false;
+  searchTerm = '';
+  selectedPeriod = 'monthly';
   selectedDateRange = 'week';
   dateRange = {
     startDate: new Date(),
@@ -865,6 +867,42 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
     }
   }
 
+  onPeriodChange(): void {
+    this.loadData();
+  }
+
+  refreshData(): void {
+    this.loading = true;
+    this.loadData();
+  }
+
+  private loadData(): void {
+    this.loading = true;
+    const searchDTO: FinancialSearchDTO = {
+      startDate: this.dateRange.startDate.toISOString(),
+      endDate: this.dateRange.endDate.toISOString(),
+      // bankId: '674ffcaab0c83957e9623138',
+      // accountId: '675068e4e31429211961ed67',
+      // storeId: '674ffcaab0c83957e9623139',
+    };
+
+    this.financialReportsService.getFinancialDashboard(searchDTO).subscribe({
+      next: (data: FinancialDashboardDTO | undefined) => {
+        if (data) {
+          this.dashboardData = data;
+          this.updateChartOptions();
+        }
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+      error: (error: any) => {
+        console.error('Error loading dashboard data:', error);
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+    });
+  }
+
   setDateRange(range: any): void {
     this.selectedDateRange = range.target.value;
     const now = new Date();
@@ -901,34 +939,6 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
         break;
     }
 
-    this.loadDashboardData();
-  }
-
-  loadDashboardData(): void {
-    this.loading = true;
-
-    const searchDTO: FinancialSearchDTO = {
-      startDate: this.dateRange.startDate.toISOString(),
-      endDate: this.dateRange.endDate.toISOString(),
-      // bankId: '674ffcaab0c83957e9623138',
-      // accountId: '675068e4e31429211961ed67',
-      // storeId: '674ffcaab0c83957e9623139',
-    };
-
-    this.financialReportsService.getFinancialDashboard(searchDTO).subscribe({
-      next: (data: FinancialDashboardDTO | undefined) => {
-        if (data) {
-          this.dashboardData = data;
-          this.updateChartOptions();
-        }
-        this.loading = false;
-        this.cdr.detectChanges();
-      },
-      error: (error: any) => {
-        console.error('Error loading dashboard data:', error);
-        this.loading = false;
-        this.cdr.detectChanges();
-      },
-    });
+    this.onPeriodChange();
   }
 }

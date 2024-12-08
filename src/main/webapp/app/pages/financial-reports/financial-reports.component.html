@@ -138,27 +138,6 @@
         </div>
       </div>
 
-      <!-- Cash Flow Summary -->
-      <div class="cash-flow-summary" *ngIf="cashFlowMetrics">
-        <h2>{{ 'financialReports.cashFlow.title' | translate }}</h2>
-        <div class="metrics-grid">
-          <div class="metric-card">
-            <h3>{{ 'financialReports.cashFlow.totalIn' | translate }}</h3>
-            <p>{{ cashFlowMetrics.totalMoneyIn | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}</p>
-          </div>
-          <div class="metric-card">
-            <h3>{{ 'financialReports.cashFlow.totalOut' | translate }}</h3>
-            <p>{{ cashFlowMetrics.totalMoneyOut | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}</p>
-          </div>
-          <div class="metric-card">
-            <h3>{{ 'financialReports.cashFlow.position' | translate }}</h3>
-            <p>
-              {{ cashFlowMetrics.currentCashPosition | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
-            </p>
-          </div>
-        </div>
-      </div>
-
       <!-- Top Selling Items -->
       <div class="top-selling-items" *ngIf="topSellingItems.length > 0">
         <h2>{{ 'financialReports.topItems.title' | translate }}</h2>
@@ -364,31 +343,6 @@
       </div>
       <div class="card-body">
         <div #profitBreakdownChart class="chart-container" echarts [options]="profitBreakdownOption" [loading]="loading"></div>
-      </div>
-    </div>
-
-    <!-- Performance Charts Section -->
-    <div class="row">
-      <div class="col-md-4">
-        <div class="card">
-          <div class="card-body">
-            <div #performanceRatiosChart class="chart-container" echarts [options]="performanceRatiosOption" [loading]="loading"></div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card">
-          <div class="card-body">
-            <div #marginTrendsChart class="chart-container" echarts [options]="marginTrendsOption" [loading]="loading"></div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card">
-          <div class="card-body">
-            <div #profitBreakdownChart class="chart-container" echarts [options]="profitBreakdownOption" [loading]="loading"></div>
-          </div>
-        </div>
       </div>
     </div>
   </ng-container>
