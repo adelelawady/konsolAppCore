@@ -163,6 +163,14 @@
             (pageChange)="onPageChange($event)"
             (pageSizeChange)="onPageSizeChange($event)"
           >
+            <!-- Details Template -->
+            <ng-template #detailsTemplate let-value let-row="row">
+              <div *ngIf="row.accountId" class="d-flex align-items-center justify-content-between">
+                <button class="btn btn-icon btn-sm btn-ghost-primary" (click)="viewAccount(row); $event.stopPropagation()">
+                  <i class="fa fa-user"></i>
+                </button>
+              </div>
+            </ng-template>
           </app-data-table>
         </div>
       </div>

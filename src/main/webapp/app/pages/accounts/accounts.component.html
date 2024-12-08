@@ -61,8 +61,15 @@
               (pageChange)="onPageChange($event)"
               (pageSizeChange)="onPageSizeChange($event)"
               (search)="onSearch($event)"
-              (rowClick)="onRowClick($event)"
             >
+              <!-- Details Template -->
+              <ng-template #detailsTemplate let-value let-row="row">
+                <div class="d-flex align-items-center justify-content-between">
+                  <button class="btn btn-icon btn-sm btn-ghost-primary" (click)="viewDetails(row); $event.stopPropagation()">
+                    <i class="ti ti-eye"></i>
+                  </button>
+                </div>
+              </ng-template>
             </app-data-table>
           </div>
         </div>

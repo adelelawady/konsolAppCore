@@ -39,7 +39,8 @@ export class AccountsComponent implements OnInit {
     { field: 'address', header: 'accounts.fields.address', sortable: true },
     { field: 'balanceIn', header: 'accounts.fields.balanceIn', type: 'currency', sortable: true },
     { field: 'balanceOut', header: 'accounts.fields.balanceOut', type: 'currency', sortable: true },
-    { field: 'actions', header: '', type: 'actions', width: '120px' },
+    { field: 'view', header: 'konsolCoreApp.money.common.actions', type: 'template', templateRef: 'detailsTemplate', width: '120px' },
+    { field: 'actions', header: 'konsolCoreApp.money.common.actions', type: 'actions', width: '120px' },
   ];
 
   showAddEditModal = false;
@@ -179,5 +180,12 @@ export class AccountsComponent implements OnInit {
   onKindChange(kind: string | undefined) {
     this.currentPage = 0; // Reset to first page
     this.loadAccounts();
+  }
+
+  viewDetails(row: any): void {
+    console.log(row.id);
+    if (row) {
+      this.router.navigate(['/accounts', row.id]);
+    }
   }
 }

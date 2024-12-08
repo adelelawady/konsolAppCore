@@ -41,6 +41,15 @@
                 (pageSizeChange)="onPageSizeChange($event)"
                 (rowClick)="onRowClick($event)"
               >
+                <!-- Details Template -->
+                <ng-template #detailsTemplate let-value let-row="row">
+                  <div class="d-flex align-items-center justify-content-between">
+                    <button class="btn btn-icon btn-sm btn-ghost-primary" (click)="viewProduct(row); $event.stopPropagation()">
+                      <i class="fa fa-eye"></i>
+                    </button>
+                  </div>
+                </ng-template>
+
                 <ng-template #actionsTemplate let-item="item">
                   <div class="d-flex gap-2 justify-content-end">
                     <button
@@ -83,6 +92,7 @@
             </div>
             <div class="card-body">
               <div class="d-grid gap-2">
+                <!--
                 <button
                   class="btn btn-outline-primary d-flex align-items-center justify-content-center gap-2 w-100"
                   (click)="printBarcode()"
@@ -90,6 +100,7 @@
                   <i class="fas fa-barcode"></i>
                   {{ 'products.print.barcode' | translate }}
                 </button>
+                -->
               </div>
             </div>
           </div>

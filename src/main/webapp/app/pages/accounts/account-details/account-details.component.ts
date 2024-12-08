@@ -65,8 +65,7 @@ export class AccountDetailsComponent implements OnInit {
     {
       field: 'details',
       header: 'accounts.transactions.fields.details',
-      type: 'template',
-      templateRef: 'detailsTemplate',
+      type: 'text',
       sortable: true,
       width: '200px',
     },
@@ -140,11 +139,7 @@ export class AccountDetailsComponent implements OnInit {
         return 'bg-secondary';
     }
   }
-  viewDetails(row: any): void {
-    // Implement your view details logic here
-    console.log('View details for:', row);
-    // You can open a modal or navigate to a details page
-  }
+
   getSourceKindClass(kind: string): string {
     switch (kind) {
       case 'CASH':

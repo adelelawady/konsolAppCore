@@ -77,10 +77,12 @@ export class ProductsComponent implements OnInit {
     },
     {
       field: 'actions',
-      header: '',
+      header: 'konsolCoreApp.money.common.actions',
       type: 'actions',
       width: '120px',
     },
+
+    { field: 'view', header: 'konsolCoreApp.money.common.actions', type: 'template', templateRef: 'detailsTemplate', width: '120px' },
   ];
 
   constructor(
@@ -337,5 +339,12 @@ export class ProductsComponent implements OnInit {
 
   viewProductDetails(productId: string): void {
     this.router.navigate(['/products', productId]);
+  }
+
+  viewProduct(row: any): void {
+    console.log(row.id);
+    if (row) {
+      this.router.navigate(['/products', row.id, 'details']);
+    }
   }
 }

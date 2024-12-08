@@ -36,6 +36,7 @@ export class BanksComponent implements OnInit {
     { field: 'details', header: 'banks.transactions.details', type: 'text', sortable: true },
     { field: 'moneyIn', header: 'banks.transactions.moneyIn', type: 'currency', sortable: true },
     { field: 'moneyOut', header: 'banks.transactions.moneyOut', type: 'currency', sortable: true },
+    { field: 'view', header: 'konsolCoreApp.money.common.actions', type: 'template', templateRef: 'detailsTemplate', width: '120px' },
   ];
 
   constructor(
@@ -226,5 +227,12 @@ export class BanksComponent implements OnInit {
         // Modal dismissed
       }
     );
+  }
+
+  viewAccount(row: any): void {
+    console.log(row.id);
+    if (row) {
+      this.router.navigate(['/accounts', row.accountId]);
+    }
   }
 }
