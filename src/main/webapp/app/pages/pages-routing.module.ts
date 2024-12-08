@@ -12,6 +12,7 @@ import { MoneyComponent } from './money/money.component';
 import { NavigationComponent } from './navigation/navigation.component';
 import { ProductsComponent } from './products/products.component';
 import { AccountDetailsComponent } from './accounts/account-details/account-details.component';
+import { InvoiceDetailsComponent } from './invoices/invoice-details/invoice-details.component';
 
 const routes: Routes = [
   {
@@ -23,6 +24,13 @@ const routes: Routes = [
     path: 'invoices',
     component: InvoicesComponent,
     canActivate: [UserRouteAccessService],
+  },
+  {
+    path: 'invoices/:invoiceId',
+    component: InvoiceDetailsComponent,
+    data: {
+      pageTitle: 'Invoice Details',
+    },
   },
   {
     path: 'products',

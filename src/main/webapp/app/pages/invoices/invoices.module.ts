@@ -22,13 +22,6 @@ import { SharedModule } from '../../shared/shared.module';
           pageTitle: 'invoices.title',
         },
       },
-      {
-        path: ':invoiceId',
-        component: InvoiceDetailsComponent,
-        data: {
-          pageTitle: 'Invoice Details',
-        },
-      },
     ]),
   ],
   exports: [],
