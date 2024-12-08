@@ -353,8 +353,17 @@
         <div #cashFlowTrendChart class="chart" echarts [options]="cashFlowTrendOption" [loading]="loading"></div>
       </div>
       <div class="chart-container">
-        <h3>{{ 'financialReports.bankBalance.title' | translate }}</h3>
+        <h3>{{ 'financialReports.charts.bankBalance.title' | translate }}</h3>
         <div #bankBalanceChart class="chart" echarts [options]="bankBalanceOption" [loading]="loading"></div>
+      </div>
+      <div class="card-body">
+        <div #performanceRatiosChart class="chart-container" echarts [options]="performanceRatiosOption" [loading]="loading"></div>
+      </div>
+      <div class="card-body">
+        <div #marginTrendsChart class="chart-container" echarts [options]="marginTrendsOption" [loading]="loading"></div>
+      </div>
+      <div class="card-body">
+        <div #profitBreakdownChart class="chart-container" echarts [options]="profitBreakdownOption" [loading]="loading"></div>
       </div>
     </div>
 
@@ -363,7 +372,6 @@
       <div class="col-md-4">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">{{ 'financialReports.performanceRatios.title' | translate }}</h5>
             <div #performanceRatiosChart class="chart-container" echarts [options]="performanceRatiosOption" [loading]="loading"></div>
           </div>
         </div>
@@ -371,7 +379,6 @@
       <div class="col-md-4">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">{{ 'financialReports.marginTrends.title' | translate }}</h5>
             <div #marginTrendsChart class="chart-container" echarts [options]="marginTrendsOption" [loading]="loading"></div>
           </div>
         </div>
@@ -379,7 +386,6 @@
       <div class="col-md-4">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">{{ 'financialReports.profitBreakdown.title' | translate }}</h5>
             <div #profitBreakdownChart class="chart-container" echarts [options]="profitBreakdownOption" [loading]="loading"></div>
           </div>
         </div>

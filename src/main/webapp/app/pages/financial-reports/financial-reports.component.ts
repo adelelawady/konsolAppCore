@@ -606,7 +606,7 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
         },
         xAxis: {
           type: 'value',
-          name: 'Quantity',
+          name: this.translateService.instant('financialReports.topItems.quantity'),
         },
         yAxis: {
           type: 'category',
@@ -615,7 +615,7 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
         },
         series: [
           {
-            name: quantityData.series?.[0]?.name || 'Quantity',
+            name: quantityData.series?.[0]?.name || this.translateService.instant('financialReports.topItems.quantity'),
             type: 'bar',
             data: quantityData.series?.[0]?.data || [],
             itemStyle: {
@@ -645,12 +645,63 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
         ...this.getDefaultChartOptions('financialReports.charts.performanceRatios.title'),
         tooltip: {
           trigger: 'item',
+          formatter: (params: any) => {
+            const value = params.value;
+            const indicators = ['currentRatio', 'quickRatio', 'operatingMargin', 'netProfitMargin'];
+            let result = `${params.name}<br/>`;
+            indicators.forEach((indicator, index) => {
+              const formattedValue = index >= 2 ? `${value[index].toFixed(2)}%` : value[index].toFixed(2);
+              result += `${this.translateService.instant(
+                `financialReports.charts.performanceRatios.metrics.${indicator}`
+              )}: ${formattedValue}<br/>`;
+            });
+            return result;
+          },
         },
         radar: {
-          indicator: ratiosData.labels.map((label: string) => ({
-            name: label,
-            max: 100,
-          })),
+          shape: 'circle',
+          splitNumber: 4,
+          axisName: {
+            show: true,
+            formatter: function (name?: string) {
+              if (!name) return '';
+              return name.length > 15 ? name.substring(0, 15) + '...' : name;
+            },
+          },
+          splitArea: {
+            show: true,
+            areaStyle: {
+              color: ['rgba(255,255,255,0.3)', 'rgba(200,200,200,0.3)'],
+            },
+          },
+          axisLine: {
+            show: true,
+          },
+          splitLine: {
+            show: true,
+          },
+          indicator: [
+            {
+              name: this.translateService.instant('financialReports.charts.performanceRatios.metrics.currentRatio'),
+              max: 4,
+              min: 0,
+            },
+            {
+              name: this.translateService.instant('financialReports.charts.performanceRatios.metrics.quickRatio'),
+              max: 4,
+              min: 0,
+            },
+            {
+              name: `${this.translateService.instant('financialReports.charts.performanceRatios.metrics.operatingMargin')} (%)`,
+              max: 40,
+              min: 0,
+            },
+            {
+              name: `${this.translateService.instant('financialReports.charts.performanceRatios.metrics.netProfitMargin')} (%)`,
+              max: 40,
+              min: 0,
+            },
+          ],
         },
         series: [
           {
@@ -658,13 +709,20 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
             data: [
               {
                 value: [
-                  this.performanceIndicators.grossProfitMargin,
-                  this.performanceIndicators.netProfitMargin,
-                  100 - this.performanceIndicators.operatingExpensesRatio,
-                  this.performanceIndicators.revenueGrowth,
-                  this.performanceIndicators.currentRatio * 10,
+                  this.performanceIndicators?.currentRatio || 0,
+                  this.performanceIndicators?.quickRatio || 0,
+                  this.performanceIndicators?.operatingMargin || 0,
+                  this.performanceIndicators?.netProfitMargin || 0,
                 ],
-                name: 'Performance Metrics',
+                name: this.translateService.instant('financialReports.charts.performanceRatios.title'),
+                areaStyle: {
+                  opacity: 0.3,
+                },
+                lineStyle: {
+                  width: 2,
+                },
+                symbol: 'circle',
+                symbolSize: 6,
               },
             ],
           },
@@ -732,9 +790,18 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
               },
             },
             data: [
-              { value: this.performanceIndicators.grossProfitMargin, name: 'Gross Profit' },
-              { value: this.performanceIndicators.operatingExpensesRatio, name: 'Operating Expenses' },
-              { value: this.performanceIndicators.netProfitMargin, name: 'Net Profit' },
+              {
+                value: this.performanceIndicators.grossProfitMargin,
+                name: this.translateService.instant('financialReports.metrics.performanceIndicators.grossProfitMargin'),
+              },
+              {
+                value: this.performanceIndicators.operatingExpensesRatio,
+                name: this.translateService.instant('financialReports.metrics.performanceIndicators.operatingExpenses'),
+              },
+              {
+                value: this.performanceIndicators.netProfitMargin,
+                name: this.translateService.instant('financialReports.metrics.performanceIndicators.netProfitMargin'),
+              },
             ],
           },
         ],
@@ -754,7 +821,7 @@ export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestr
             const percent = params.percent || 0;
             return `${params.name}<br/>Balance: ${value.toLocaleString('tr-TR', {
               style: 'currency',
-              currency: 'TRY',
+              currency: 'USD',
             })}<br/>Percentage: ${percent}%`;
           },
         },
