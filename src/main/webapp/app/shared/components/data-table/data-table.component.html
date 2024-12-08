@@ -88,7 +88,8 @@
               </ng-container>
 
               <ng-container *ngSwitchCase="'template'">
-                <ng-container *ngTemplateOutlet="getTemplateRef(col.template); context: { $implicit: row, row: row }"> </ng-container>
+                <ng-container *ngTemplateOutlet="getTemplateRef(col.templateRef); context: { $implicit: row[col.field], row: row }">
+                </ng-container>
               </ng-container>
             </ng-container>
           </td>

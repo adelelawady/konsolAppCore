@@ -8,6 +8,8 @@ import {
   SimpleChanges,
   ChangeDetectorRef,
   ContentChild,
+  ContentChildren,
+  QueryList,
   TemplateRef,
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
@@ -27,6 +29,7 @@ export interface TableColumn {
   editable?: boolean;
   format?: string | ((value: any) => string);
   template?: string;
+  templateRef?: string;
   visible?: () => boolean;
 }
 
@@ -50,7 +53,6 @@ export class DataTableComponent implements OnInit, OnChanges {
   @Output() delete = new EventEmitter<any>();
   @Output() pageChange = new EventEmitter<number>();
   @Output() pageSizeChange = new EventEmitter<number>();
-
   @Output() sortChange = new EventEmitter<{ field: string; direction: string }>();
   @Output() search = new EventEmitter<string>();
   @Output() valueChange = new EventEmitter<{ row: any; field: string; value: any }>();
@@ -58,6 +60,7 @@ export class DataTableComponent implements OnInit, OnChanges {
   @Output() rowSelect = new EventEmitter<any>();
 
   @ContentChild('actionTemplate', { static: true }) actionTemplate?: TemplateRef<any>;
+  @ContentChild('detailsTemplate', { static: true }) detailsTemplate?: TemplateRef<any>;
 
   filteredData: any[] = [];
   searchText: string = '';
@@ -91,9 +94,9 @@ export class DataTableComponent implements OnInit, OnChanges {
   }
 
   onSearch(value: string): void {
-    this.searchSubject.next(value);
     this.searchText = value;
-    this.updateFilteredData();
+    this.searchSubject.next(value);
+    this.filterData();
   }
 
   onValueChange(row: any, field: string, value: any): void {
@@ -109,21 +112,16 @@ export class DataTableComponent implements OnInit, OnChanges {
   }
 
   onPageSizeChange(size: number): void {
-    this.pageSize = size;
-    this.pageSizeChange.emit(this.pageSize);
+    this.pageSizeChange.emit(size);
   }
 
   onPageNumberChange(page: number): void {
-    if (page >= 0 && page < Math.ceil(this.totalItems / this.pageSize)) {
-      this.currentPage = page;
-      this.pageChange.emit(page);
-    }
+    this.pageChange.emit(page);
   }
 
   onSort(column: TableColumn): void {
     if (!column.sortable) return;
-    // Implement sorting logic here
-    this.sortChange.emit({ field: column.field, direction: 'ASC' });
+    this.sortChange.emit({ field: column.field, direction: 'asc' });
   }
 
   onRowClick(row: any): void {
@@ -135,46 +133,18 @@ export class DataTableComponent implements OnInit, OnChanges {
   }
 
   getPages(): number[] {
-    const totalPages = Math.ceil(this.totalItems / this.pageSize);
-    const currentPage = this.currentPage;
-    const pages: number[] = [];
-
-    if (totalPages <= 7) {
-      return Array.from({ length: totalPages }, (_, i) => i);
-    }
-
-    // Always show first page
-    pages.push(0);
-
-    if (currentPage > 3) {
-      pages.push(-1); // Separator
-    }
-
-    // Show pages around current page
-    for (let i = Math.max(1, currentPage - 1); i <= Math.min(totalPages - 2, currentPage + 1); i++) {
-      pages.push(i);
-    }
-
-    if (currentPage < totalPages - 4) {
-      pages.push(-1); // Separator
-    }
-
-    // Always show last page
-    if (totalPages > 1) {
-      pages.push(totalPages - 1);
-    }
-
-    return pages;
+    const pageCount = Math.ceil(this.totalItems / this.pageSize);
+    return Array.from({ length: pageCount }, (_, i) => i);
   }
 
   formatCellValue(value: any, column: TableColumn): string {
-    if (!value) return '';
+    if (value == null) return '';
 
     if (column.format) {
       if (typeof column.format === 'function') {
         return column.format(value);
       }
-      return column.format;
+      return value.toString();
     }
 
     switch (column.type) {
@@ -228,8 +198,9 @@ export class DataTableComponent implements OnInit, OnChanges {
 
   getTemplateRef(templateName: string | undefined): TemplateRef<any> | null {
     if (!templateName) return null;
-
     switch (templateName) {
+      case 'detailsTemplate':
+        return this.detailsTemplate || null;
       case 'actionTemplate':
         return this.actionTemplate || null;
       default:
