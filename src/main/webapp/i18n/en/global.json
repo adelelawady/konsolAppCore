@@ -306,6 +306,53 @@
     },
     "invoice": {
       "deferred": "Deferred Payment"
+    },
+    "invoiceDetails": {
+      "loading": "Loading...",
+      "title": "Invoice #{{id}}",
+      "types": {
+        "SALE": "Sale",
+        "PURCHASE": "Purchase",
+        "ADJUST": "Adjustment",
+        "TRANSFER": "Transfer"
+      },
+      "accountInfo": {
+        "title": "Account Information",
+        "account": "Account",
+        "store": "Store",
+        "bank": "Bank",
+        "notAvailable": "Not Available"
+      },
+      "invoiceInfo": {
+        "title": "Invoice Details",
+        "date": "Date",
+        "createdBy": "Created By",
+        "paymentStatus": "Payment Status",
+        "deferred": "Deferred",
+        "paid": "Paid"
+      },
+      "items": {
+        "title": "Items",
+        "item": "Item",
+        "unit": "Unit",
+        "quantity": "Quantity",
+        "unitPrice": "Unit Price",
+        "discount": "Discount",
+        "total": "Total"
+      },
+      "additionalInfo": {
+        "title": "Additional Information",
+        "additionsType": "Additions Type",
+        "expensesType": "Expenses Type"
+      },
+      "summary": {
+        "title": "Invoice Summary",
+        "subtotal": "Subtotal",
+        "discount": "Discount",
+        "additions": "Additions",
+        "expenses": "Expenses",
+        "netTotal": "Net Total"
+      }
     }
   },
   "entity": {

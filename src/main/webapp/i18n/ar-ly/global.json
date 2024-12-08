@@ -1,5 +1,52 @@
 {
   "global": {
+    "invoiceDetails": {
+      "loading": "جاري التحميل...",
+      "title": "فاتورة رقم {{id}}#",
+      "types": {
+        "SALE": "مبيعات",
+        "PURCHASE": "مشتريات",
+        "ADJUST": "تسوية",
+        "TRANSFER": "تحويل"
+      },
+      "accountInfo": {
+        "title": "معلومات الحساب",
+        "account": "الحساب",
+        "store": "المخزن",
+        "bank": "البنك",
+        "notAvailable": "غير متوفر"
+      },
+      "invoiceInfo": {
+        "title": "تفاصيل الفاتورة",
+        "date": "التاريخ",
+        "createdBy": "تم الإنشاء بواسطة",
+        "paymentStatus": "حالة الدفع",
+        "deferred": "آجل",
+        "paid": "مدفوع"
+      },
+      "items": {
+        "title": "الأصناف",
+        "item": "الصنف",
+        "unit": "الوحدة",
+        "quantity": "الكمية",
+        "unitPrice": "سعر الوحدة",
+        "discount": "الخصم",
+        "total": "الإجمالي"
+      },
+      "additionalInfo": {
+        "title": "معلومات إضافية",
+        "additionsType": "نوع الإضافات",
+        "expensesType": "نوع المصروفات"
+      },
+      "summary": {
+        "title": "ملخص الفاتورة",
+        "subtotal": "المجموع الفرعي",
+        "discount": "الخصم",
+        "additions": "الإضافات",
+        "expenses": "المصروفات",
+        "netTotal": "الصافي"
+      }
+    },
     "footer": {
       "copyright": "حقوق النشر {{ year }} كونسول كور. جميع الحقوق محفوظة."
     },
