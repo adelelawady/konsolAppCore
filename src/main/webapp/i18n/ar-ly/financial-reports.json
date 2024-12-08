@@ -35,17 +35,12 @@
         "netProfitMargin": "هامش الربح الصافي",
         "currentRatio": "النسبة الحالية",
         "quickRatio": "النسبة السريعة",
-        "gross": "إجمالي",
-        "net": "صافي",
-        "financialRatios": "النسب المالية",
-        "current": "الحالي",
-        "quick": "السريع",
         "growthExpenses": "النمو والمصروفات",
         "revenueGrowth": "نمو الإيرادات",
         "revenueGrowthRate": "معدل نمو الإيرادات",
         "operatingExpenses": "المصروفات التشغيلية",
         "operatingExpensesRatio": "نسبة المصروفات التشغيلية",
-        "operatingExpensesToRevenueRatio": "نسبة المصروفات التشغيلية إلى الإيرادات",
+        "operatingExpensesToRevenue": "نسبة المصروفات التشغيلية إلى الإيرادات",
         "growthRatio": "نسبة النمو",
         "financialMetrics": {
           "title": "المقاييس المالية",
@@ -63,22 +58,37 @@
       "dailySales": "اتجاه المبيعات اليومية",
       "salesVsCosts": "المبيعات مقابل التكاليف",
       "profitMargin": "توزيع هامش الربح",
-      "topItems": "أعلى المنتجات مبيعاً",
+      "topItems": "أعلى المنتجات من حيث الإيرادات",
+      "topItemsByRevenue": "أعلى المنتجات من حيث الإيرادات",
+      "topItemsByQuantity": "أعلى المنتجات من حيث الكمية",
       "cashFlow": "اتجاه التدفق النقدي",
+      "cashFlowTrend": "اتجاه التدفق النقدي",
       "bankBalance": {
-        "title": "الرصيد المصرفي"
+        "title": "الرصيد المصرفي",
+        "trend": "اتجاه الرصيد المصرفي"
       },
       "performanceRatios": {
-        "title": "نسب الأداء"
+        "title": "نسب الأداء",
+        "metrics": {
+          "currentRatio": "النسبة الحالية",
+          "quickRatio": "النسبة السريعة",
+          "operatingMargin": "هامش التشغيل",
+          "netProfitMargin": "هامش صافي الربح"
+        }
       },
       "marginTrends": {
-        "title": "اتجاهات الهامش"
+        "title": "اتجاهات الهامش",
+        "gross": "الهامش الإجمالي",
+        "operating": "هامش التشغيل",
+        "net": "الهامش الصافي"
       },
       "profitBreakdown": {
-        "title": "تحليل الربح"
-      },
-      "topItemsByQuantity": "أعلى العناصر من حيث الكمية",
-      "cashFlowTrend": "اتجاه التدفق النقدي"
+        "title": "تحليل الربح",
+        "revenue": "الإيرادات",
+        "costs": "التكاليف",
+        "grossProfit": "الربح الإجمالي",
+        "netProfit": "صافي الربح"
+      }
     },
     "cashFlow": {
       "title": "ملخص التدفق النقدي",
