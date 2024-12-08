@@ -198,8 +198,6 @@ export abstract class InvoicesView implements OnInit {
                   item =>
                     ({
                       ...item,
-                      totalPrice: this.type === 'SALE' ? (item.userQty || 0) * (item.price || 0) : undefined,
-                      totalCost: this.type === 'PURCHASE' ? (item.userQty || 0) * (item.cost || 0) : undefined,
                     } as InvoiceItemViewDTO)
                 )
               : [],
@@ -270,8 +268,6 @@ export abstract class InvoicesView implements OnInit {
               item =>
                 ({
                   ...item,
-                  totalPrice: this.type === 'SALE' ? (item.userQty || 0) * (item.price || 0) : undefined,
-                  totalCost: this.type === 'PURCHASE' ? (item.userQty || 0) * (item.cost || 0) : undefined,
                 } as InvoiceItemViewDTO)
             )
           : [];

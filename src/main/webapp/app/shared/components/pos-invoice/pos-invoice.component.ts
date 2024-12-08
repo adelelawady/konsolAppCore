@@ -9,6 +9,7 @@ import { StoreDTO } from 'app/core/konsolApi/model/storeDTO';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ItemsSearchBoxComponent } from 'app/shared/components/items-search-box/items-search-box.component';
 import { InvoiceItemDTO } from 'app/core/konsolApi/model/invoiceItemDTO';
+import { AppCurrencyPipe } from 'app/shared/pipes/app-currency.pipe';
 
 interface ErrorResponse {
   type: string;
@@ -52,7 +53,12 @@ export class PosInvoiceComponent implements OnInit, AfterViewInit {
   // Add deferred property
   isDeferred = false;
 
-  constructor(private route: ActivatedRoute, private router: Router, protected invoiceService: InvoiceResourceService) {}
+  constructor(
+    protected appCurrency: AppCurrencyPipe,
+    private route: ActivatedRoute,
+    private router: Router,
+    protected invoiceService: InvoiceResourceService
+  ) {}
   ngAfterViewInit(): void {
     if (this.isLoadingExistingInvoiceId) {
       // Set bank and store directly from the invoice

@@ -4,7 +4,7 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'appCurrency',
 })
 export class AppCurrencyPipe implements PipeTransform {
-  private defaultCurrency = '$';
+  public defaultCurrency = 'USD';
 
   transform(value: number | string | null | undefined, currency?: string): string {
     if (value === null || value === undefined) {

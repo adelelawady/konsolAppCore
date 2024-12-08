@@ -141,9 +141,14 @@ export class DataTableComponent implements OnInit, OnChanges {
     if (value == null) return '';
 
     if (column.format) {
+      if (typeof column.format === 'function' && column.type == 'currency') {
+        return this.formatCurrency(Number(column.format(value)));
+      }
+
       if (typeof column.format === 'function') {
         return column.format(value);
       }
+
       return value.toString();
     }
 
@@ -160,7 +165,7 @@ export class DataTableComponent implements OnInit, OnChanges {
   private formatCurrency(value: number): string {
     return new Intl.NumberFormat(this.translateService.currentLang, {
       style: 'currency',
-      currency: 'LYD',
+      currency: 'USD',
     }).format(value);
   }
 

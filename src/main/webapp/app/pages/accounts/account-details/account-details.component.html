@@ -36,7 +36,7 @@
               <div class="card bg-light">
                 <div class="card-body">
                   <h5 class="card-title text-success">{{ 'accounts.fields.balanceIn' | translate }}</h5>
-                  <p class="card-text h3">{{ account.balanceIn | currency: 'USD':'symbol':'1.2-2' }}</p>
+                  <p class="card-text h3">{{ account.balanceIn | currency }}</p>
                 </div>
               </div>
             </div>
@@ -44,7 +44,7 @@
               <div class="card bg-light">
                 <div class="card-body">
                   <h5 class="card-title text-danger">{{ 'accounts.fields.balanceOut' | translate }}</h5>
-                  <p class="card-text h3">{{ account.balanceOut | currency: 'USD':'symbol':'1.2-2' }}</p>
+                  <p class="card-text h3">{{ account.balanceOut | currency }}</p>
                 </div>
               </div>
             </div>

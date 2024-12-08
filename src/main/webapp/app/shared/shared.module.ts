@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { DEFAULT_CURRENCY_CODE, NgModule } from '@angular/core';
 
 import { SharedLibsModule } from './shared-libs.module';
 import { FindLanguageFromKeyPipe } from './language/find-language-from-key.pipe';
@@ -66,6 +66,11 @@ import { TranslationModule } from '../shared/language/translation.module';
     StoreSelectorComponent,
     BankSelectorComponent,
     AccountSelectorComponent,
+  ],
+  providers: [
+    AppCurrencyPipe,
+
+    { provide: DEFAULT_CURRENCY_CODE, useValue: 'EGP' }, // Replace 'USD' with your desired default currency code
   ],
 })
 export class SharedModule {}

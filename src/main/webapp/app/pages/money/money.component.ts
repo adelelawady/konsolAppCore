@@ -37,8 +37,8 @@ export class MoneyComponent implements OnInit {
       { field: 'pk', header: 'konsolCoreApp.money.fields.id', sortable: true },
       { field: 'kind', header: 'konsolCoreApp.money.fields.type', sortable: true },
       { field: 'account', header: 'konsolCoreApp.money.fields.account', format: (acc: any) => acc.name, sortable: true },
-      { field: 'moneyIn', header: 'konsolCoreApp.money.fields.moneyIn', sortable: true },
-      { field: 'moneyOut', header: 'konsolCoreApp.money.fields.moneyOut', sortable: true },
+      { field: 'moneyIn', header: 'konsolCoreApp.money.fields.moneyIn', type: 'currency', sortable: true },
+      { field: 'moneyOut', header: 'konsolCoreApp.money.fields.moneyOut', type: 'currency', sortable: true },
 
       { field: 'details', header: 'konsolCoreApp.money.fields.details', sortable: true },
 
