@@ -101,6 +101,15 @@ public interface StoreService {
      * @return OK (status code 200)
      * @see StoresApi#setStoreItem
      */
+    StoreItemDTO setStoreItem(StoreItemIdOnlyDTO storeItemIdOnlyDTO, boolean createAdjustInvoice);
+
+    /**
+     * creates if not exsits or updates exsitsing store item  for selected item and store
+     *
+     * @param storeItemIdOnlyDTO store item contains item.id and store.id and qty required (required)
+     * @return OK (status code 200)
+     * @see StoresApi#setStoreItem
+     */
     StoreItemDTO setStoreItem(StoreItemIdOnlyDTO storeItemIdOnlyDTO);
 
     /**
