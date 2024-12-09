@@ -57,6 +57,13 @@ public interface MoneyService {
      * @param createMoneyDTO the entity to be created
      * @return the persisted entity.
      */
+    MoneyDTO createMoney(CreateMoneyDTO createMoneyDTO, boolean addMoneyToAccount);
+
+    /**
+     * create new money and save it to system
+     * @param createMoneyDTO the entity to be created
+     * @return the persisted entity.
+     */
     MoneyDTO createMoney(CreateMoneyDTO createMoneyDTO);
     /**
      * search money daftar

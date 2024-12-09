@@ -3,6 +3,7 @@ package com.konsol.core.service.impl;
 import com.konsol.core.domain.Item;
 import com.konsol.core.domain.Store;
 import com.konsol.core.domain.StoreItem;
+import com.konsol.core.repository.InvoiceRepository;
 import com.konsol.core.repository.StoreItemRepository;
 import com.konsol.core.repository.StoreRepository;
 import com.konsol.core.service.ItemService;
@@ -51,13 +52,16 @@ public class StoreServiceImpl implements StoreService {
 
     private final MongoTemplate mongoTemplate;
 
+    private final InvoiceRepository invoiceRepository;
+
     public StoreServiceImpl(
         StoreRepository storeRepository,
         StoreItemRepository storeItemRepository,
         StoreMapper storeMapper,
         StoreItemMapper storeItemMapper,
         ItemService itemService,
-        MongoTemplate mongoTemplate
+        MongoTemplate mongoTemplate,
+        InvoiceRepository invoiceRepository
     ) {
         this.storeRepository = storeRepository;
         this.storeItemRepository = storeItemRepository;
@@ -65,6 +69,7 @@ public class StoreServiceImpl implements StoreService {
         this.storeItemMapper = storeItemMapper;
         this.itemService = itemService;
         this.mongoTemplate = mongoTemplate;
+        this.invoiceRepository = invoiceRepository;
     }
 
     @Override
@@ -344,14 +349,16 @@ public class StoreServiceImpl implements StoreService {
         if (paginationSearchModel.getSortField() != null && !paginationSearchModel.getSortField().isEmpty()) {
             if (paginationSearchModel.getSortOrder() != null && !paginationSearchModel.getSortOrder().isEmpty()) {
                 switch (paginationSearchModel.getSortOrder().toLowerCase()) {
-                    case "asc": {
-                        query.with(Sort.by(Sort.Direction.ASC, paginationSearchModel.getSortField()));
-                        break;
-                    }
-                    case "desc": {
-                        query.with(Sort.by(Sort.Direction.DESC, paginationSearchModel.getSortField()));
-                        break;
-                    }
+                    case "asc":
+                        {
+                            query.with(Sort.by(Sort.Direction.ASC, paginationSearchModel.getSortField()));
+                            break;
+                        }
+                    case "desc":
+                        {
+                            query.with(Sort.by(Sort.Direction.DESC, paginationSearchModel.getSortField()));
+                            break;
+                        }
                 }
             } else {
                 query.with(Sort.by(Sort.Direction.DESC, paginationSearchModel.getSortField()));
@@ -368,12 +375,12 @@ public class StoreServiceImpl implements StoreService {
             }
 
             List<Criteria> searchCriteria = new ArrayList<>();
-            
+
             if (objectId != null) {
                 searchCriteria.add(Criteria.where("_id").is(objectId));
                 searchCriteria.add(Criteria.where("item.$id").is(objectId));
             }
-            
+
             searchCriteria.add(Criteria.where("qty").regex(paginationSearchModel.getSearchText(), "i"));
 
             // Add the search criteria to the query
@@ -387,6 +394,11 @@ public class StoreServiceImpl implements StoreService {
         return mongoTemplate.find(query, StoreItem.class);
     }
 
+    @Override
+    public StoreItemDTO setStoreItem(StoreItemIdOnlyDTO storeItemIdOnlyDTO) {
+        return setStoreItem(storeItemIdOnlyDTO, false);
+    }
+
     /**
      * creates if not exsits or updates exsitsing store item  for selected item and store
      *
@@ -395,7 +407,7 @@ public class StoreServiceImpl implements StoreService {
      * @see StoresApi#setStoreItem
      */
     @Override
-    public StoreItemDTO setStoreItem(StoreItemIdOnlyDTO storeItemIdOnlyDTO) {
+    public StoreItemDTO setStoreItem(StoreItemIdOnlyDTO storeItemIdOnlyDTO, boolean createAdjustInvoice) {
         /**
          * get and check item
          */

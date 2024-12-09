@@ -4,15 +4,18 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 
 import com.konsol.core.domain.AccountUser;
 import com.konsol.core.domain.Bank;
+import com.konsol.core.domain.Money;
+import com.konsol.core.domain.Settings;
+import com.konsol.core.domain.enumeration.InvoiceKind;
+import com.konsol.core.domain.enumeration.MoneyKind;
 import com.konsol.core.repository.AccountUserRepository;
 import com.konsol.core.repository.InvoiceRepository;
 import com.konsol.core.repository.MoneyRepository;
 import com.konsol.core.service.AccountUserService;
-import com.konsol.core.service.api.dto.AccountUserContainer;
-import com.konsol.core.service.api.dto.AccountUserDTO;
-import com.konsol.core.service.api.dto.AccountUserSearchModel;
-import com.konsol.core.service.api.dto.CreateAccountUserDTO;
-import com.konsol.core.service.api.dto.PaginationSearchModel;
+import com.konsol.core.service.InvoiceService;
+import com.konsol.core.service.MoneyService;
+import com.konsol.core.service.SettingService;
+import com.konsol.core.service.api.dto.*;
 import com.konsol.core.service.core.query.MongoQueryService;
 import com.konsol.core.service.dto.AccountTransactionsContainer;
 import com.konsol.core.service.dto.AccountTransactionsDTO;
@@ -64,17 +67,23 @@ public class AccountUserServiceImpl implements AccountUserService {
     @Autowired
     private InvoiceRepository invoiceRepository;
 
+    @Autowired
+    MoneyRepository MoneyRepository;
+
+    private final SettingService settingService;
     private final AccountTransactionsMapper accountTransactionsMapper;
 
     public AccountUserServiceImpl(
         AccountUserRepository accountUserRepository,
         AccountUserMapper accountUserMapper,
         MongoQueryService mongoQueryService,
+        SettingService settingService,
         AccountTransactionsMapper accountTransactionsMapper
     ) {
         this.accountUserRepository = accountUserRepository;
         this.accountUserMapper = accountUserMapper;
         this.mongoQueryService = mongoQueryService;
+        this.settingService = settingService;
         this.accountTransactionsMapper = accountTransactionsMapper;
     }
 
@@ -129,11 +138,82 @@ public class AccountUserServiceImpl implements AccountUserService {
     @Override
     public Optional<AccountUserDTO> update(AccountUserDTO accountUserDTO) {
         log.debug("Request to partially update AccountUser : {}", accountUserDTO);
-
+        Settings settings = settingService.getSettings();
         return accountUserRepository
             .findById(accountUserDTO.getId())
             .map(existingAccountUser -> {
+                // Calculate balance differences before update
+                BigDecimal oldBalanceIn = existingAccountUser.getBalanceIn() != null ? existingAccountUser.getBalanceIn() : BigDecimal.ZERO;
+                BigDecimal oldBalanceOut = existingAccountUser.getBalanceOut() != null
+                    ? existingAccountUser.getBalanceOut()
+                    : BigDecimal.ZERO;
+
+                // Apply the update
                 accountUserMapper.partialUpdate(existingAccountUser, accountUserDTO);
+
+                // Calculate new balances
+                BigDecimal newBalanceIn = existingAccountUser.getBalanceIn() != null ? existingAccountUser.getBalanceIn() : BigDecimal.ZERO;
+                BigDecimal newBalanceOut = existingAccountUser.getBalanceOut() != null
+                    ? existingAccountUser.getBalanceOut()
+                    : BigDecimal.ZERO;
+
+                // Calculate differences
+                BigDecimal balanceInDiff = newBalanceIn.subtract(oldBalanceIn);
+                BigDecimal balanceOutDiff = newBalanceOut.subtract(oldBalanceOut);
+
+                // Validate that only one balance is changing
+                if (balanceInDiff.compareTo(BigDecimal.ZERO) != 0 && balanceOutDiff.compareTo(BigDecimal.ZERO) != 0) {
+                    throw new IllegalStateException("Cannot modify both BalanceIn and BalanceOut simultaneously");
+                }
+
+                // Create money transactions for balance changes
+                if (balanceInDiff.compareTo(BigDecimal.ZERO) != 0) {
+                    // Validate that BalanceOut is zero
+                    if (newBalanceOut.compareTo(BigDecimal.ZERO) != 0) {
+                        throw new IllegalStateException("BalanceOut must be zero when modifying BalanceIn");
+                    }
+
+                    Money moneyDTO = new Money();
+                    moneyDTO.setAccount(existingAccountUser);
+                    moneyDTO.setMoneyIn(balanceInDiff.abs());
+                    moneyDTO.setMoneyOut(BigDecimal.ZERO);
+                    moneyDTO.setKind(MoneyKind.PAYMENT);
+                    moneyDTO.setDetails("Balance In Update By : ");
+                    // moneyDTO.setBank(settings.getMAIN_SELECTED_BANK_ID());
+                    MoneyRepository.save(moneyDTO);
+
+                    log.info(
+                        "Account {} balance_in changed by {}: {} -> {}",
+                        existingAccountUser.getId(),
+                        balanceInDiff,
+                        oldBalanceIn,
+                        newBalanceIn
+                    );
+                }
+
+                if (balanceOutDiff.compareTo(BigDecimal.ZERO) != 0) {
+                    // Validate that BalanceIn is zero
+                    if (newBalanceIn.compareTo(BigDecimal.ZERO) != 0) {
+                        throw new IllegalStateException("BalanceIn must be zero when modifying BalanceOut");
+                    }
+
+                    Money moneyDTO = new Money();
+                    moneyDTO.setAccount(existingAccountUser);
+                    moneyDTO.setMoneyIn(BigDecimal.ZERO);
+                    moneyDTO.setMoneyOut(balanceOutDiff.abs());
+                    moneyDTO.setKind(MoneyKind.RECEIPT);
+                    moneyDTO.setDetails("Balance Out Update By : ");
+                    // moneyDTO.setBankId(settings.getMAIN_SELECTED_BANK_ID());
+                    moneyRepository.save(moneyDTO);
+
+                    log.info(
+                        "Account {} balance_out changed by {}: {} -> {}",
+                        existingAccountUser.getId(),
+                        balanceOutDiff,
+                        oldBalanceOut,
+                        newBalanceOut
+                    );
+                }
 
                 return existingAccountUser;
             })

@@ -113,7 +113,7 @@ public class MoneyServiceImpl implements MoneyService {
     }
 
     @Override
-    public MoneyDTO createMoney(CreateMoneyDTO createMoneyDTO) {
+    public MoneyDTO createMoney(CreateMoneyDTO createMoneyDTO, boolean addMoneyToAccount) {
         log.debug("Request to create Money : {}", createMoneyDTO);
 
         /**
@@ -181,7 +181,7 @@ public class MoneyServiceImpl implements MoneyService {
         Pk pk = pkService.generatePkEntity(PkKind.Money);
         money.setPk(pk.getValue().toString());
 
-        if (!(createMoneyDTO.getAccountId() == null || createMoneyDTO.getAccountId().isEmpty())) {
+        if (addMoneyToAccount && !(createMoneyDTO.getAccountId() == null || createMoneyDTO.getAccountId().isEmpty())) {
             Optional<AccountUser> optionalAccountUser = accountUserService.findOneDomain(createMoneyDTO.getAccountId());
             if (optionalAccountUser.isPresent()) {
                 AccountUser accountUser = optionalAccountUser.get();
@@ -201,5 +201,10 @@ public class MoneyServiceImpl implements MoneyService {
 
         money = moneyRepository.save(money);
         return moneyMapper.toDto(money);
+    }
+
+    @Override
+    public MoneyDTO createMoney(CreateMoneyDTO createMoneyDTO) {
+        return this.createMoney(createMoneyDTO, true);
     }
 }
