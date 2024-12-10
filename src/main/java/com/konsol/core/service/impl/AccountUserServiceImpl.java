@@ -23,6 +23,7 @@ import com.konsol.core.service.dto.BankTransactionsDTO;
 import com.konsol.core.service.exception.BankNotFoundException;
 import com.konsol.core.service.mapper.AccountUserMapper;
 import com.konsol.core.service.mapper.sup.AccountTransactionsMapper;
+import com.konsol.core.web.rest.api.errors.AccountDeletionException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -242,6 +243,13 @@ public class AccountUserServiceImpl implements AccountUserService {
     @Override
     public void delete(String id) {
         log.debug("Request to delete AccountUser : {}", id);
+        if (!moneyRepository.findAllByAccountId(id).isEmpty()) {
+            throw new AccountDeletionException("Cannot delete account with ID " + id + ": There are associated money transactions.");
+        }
+
+        if (!invoiceRepository.findAllByAccountId(id).isEmpty()) {
+            throw new AccountDeletionException("Cannot delete account with ID " + id + ": There are associated Invoices transactions.");
+        }
         accountUserRepository.deleteById(id);
     }
 

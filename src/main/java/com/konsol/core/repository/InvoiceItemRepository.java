@@ -1,5 +1,6 @@
 package com.konsol.core.repository;
 
+import com.carrotsearch.hppc.ByteContainer;
 import com.konsol.core.domain.InvoiceItem;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,4 +18,6 @@ public interface InvoiceItemRepository extends MongoRepository<InvoiceItem, Stri
 
     @Query("{'_class': 'com.konsol.core.domain.InvoiceItem', 'createdDate': {$gte: ?0, $lte: ?1}}")
     List<InvoiceItem> findByCreatedDateBetween(LocalDateTime startDate, LocalDateTime endDate);
+
+    List<InvoiceItem> findAllByItemId(String id);
 }

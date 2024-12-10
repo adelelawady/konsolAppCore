@@ -4,6 +4,7 @@ import com.konsol.core.domain.Item;
 import com.konsol.core.domain.ItemUnit;
 import com.konsol.core.domain.Pk;
 import com.konsol.core.domain.enumeration.PkKind;
+import com.konsol.core.repository.InvoiceItemRepository;
 import com.konsol.core.repository.ItemRepository;
 import com.konsol.core.repository.ItemUnitRepository;
 import com.konsol.core.service.ItemService;
@@ -14,6 +15,8 @@ import com.konsol.core.service.dto.ChartDataDTO;
 import com.konsol.core.service.dto.ItemAnalysisDTO;
 import com.konsol.core.service.mapper.ItemMapper;
 import com.konsol.core.service.mapper.ItemUnitMapper;
+import com.konsol.core.web.rest.api.errors.AccountDeletionException;
+import com.konsol.core.web.rest.api.errors.ItemDeletionException;
 import com.konsol.core.web.rest.api.errors.ItemNotFoundException;
 import com.konsol.core.web.rest.api.errors.ItemUnitException;
 import com.mongodb.client.AggregateIterable;
@@ -60,6 +63,7 @@ public class ItemServiceImpl implements ItemService {
     private final PkService pkService;
 
     private final ItemUnitService itemUnitService;
+    private final InvoiceItemRepository invoiceItemRepository;
 
     public ItemServiceImpl(
         ItemRepository itemRepository,
@@ -68,7 +72,8 @@ public class ItemServiceImpl implements ItemService {
         MongoTemplate mongoTemplate,
         PkService pkService,
         ItemUnitService itemUnitService,
-        ItemUnitMapper itemUnitMapper
+        ItemUnitMapper itemUnitMapper,
+        InvoiceItemRepository invoiceItemRepository
     ) {
         this.itemRepository = itemRepository;
         this.itemMapper = itemMapper;
@@ -77,6 +82,7 @@ public class ItemServiceImpl implements ItemService {
         this.pkService = pkService;
         this.itemUnitService = itemUnitService;
         this.itemUnitMapper = itemUnitMapper;
+        this.invoiceItemRepository = invoiceItemRepository;
     }
 
     @Override
@@ -404,6 +410,9 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public void delete(String id) {
         log.debug("Request to delete Item : {}", id);
+        if (!invoiceItemRepository.findAllByItemId(id).isEmpty()) {
+            throw new ItemDeletionException("Cannot delete Item with ID " + id + ": There are associated Invoices");
+        }
         this.deleteItemUnits(id);
         itemRepository.deleteById(id);
     }

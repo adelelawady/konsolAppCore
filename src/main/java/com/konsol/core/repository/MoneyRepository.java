@@ -1,5 +1,6 @@
 package com.konsol.core.repository;
 
+import com.carrotsearch.hppc.ByteContainer;
 import com.konsol.core.domain.Money;
 import com.konsol.core.domain.enumeration.MoneyKind;
 import java.time.LocalDateTime;
@@ -79,4 +80,8 @@ public interface MoneyRepository extends MongoRepository<Money, String> {
      * @return list of money records
      */
     List<Money> findByBankIdAndKind(String bankId, MoneyKind kind);
+
+    List<Money> findAllByAccountId(String id);
+
+    List<Money> findAllByBankId(String id);
 }

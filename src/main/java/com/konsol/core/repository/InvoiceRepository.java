@@ -1,5 +1,6 @@
 package com.konsol.core.repository;
 
+import com.carrotsearch.hppc.ByteContainer;
 import com.konsol.core.domain.Invoice;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -68,4 +69,8 @@ public interface InvoiceRepository extends MongoRepository<Invoice, String> {
     List<Invoice> findByCreatedDateBetweenAndDeferred(LocalDateTime startDate, LocalDateTime endDate, boolean b);
 
     boolean existsByStoreId(String id);
+
+    List<Invoice> findAllByAccountId(String id);
+
+    List<Invoice> findAllByBankId(String id);
 }

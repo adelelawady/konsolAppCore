@@ -6,6 +6,8 @@ import com.konsol.core.domain.Money;
 import com.konsol.core.domain.Pk;
 import com.konsol.core.domain.enumeration.MoneyKind;
 import com.konsol.core.domain.enumeration.PkKind;
+import com.konsol.core.repository.InvoiceItemRepository;
+import com.konsol.core.repository.InvoiceRepository;
 import com.konsol.core.repository.MoneyRepository;
 import com.konsol.core.service.AccountUserService;
 import com.konsol.core.service.BankService;
@@ -17,6 +19,7 @@ import com.konsol.core.service.api.dto.MoniesSearchModel;
 import com.konsol.core.service.api.dto.MoniesViewDTOContainer;
 import com.konsol.core.service.dto.AccountUserDTO;
 import com.konsol.core.service.mapper.MoneyMapper;
+import com.konsol.core.web.rest.api.errors.AccountDeletionException;
 import com.konsol.core.web.rest.api.errors.MoneyException;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
@@ -54,6 +57,12 @@ public class MoneyServiceImpl implements MoneyService {
     private final AccountUserService accountUserService;
 
     private final BankService bankService;
+
+    @Autowired
+    private InvoiceRepository invoiceRepository;
+
+    @Autowired
+    private InvoiceItemRepository invoiceItemRepository;
 
     public MoneyServiceImpl(
         MoneyRepository moneyRepository,
@@ -109,6 +118,7 @@ public class MoneyServiceImpl implements MoneyService {
     @Override
     public void delete(String id) {
         log.debug("Request to delete Money : {}", id);
+
         moneyRepository.deleteById(id);
     }
 

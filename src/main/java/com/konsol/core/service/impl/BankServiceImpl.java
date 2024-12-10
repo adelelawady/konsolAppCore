@@ -15,6 +15,8 @@ import com.konsol.core.service.dto.BankTransactionsDTO;
 import com.konsol.core.service.exception.BankNotFoundException;
 import com.konsol.core.service.mapper.BankMapper;
 import com.konsol.core.service.mapper.sup.BankTransactionsMapper;
+import com.konsol.core.web.rest.api.errors.AccountDeletionException;
+import com.konsol.core.web.rest.api.errors.BankDeletionException;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
 import java.math.BigDecimal;
@@ -111,6 +113,13 @@ public class BankServiceImpl implements BankService {
     @Override
     public void delete(String id) {
         log.debug("Request to delete Bank : {}", id);
+        if (!moneyRepository.findAllByBankId(id).isEmpty()) {
+            throw new BankDeletionException("Cannot delete Bank with ID " + id + ": There are associated money transactions.");
+        }
+
+        if (!invoiceRepository.findAllByBankId(id).isEmpty()) {
+            throw new BankDeletionException("Cannot delete Bank with ID " + id + ": There are associated Invoices transactions.");
+        }
         bankRepository.deleteById(id);
     }
 
