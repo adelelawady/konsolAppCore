@@ -92,6 +92,7 @@
     "@ngx-translate/http-loader": "7.0.0",
     "@openapitools/openapi-generator-cli": "^2.5.2",
     "@popperjs/core": "2.11.6",
+    "angular-gridster2": "^14.1.5",
     "bootstrap": "5.2.0",
     "chart.js": "^4.4.7",
     "copy-dir-cli": "^0.0.3",

@@ -79,7 +79,7 @@ public interface AccountUserService {
      * @param paginationSearchModel pagination and search parameters
      * @return list of account movements.
      */
-    com.konsol.core.service.api.dto.AccountTransactionsContainer processAccountTransactions(
+    com.konsol.core.service.api.dto.AccountTransactionsContainer getProcessAccountTransactions(
         String accountId,
         PaginationSearchModel paginationSearchModel
     );

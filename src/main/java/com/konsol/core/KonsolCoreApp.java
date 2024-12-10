@@ -18,8 +18,8 @@ import org.springframework.core.env.Environment;
 import tech.jhipster.config.DefaultProfileUtil;
 import tech.jhipster.config.JHipsterConstants;
 
-@SpringBootApplication
 @EnableConfigurationProperties({ ApplicationProperties.class })
+@SpringBootApplication(scanBasePackages = "com.konsol.core")
 public class KonsolCoreApp {
 
     private static final Logger log = LoggerFactory.getLogger(KonsolCoreApp.class);

@@ -32,15 +32,17 @@ import { CurrencyConfigService } from './core/config/currency-config.service';
 import { PagesModule } from './pages/pages.module';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { TranslateDirective } from './shared/language/translate.directive';
 @NgModule({
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    ApiModule.forRoot(() => {
-      return new Configuration({
-        basePath: 'api',
-      });
-    }),
+    ApiModule.forRoot(
+      () =>
+        new Configuration({
+          basePath: 'api',
+        })
+    ),
     TranslateModule,
     TranslationModule,
     PagesModule,
@@ -55,6 +57,7 @@ import { TranslateModule } from '@ngx-translate/core';
       preventDuplicates: true,
     }),
   ],
+  exports: [],
   providers: [
     Title,
     { provide: LOCALE_ID, useValue: 'en' },

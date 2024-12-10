@@ -213,6 +213,6 @@ public class AccountUserResource implements AccountUserApiDelegate {
         String id,
         PaginationSearchModel paginationSearchModel
     ) {
-        return ResponseEntity.ok().body(accountUserService.processAccountTransactions(id, paginationSearchModel));
+        return ResponseEntity.ok().body(accountUserService.getProcessAccountTransactions(id, paginationSearchModel));
     }
 }

@@ -6,6 +6,7 @@ import com.konsol.core.service.api.dto.InvoiceUpdateDTO;
 import com.konsol.core.service.api.dto.InvoiceViewDTO;
 import com.konsol.core.service.api.dto.InvoiceViewSimpleDTO;
 import org.mapstruct.*;
+import org.springframework.stereotype.Component;
 
 /**
  * Mapper for the entity {@link Invoice} and its DTO {@link InvoiceDTO}.

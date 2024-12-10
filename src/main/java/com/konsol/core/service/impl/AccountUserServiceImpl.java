@@ -324,7 +324,7 @@ public class AccountUserServiceImpl implements AccountUserService {
     }
 
     @Override
-    public com.konsol.core.service.api.dto.AccountTransactionsContainer processAccountTransactions(
+    public com.konsol.core.service.api.dto.AccountTransactionsContainer getProcessAccountTransactions(
         String accountId,
         PaginationSearchModel paginationSearchModel
     ) {

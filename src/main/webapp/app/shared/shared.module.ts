@@ -23,11 +23,11 @@ import { AccountSelectorComponent } from './components/account-selector/account-
 import { TranslationModule } from '../shared/language/translation.module';
 
 @NgModule({
-  imports: [SharedLibsModule, TranslationModule],
+  imports: [SharedLibsModule],
   declarations: [
+    AlertComponent,
     FindLanguageFromKeyPipe,
     TranslateDirective,
-    AlertComponent,
     AlertErrorComponent,
     HasAnyAuthorityDirective,
     DurationPipe,
