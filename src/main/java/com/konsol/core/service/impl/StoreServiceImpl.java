@@ -8,6 +8,7 @@ import com.konsol.core.domain.StoreItem;
 import com.konsol.core.domain.enumeration.InvoiceKind;
 import com.konsol.core.repository.InvoiceItemRepository;
 import com.konsol.core.repository.InvoiceRepository;
+import com.konsol.core.repository.MoneyRepository;
 import com.konsol.core.repository.StoreItemRepository;
 import com.konsol.core.repository.StoreRepository;
 import com.konsol.core.service.ItemService;
@@ -18,6 +19,7 @@ import com.konsol.core.service.mapper.StoreMapper;
 import com.konsol.core.web.api.StoresApi;
 import com.konsol.core.web.rest.api.errors.ItemNotFoundException;
 import com.konsol.core.web.rest.api.errors.ItemQtyException;
+import com.konsol.core.web.rest.api.errors.StoreDeletionException;
 import com.konsol.core.web.rest.api.errors.StoreNotFoundException;
 import com.mongodb.client.*;
 import java.math.BigDecimal;
@@ -59,6 +61,7 @@ public class StoreServiceImpl implements StoreService {
 
     private final InvoiceRepository invoiceRepository;
     private final InvoiceItemRepository invoiceItemRepository;
+    private final MoneyRepository moneyRepository;
 
     public StoreServiceImpl(
         StoreRepository storeRepository,
@@ -68,7 +71,8 @@ public class StoreServiceImpl implements StoreService {
         ItemService itemService,
         MongoTemplate mongoTemplate,
         InvoiceRepository invoiceRepository,
-        InvoiceItemRepository invoiceItemRepository
+        InvoiceItemRepository invoiceItemRepository,
+        MoneyRepository moneyRepository
     ) {
         this.storeRepository = storeRepository;
         this.storeItemRepository = storeItemRepository;
@@ -78,6 +82,7 @@ public class StoreServiceImpl implements StoreService {
         this.mongoTemplate = mongoTemplate;
         this.invoiceRepository = invoiceRepository;
         this.invoiceItemRepository = invoiceItemRepository;
+        this.moneyRepository = moneyRepository;
     }
 
     @Override
@@ -127,6 +132,13 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public void delete(String id) {
         log.debug("Request to delete Store : {}", id);
+        if (invoiceRepository.existsByStoreId(id)) {
+            throw new StoreDeletionException("Cannot delete store with ID " + id + ": There are associated invoices.");
+        }
+        if (!storeItemRepository.findAllByStoreId(id).isEmpty()) {
+            throw new StoreDeletionException("Cannot delete store with ID " + id + ": There are associated StoreItems.");
+        }
+
         storeRepository.deleteById(id);
     }
 

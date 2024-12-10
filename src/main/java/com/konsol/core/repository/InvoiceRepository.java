@@ -66,4 +66,6 @@ public interface InvoiceRepository extends MongoRepository<Invoice, String> {
     List<Invoice> findInvoicesByStoreAndCreatedDateRange(String storeId, LocalDateTime startDate, LocalDateTime endDate);
 
     List<Invoice> findByCreatedDateBetweenAndDeferred(LocalDateTime startDate, LocalDateTime endDate, boolean b);
+
+    boolean existsByStoreId(String id);
 }
