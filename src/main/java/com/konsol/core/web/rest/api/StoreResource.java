@@ -261,7 +261,7 @@ public class StoreResource implements StoresApiDelegate {
      */
     @Override
     public ResponseEntity<StoreItemDTO> setStoreItem(StoreItemIdOnlyDTO storeItemIdOnlyDTO) {
-        return ResponseEntity.ok().body(storeService.setStoreItem(storeItemIdOnlyDTO));
+        return ResponseEntity.ok().body(storeService.setStoreItem(storeItemIdOnlyDTO, true));
     }
 
     @Override

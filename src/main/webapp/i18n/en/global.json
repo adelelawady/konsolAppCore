@@ -194,10 +194,12 @@
         "product": "Product",
         "unit": "Unit",
         "price": "Unit Price",
+        "cost": "Unit Cost",
         "quantity": "Quantity",
         "total": "Total",
         "discount": "Discount",
         "netPrice": "Net Price",
+        "netCost": "Net Cost",
         "actions": "Actions"
       },
       "empty": {

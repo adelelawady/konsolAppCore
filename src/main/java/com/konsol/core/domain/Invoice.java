@@ -101,6 +101,9 @@ public class Invoice extends AbstractAuditingEntity<String> implements Serializa
     @JsonIgnoreProperties(allowSetters = true)
     private Set<InvoiceItem> invoiceItems = new HashSet<>();
 
+    @Field("details")
+    private String details;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
     public String getPk() {
@@ -385,5 +388,13 @@ public class Invoice extends AbstractAuditingEntity<String> implements Serializa
 
     public void setDeferred(boolean deferred) {
         this.deferred = deferred;
+    }
+
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
     }
 }

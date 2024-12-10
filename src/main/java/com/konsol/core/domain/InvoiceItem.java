@@ -39,27 +39,27 @@ public class InvoiceItem extends AbstractAuditingEntity<String> implements Seria
 
     @DecimalMin(value = "0")
     @Field("unit_pieces")
-    private BigDecimal unitPieces;
+    private BigDecimal unitPieces = new BigDecimal(0);
 
     @DecimalMin(value = "0")
     @Field("user_qty")
-    private BigDecimal userQty;
+    private BigDecimal userQty = new BigDecimal(0);
 
     @DecimalMin(value = "0")
     @Field("unit_qty_in")
-    private BigDecimal unitQtyIn;
+    private BigDecimal unitQtyIn = new BigDecimal(0);
 
     @DecimalMin(value = "0")
     @Field("unit_qty_out")
-    private BigDecimal unitQtyOut;
+    private BigDecimal unitQtyOut = new BigDecimal(0);
 
     @DecimalMin(value = "0")
     @Field("unit_cost")
-    private BigDecimal unitCost;
+    private BigDecimal unitCost = new BigDecimal(0);
 
     @DecimalMin(value = "0")
     @Field("unit_price")
-    private BigDecimal unitPrice;
+    private BigDecimal unitPrice = new BigDecimal(0);
 
     @Min(value = 0)
     @Max(value = 100)
@@ -72,35 +72,35 @@ public class InvoiceItem extends AbstractAuditingEntity<String> implements Seria
 
     @DecimalMin(value = "0")
     @Field("total_cost")
-    private BigDecimal totalCost;
+    private BigDecimal totalCost = new BigDecimal(0);
 
     @DecimalMin(value = "0")
     @Field("total_price")
-    private BigDecimal totalPrice;
+    private BigDecimal totalPrice = new BigDecimal(0);
 
     @DecimalMin(value = "0")
     @Field("qty_in")
-    private BigDecimal qtyIn;
+    private BigDecimal qtyIn = new BigDecimal(0);
 
     @DecimalMin(value = "0")
     @Field("qty_out")
-    private BigDecimal qtyOut;
+    private BigDecimal qtyOut = new BigDecimal(0);
 
     @DecimalMin(value = "0")
     @Field("cost")
-    private BigDecimal cost;
+    private BigDecimal cost = new BigDecimal(0);
 
     @DecimalMin(value = "0")
     @Field("price")
-    private BigDecimal price;
+    private BigDecimal price = new BigDecimal(0);
 
     @DecimalMin(value = "0")
     @Field("net_cost")
-    private BigDecimal netCost;
+    private BigDecimal netCost = new BigDecimal(0);
 
     @DecimalMin(value = "0")
     @Field("net_price")
-    private BigDecimal netPrice;
+    private BigDecimal netPrice = new BigDecimal(0);
 
     @Field("invoice_id")
     private String invoiceId;

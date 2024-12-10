@@ -48,6 +48,8 @@ public interface InvoiceController {
             }
         }
 
+        /*
+
         if (!(invoiceItem.getDiscountPer() == null || (invoiceItem.getDiscountPer() == 0))) {
             BigDecimal discount =
                 (BigDecimal.valueOf(invoiceItem.getDiscountPer()).divide(BigDecimal.valueOf(100), 4, RoundingMode.CEILING)).multiply(
@@ -72,6 +74,8 @@ public interface InvoiceController {
                 }
             }
         }
+        
+         */
 
         if (!(invoiceItem.getDiscount() == null || (invoiceItem.getDiscount().compareTo(new BigDecimal(0))) == 0)) {
             BigDecimal discountPer =

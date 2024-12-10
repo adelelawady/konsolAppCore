@@ -1,8 +1,12 @@
 package com.konsol.core.service.impl;
 
+import com.konsol.core.domain.Invoice;
+import com.konsol.core.domain.InvoiceItem;
 import com.konsol.core.domain.Item;
 import com.konsol.core.domain.Store;
 import com.konsol.core.domain.StoreItem;
+import com.konsol.core.domain.enumeration.InvoiceKind;
+import com.konsol.core.repository.InvoiceItemRepository;
 import com.konsol.core.repository.InvoiceRepository;
 import com.konsol.core.repository.StoreItemRepository;
 import com.konsol.core.repository.StoreRepository;
@@ -32,6 +36,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 /**
@@ -53,6 +58,7 @@ public class StoreServiceImpl implements StoreService {
     private final MongoTemplate mongoTemplate;
 
     private final InvoiceRepository invoiceRepository;
+    private final InvoiceItemRepository invoiceItemRepository;
 
     public StoreServiceImpl(
         StoreRepository storeRepository,
@@ -61,7 +67,8 @@ public class StoreServiceImpl implements StoreService {
         StoreItemMapper storeItemMapper,
         ItemService itemService,
         MongoTemplate mongoTemplate,
-        InvoiceRepository invoiceRepository
+        InvoiceRepository invoiceRepository,
+        InvoiceItemRepository invoiceItemRepository
     ) {
         this.storeRepository = storeRepository;
         this.storeItemRepository = storeItemRepository;
@@ -70,6 +77,7 @@ public class StoreServiceImpl implements StoreService {
         this.itemService = itemService;
         this.mongoTemplate = mongoTemplate;
         this.invoiceRepository = invoiceRepository;
+        this.invoiceItemRepository = invoiceItemRepository;
     }
 
     @Override
@@ -258,7 +266,7 @@ public class StoreServiceImpl implements StoreService {
         }
 
         if (checkNotItemQtyAvailable(ItemId, qty)) {
-            throw new ItemQtyException("مشكلة ف كمية الصنف", "لا يوجد ما يكفي من الصنف ف المخازن");
+            throw new ItemQtyException("مشكلة ف كم��ة الصنف", "لا يوجد ما يكفي من الصنف ف المخازن");
         }
 
         for (StoreItemDTO storeItemDTO : this.getAllStoresItemsForItem(ItemId)) {
@@ -429,36 +437,83 @@ public class StoreServiceImpl implements StoreService {
          * get and check store item
          */
         Optional<StoreItem> storeItemOptional = storeItemRepository.findOneByItemIdAndStoreId(item.get().getId(), store.get().getId());
+        StoreItem storeItem;
+        BigDecimal oldQty = BigDecimal.ZERO;
+
         if (storeItemOptional.isPresent()) {
-            /**
-             * update
-             */
-            StoreItem storeItem = storeItemOptional.get();
+            // Update
+            storeItem = storeItemOptional.get();
+            oldQty = storeItem.getQty();
             storeItem.setQty(storeItemIdOnlyDTO.getQty());
             storeItem = storeItemRepository.save(storeItem);
-
-            /**
-             * Update item QTY
-             */
-            UpdateItemQty(storeItemIdOnlyDTO.getItemId());
-
-            return storeItemMapper.toDto(storeItem);
         } else {
-            /**
-             * create
-             */
-            StoreItem storeItem = new StoreItem();
+            // Create new
+            storeItem = new StoreItem();
             storeItem.setItem(item.get());
             storeItem.setStore(store.get());
             storeItem.setQty(storeItemIdOnlyDTO.getQty());
             storeItem = storeItemRepository.save(storeItem);
-
-            /**
-             * Update item QTY
-             */
-            UpdateItemQty(storeItemIdOnlyDTO.getItemId());
-
-            return storeItemMapper.toDto(storeItem);
         }
+
+        // Create adjustment invoice if requested
+        if (createAdjustInvoice) {
+            BigDecimal diffQty = storeItemIdOnlyDTO.getQty().subtract(oldQty);
+
+            if (diffQty.compareTo(BigDecimal.ZERO) != 0) {
+                Invoice adjustInvoice = new Invoice();
+                adjustInvoice.setKind(InvoiceKind.ADJUST);
+                adjustInvoice.setStore(store.get());
+
+                // Add adjustment details including user info
+                String username = SecurityContextHolder.getContext().getAuthentication().getName();
+                String details = String.format(
+                    "Quantity adjusted from %s to %s (diff: %s) by user: %s",
+                    oldQty,
+                    storeItemIdOnlyDTO.getQty(),
+                    diffQty,
+                    username
+                );
+                adjustInvoice.setDetails(details);
+
+                // Create invoice item
+                InvoiceItem invoiceItem = new InvoiceItem();
+                invoiceItem.setItem(item.get());
+                invoiceItem.setUnit("-");
+
+                // Set quantities based on whether items were added or removed
+                if (diffQty.compareTo(BigDecimal.ZERO) > 0) {
+                    invoiceItem.setQtyIn(diffQty);
+                    invoiceItem.setUnitQtyIn(diffQty.multiply(new BigDecimal(1)));
+                    invoiceItem.setQtyOut(BigDecimal.ZERO);
+                    invoiceItem.setUnitQtyOut(BigDecimal.ZERO);
+                    invoiceItem.setUserQty(diffQty);
+                } else {
+                    invoiceItem.setQtyIn(BigDecimal.ZERO);
+                    invoiceItem.setUnitQtyIn(BigDecimal.ZERO);
+                    invoiceItem.setQtyOut(diffQty.abs());
+                    invoiceItem.setUnitQtyOut(diffQty.abs().multiply(new BigDecimal(1)));
+                    invoiceItem.setUserQty(diffQty.abs());
+                }
+
+                // Save the invoice first to get its ID
+                adjustInvoice = invoiceRepository.save(adjustInvoice);
+
+                // Link invoice item to invoice
+                invoiceItem.setInvoiceId(adjustInvoice.getId());
+
+                // Add invoice item to invoice's items set
+                Set<InvoiceItem> invoiceItems = new HashSet<>();
+                invoiceItems.add(invoiceItem);
+                adjustInvoice.setInvoiceItems(invoiceItems);
+
+                // Save both invoice item and updated invoice
+                invoiceItemRepository.save(invoiceItem);
+                invoiceRepository.save(adjustInvoice);
+            }
+        }
+        // Update item QTY
+        UpdateItemQty(storeItemIdOnlyDTO.getItemId());
+
+        return storeItemMapper.toDto(storeItem);
     }
 }

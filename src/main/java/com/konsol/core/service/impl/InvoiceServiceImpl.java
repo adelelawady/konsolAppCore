@@ -725,6 +725,7 @@ public class InvoiceServiceImpl implements InvoiceService {
             return invoice;
         }
 
+        /*
         // Check if discount percentage is set and greater than 0
         if (invoice.getDiscountPer() != null && invoice.getDiscountPer() > 0) {
             // Calculate the discount amount
@@ -751,9 +752,11 @@ public class InvoiceServiceImpl implements InvoiceService {
                 invoice.netCost(netAmount);
             }
 
+
+
             return invoice;
         }
-
+*/
         // No discount, return the invoice as is
         return invoice;
     }
@@ -766,8 +769,21 @@ public class InvoiceServiceImpl implements InvoiceService {
      */
     @Override
     public Invoice addInvoiceAddititon(Invoice invoice) {
-        if (invoice.getAdditions() != null && invoice.getAdditions().compareTo(new BigDecimal(0)) == 1) {
-            return invoice.netPrice(invoice.getNetPrice().add(invoice.getAdditions()));
+        if (invoice.getAdditions() != null && invoice.getAdditions().compareTo(new BigDecimal(0)) > 0) {
+            switch (invoice.getKind()) {
+                case SALE:
+                    {
+                        return invoice.netPrice(invoice.getNetPrice().add(invoice.getAdditions()));
+                    }
+                case PURCHASE:
+                    {
+                        return invoice.netCost(invoice.getNetCost().add(invoice.getAdditions()));
+                    }
+                default:
+                    {
+                        return invoice.netPrice(invoice.getNetPrice().add(invoice.getAdditions()));
+                    }
+            }
         }
         return invoice;
     }

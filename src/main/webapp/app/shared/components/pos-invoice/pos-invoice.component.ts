@@ -43,12 +43,12 @@ export class PosInvoiceComponent implements OnInit, AfterViewInit {
   selectedAccountId: string | null = null;
   additions: number = 0;
   additionsType: string = '';
+  editingItem: { id: string; qty: number; cost: number; price: number; discount: number } | null = null;
 
   // New properties for selected bank and store
   selectedBank: BankDTO | null = null;
   selectedStore: StoreDTO | null = null;
   private discountTimeout: any;
-  editingItem: { id: string; qty: number; price: number; discount: number } | null = null;
 
   // Add deferred property
   isDeferred = false;
@@ -351,6 +351,7 @@ export class PosInvoiceComponent implements OnInit, AfterViewInit {
     this.editingItem = {
       id: item.id || '',
       qty: item.userQty || 0,
+      cost: item.cost || 0,
       price: item.price || 0,
       discount: item.discount || 0,
     };

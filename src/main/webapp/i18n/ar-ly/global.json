@@ -183,10 +183,12 @@
         "product": "المنتج",
         "unit": "وحدة",
         "price": "سعر الوحدة",
+        "cost": "تكلفة الوحدة",
         "quantity": "الكمية",
         "total": "الإجمالي",
         "discount": "خصم",
         "netPrice": "صافي",
+        "netCost": "صافي",
         "actions": "إجراءات"
       },
       "empty": {

@@ -119,11 +119,18 @@
                   <th>{{ 'global.posInvoice.table.number' | translate }}</th>
                   <th>{{ 'global.posInvoice.table.product' | translate }}</th>
                   <th>{{ 'global.posInvoice.table.unit' | translate }}</th>
-                  <th>{{ 'global.posInvoice.table.price' | translate }}</th>
+
+                  <th *ngIf="currentInvoice.kind == 'SALE'">{{ 'global.posInvoice.table.price' | translate }}</th>
+                  <th *ngIf="currentInvoice.kind == 'PURCHASE'">{{ 'global.posInvoice.table.cost' | translate }}</th>
+
                   <th>{{ 'global.posInvoice.table.quantity' | translate }}</th>
                   <th>{{ 'global.posInvoice.table.total' | translate }}</th>
                   <th>{{ 'global.posInvoice.table.discount' | translate }}</th>
-                  <th>{{ 'global.posInvoice.table.netPrice' | translate }}</th>
+
+                  <th *ngIf="currentInvoice.kind == 'SALE'">{{ 'global.posInvoice.table.netPrice' | translate }}</th>
+
+                  <th *ngIf="currentInvoice.kind == 'PURCHASE'">{{ 'global.posInvoice.table.netCost' | translate }}</th>
+
                   <th>{{ 'global.posInvoice.table.actions' | translate }}</th>
                 </tr>
               </thead>
@@ -136,7 +143,8 @@
                   <td>{{ i + 1 }}</td>
                   <td class="text-start">{{ item.item?.name || '-' }}</td>
                   <td>{{ item.unit || '-' }}</td>
-                  <td>
+
+                  <td *ngIf="currentInvoice.kind == 'SALE'">
                     <ng-container *ngIf="editingItem?.id !== item.id; else editPrice">
                       {{ item.price || 0 | appCurrency }}
                     </ng-container>
@@ -150,6 +158,22 @@
                       />
                     </ng-template>
                   </td>
+
+                  <td *ngIf="currentInvoice.kind == 'PURCHASE'">
+                    <ng-container *ngIf="editingItem?.id !== item.id; else editPrice">
+                      {{ item.cost || 0 | appCurrency }}
+                    </ng-container>
+                    <ng-template #editPrice>
+                      <input
+                        type="number"
+                        class="form-control form-control-sm text-center"
+                        [(ngModel)]="editingItem!.cost"
+                        min="1.00"
+                        step="1.00"
+                      />
+                    </ng-template>
+                  </td>
+
                   <td>
                     <ng-container *ngIf="editingItem?.id !== item.id; else editQty">
                       {{ item.userQty || 0 | number: '1.3-3' }}
@@ -164,7 +188,8 @@
                       />
                     </ng-template>
                   </td>
-                  <td>{{ item.totalPrice || 0 | appCurrency }}</td>
+                  <td *ngIf="currentInvoice.kind == 'SALE'">{{ item.totalPrice || 0 | appCurrency }}</td>
+                  <td *ngIf="currentInvoice.kind == 'PURCHASE'">{{ item.totalCost || 0 | appCurrency }}</td>
                   <td>
                     <ng-container *ngIf="editingItem?.id !== item.id; else editDiscount">
                       <div [class.text-danger]="(item.discount || 0) > 0">
@@ -181,7 +206,8 @@
                       />
                     </ng-template>
                   </td>
-                  <td>{{ item.netPrice || 0 | appCurrency }}</td>
+                  <td *ngIf="currentInvoice.kind == 'SALE'">{{ item.netPrice || 0 | appCurrency }}</td>
+                  <td *ngIf="currentInvoice.kind == 'PURCHASE'">{{ item.netCost || 0 | appCurrency }}</td>
                   <td>
                     <div class="btn-list justify-content-center">
                       <ng-container *ngIf="editingItem?.id !== item.id; else editActions">
@@ -225,9 +251,11 @@
                 <tr class="text-center fw-bold">
                   <td colspan="4" class="text-start">{{ 'global.posInvoice.table.total' | translate }}</td>
                   <td>{{ getTotalQuantity() | number: '1.3-3' }}</td>
-                  <td>{{ currentInvoice?.totalPrice || 0 | appCurrency }}</td>
+                  <td *ngIf="currentInvoice.kind == 'SALE'">{{ currentInvoice?.totalPrice || 0 | appCurrency }}</td>
+                  <td *ngIf="currentInvoice.kind == 'PURCHASE'">{{ currentInvoice?.totalCost || 0 | appCurrency }}</td>
                   <td>{{ currentInvoice?.discount || 0 | appCurrency }}</td>
-                  <td>{{ currentInvoice?.netPrice || 0 | appCurrency }}</td>
+                  <td *ngIf="currentInvoice.kind == 'SALE'">{{ currentInvoice?.netPrice || 0 | appCurrency }}</td>
+                  <td *ngIf="currentInvoice.kind == 'PURCHASE'">{{ currentInvoice?.netCost || 0 | appCurrency }}</td>
                   <td></td>
                 </tr>
               </tfoot>
@@ -319,7 +347,8 @@
             <div class="card-body">
               <div class="d-flex justify-content-between mb-2">
                 <span class="text-muted">{{ 'global.posInvoice.totals.beforeDiscount' | translate }} </span>
-                <span class="font-weight-medium">{{ currentInvoice?.totalPrice | currency }}</span>
+                <span *ngIf="currentInvoice.kind == 'SALE'" class="font-weight-medium">{{ currentInvoice?.totalPrice | currency }}</span>
+                <span *ngIf="currentInvoice.kind == 'PURCHASE'" class="font-weight-medium">{{ currentInvoice?.totalCost | currency }}</span>
               </div>
               <div class="d-flex justify-content-between mb-2">
                 <span class="text-muted">{{ 'global.posInvoice.totals.discount' | translate }} </span>
@@ -331,7 +360,12 @@
               </div>
               <div class="d-flex justify-content-between">
                 <span class="font-weight-bold">{{ 'global.posInvoice.totals.total' | translate }} </span>
-                <span class="font-weight-bold text-primary h4 mb-0">{{ currentInvoice?.netPrice | currency }}</span>
+                <span *ngIf="currentInvoice.kind == 'SALE'" class="font-weight-bold text-primary h4 mb-0">{{
+                  currentInvoice?.netPrice | currency
+                }}</span>
+                <span *ngIf="currentInvoice.kind == 'PURCHASE'" class="font-weight-bold text-primary h4 mb-0">{{
+                  currentInvoice?.netCost | currency
+                }}</span>
               </div>
             </div>
           </div>
