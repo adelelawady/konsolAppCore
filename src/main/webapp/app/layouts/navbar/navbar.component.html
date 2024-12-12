@@ -37,6 +37,13 @@
             <span jhiTranslate="global.menu.home">Home</span>
           </a>
         </li>
+        <!-- Playstation -->
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/playstation" routerLinkActive="active">
+            <i class="fa fa-gamepad"></i>
+            <span>Playstation</span>
+          </a>
+        </li>
 
         <!-- Admin Menu -->
         <li *jhiHasAnyAuthority="'ROLE_ADMIN'" ngbDropdown class="nav-item" display="dynamic">

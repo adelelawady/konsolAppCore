@@ -84,6 +84,14 @@ const routes: Routes = [
     canActivate: [UserRouteAccessService],
     data: { title: 'Money Transactions' },
   },
+
+  // PLAYSTATION
+
+  {
+    path: 'playstation',
+    loadChildren: () => import('./playstation/playstation.module').then(m => m.PlaystationModule),
+    data: { title: 'playstation' },
+  },
 ];
 
 @NgModule({
