@@ -1,0 +1,35 @@
+{
+  "annotations": {
+    "changelogDate": "20241213171707"
+  },
+  "applications": "*",
+  "dto": "mapstruct",
+  "entityTableName": "ps_device",
+  "fields": [
+    {
+      "fieldName": "pk",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "index",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "active",
+      "fieldType": "Boolean",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "name": "PlaystationDevice",
+  "pagination": "pagination",
+  "relationships": [],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}

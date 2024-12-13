@@ -1,4 +1,7 @@
 {
+  "annotations": {
+    "changelogDate": "20220907223436"
+  },
   "applications": "*",
   "changelogDate": "20220907223436",
   "dto": "mapstruct",
@@ -26,8 +29,10 @@
       "otherEntityRelationshipName": "storeId",
       "ownerSide": true,
       "relationshipName": "items",
+      "relationshipSide": "left",
       "relationshipType": "many-to-many"
     }
   ],
+  "searchEngine": "no",
   "service": "serviceImpl"
 }

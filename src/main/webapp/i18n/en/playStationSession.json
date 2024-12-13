@@ -1,0 +1,27 @@
+{
+  "konsolCoreApp": {
+    "playStationSession": {
+      "home": {
+        "title": "Play Station Sessions",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Play Station Session",
+        "createOrEditLabel": "Create or edit a Play Station Session",
+        "notFound": "No Play Station Sessions found"
+      },
+      "created": "A new Play Station Session is created with identifier {{ param }}",
+      "updated": "A Play Station Session is updated with identifier {{ param }}",
+      "deleted": "A Play Station Session is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Play Station Session {{ id }}?"
+      },
+      "detail": {
+        "title": "Play Station Session"
+      },
+      "id": "Id",
+      "active": "Active",
+      "startTime": "Start Time",
+      "endTime": "End Time",
+      "invoiceId": "Invoice Id"
+    }
+  }
+}

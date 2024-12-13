@@ -1,0 +1,48 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (playStationSession(); as playStationSessionRef) {
+      <div>
+        <h2 data-cy="playStationSessionDetailsHeading">
+          <span jhiTranslate="konsolCoreApp.playStationSession.detail.title">Play Station Session</span>
+        </h2>
+
+        <hr />
+
+        <jhi-alert-error></jhi-alert-error>
+
+        <jhi-alert></jhi-alert>
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="konsolCoreApp.playStationSession.id">Id</span></dt>
+          <dd>
+            <span>{{ playStationSessionRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="konsolCoreApp.playStationSession.active">Active</span></dt>
+          <dd>
+            <span>{{ playStationSessionRef.active }}</span>
+          </dd>
+          <dt><span jhiTranslate="konsolCoreApp.playStationSession.startTime">Start Time</span></dt>
+          <dd>
+            <span>{{ playStationSessionRef.startTime | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="konsolCoreApp.playStationSession.endTime">End Time</span></dt>
+          <dd>
+            <span>{{ playStationSessionRef.endTime | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="konsolCoreApp.playStationSession.invoiceId">Invoice Id</span></dt>
+          <dd>
+            <span>{{ playStationSessionRef.invoiceId }}</span>
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/play-station-session', playStationSessionRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

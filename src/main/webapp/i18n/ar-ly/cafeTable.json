@@ -1,0 +1,27 @@
+{
+  "konsolCoreApp": {
+    "cafeTable": {
+      "home": {
+        "title": "Cafe Tables",
+        "refreshListLabel": "تحديث القائمة",
+        "createLabel": "إنشاء Cafe Table جديد",
+        "createOrEditLabel": "إنشاء أو تعديل Cafe Table",
+        "notFound": "لم يتم العثور على Cafe Tables"
+      },
+      "created": "Cafe Table جديد تم إنشاؤه بالمعرف {{ param }}",
+      "updated": "Cafe Table تم تحديثه بالمعرف {{ param }}",
+      "deleted": "Cafe Table تم حذفه بالمعرف {{ param }}",
+      "delete": {
+        "question": "هل أنت متأكد أنك تريد حذف Cafe Table {{ id }}؟"
+      },
+      "detail": {
+        "title": "Cafe Table"
+      },
+      "id": "ID",
+      "pk": "Pk",
+      "name": "Name",
+      "index": "Index",
+      "active": "Active"
+    }
+  }
+}

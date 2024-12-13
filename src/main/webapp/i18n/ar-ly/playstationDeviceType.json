@@ -1,0 +1,26 @@
+{
+  "konsolCoreApp": {
+    "playstationDeviceType": {
+      "home": {
+        "title": "Playstation Device Types",
+        "refreshListLabel": "تحديث القائمة",
+        "createLabel": "إنشاء Playstation Device Type جديد",
+        "createOrEditLabel": "إنشاء أو تعديل Playstation Device Type",
+        "notFound": "لم يتم العثور على Playstation Device Types"
+      },
+      "created": "Playstation Device Type جديد تم إنشاؤه بالمعرف {{ param }}",
+      "updated": "Playstation Device Type تم تحديثه بالمعرف {{ param }}",
+      "deleted": "Playstation Device Type تم حذفه بالمعرف {{ param }}",
+      "delete": {
+        "question": "هل أنت متأكد أنك تريد حذف Playstation Device Type {{ id }}؟"
+      },
+      "detail": {
+        "title": "Playstation Device Type"
+      },
+      "id": "ID",
+      "name": "Name",
+      "defaultMainPrice": "Default Main Price",
+      "productId": "Product Id"
+    }
+  }
+}

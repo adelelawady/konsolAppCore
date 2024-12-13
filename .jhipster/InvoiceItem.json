@@ -1,4 +1,7 @@
 {
+  "annotations": {
+    "changelogDate": "20220907223432"
+  },
   "applications": "*",
   "changelogDate": "20220907223432",
   "dto": "mapstruct",
@@ -126,8 +129,10 @@
       "otherEntityRelationshipName": "invoiceItems",
       "ownerSide": false,
       "relationshipName": "invoice",
+      "relationshipSide": "right",
       "relationshipType": "many-to-many"
     }
   ],
+  "searchEngine": "no",
   "service": "serviceImpl"
 }

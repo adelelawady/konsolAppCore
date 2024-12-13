@@ -1,4 +1,7 @@
 {
+  "annotations": {
+    "changelogDate": "20220907223435"
+  },
   "applications": "*",
   "changelogDate": "20220907223435",
   "dto": "mapstruct",
@@ -41,20 +44,24 @@
       "otherEntityName": "bank",
       "ownerSide": true,
       "relationshipName": "bank",
+      "relationshipSide": "left",
       "relationshipType": "one-to-one"
     },
     {
       "otherEntityName": "item",
       "ownerSide": true,
       "relationshipName": "item",
+      "relationshipSide": "left",
       "relationshipType": "one-to-one"
     },
     {
       "otherEntityName": "accountUser",
       "ownerSide": true,
       "relationshipName": "account",
+      "relationshipSide": "left",
       "relationshipType": "one-to-one"
     }
   ],
+  "searchEngine": "no",
   "service": "serviceImpl"
 }
