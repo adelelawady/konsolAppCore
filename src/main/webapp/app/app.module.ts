@@ -23,7 +23,6 @@ import { httpInterceptorProviders } from 'app/core/interceptor/index';
 import { FindLanguageFromKeyPipe } from 'app/shared/language/find-language-from-key.pipe';
 import { MainComponent } from './layouts/main/main.component';
 import { NavbarComponent } from './layouts/navbar/navbar.component';
-import { FooterComponent } from './layouts/footer/footer.component';
 import { PageRibbonComponent } from './layouts/profiles/page-ribbon.component';
 import { ActiveMenuDirective } from './layouts/navbar/active-menu.directive';
 import { ErrorComponent } from './layouts/error/error.component';
@@ -31,6 +30,7 @@ import { ApiModule, Configuration } from './core/konsolApi';
 import { CurrencyConfigService } from './core/config/currency-config.service';
 import { PagesModule } from './pages/pages.module';
 import { TranslateModule } from '@ngx-translate/core';
+import { LayoutsModule } from './layouts/layouts.module';
 
 import { TranslateDirective } from './shared/language/translate.directive';
 @NgModule({
@@ -56,6 +56,7 @@ import { TranslateDirective } from './shared/language/translate.directive';
       positionClass: 'toast-top-right',
       preventDuplicates: true,
     }),
+    LayoutsModule,
   ],
   exports: [],
   providers: [
@@ -66,7 +67,7 @@ import { TranslateDirective } from './shared/language/translate.directive';
     CurrencyConfigService,
     FindLanguageFromKeyPipe,
   ],
-  declarations: [MainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, ActiveMenuDirective, FooterComponent],
+  declarations: [MainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, ActiveMenuDirective],
   bootstrap: [MainComponent],
 })
 export class AppModule {

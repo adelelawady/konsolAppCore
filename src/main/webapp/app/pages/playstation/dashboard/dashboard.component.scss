@@ -1,0 +1,23 @@
+.card {
+  margin-bottom: 1.5rem;
+  transition: transform 0.2s;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+}
+
+h1 {
+  margin-bottom: 2rem;
+  color: #333;
+}
+
+.card-title {
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+.card-text {
+  color: #666;
+}
