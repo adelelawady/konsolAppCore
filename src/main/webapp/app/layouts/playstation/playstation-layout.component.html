@@ -1,38 +1,8 @@
 <div class="playstation-layout">
-  <!-- Navbar -->
-  <header class="ps-header">
-    <div class="ps-navbar">
-      <router-outlet name="navbar"></router-outlet>
-    </div>
-  </header>
-
   <!-- Main content -->
-  <main class="ps-main" [ngClass]="{'no-sidebar': isDashboard}">
-    <!-- Sidebar - Only show if not dashboard -->
-    <div class="ps-sidebar" *ngIf="!isDashboard">
-      <div class="ps-menu">
-        <div class="menu-item">
-          <a [routerLink]="['/playstation']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-            <i class="fas fa-home"></i>
-            <span>Home</span>
-          </a>
-        </div>
-        <div class="menu-item">
-          <a [routerLink]="['/playstation/dashboard']" routerLinkActive="active">
-            <i class="fas fa-tachometer-alt"></i>
-            <span>Dashboard</span>
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <div class="ps-content" [ngClass]="{'full-width': isDashboard}">
+  <main class="ps-main">
+    <div class="ps-content">
       <router-outlet></router-outlet>
     </div>
   </main>
-
-  <!-- Footer -->
-  <footer class="ps-footer">
-    <jhi-footer></jhi-footer>
-  </footer>
 </div>
