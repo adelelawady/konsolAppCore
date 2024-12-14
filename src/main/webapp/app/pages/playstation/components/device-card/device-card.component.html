@@ -7,10 +7,7 @@
   </div>
 
   <div class="device-card__content">
-    <div class="device-type">
-      {{ device.deviceType }}
-    </div>
-
+    <div class="device-type">{{ device.deviceType }}</div>
     <div class="device-actions" *ngIf="device.status === 'in-use'">
       <button class="btn-icon settings">
         <i class="fas fa-cog"></i>
@@ -19,12 +16,14 @@
   </div>
 
   <div class="device-card__footer">
-    <div class="status-badge" *ngIf="device.status === 'maintenance'">
-      {{ getStatusText() }}
-    </div>
-    <div class="session-info" *ngIf="device.status === 'in-use'">
-      <span class="duration">{{ device.duration }} m</span>
-      <span class="cost">EGP {{ device.cost }}</span>
-    </div>
+    <ng-container *ngIf="device.status === 'maintenance'">
+      <div class="status-badge">{{ getStatusText() }}</div>
+    </ng-container>
+    <ng-container *ngIf="device.status === 'in-use'">
+      <div class="session-info">
+        <span class="duration">{{ device.duration }} m</span>
+        <span class="cost">EGP {{ device.cost }}</span>
+      </div>
+    </ng-container>
   </div>
 </div>
