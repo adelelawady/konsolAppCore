@@ -1,0 +1,47 @@
+<div class="device-card">
+  <div class="device-card__header">
+    <div class="device-status" [class]="getStatusClass()">
+      {{ device.status }}
+    </div>
+    <div class="device-actions">
+      <button class="btn-icon" title="Settings">
+        <i class="fas fa-cog"></i>
+      </button>
+    </div>
+  </div>
+  
+  <div class="device-card__image">
+    <img [src]="device.imageUrl" [alt]="device.name">
+  </div>
+
+  <div class="device-card__content">
+    <h3 class="device-name">{{ device.name }}</h3>
+    <div class="device-rate">
+      {{ formatCurrency(device.hourlyRate) }} / hour
+    </div>
+
+    <div class="device-session" *ngIf="device.currentSession">
+      <div class="session-info">
+        <div class="info-item">
+          <i class="fas fa-clock"></i>
+          <span>Started: {{ device.currentSession.startTime }}</span>
+        </div>
+        <div class="info-item">
+          <i class="fas fa-hourglass-half"></i>
+          <span>Duration: {{ formatDuration(device.currentSession.duration) }}</span>
+        </div>
+        <div class="info-item">
+          <i class="fas fa-coins"></i>
+          <span>Cost: {{ formatCurrency(device.currentSession.cost) }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="device-card__footer">
+    <button class="btn-primary" [disabled]="device.status !== 'available'">
+      <i class="fas fa-play"></i>
+      Start Session
+    </button>
+  </div>
+</div>
