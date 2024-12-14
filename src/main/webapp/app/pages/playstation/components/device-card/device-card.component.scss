@@ -1,4 +1,9 @@
 .device-card {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  
   min-width: 200px;
   background: white;
   border-radius: 12px;
