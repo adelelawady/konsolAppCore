@@ -249,13 +249,17 @@ public class InvoiceServiceImpl implements InvoiceService {
      */
     @Override
     public InvoiceDTO initializeNewInvoice(InvoiceKind kind) {
+        return invoiceMapper.toDto(initializeNewInvoiceDomein(kind));
+    }
+
+    @Override
+    public Invoice initializeNewInvoiceDomein(InvoiceKind kind) {
         Invoice invoice = new Invoice();
         invoice.setActive(false);
         Pk pk = pkService.getPkEntity(PkKind.INVOICE);
         invoice.setPk(pk.getValue().add(new BigDecimal(1)).intValue() + "");
         invoice.setKind(kind);
-        Invoice resultInvoice = invoiceRepository.save(invoice);
-        return invoiceMapper.toDto(resultInvoice);
+        return invoiceRepository.save(invoice);
     }
 
     /**

@@ -91,6 +91,8 @@ public interface InvoiceService {
     //@PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.CREATE_INVOICE + "\")")
     InvoiceDTO initializeNewInvoice(InvoiceKind kind);
 
+    Invoice initializeNewInvoiceDomein(InvoiceKind kind);
+
     /**
      * creates new empty invoice item as temp not included till it's active and saved invoice
      *
