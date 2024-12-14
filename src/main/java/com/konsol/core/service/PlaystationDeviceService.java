@@ -1,13 +1,15 @@
 package com.konsol.core.service;
 
-import com.konsol.core.service.dto.PlaystationDeviceDTO;
-import com.konsol.core.service.dto.PlayStationSessionDTO;
+import com.konsol.core.domain.playstation.PlaystationDevice;
+import com.konsol.core.service.api.dto.PsDeviceDTO;
+import com.konsol.core.service.api.dto.PsSessionDTO;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 /**
- * Service Interface for managing {@link com.konsol.core.domain.PlaystationDevice}.
+ * Service Interface for managing {@link PlaystationDevice}.
  */
 public interface PlaystationDeviceService {
     /**
@@ -16,7 +18,7 @@ public interface PlaystationDeviceService {
      * @param playstationDeviceDTO the entity to save.
      * @return the persisted entity.
      */
-    PlaystationDeviceDTO save(PlaystationDeviceDTO playstationDeviceDTO);
+    PsDeviceDTO save(PsDeviceDTO playstationDeviceDTO);
 
     /**
      * Updates a playstationDevice.
@@ -24,7 +26,7 @@ public interface PlaystationDeviceService {
      * @param playstationDeviceDTO the entity to update.
      * @return the persisted entity.
      */
-    PlaystationDeviceDTO update(PlaystationDeviceDTO playstationDeviceDTO);
+    PsDeviceDTO update(PsDeviceDTO playstationDeviceDTO);
 
     /**
      * Partially updates a playstationDevice.
@@ -32,7 +34,7 @@ public interface PlaystationDeviceService {
      * @param playstationDeviceDTO the entity to update partially.
      * @return the persisted entity.
      */
-    Optional<PlaystationDeviceDTO> partialUpdate(PlaystationDeviceDTO playstationDeviceDTO);
+    Optional<PsDeviceDTO> partialUpdate(PsDeviceDTO playstationDeviceDTO);
 
     /**
      * Get all the playstationDevices.
@@ -40,15 +42,16 @@ public interface PlaystationDeviceService {
      * @param pageable the pagination information.
      * @return the list of entities.
      */
-    Page<PlaystationDeviceDTO> findAll(Pageable pageable);
+    Page<PsDeviceDTO> findAll(Pageable pageable);
 
+    List<PsDeviceDTO> findAll();
     /**
      * Get the "id" playstationDevice.
      *
      * @param id the id of the entity.
      * @return the entity.
      */
-    Optional<PlaystationDeviceDTO> findOne(String id);
+    Optional<PsDeviceDTO> findOne(String id);
 
     /**
      * Delete the "id" playstationDevice.
@@ -63,7 +66,7 @@ public interface PlaystationDeviceService {
      * @param deviceId the id of the device to start session for
      * @return the created session DTO
      */
-    PlaystationDeviceDTO startSession(String deviceId);
+    PsDeviceDTO startSession(String deviceId);
 
     /**
      * Get active session for a device.
@@ -71,7 +74,7 @@ public interface PlaystationDeviceService {
      * @param deviceId the id of the device
      * @return the active session DTO if exists, or null
      */
-    Optional<PlayStationSessionDTO> getDeviceSession(String deviceId);
+    Optional<PsSessionDTO> getDeviceSession(String deviceId);
 
     /**
      * Stop an active session for a device.
@@ -80,5 +83,5 @@ public interface PlaystationDeviceService {
      * @return the stopped session DTO
      * @throws RuntimeException if device not found or no active session exists
      */
-    PlayStationSessionDTO stopSession(String deviceId);
+    PsSessionDTO stopSession(String deviceId);
 }

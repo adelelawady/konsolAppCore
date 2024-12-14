@@ -1,9 +1,9 @@
 package com.konsol.core.service.impl;
 
-import com.konsol.core.domain.PlaystationDeviceType;
+import com.konsol.core.domain.playstation.PlaystationDeviceType;
 import com.konsol.core.repository.PlaystationDeviceTypeRepository;
 import com.konsol.core.service.PlaystationDeviceTypeService;
-import com.konsol.core.service.dto.PlaystationDeviceTypeDTO;
+import com.konsol.core.service.api.dto.PsDeviceType;
 import com.konsol.core.service.mapper.PlaystationDeviceTypeMapper;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -13,7 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 /**
- * Service Implementation for managing {@link com.konsol.core.domain.PlaystationDeviceType}.
+ * Service Implementation for managing {@link com.konsol.core.domain.playstation.PlaystationDeviceType}.
  */
 @Service
 public class PlaystationDeviceTypeServiceImpl implements PlaystationDeviceTypeService {
@@ -33,29 +33,29 @@ public class PlaystationDeviceTypeServiceImpl implements PlaystationDeviceTypeSe
     }
 
     @Override
-    public PlaystationDeviceTypeDTO save(PlaystationDeviceTypeDTO playstationDeviceTypeDTO) {
-        LOG.debug("Request to save PlaystationDeviceType : {}", playstationDeviceTypeDTO);
-        PlaystationDeviceType playstationDeviceType = playstationDeviceTypeMapper.toEntity(playstationDeviceTypeDTO);
+    public PsDeviceType save(PsDeviceType PsDeviceType) {
+        LOG.debug("Request to save PlaystationDeviceType : {}", PsDeviceType);
+        PlaystationDeviceType playstationDeviceType = playstationDeviceTypeMapper.toEntity(PsDeviceType);
         playstationDeviceType = playstationDeviceTypeRepository.save(playstationDeviceType);
         return playstationDeviceTypeMapper.toDto(playstationDeviceType);
     }
 
     @Override
-    public PlaystationDeviceTypeDTO update(PlaystationDeviceTypeDTO playstationDeviceTypeDTO) {
-        LOG.debug("Request to update PlaystationDeviceType : {}", playstationDeviceTypeDTO);
-        PlaystationDeviceType playstationDeviceType = playstationDeviceTypeMapper.toEntity(playstationDeviceTypeDTO);
+    public PsDeviceType update(PsDeviceType PsDeviceType) {
+        LOG.debug("Request to update PlaystationDeviceType : {}", PsDeviceType);
+        PlaystationDeviceType playstationDeviceType = playstationDeviceTypeMapper.toEntity(PsDeviceType);
         playstationDeviceType = playstationDeviceTypeRepository.save(playstationDeviceType);
         return playstationDeviceTypeMapper.toDto(playstationDeviceType);
     }
 
     @Override
-    public Optional<PlaystationDeviceTypeDTO> partialUpdate(PlaystationDeviceTypeDTO playstationDeviceTypeDTO) {
-        LOG.debug("Request to partially update PlaystationDeviceType : {}", playstationDeviceTypeDTO);
+    public Optional<PsDeviceType> partialUpdate(PsDeviceType PsDeviceType) {
+        LOG.debug("Request to partially update PlaystationDeviceType : {}", PsDeviceType);
 
         return playstationDeviceTypeRepository
-            .findById(playstationDeviceTypeDTO.getId())
+            .findById(PsDeviceType.getId())
             .map(existingPlaystationDeviceType -> {
-                playstationDeviceTypeMapper.partialUpdate(existingPlaystationDeviceType, playstationDeviceTypeDTO);
+                playstationDeviceTypeMapper.partialUpdate(existingPlaystationDeviceType, PsDeviceType);
 
                 return existingPlaystationDeviceType;
             })
@@ -64,13 +64,13 @@ public class PlaystationDeviceTypeServiceImpl implements PlaystationDeviceTypeSe
     }
 
     @Override
-    public Page<PlaystationDeviceTypeDTO> findAll(Pageable pageable) {
+    public Page<PsDeviceType> findAll(Pageable pageable) {
         LOG.debug("Request to get all PlaystationDeviceTypes");
         return playstationDeviceTypeRepository.findAll(pageable).map(playstationDeviceTypeMapper::toDto);
     }
 
     @Override
-    public Optional<PlaystationDeviceTypeDTO> findOne(String id) {
+    public Optional<PsDeviceType> findOne(String id) {
         LOG.debug("Request to get PlaystationDeviceType : {}", id);
         return playstationDeviceTypeRepository.findById(id).map(playstationDeviceTypeMapper::toDto);
     }

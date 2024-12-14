@@ -1,22 +1,22 @@
 package com.konsol.core.service.impl;
 
 import com.konsol.core.domain.Invoice;
-import com.konsol.core.domain.PlayStationSession;
-import com.konsol.core.domain.PlaystationDevice;
 import com.konsol.core.domain.enumeration.InvoiceKind;
+import com.konsol.core.domain.playstation.PlayStationSession;
+import com.konsol.core.domain.playstation.PlaystationDevice;
 import com.konsol.core.repository.InvoiceRepository;
 import com.konsol.core.repository.PlayStationSessionRepository;
 import com.konsol.core.repository.PlaystationDeviceRepository;
 import com.konsol.core.service.InvoiceService;
 import com.konsol.core.service.PlaystationDeviceService;
-import com.konsol.core.service.api.dto.*;
-import com.konsol.core.service.dto.PlayStationSessionDTO;
-import com.konsol.core.service.dto.PlaystationDeviceDTO;
+import com.konsol.core.service.api.dto.PsDeviceDTO;
+import com.konsol.core.service.api.dto.PsSessionDTO;
 import com.konsol.core.service.mapper.PlayStationSessionMapper;
 import com.konsol.core.service.mapper.PlaystationDeviceMapper;
-import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -24,7 +24,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 /**
- * Service Implementation for managing {@link com.konsol.core.domain.PlaystationDevice}.
+ * Service Implementation for managing {@link com.konsol.core.domain.playstation.PlaystationDevice}.
  */
 @Service
 public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
@@ -55,29 +55,29 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
     }
 
     @Override
-    public PlaystationDeviceDTO save(PlaystationDeviceDTO playstationDeviceDTO) {
-        LOG.debug("Request to save PlaystationDevice : {}", playstationDeviceDTO);
-        PlaystationDevice playstationDevice = playstationDeviceMapper.toEntity(playstationDeviceDTO);
+    public PsDeviceDTO save(PsDeviceDTO PsDeviceDTO) {
+        LOG.debug("Request to save PlaystationDevice : {}", PsDeviceDTO);
+        PlaystationDevice playstationDevice = playstationDeviceMapper.toEntity(PsDeviceDTO);
         playstationDevice = playstationDeviceRepository.save(playstationDevice);
         return playstationDeviceMapper.toDto(playstationDevice);
     }
 
     @Override
-    public PlaystationDeviceDTO update(PlaystationDeviceDTO playstationDeviceDTO) {
-        LOG.debug("Request to update PlaystationDevice : {}", playstationDeviceDTO);
-        PlaystationDevice playstationDevice = playstationDeviceMapper.toEntity(playstationDeviceDTO);
+    public PsDeviceDTO update(PsDeviceDTO PsDeviceDTO) {
+        LOG.debug("Request to update PlaystationDevice : {}", PsDeviceDTO);
+        PlaystationDevice playstationDevice = playstationDeviceMapper.toEntity(PsDeviceDTO);
         playstationDevice = playstationDeviceRepository.save(playstationDevice);
         return playstationDeviceMapper.toDto(playstationDevice);
     }
 
     @Override
-    public Optional<PlaystationDeviceDTO> partialUpdate(PlaystationDeviceDTO playstationDeviceDTO) {
-        LOG.debug("Request to partially update PlaystationDevice : {}", playstationDeviceDTO);
+    public Optional<PsDeviceDTO> partialUpdate(PsDeviceDTO PsDeviceDTO) {
+        LOG.debug("Request to partially update PlaystationDevice : {}", PsDeviceDTO);
 
         return playstationDeviceRepository
-            .findById(playstationDeviceDTO.getId())
+            .findById(PsDeviceDTO.getId())
             .map(existingPlaystationDevice -> {
-                playstationDeviceMapper.partialUpdate(existingPlaystationDevice, playstationDeviceDTO);
+                playstationDeviceMapper.partialUpdate(existingPlaystationDevice, PsDeviceDTO);
 
                 return existingPlaystationDevice;
             })
@@ -86,13 +86,19 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
     }
 
     @Override
-    public Page<PlaystationDeviceDTO> findAll(Pageable pageable) {
+    public Page<PsDeviceDTO> findAll(Pageable pageable) {
         LOG.debug("Request to get all PlaystationDevices");
         return playstationDeviceRepository.findAll(pageable).map(playstationDeviceMapper::toDto);
     }
 
     @Override
-    public Optional<PlaystationDeviceDTO> findOne(String id) {
+    public List<PsDeviceDTO> findAll() {
+        LOG.debug("Request to get all PlaystationDevices");
+        return playstationDeviceRepository.findAll().stream().map(playstationDeviceMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<PsDeviceDTO> findOne(String id) {
         LOG.debug("Request to get PlaystationDevice : {}", id);
         return playstationDeviceRepository.findById(id).map(playstationDeviceMapper::toDto);
     }
@@ -104,7 +110,7 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
     }
 
     @Override
-    public PlaystationDeviceDTO startSession(String deviceId) {
+    public PsDeviceDTO startSession(String deviceId) {
         LOG.debug("Request to start session for PlaystationDevice : {}", deviceId);
 
         // Find device
@@ -121,7 +127,7 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
         Invoice invoice = invoiceService.initializeNewInvoiceDomein(InvoiceKind.SALE);
 
         // Create new session
-        PlayStationSession session = new PlayStationSession().active(true).startTime(Instant.now()).deviceId(deviceId).invoice(invoice);
+        PlayStationSession session = new PlayStationSession().active(true).startTime(Instant.now()).device(device).invoice(invoice);
 
         // Update device status to active
         device.setActive(true);
@@ -134,7 +140,7 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
     }
 
     @Override
-    public Optional<PlayStationSessionDTO> getDeviceSession(String deviceId) {
+    public Optional<PsSessionDTO> getDeviceSession(String deviceId) {
         LOG.debug("Request to get active session for PlaystationDevice : {}", deviceId);
 
         // Find device to verify it exists
@@ -152,7 +158,7 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
     }
 
     @Override
-    public PlayStationSessionDTO stopSession(String deviceId) {
+    public PsSessionDTO stopSession(String deviceId) {
         LOG.debug("Request to stop session for PlaystationDevice : {}", deviceId);
 
         // Find device

@@ -1,11 +1,11 @@
 package com.konsol.core.service.mapper;
 
-import com.konsol.core.domain.PlaystationDevice;
-import com.konsol.core.service.dto.PlaystationDeviceDTO;
+import com.konsol.core.domain.playstation.PlaystationDevice;
+import com.konsol.core.service.api.dto.PsDeviceDTO;
 import org.mapstruct.*;
 
 /**
- * Mapper for the entity {@link PlaystationDevice} and its DTO {@link PlaystationDeviceDTO}.
+ * Mapper for the entity {@link PlaystationDevice} and its DTO {@link PsDeviceDTO}.
  */
 @Mapper(componentModel = "spring")
-public interface PlaystationDeviceMapper extends EntityMapper<PlaystationDeviceDTO, PlaystationDevice> {}
+public interface PlaystationDeviceMapper extends EntityMapper<PsDeviceDTO, PlaystationDevice> {}

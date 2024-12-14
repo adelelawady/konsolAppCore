@@ -1,18 +1,19 @@
-package com.konsol.core.domain;
+package com.konsol.core.domain.playstation;
 
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
- * A PriceOption.
+ * A PlaystationDeviceType.
  */
-@Document(collection = "ps_price_option")
+@Document(collection = "ps_device_type")
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class PriceOption implements Serializable {
+public class PlaystationDeviceType implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -24,12 +25,13 @@ public class PriceOption implements Serializable {
     private String name;
 
     @NotNull
-    @Field("value")
-    private BigDecimal value;
+    @Field("price")
+    private BigDecimal price;
 
     @NotNull
-    @Field("product_id")
-    private String productId;
+    @DBRef
+    @Field("product")
+    private com.konsol.core.domain.Item Item;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -37,7 +39,7 @@ public class PriceOption implements Serializable {
         return this.id;
     }
 
-    public PriceOption id(String id) {
+    public PlaystationDeviceType id(String id) {
         this.setId(id);
         return this;
     }
@@ -50,39 +52,13 @@ public class PriceOption implements Serializable {
         return this.name;
     }
 
-    public PriceOption name(String name) {
+    public PlaystationDeviceType name(String name) {
         this.setName(name);
         return this;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public BigDecimal getValue() {
-        return this.value;
-    }
-
-    public PriceOption value(BigDecimal value) {
-        this.setValue(value);
-        return this;
-    }
-
-    public void setValue(BigDecimal value) {
-        this.value = value;
-    }
-
-    public String getProductId() {
-        return this.productId;
-    }
-
-    public PriceOption productId(String productId) {
-        this.setProductId(productId);
-        return this;
-    }
-
-    public void setProductId(String productId) {
-        this.productId = productId;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
@@ -92,10 +68,10 @@ public class PriceOption implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof PriceOption)) {
+        if (!(o instanceof PlaystationDeviceType)) {
             return false;
         }
-        return getId() != null && getId().equals(((PriceOption) o).getId());
+        return getId() != null && getId().equals(((PlaystationDeviceType) o).getId());
     }
 
     @Override
@@ -107,11 +83,25 @@ public class PriceOption implements Serializable {
     // prettier-ignore
     @Override
     public String toString() {
-        return "PriceOption{" +
+        return "PlaystationDeviceType{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
-            ", value=" + getValue() +
-            ", productId='" + getProductId() + "'" +
             "}";
+    }
+
+    public @NotNull BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(@NotNull BigDecimal price) {
+        this.price = price;
+    }
+
+    public com.konsol.core.domain.@NotNull Item getItem() {
+        return Item;
+    }
+
+    public void setItem(com.konsol.core.domain.@NotNull Item item) {
+        Item = item;
     }
 }

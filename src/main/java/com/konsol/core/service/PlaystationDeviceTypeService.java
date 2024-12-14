@@ -1,37 +1,38 @@
 package com.konsol.core.service;
 
-import com.konsol.core.service.dto.PlaystationDeviceTypeDTO;
+import com.konsol.core.domain.playstation.PlaystationDeviceType;
+import com.konsol.core.service.api.dto.PsDeviceType;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 /**
- * Service Interface for managing {@link com.konsol.core.domain.PlaystationDeviceType}.
+ * Service Interface for managing {@link PlaystationDeviceType}.
  */
 public interface PlaystationDeviceTypeService {
     /**
      * Save a playstationDeviceType.
      *
-     * @param playstationDeviceTypeDTO the entity to save.
+     * @param PsDeviceType the entity to save.
      * @return the persisted entity.
      */
-    PlaystationDeviceTypeDTO save(PlaystationDeviceTypeDTO playstationDeviceTypeDTO);
+    PsDeviceType save(PsDeviceType PsDeviceType);
 
     /**
      * Updates a playstationDeviceType.
      *
-     * @param playstationDeviceTypeDTO the entity to update.
+     * @param PsDeviceType the entity to update.
      * @return the persisted entity.
      */
-    PlaystationDeviceTypeDTO update(PlaystationDeviceTypeDTO playstationDeviceTypeDTO);
+    PsDeviceType update(PsDeviceType PsDeviceType);
 
     /**
      * Partially updates a playstationDeviceType.
      *
-     * @param playstationDeviceTypeDTO the entity to update partially.
+     * @param PsDeviceType the entity to update partially.
      * @return the persisted entity.
      */
-    Optional<PlaystationDeviceTypeDTO> partialUpdate(PlaystationDeviceTypeDTO playstationDeviceTypeDTO);
+    Optional<PsDeviceType> partialUpdate(PsDeviceType PsDeviceType);
 
     /**
      * Get all the playstationDeviceTypes.
@@ -39,7 +40,7 @@ public interface PlaystationDeviceTypeService {
      * @param pageable the pagination information.
      * @return the list of entities.
      */
-    Page<PlaystationDeviceTypeDTO> findAll(Pageable pageable);
+    Page<PsDeviceType> findAll(Pageable pageable);
 
     /**
      * Get the "id" playstationDeviceType.
@@ -47,7 +48,7 @@ public interface PlaystationDeviceTypeService {
      * @param id the id of the entity.
      * @return the entity.
      */
-    Optional<PlaystationDeviceTypeDTO> findOne(String id);
+    Optional<PsDeviceType> findOne(String id);
 
     /**
      * Delete the "id" playstationDeviceType.

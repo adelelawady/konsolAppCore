@@ -1,8 +1,9 @@
-package com.konsol.core.domain;
+package com.konsol.core.domain.playstation;
 
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -19,10 +20,6 @@ public class PlaystationDevice implements Serializable {
     private String id;
 
     @NotNull
-    @Field("pk")
-    private Long pk;
-
-    @NotNull
     @Field("name")
     private String name;
 
@@ -33,6 +30,11 @@ public class PlaystationDevice implements Serializable {
     @NotNull
     @Field("active")
     private Boolean active;
+
+    @DBRef
+    @Field("type")
+    //@JsonIgnoreProperties(value = { "items" }, allowSetters = true)
+    private PlaystationDeviceType deviceType;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -47,19 +49,6 @@ public class PlaystationDevice implements Serializable {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public Long getPk() {
-        return this.pk;
-    }
-
-    public PlaystationDevice pk(Long pk) {
-        this.setPk(pk);
-        return this;
-    }
-
-    public void setPk(Long pk) {
-        this.pk = pk;
     }
 
     public String getName() {
@@ -125,10 +114,17 @@ public class PlaystationDevice implements Serializable {
     public String toString() {
         return "PlaystationDevice{" +
             "id=" + getId() +
-            ", pk=" + getPk() +
             ", name='" + getName() + "'" +
             ", index=" + getIndex() +
             ", active='" + getActive() + "'" +
             "}";
+    }
+
+    public PlaystationDeviceType getDeviceType() {
+        return deviceType;
+    }
+
+    public void setDeviceType(PlaystationDeviceType deviceType) {
+        this.deviceType = deviceType;
     }
 }

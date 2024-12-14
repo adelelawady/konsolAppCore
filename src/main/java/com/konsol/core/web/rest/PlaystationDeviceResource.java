@@ -1,8 +1,10 @@
 package com.konsol.core.web.rest;
 
+import com.konsol.core.domain.playstation.PlaystationDevice;
 import com.konsol.core.repository.PlaystationDeviceRepository;
 import com.konsol.core.service.PlaystationDeviceService;
-import com.konsol.core.service.dto.PlaystationDeviceDTO;
+import com.konsol.core.service.api.dto.PsDeviceDTO;
+import com.konsol.core.web.api.PlaystationApiDelegate;
 import com.konsol.core.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -19,6 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -26,11 +29,10 @@ import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
 /**
- * REST controller for managing {@link com.konsol.core.domain.PlaystationDevice}.
+ * REST controller for managing {@link PlaystationDevice}.
  */
-@RestController
-@RequestMapping("/api/playstation-devices")
-public class PlaystationDeviceResource {
+@Service
+public class PlaystationDeviceResource implements PlaystationApiDelegate {
 
     private static final Logger LOG = LoggerFactory.getLogger(PlaystationDeviceResource.class);
 
@@ -54,43 +56,43 @@ public class PlaystationDeviceResource {
     /**
      * {@code POST  /playstation-devices} : Create a new playstationDevice.
      *
-     * @param playstationDeviceDTO the playstationDeviceDTO to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new playstationDeviceDTO, or with status {@code 400 (Bad Request)} if the playstationDevice has already an ID.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     * @param psDeviceDTO the PsDeviceDTO to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new PsDeviceDTO, or with status {@code 400 (Bad Request)} if the playstationDevice has already an ID.
      */
-    @PostMapping("")
-    public ResponseEntity<PlaystationDeviceDTO> createPlaystationDevice(@Valid @RequestBody PlaystationDeviceDTO playstationDeviceDTO)
-        throws URISyntaxException {
-        LOG.debug("REST request to save PlaystationDevice : {}", playstationDeviceDTO);
-        if (playstationDeviceDTO.getId() != null) {
+    @Override
+    public ResponseEntity<PsDeviceDTO> createPlayStationDevice(PsDeviceDTO psDeviceDTO) {
+        LOG.debug("REST request to save PlaystationDevice : {}", psDeviceDTO);
+        if (psDeviceDTO.getId() != null) {
             throw new BadRequestAlertException("A new playstationDevice cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        playstationDeviceDTO = playstationDeviceService.save(playstationDeviceDTO);
-        return ResponseEntity.created(new URI("/api/playstation-devices/" + playstationDeviceDTO.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, playstationDeviceDTO.getId()))
-            .body(playstationDeviceDTO);
+        psDeviceDTO = playstationDeviceService.save(psDeviceDTO);
+        try {
+            return ResponseEntity
+                .created(new URI("/api/playstation-devices/" + psDeviceDTO.getId()))
+                .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, psDeviceDTO.getId()))
+                .body(psDeviceDTO);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
      * {@code PUT  /playstation-devices/:id} : Updates an existing playstationDevice.
      *
-     * @param id the id of the playstationDeviceDTO to save.
-     * @param playstationDeviceDTO the playstationDeviceDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated playstationDeviceDTO,
-     * or with status {@code 400 (Bad Request)} if the playstationDeviceDTO is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the playstationDeviceDTO couldn't be updated.
+     * @param id the id of the PsDeviceDTO to save.
+     * @param psDeviceDTO the PsDeviceDTO to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated PsDeviceDTO,
+     * or with status {@code 400 (Bad Request)} if the PsDeviceDTO is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the PsDeviceDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/{id}")
-    public ResponseEntity<PlaystationDeviceDTO> updatePlaystationDevice(
-        @PathVariable(value = "id", required = false) final String id,
-        @Valid @RequestBody PlaystationDeviceDTO playstationDeviceDTO
-    ) throws URISyntaxException {
-        LOG.debug("REST request to update PlaystationDevice : {}, {}", id, playstationDeviceDTO);
-        if (playstationDeviceDTO.getId() == null) {
+    @Override
+    public ResponseEntity<PsDeviceDTO> updateDevice(String id, PsDeviceDTO psDeviceDTO) {
+        LOG.debug("REST request to update PlaystationDevice : {}, {}", id, psDeviceDTO);
+        if (psDeviceDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, playstationDeviceDTO.getId())) {
+        if (!Objects.equals(id, psDeviceDTO.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -98,33 +100,31 @@ public class PlaystationDeviceResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        playstationDeviceDTO = playstationDeviceService.update(playstationDeviceDTO);
-        return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, playstationDeviceDTO.getId()))
-            .body(playstationDeviceDTO);
+        psDeviceDTO = playstationDeviceService.update(psDeviceDTO);
+        return ResponseEntity
+            .ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, psDeviceDTO.getId()))
+            .body(psDeviceDTO);
     }
 
     /**
      * {@code PATCH  /playstation-devices/:id} : Partial updates given fields of an existing playstationDevice, field will ignore if it is null
      *
-     * @param id the id of the playstationDeviceDTO to save.
-     * @param playstationDeviceDTO the playstationDeviceDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated playstationDeviceDTO,
-     * or with status {@code 400 (Bad Request)} if the playstationDeviceDTO is not valid,
-     * or with status {@code 404 (Not Found)} if the playstationDeviceDTO is not found,
-     * or with status {@code 500 (Internal Server Error)} if the playstationDeviceDTO couldn't be updated.
+     * @param id the id of the PsDeviceDTO to save.
+     * @param psDeviceDTO the PsDeviceDTO to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated PsDeviceDTO,
+     * or with status {@code 400 (Bad Request)} if the PsDeviceDTO is not valid,
+     * or with status {@code 404 (Not Found)} if the PsDeviceDTO is not found,
+     * or with status {@code 500 (Internal Server Error)} if the PsDeviceDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
-    public ResponseEntity<PlaystationDeviceDTO> partialUpdatePlaystationDevice(
-        @PathVariable(value = "id", required = false) final String id,
-        @NotNull @RequestBody PlaystationDeviceDTO playstationDeviceDTO
-    ) throws URISyntaxException {
-        LOG.debug("REST request to partial update PlaystationDevice partially : {}, {}", id, playstationDeviceDTO);
-        if (playstationDeviceDTO.getId() == null) {
+    @Override
+    public ResponseEntity<PsDeviceDTO> partialUpdateDevice(String id, PsDeviceDTO psDeviceDTO) {
+        LOG.debug("REST request to partial update PlaystationDevice partially : {}, {}", id, psDeviceDTO);
+        if (psDeviceDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, playstationDeviceDTO.getId())) {
+        if (!Objects.equals(id, psDeviceDTO.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -132,51 +132,48 @@ public class PlaystationDeviceResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<PlaystationDeviceDTO> result = playstationDeviceService.partialUpdate(playstationDeviceDTO);
+        Optional<PsDeviceDTO> result = playstationDeviceService.partialUpdate(psDeviceDTO);
 
         return ResponseUtil.wrapOrNotFound(
             result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, playstationDeviceDTO.getId())
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, psDeviceDTO.getId())
         );
     }
 
     /**
      * {@code GET  /playstation-devices} : get all the playstationDevices.
      *
-     * @param pageable the pagination information.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of playstationDevices in body.
      */
-    @GetMapping("")
-    public ResponseEntity<List<PlaystationDeviceDTO>> getAllPlaystationDevices(
-        @ParameterObject Pageable pageable
-    ) {
+    @Override
+    public ResponseEntity<List<PsDeviceDTO>> getDevices() {
         LOG.debug("REST request to get a page of PlaystationDevices");
-        Page<PlaystationDeviceDTO> page = playstationDeviceService.findAll(pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
+        List<PsDeviceDTO> page = playstationDeviceService.findAll();
+        // HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().body(page);
     }
 
     /**
      * {@code GET  /playstation-devices/:id} : get the "id" playstationDevice.
      *
-     * @param id the id of the playstationDeviceDTO to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the playstationDeviceDTO, or with status {@code 404 (Not Found)}.
+     * @param id the id of the PsDeviceDTO to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the PsDeviceDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<PlaystationDeviceDTO> getPlaystationDevice(@PathVariable("id") String id) {
+    public ResponseEntity<PsDeviceDTO> getPlaystationDevice(@PathVariable("id") String id) {
         LOG.debug("REST request to get PlaystationDevice : {}", id);
-        Optional<PlaystationDeviceDTO> playstationDeviceDTO = playstationDeviceService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(playstationDeviceDTO);
+        Optional<PsDeviceDTO> PsDeviceDTO = playstationDeviceService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(PsDeviceDTO);
     }
 
     /**
      * {@code DELETE  /playstation-devices/:id} : delete the "id" playstationDevice.
      *
-     * @param id the id of the playstationDeviceDTO to delete.
+     * @param id the id of the PsDeviceDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePlaystationDevice(@PathVariable("id") String id) {
+    @Override
+    public ResponseEntity<PsDeviceDTO> deleteDevice(String id) {
         LOG.debug("REST request to delete PlaystationDevice : {}", id);
         playstationDeviceService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id)).build();

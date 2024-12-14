@@ -1,5 +1,6 @@
-package com.konsol.core.domain;
+package com.konsol.core.domain.playstation;
 
+import com.konsol.core.domain.Invoice;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.time.Instant;
@@ -34,7 +35,7 @@ public class PlayStationSession implements Serializable {
 
     @NotNull
     @Field("device_id")
-    private String deviceId;
+    private PlaystationDevice device;
 
     @DBRef
     @Field("invoice")
@@ -92,19 +93,6 @@ public class PlayStationSession implements Serializable {
         this.endTime = endTime;
     }
 
-    public String getDeviceId() {
-        return deviceId;
-    }
-
-    public PlayStationSession deviceId(String deviceId) {
-        this.setDeviceId(deviceId);
-        return this;
-    }
-
-    public void setDeviceId(String deviceId) {
-        this.deviceId = deviceId;
-    }
-
     public Invoice getInvoice() {
         return invoice;
     }
@@ -136,13 +124,36 @@ public class PlayStationSession implements Serializable {
 
     @Override
     public String toString() {
-        return "PlayStationSession{" +
-            "id=" + getId() +
-            ", active='" + getActive() + "'" +
-            ", startTime='" + getStartTime() + "'" +
-            ", endTime='" + getEndTime() + "'" +
-            ", deviceId='" + getDeviceId() + "'" +
-            ", invoice='" + getInvoice() + "'" +
-            "}";
+        return (
+            "PlayStationSession{" +
+            "id=" +
+            getId() +
+            ", active='" +
+            getActive() +
+            "'" +
+            ", startTime='" +
+            getStartTime() +
+            "'" +
+            ", endTime='" +
+            getEndTime() +
+            "'" +
+            ", invoice='" +
+            getInvoice() +
+            "'" +
+            "}"
+        );
+    }
+
+    public @NotNull PlaystationDevice getDevice() {
+        return device;
+    }
+
+    public void setDevice(@NotNull PlaystationDevice device) {
+        this.device = device;
+    }
+
+    public PlayStationSession device(PlaystationDevice device) {
+        this.device = device;
+        return this;
     }
 }

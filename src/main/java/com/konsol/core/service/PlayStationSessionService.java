@@ -1,37 +1,38 @@
 package com.konsol.core.service;
 
-import com.konsol.core.service.dto.PlayStationSessionDTO;
+import com.konsol.core.domain.playstation.PlayStationSession;
+import com.konsol.core.service.api.dto.PsSessionDTO;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 /**
- * Service Interface for managing {@link com.konsol.core.domain.PlayStationSession}.
+ * Service Interface for managing {@link PlayStationSession}.
  */
 public interface PlayStationSessionService {
     /**
      * Save a playStationSession.
      *
-     * @param playStationSessionDTO the entity to save.
+     * @param PsSessionDTO the entity to save.
      * @return the persisted entity.
      */
-    PlayStationSessionDTO save(PlayStationSessionDTO playStationSessionDTO);
+    PsSessionDTO save(PsSessionDTO PsSessionDTO);
 
     /**
      * Updates a playStationSession.
      *
-     * @param playStationSessionDTO the entity to update.
+     * @param PsSessionDTO the entity to update.
      * @return the persisted entity.
      */
-    PlayStationSessionDTO update(PlayStationSessionDTO playStationSessionDTO);
+    PsSessionDTO update(PsSessionDTO PsSessionDTO);
 
     /**
      * Partially updates a playStationSession.
      *
-     * @param playStationSessionDTO the entity to update partially.
+     * @param PsSessionDTO the entity to update partially.
      * @return the persisted entity.
      */
-    Optional<PlayStationSessionDTO> partialUpdate(PlayStationSessionDTO playStationSessionDTO);
+    Optional<PsSessionDTO> partialUpdate(PsSessionDTO PsSessionDTO);
 
     /**
      * Get all the playStationSessions.
@@ -39,7 +40,7 @@ public interface PlayStationSessionService {
      * @param pageable the pagination information.
      * @return the list of entities.
      */
-    Page<PlayStationSessionDTO> findAll(Pageable pageable);
+    Page<PsSessionDTO> findAll(Pageable pageable);
 
     /**
      * Get the "id" playStationSession.
@@ -47,7 +48,7 @@ public interface PlayStationSessionService {
      * @param id the id of the entity.
      * @return the entity.
      */
-    Optional<PlayStationSessionDTO> findOne(Long id);
+    Optional<PsSessionDTO> findOne(Long id);
 
     /**
      * Delete the "id" playStationSession.

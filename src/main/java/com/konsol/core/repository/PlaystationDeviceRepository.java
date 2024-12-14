@@ -1,6 +1,6 @@
 package com.konsol.core.repository;
 
-import com.konsol.core.domain.PlaystationDevice;
+import com.konsol.core.domain.playstation.PlaystationDevice;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

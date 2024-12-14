@@ -1,8 +1,9 @@
 package com.konsol.core.web.rest;
 
+import com.konsol.core.domain.playstation.PlayStationSession;
 import com.konsol.core.repository.PlayStationSessionRepository;
 import com.konsol.core.service.PlayStationSessionService;
-import com.konsol.core.service.dto.PlayStationSessionDTO;
+import com.konsol.core.service.api.dto.PsSessionDTO;
 import com.konsol.core.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -26,7 +27,7 @@ import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
 /**
- * REST controller for managing {@link com.konsol.core.domain.PlayStationSession}.
+ * REST controller for managing {@link PlayStationSession}.
  */
 @RestController
 @RequestMapping("/api/play-station-sessions")
@@ -54,43 +55,43 @@ public class PlayStationSessionResource {
     /**
      * {@code POST  /play-station-sessions} : Create a new playStationSession.
      *
-     * @param playStationSessionDTO the playStationSessionDTO to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new playStationSessionDTO, or with status {@code 400 (Bad Request)} if the playStationSession has already an ID.
+     * @param PsSessionDTO the PsSessionDTO to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new PsSessionDTO, or with status {@code 400 (Bad Request)} if the playStationSession has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
-    public ResponseEntity<PlayStationSessionDTO> createPlayStationSession(@Valid @RequestBody PlayStationSessionDTO playStationSessionDTO)
-        throws URISyntaxException {
-        LOG.debug("REST request to save PlayStationSession : {}", playStationSessionDTO);
-        if (playStationSessionDTO.getId() != null) {
+    public ResponseEntity<PsSessionDTO> createPlayStationSession(@Valid @RequestBody PsSessionDTO PsSessionDTO) throws URISyntaxException {
+        LOG.debug("REST request to save PlayStationSession : {}", PsSessionDTO);
+        if (PsSessionDTO.getId() != null) {
             throw new BadRequestAlertException("A new playStationSession cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        playStationSessionDTO = playStationSessionService.save(playStationSessionDTO);
-        return ResponseEntity.created(new URI("/api/play-station-sessions/" + playStationSessionDTO.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, playStationSessionDTO.getId().toString()))
-            .body(playStationSessionDTO);
+        PsSessionDTO = playStationSessionService.save(PsSessionDTO);
+        return ResponseEntity
+            .created(new URI("/api/play-station-sessions/" + PsSessionDTO.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, PsSessionDTO.getId().toString()))
+            .body(PsSessionDTO);
     }
 
     /**
      * {@code PUT  /play-station-sessions/:id} : Updates an existing playStationSession.
      *
-     * @param id the id of the playStationSessionDTO to save.
-     * @param playStationSessionDTO the playStationSessionDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated playStationSessionDTO,
-     * or with status {@code 400 (Bad Request)} if the playStationSessionDTO is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the playStationSessionDTO couldn't be updated.
+     * @param id the id of the PsSessionDTO to save.
+     * @param PsSessionDTO the PsSessionDTO to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated PsSessionDTO,
+     * or with status {@code 400 (Bad Request)} if the PsSessionDTO is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the PsSessionDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<PlayStationSessionDTO> updatePlayStationSession(
+    public ResponseEntity<PsSessionDTO> updatePlayStationSession(
         @PathVariable(value = "id", required = false) final Long id,
-        @Valid @RequestBody PlayStationSessionDTO playStationSessionDTO
+        @Valid @RequestBody PsSessionDTO PsSessionDTO
     ) throws URISyntaxException {
-        LOG.debug("REST request to update PlayStationSession : {}, {}", id, playStationSessionDTO);
-        if (playStationSessionDTO.getId() == null) {
+        LOG.debug("REST request to update PlayStationSession : {}, {}", id, PsSessionDTO);
+        if (PsSessionDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, playStationSessionDTO.getId())) {
+        if (!Objects.equals(id, PsSessionDTO.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -98,33 +99,34 @@ public class PlayStationSessionResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        playStationSessionDTO = playStationSessionService.update(playStationSessionDTO);
-        return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, playStationSessionDTO.getId().toString()))
-            .body(playStationSessionDTO);
+        PsSessionDTO = playStationSessionService.update(PsSessionDTO);
+        return ResponseEntity
+            .ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, PsSessionDTO.getId().toString()))
+            .body(PsSessionDTO);
     }
 
     /**
      * {@code PATCH  /play-station-sessions/:id} : Partial updates given fields of an existing playStationSession, field will ignore if it is null
      *
-     * @param id the id of the playStationSessionDTO to save.
-     * @param playStationSessionDTO the playStationSessionDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated playStationSessionDTO,
-     * or with status {@code 400 (Bad Request)} if the playStationSessionDTO is not valid,
-     * or with status {@code 404 (Not Found)} if the playStationSessionDTO is not found,
-     * or with status {@code 500 (Internal Server Error)} if the playStationSessionDTO couldn't be updated.
+     * @param id the id of the PsSessionDTO to save.
+     * @param PsSessionDTO the PsSessionDTO to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated PsSessionDTO,
+     * or with status {@code 400 (Bad Request)} if the PsSessionDTO is not valid,
+     * or with status {@code 404 (Not Found)} if the PsSessionDTO is not found,
+     * or with status {@code 500 (Internal Server Error)} if the PsSessionDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
-    public ResponseEntity<PlayStationSessionDTO> partialUpdatePlayStationSession(
+    public ResponseEntity<PsSessionDTO> partialUpdatePlayStationSession(
         @PathVariable(value = "id", required = false) final Long id,
-        @NotNull @RequestBody PlayStationSessionDTO playStationSessionDTO
+        @NotNull @RequestBody PsSessionDTO PsSessionDTO
     ) throws URISyntaxException {
-        LOG.debug("REST request to partial update PlayStationSession partially : {}, {}", id, playStationSessionDTO);
-        if (playStationSessionDTO.getId() == null) {
+        LOG.debug("REST request to partial update PlayStationSession partially : {}, {}", id, PsSessionDTO);
+        if (PsSessionDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, playStationSessionDTO.getId())) {
+        if (!Objects.equals(id, PsSessionDTO.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -132,11 +134,11 @@ public class PlayStationSessionResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<PlayStationSessionDTO> result = playStationSessionService.partialUpdate(playStationSessionDTO);
+        Optional<PsSessionDTO> result = playStationSessionService.partialUpdate(PsSessionDTO);
 
         return ResponseUtil.wrapOrNotFound(
             result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, playStationSessionDTO.getId().toString())
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, PsSessionDTO.getId().toString())
         );
     }
 
@@ -147,11 +149,9 @@ public class PlayStationSessionResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of playStationSessions in body.
      */
     @GetMapping("")
-    public ResponseEntity<List<PlayStationSessionDTO>> getAllPlayStationSessions(
-        @ParameterObject Pageable pageable
-    ) {
+    public ResponseEntity<List<PsSessionDTO>> getAllPlayStationSessions(@ParameterObject Pageable pageable) {
         LOG.debug("REST request to get a page of PlayStationSessions");
-        Page<PlayStationSessionDTO> page = playStationSessionService.findAll(pageable);
+        Page<PsSessionDTO> page = playStationSessionService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -159,27 +159,28 @@ public class PlayStationSessionResource {
     /**
      * {@code GET  /play-station-sessions/:id} : get the "id" playStationSession.
      *
-     * @param id the id of the playStationSessionDTO to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the playStationSessionDTO, or with status {@code 404 (Not Found)}.
+     * @param id the id of the PsSessionDTO to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the PsSessionDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<PlayStationSessionDTO> getPlayStationSession(@PathVariable("id") Long id) {
+    public ResponseEntity<PsSessionDTO> getPlayStationSession(@PathVariable("id") Long id) {
         LOG.debug("REST request to get PlayStationSession : {}", id);
-        Optional<PlayStationSessionDTO> playStationSessionDTO = playStationSessionService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(playStationSessionDTO);
+        Optional<PsSessionDTO> PsSessionDTO = playStationSessionService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(PsSessionDTO);
     }
 
     /**
      * {@code DELETE  /play-station-sessions/:id} : delete the "id" playStationSession.
      *
-     * @param id the id of the playStationSessionDTO to delete.
+     * @param id the id of the PsSessionDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePlayStationSession(@PathVariable("id") Long id) {
         LOG.debug("REST request to delete PlayStationSession : {}", id);
         playStationSessionService.delete(id);
-        return ResponseEntity.noContent()
+        return ResponseEntity
+            .noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
     }
