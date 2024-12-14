@@ -7,5 +7,5 @@ import org.mapstruct.*;
 /**
  * Mapper for the entity {@link PlayStationSession} and its DTO {@link PsSessionDTO}.
  */
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = { UtilitsMapper.class })
 public interface PlayStationSessionMapper extends EntityMapper<PsSessionDTO, PlayStationSession> {}
