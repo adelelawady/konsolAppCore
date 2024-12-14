@@ -10,6 +10,7 @@ import { LayoutsModule } from '../../layouts/layouts.module';
 import { DeviceListComponent } from './components/device-list/device-list.component';
 import { OrdersSliderComponent } from './components/orders-slider/orders-slider.component';
 import { DeviceCardComponent } from './components/device-card/device-card.component';
+import { DeviceDetailsComponent } from './components/device-details/device-details.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { DeviceCardComponent } from './components/device-card/device-card.compon
     PlaystationLayoutComponent,
     DeviceListComponent,
     OrdersSliderComponent,
-    DeviceCardComponent
+    DeviceCardComponent,
+    DeviceDetailsComponent
   ],
   imports: [
     CommonModule,

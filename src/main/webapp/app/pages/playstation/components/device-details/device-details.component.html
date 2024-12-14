@@ -1,0 +1,55 @@
+<div class="device-details">
+  <div class="device-details__header">
+    <h3>Device Details</h3>
+  </div>
+
+  <div class="device-details__content" *ngIf="selectedDevice; else noDeviceSelected">
+    <div class="details-section">
+      <div class="section-header">
+        <i class="fas fa-tv"></i>
+        <span>{{ selectedDevice.roomName }}</span>
+      </div>
+      
+      <div class="device-info">
+        <div class="info-item">
+          <label>Device Type</label>
+          <span>{{ selectedDevice.deviceType }}</span>
+        </div>
+        <div class="info-item">
+          <label>Status</label>
+          <span [class]="'status-' + selectedDevice.status">{{ selectedDevice.status }}</span>
+        </div>
+        <div class="info-item" *ngIf="selectedDevice.duration">
+          <label>Session Duration</label>
+          <span>{{ formatDuration(selectedDevice.duration) }}</span>
+        </div>
+        <div class="info-item" *ngIf="selectedDevice.cost">
+          <label>Current Cost</label>
+          <span class="cost">{{ formatCurrency(selectedDevice.cost) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions-section">
+      <button class="btn-primary" *ngIf="selectedDevice.status === 'available'">
+        <i class="fas fa-play"></i>
+        Start Session
+      </button>
+      <button class="btn-warning" *ngIf="selectedDevice.status === 'in-use'">
+        <i class="fas fa-stop"></i>
+        End Session
+      </button>
+      <button class="btn-secondary">
+        <i class="fas fa-history"></i>
+        View History
+      </button>
+    </div>
+  </div>
+
+  <ng-template #noDeviceSelected>
+    <div class="no-device">
+      <i class="fas fa-tv"></i>
+      <p>Select a device to view details</p>
+    </div>
+  </ng-template>
+</div>
