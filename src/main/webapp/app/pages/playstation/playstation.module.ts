@@ -11,6 +11,7 @@ import { DeviceListComponent } from './components/device-list/device-list.compon
 import { OrdersSliderComponent } from './components/orders-slider/orders-slider.component';
 import { DeviceCardComponent } from './components/device-card/device-card.component';
 import { DeviceDetailsComponent } from './components/device-details/device-details.component';
+import { DevicesControlComponent } from './devices-control/devices-control.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { DeviceDetailsComponent } from './components/device-details/device-detai
     DeviceListComponent,
     OrdersSliderComponent,
     DeviceCardComponent,
-    DeviceDetailsComponent
+    DeviceDetailsComponent,
+    DevicesControlComponent,
   ],
   imports: [
     CommonModule,

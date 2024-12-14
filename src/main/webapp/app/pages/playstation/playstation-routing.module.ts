@@ -4,6 +4,7 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access.service'
 import { NavigationPageComponent } from './navigation-page/navigation-page.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { PlaystationLayoutComponent } from '../../layouts/playstation/playstation-layout.component';
+import { DevicesControlComponent } from './devices-control/devices-control.component';
 
 const routes: Routes = [
   {
@@ -19,6 +20,13 @@ const routes: Routes = [
         path: 'dashboard',
         component: DashboardComponent,
         canActivate: [UserRouteAccessService],
+      },
+      {
+        path: 'controls',
+        component: DevicesControlComponent,
+        data: {
+          pageTitle: 'Control Devices',
+        },
       },
     ],
   },
