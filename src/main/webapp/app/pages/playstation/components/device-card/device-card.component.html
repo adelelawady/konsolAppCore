@@ -1,4 +1,7 @@
-<div class="device-card" [ngClass]="getBorderColor()">
+<div class="device-card" 
+     [ngClass]="getBorderColor()" 
+     (click)="onSelect()"
+     (dblclick)="onDoubleClick($event)">
   <div class="device-card__header">
     <div class="room-info">
       <i class="fas fa-tv"></i>

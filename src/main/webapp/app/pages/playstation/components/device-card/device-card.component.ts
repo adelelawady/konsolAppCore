@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { PlaystationService } from '../../services/playstation.service';
 
 export interface Device {
   id: number;
@@ -25,9 +26,20 @@ export interface Device {
 export class DeviceCardComponent implements OnInit {
   @Input() device!: Device;
 
-  constructor() {}
+  constructor(private playstationService: PlaystationService) {}
 
   ngOnInit(): void {}
+
+  onSelect(): void {
+    this.playstationService.selectDevice(this.device);
+  }
+
+  onDoubleClick(event: MouseEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.playstationService.selectDevice(this.device);
+    this.playstationService.showOrdersList();
+  }
 
   getStatusText(): string {
     switch (this.device.status) {

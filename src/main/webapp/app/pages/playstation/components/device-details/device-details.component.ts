@@ -1,20 +1,31 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Device } from '../device-card/device-card.component';
+import { PlaystationService } from '../../services/playstation.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'jhi-device-details',
   templateUrl: './device-details.component.html',
   styleUrls: ['./device-details.component.scss']
 })
-export class DeviceDetailsComponent implements OnInit {
+export class DeviceDetailsComponent implements OnInit, OnDestroy {
   selectedDevice?: Device;
+  private subscription?: Subscription;
   
-  constructor() {}
+  constructor(private playstationService: PlaystationService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.subscription = this.playstationService.selectedDevice$.subscribe(
+      device => {
+        this.selectedDevice = device || undefined;
+      }
+    );
+  }
 
-  onDeviceSelect(device: Device): void {
-    this.selectedDevice = device;
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   formatDuration(minutes: number): string {

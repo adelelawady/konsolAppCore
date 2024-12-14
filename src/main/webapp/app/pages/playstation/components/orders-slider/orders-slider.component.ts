@@ -1,5 +1,7 @@
-import { Component, OnInit, HostListener, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, ElementRef } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
+import { PlaystationService } from '../../services/playstation.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'jhi-orders-slider',
@@ -24,17 +26,30 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
     ])
   ]
 })
-export class OrdersSliderComponent implements OnInit {
+export class OrdersSliderComponent implements OnInit, OnDestroy {
   isVisible = false;
+  private subscription?: Subscription;
 
-  constructor(private elementRef: ElementRef) {}
+  constructor(private playstationService: PlaystationService, private elementRef: ElementRef) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.subscription = this.playstationService.ordersListVisible$.subscribe(
+      visible => {
+        this.isVisible = visible;
+      }
+    );
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
 
   @HostListener('document:click', ['$event'])
   clickOutside(event: Event): void {
     if (!this.elementRef.nativeElement.contains(event.target) && this.isVisible) {
-      this.hide();
+      this.close();
     }
   }
 
@@ -48,5 +63,9 @@ export class OrdersSliderComponent implements OnInit {
 
   show(): void {
     this.isVisible = true;
+  }
+
+  close(): void {
+    this.playstationService.hideOrdersList();
   }
 }
