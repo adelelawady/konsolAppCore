@@ -1,6 +1,7 @@
 package com.konsol.core.service;
 
 import com.konsol.core.service.dto.PlaystationDeviceDTO;
+import com.konsol.core.service.dto.PlayStationSessionDTO;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -55,4 +56,29 @@ public interface PlaystationDeviceService {
      * @param id the id of the entity.
      */
     void delete(String id);
+
+    /**
+     * Start a new session for a device.
+     *
+     * @param deviceId the id of the device to start session for
+     * @return the created session DTO
+     */
+    PlaystationDeviceDTO startSession(String deviceId);
+
+    /**
+     * Get active session for a device.
+     *
+     * @param deviceId the id of the device
+     * @return the active session DTO if exists, or null
+     */
+    Optional<PlayStationSessionDTO> getDeviceSession(String deviceId);
+
+    /**
+     * Stop an active session for a device.
+     *
+     * @param deviceId the id of the device
+     * @return the stopped session DTO
+     * @throws RuntimeException if device not found or no active session exists
+     */
+    PlayStationSessionDTO stopSession(String deviceId);
 }

@@ -4,6 +4,7 @@ import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.time.Instant;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -32,10 +33,12 @@ public class PlayStationSession implements Serializable {
     private Instant endTime;
 
     @NotNull
-    @Field("invoice_id")
-    private String invoiceId;
+    @Field("device_id")
+    private String deviceId;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
+    @DBRef
+    @Field("invoice")
+    private Invoice invoice;
 
     public Long getId() {
         return this.id;
@@ -51,7 +54,7 @@ public class PlayStationSession implements Serializable {
     }
 
     public Boolean getActive() {
-        return this.active;
+        return active;
     }
 
     public PlayStationSession active(Boolean active) {
@@ -64,7 +67,7 @@ public class PlayStationSession implements Serializable {
     }
 
     public Instant getStartTime() {
-        return this.startTime;
+        return startTime;
     }
 
     public PlayStationSession startTime(Instant startTime) {
@@ -77,7 +80,7 @@ public class PlayStationSession implements Serializable {
     }
 
     public Instant getEndTime() {
-        return this.endTime;
+        return endTime;
     }
 
     public PlayStationSession endTime(Instant endTime) {
@@ -89,20 +92,31 @@ public class PlayStationSession implements Serializable {
         this.endTime = endTime;
     }
 
-    public String getInvoiceId() {
-        return this.invoiceId;
+    public String getDeviceId() {
+        return deviceId;
     }
 
-    public PlayStationSession invoiceId(String invoiceId) {
-        this.setInvoiceId(invoiceId);
+    public PlayStationSession deviceId(String deviceId) {
+        this.setDeviceId(deviceId);
         return this;
     }
 
-    public void setInvoiceId(String invoiceId) {
-        this.invoiceId = invoiceId;
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+    public Invoice getInvoice() {
+        return invoice;
+    }
+
+    public PlayStationSession invoice(Invoice invoice) {
+        this.setInvoice(invoice);
+        return this;
+    }
+
+    public void setInvoice(Invoice invoice) {
+        this.invoice = invoice;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -112,16 +126,14 @@ public class PlayStationSession implements Serializable {
         if (!(o instanceof PlayStationSession)) {
             return false;
         }
-        return getId() != null && getId().equals(((PlayStationSession) o).getId());
+        return id != null && id.equals(((PlayStationSession) o).id);
     }
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
-    // prettier-ignore
     @Override
     public String toString() {
         return "PlayStationSession{" +
@@ -129,7 +141,8 @@ public class PlayStationSession implements Serializable {
             ", active='" + getActive() + "'" +
             ", startTime='" + getStartTime() + "'" +
             ", endTime='" + getEndTime() + "'" +
-            ", invoiceId='" + getInvoiceId() + "'" +
+            ", deviceId='" + getDeviceId() + "'" +
+            ", invoice='" + getInvoice() + "'" +
             "}";
     }
 }
