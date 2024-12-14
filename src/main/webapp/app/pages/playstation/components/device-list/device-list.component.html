@@ -3,6 +3,10 @@
     <h2>PlayStation Devices</h2>
   </div>
   <div class="device-list__content">
-    <!-- Device list content will go here -->
+    <div class="devices-grid">
+      <div class="device-item" *ngFor="let device of devices">
+        <jhi-device-card [device]="device"></jhi-device-card>
+      </div>
+    </div>
   </div>
 </div>

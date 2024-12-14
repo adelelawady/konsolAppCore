@@ -12,6 +12,18 @@
   }
 
   &__content {
-    // Styles for the content will be added as needed
+    .devices-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      padding: 1rem;
+      overflow-y: auto;
+      flex: 1;
+      justify-content: center;
+
+      .device-item {
+        display: flex;
+      }
+    }
   }
 }

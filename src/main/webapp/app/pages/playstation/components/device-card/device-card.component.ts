@@ -1,9 +1,13 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 export interface Device {
   id: number;
   name: string;
+  roomName: string;
+  deviceType: 'PS4' | 'PS5';
   status: 'available' | 'in-use' | 'maintenance';
+  duration?: number;
+  cost?: number;
   hourlyRate: number;
   currentSession?: {
     startTime: string;
@@ -18,8 +22,34 @@ export interface Device {
   templateUrl: './device-card.component.html',
   styleUrls: ['./device-card.component.scss']
 })
-export class DeviceCardComponent {
+export class DeviceCardComponent implements OnInit {
   @Input() device!: Device;
+
+  constructor() {}
+
+  ngOnInit(): void {}
+
+  getStatusText(): string {
+    switch (this.device.status) {
+      case 'maintenance':
+        return 'متوقف';
+      case 'in-use':
+        return 'قيد الاستخدام';
+      default:
+        return 'متاح';
+    }
+  }
+
+  getBorderColor(): string {
+    switch (this.device.status) {
+      case 'maintenance':
+        return 'border-red';
+      case 'in-use':
+        return 'border-blue';
+      default:
+        return 'border-green';
+    }
+  }
 
   getStatusClass(): string {
     return `status-${this.device.status}`;

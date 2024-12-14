@@ -1,22 +1,9 @@
 <div class="dashboard-container">
   <div class="dashboard-header">
     <h2>Gaming Stations</h2>
-    <div class="header-actions">
-      <button class="btn-filter">
-        <i class="fas fa-filter"></i>
-        Filter
-      </button>
-      <button class="btn-add">
-        <i class="fas fa-plus"></i>
-        Add Device
-      </button>
-    </div>
+   
   </div>
 
-  <div class="devices-grid">
-    <div class="device-item" *ngFor="let device of devices">
-      <jhi-device-card [device]="device"></jhi-device-card>
-    </div>
-  </div>
+  <jhi-device-list></jhi-device-list>
   <jhi-orders-slider></jhi-orders-slider>
 </div>
