@@ -5,6 +5,8 @@ import { NavigationPageComponent } from './navigation-page/navigation-page.compo
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { PlaystationLayoutComponent } from '../../layouts/playstation/playstation-layout.component';
 import { DevicesControlComponent } from './devices-control/devices-control.component';
+import { PlaystationDeviceUpdateComponent } from 'app/entities/playstation-device/update/playstation-device-update.component';
+import PlaystationDeviceResolve from 'app/entities/playstation-device/route/playstation-device-routing-resolve.service';
 
 const routes: Routes = [
   {
@@ -23,10 +25,26 @@ const routes: Routes = [
       },
       {
         path: 'controls',
-        component: DevicesControlComponent,
-        data: {
-          pageTitle: 'Control Devices',
-        },
+        children: [
+          {
+            path: '',
+            component: DevicesControlComponent,
+          },
+          {
+            path: 'new',
+            component: PlaystationDeviceUpdateComponent,
+            resolve: {
+              playstationDevice: PlaystationDeviceResolve,
+            },
+          },
+          {
+            path: ':id/edit',
+            component: PlaystationDeviceUpdateComponent,
+            resolve: {
+              playstationDevice: PlaystationDeviceResolve,
+            },
+          },
+        ],
       },
     ],
   },

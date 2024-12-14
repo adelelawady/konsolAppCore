@@ -151,12 +151,13 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
      * @param id the id of the PsDeviceDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the PsDeviceDTO, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/{id}")
-    public ResponseEntity<PsDeviceDTO> getPlaystationDevice(@PathVariable("id") String id) {
+  @Override
+    public ResponseEntity<PsDeviceDTO> getDevice(String id) {
         LOG.debug("REST request to get PlaystationDevice : {}", id);
         Optional<PsDeviceDTO> PsDeviceDTO = playstationDeviceService.findOne(id);
         return ResponseUtil.wrapOrNotFound(PsDeviceDTO);
     }
+
 
     /**
      * {@code DELETE  /playstation-devices/:id} : delete the "id" playstationDevice.

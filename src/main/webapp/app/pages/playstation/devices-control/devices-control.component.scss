@@ -1,1 +1,15 @@
-// Add your styles here 
+.table {
+  th {
+    background-color: #f8f9fa;
+  }
+}
+
+.btn-group {
+  .btn {
+    margin-right: 0.25rem;
+    
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+} 

@@ -1,13 +1,83 @@
 <div class="container">
   <h1>Control Devices</h1>
-  <div class="row">
-    <div class="col-12">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Connected Devices</h5>
-          <!-- Add your devices control content here -->
-          <p>Manage your PlayStation controllers and accessories here.</p>
+  
+  <!-- Action Buttons -->
+  <div class="mb-3">
+    <button class="btn btn-primary me-2" [routerLink]="['./new']">
+      <fa-icon icon="plus"></fa-icon>
+      <span>Add New Device</span>
+    </button>
+    
+    <button class="btn btn-info" (click)="loadDevices()" [disabled]="isLoading">
+      <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+      <span>Refresh List</span>
+    </button>
+  </div>
+
+  <!-- Devices List -->
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Connected Devices</h5>
+      
+      <div *ngIf="isLoading" class="text-center">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
         </div>
+      </div>
+
+      <div *ngIf="!isLoading && devices && devices.length > 0">
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Type</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let device of devices; trackBy: trackId">
+                <td>{{ device.name }}</td>
+                <td>
+                  <span [class]="device.active === 'true' ? 'badge bg-success' : 'badge bg-danger'">
+                    {{ device.active === 'true' ? 'Active' : 'Inactive' }}
+                  </span>
+                </td>
+                <td>{{ device.type }}</td>
+                <td>
+                  <div class="btn-group">
+                    <button class="btn btn-info btn-sm" [routerLink]="['./', device.id, 'edit']">
+                      <fa-icon icon="pencil-alt"></fa-icon>
+                      <span class="d-none d-md-inline">Edit</span>
+                    </button>
+                    <button class="btn btn-danger btn-sm" (click)="delete(device)">
+                      <fa-icon icon="times"></fa-icon>
+                      <span class="d-none d-md-inline">Delete</span>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div *ngIf="devices.length > 0" class="d-flex justify-content-center">
+          <ngb-pagination
+            [collectionSize]="totalItems"
+            [page]="page"
+            [pageSize]="itemsPerPage"
+            [maxSize]="5"
+            [rotate]="true"
+            [boundaryLinks]="true"
+            (pageChange)="loadDevices()"
+          ></ngb-pagination>
+        </div>
+      </div>
+
+      <div *ngIf="!isLoading && (!devices || devices.length === 0)" class="alert alert-warning">
+        No devices found
       </div>
     </div>
   </div>

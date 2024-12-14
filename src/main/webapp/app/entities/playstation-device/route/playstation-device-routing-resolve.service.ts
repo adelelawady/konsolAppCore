@@ -4,18 +4,18 @@ import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { EMPTY, Observable, of } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 
-import { IPlaystationDevice } from '../playstation-device.model';
-import { PlaystationDeviceService } from '../service/playstation-device.service';
+import { PsDeviceDTO } from 'app/core/konsolApi/model/psDeviceDTO';
+import { PlaystationResourceService } from 'app/core/konsolApi/api/playstationResource.service';
 
-const playstationDeviceResolve = (route: ActivatedRouteSnapshot): Observable<null | IPlaystationDevice> => {
+const playstationDeviceResolve = (route: ActivatedRouteSnapshot): Observable<null | PsDeviceDTO> => {
   const id = route.params.id;
   if (id) {
-    return inject(PlaystationDeviceService)
-      .find(id)
+    return inject(PlaystationResourceService)
+      .getDevice(id)
       .pipe(
-        mergeMap((playstationDevice: HttpResponse<IPlaystationDevice>) => {
-          if (playstationDevice.body) {
-            return of(playstationDevice.body);
+        mergeMap((device: PsDeviceDTO) => {
+          if (device) {
+            return of(device);
           }
           inject(Router).navigate(['404']);
           return EMPTY;

@@ -12,6 +12,7 @@ import { OrdersSliderComponent } from './components/orders-slider/orders-slider.
 import { DeviceCardComponent } from './components/device-card/device-card.component';
 import { DeviceDetailsComponent } from './components/device-details/device-details.component';
 import { DevicesControlComponent } from './devices-control/devices-control.component';
+import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { DevicesControlComponent } from './devices-control/devices-control.compo
     RouterModule,
     SharedModule,
     PlaystationRoutingModule,
-    LayoutsModule
+    LayoutsModule,
+    NgbPaginationModule,
   ],
   exports: [
     DeviceListComponent,

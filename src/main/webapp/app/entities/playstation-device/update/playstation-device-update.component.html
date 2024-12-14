@@ -12,69 +12,51 @@
       <div>
         <jhi-alert-error></jhi-alert-error>
 
-        @if (editForm.controls.id.value !== null) {
-          <div class="mb-3">
-            <label class="form-label" for="field_id" jhiTranslate="konsolCoreApp.playstationDevice.id">ID</label>
-            <input type="text" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
-          </div>
-        }
-
-        @let pkRef = editForm.get('pk')!;
-        <div class="mb-3">
-          <label class="form-label" for="field_pk" jhiTranslate="konsolCoreApp.playstationDevice.pk">Pk</label>
-          <input type="number" class="form-control" name="pk" id="field_pk" data-cy="pk" formControlName="pk" />
-          @if (pkRef.invalid && (pkRef.dirty || pkRef.touched)) {
-            <div>
-              @if (editForm.get('pk')?.errors?.required) {
-                <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
-              }
-              <small class="form-text text-danger" [hidden]="!editForm.get('pk')?.errors?.number" jhiTranslate="entity.validation.number"
-                >This field should be a number.</small
-              >
-            </div>
-          }
+        <div class="mb-3" *ngIf="editForm.controls.id.value">
+          <label class="form-label" for="field_id" jhiTranslate="global.field.id">ID</label>
+          <input type="text" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
         </div>
 
-        @let nameRef = editForm.get('name')!;
         <div class="mb-3">
           <label class="form-label" for="field_name" jhiTranslate="konsolCoreApp.playstationDevice.name">Name</label>
           <input type="text" class="form-control" name="name" id="field_name" data-cy="name" formControlName="name" />
-          @if (nameRef.invalid && (nameRef.dirty || nameRef.touched)) {
-            <div>
-              @if (editForm.get('name')?.errors?.required) {
-                <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
-              }
-            </div>
-          }
+          <div *ngIf="editForm.get('name')?.invalid && (editForm.get('name')?.dirty || editForm.get('name')?.touched)">
+            <small 
+              class="form-text text-danger"
+              *ngIf="editForm.get('name')?.errors?.required"
+              jhiTranslate="entity.validation.required"
+            >
+              This field is required.
+            </small>
+          </div>
         </div>
 
-        @let indexRef = editForm.get('index')!;
         <div class="mb-3">
-          <label class="form-label" for="field_index" jhiTranslate="konsolCoreApp.playstationDevice.index">Index</label>
-          <input type="number" class="form-control" name="index" id="field_index" data-cy="index" formControlName="index" />
-          @if (indexRef.invalid && (indexRef.dirty || indexRef.touched)) {
-            <div>
-              @if (editForm.get('index')?.errors?.required) {
-                <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
-              }
-              <small class="form-text text-danger" [hidden]="!editForm.get('index')?.errors?.number" jhiTranslate="entity.validation.number"
-                >This field should be a number.</small
-              >
-            </div>
-          }
+          <label class="form-label" for="field_type">Device Type</label>
+          <select class="form-control" name="type" id="field_type" data-cy="type" formControlName="type">
+            <option [ngValue]="null">Select Type</option>
+            <option value="CONTROLLER">Controller</option>
+            <option value="CONSOLE">Console</option>
+            <option value="ACCESSORY">Accessory</option>
+          </select>
         </div>
 
-        @let activeRef = editForm.get('active')!;
         <div class="mb-3">
-          <label class="form-label" for="field_active" jhiTranslate="konsolCoreApp.playstationDevice.active">Active</label>
-          <input type="checkbox" class="form-check" name="active" id="field_active" data-cy="active" formControlName="active" />
-          @if (activeRef.invalid && (activeRef.dirty || activeRef.touched)) {
-            <div>
-              @if (editForm.get('active')?.errors?.required) {
-                <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
-              }
-            </div>
-          }
+          <div class="form-check">
+            <input 
+              type="checkbox" 
+              class="form-check-input" 
+              name="active" 
+              id="field_active" 
+              data-cy="active" 
+              [value]="'true'"
+              (change)="onActiveChange($event)"
+              [checked]="editForm.get('active')?.value === 'true'"
+            />
+            <label class="form-check-label" for="field_active">
+              Active
+            </label>
+          </div>
         </div>
       </div>
 
@@ -96,3 +78,4 @@
     </form>
   </div>
 </div>
+

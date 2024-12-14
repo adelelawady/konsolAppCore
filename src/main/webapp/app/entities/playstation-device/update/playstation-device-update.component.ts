@@ -3,34 +3,31 @@ import { HttpResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
-
-import SharedModule from 'app/shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
-import { IPlaystationDevice } from '../playstation-device.model';
-import { PlaystationDeviceService } from '../service/playstation-device.service';
+import { SharedModule } from 'app/shared/shared.module';
+import { PsDeviceDTO } from 'app/core/konsolApi/model/psDeviceDTO';
+import { PlaystationResourceService } from 'app/core/konsolApi/api/playstationResource.service';
 import { PlaystationDeviceFormGroup, PlaystationDeviceFormService } from './playstation-device-form.service';
 
 @Component({
   standalone: true,
   selector: 'jhi-playstation-device-update',
   templateUrl: './playstation-device-update.component.html',
-  imports: [SharedModule, FormsModule, ReactiveFormsModule],
+  imports: [[SharedModule], FormsModule, ReactiveFormsModule],
 })
 export class PlaystationDeviceUpdateComponent implements OnInit {
   isSaving = false;
-  playstationDevice: IPlaystationDevice | null = null;
+  device: PsDeviceDTO | null = null;
 
-  protected playstationDeviceService = inject(PlaystationDeviceService);
+  protected playstationResourceService = inject(PlaystationResourceService);
   protected playstationDeviceFormService = inject(PlaystationDeviceFormService);
   protected activatedRoute = inject(ActivatedRoute);
 
-  // eslint-disable-next-line @typescript-eslint/member-ordering
   editForm: PlaystationDeviceFormGroup = this.playstationDeviceFormService.createPlaystationDeviceFormGroup();
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ playstationDevice }) => {
-      this.playstationDevice = playstationDevice;
+      this.device = playstationDevice;
       if (playstationDevice) {
         this.updateForm(playstationDevice);
       }
@@ -43,15 +40,19 @@ export class PlaystationDeviceUpdateComponent implements OnInit {
 
   save(): void {
     this.isSaving = true;
-    const playstationDevice = this.playstationDeviceFormService.getPlaystationDevice(this.editForm);
-    if (playstationDevice.id !== null) {
-      this.subscribeToSaveResponse(this.playstationDeviceService.update(playstationDevice));
+    const device = this.playstationDeviceFormService.getPlaystationDevice(this.editForm);
+    if (device.id) {
+      this.subscribeToSaveResponse(
+        this.playstationResourceService.updateDevice(device.id, device)
+      );
     } else {
-      this.subscribeToSaveResponse(this.playstationDeviceService.create(playstationDevice));
+      this.subscribeToSaveResponse(
+        this.playstationResourceService.createPlayStationDevice(device)
+      );
     }
   }
 
-  protected subscribeToSaveResponse(result: Observable<HttpResponse<IPlaystationDevice>>): void {
+  protected subscribeToSaveResponse(result: Observable<PsDeviceDTO>): void {
     result.pipe(finalize(() => this.onSaveFinalize())).subscribe({
       next: () => this.onSaveSuccess(),
       error: () => this.onSaveError(),
@@ -70,8 +71,13 @@ export class PlaystationDeviceUpdateComponent implements OnInit {
     this.isSaving = false;
   }
 
-  protected updateForm(playstationDevice: IPlaystationDevice): void {
-    this.playstationDevice = playstationDevice;
-    this.playstationDeviceFormService.resetForm(this.editForm, playstationDevice);
+  protected updateForm(device: PsDeviceDTO): void {
+    this.device = device;
+    this.playstationDeviceFormService.resetForm(this.editForm, device);
+  }
+
+  onActiveChange(event: Event): void {
+    const checkbox = event.target as HTMLInputElement;
+    this.editForm.get('active')?.setValue(checkbox.checked ? 'true' : 'false');
   }
 }
