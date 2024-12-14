@@ -3,7 +3,9 @@ package com.konsol.core.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.validation.constraints.*;
 import org.springframework.data.annotation.Id;
@@ -59,6 +61,9 @@ public class Item extends AbstractAuditingEntity<String> implements Serializable
     @Field("itemUnits")
     //@JsonIgnoreProperties(value = { "items" }, allowSetters = true)
     private Set<ItemUnit> itemUnits = new HashSet<>();
+
+    @Field("price_options")
+    private List<ItemPriceOptions> PriceOptions = new ArrayList<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -227,5 +232,13 @@ public class Item extends AbstractAuditingEntity<String> implements Serializable
 
     public void setCheckQty(boolean checkQty) {
         this.checkQty = checkQty;
+    }
+
+    public List<ItemPriceOptions> getPriceOptions() {
+        return PriceOptions;
+    }
+
+    public void setPriceOptions(List<ItemPriceOptions> priceOptions) {
+        PriceOptions = priceOptions;
     }
 }
