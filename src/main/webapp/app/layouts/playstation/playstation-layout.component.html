@@ -7,8 +7,9 @@
   </header>
 
   <!-- Main content -->
-  <main class="ps-main">
-    <div class="ps-sidebar">
+  <main class="ps-main" [ngClass]="{'no-sidebar': isDashboard}">
+    <!-- Sidebar - Only show if not dashboard -->
+    <div class="ps-sidebar" *ngIf="!isDashboard">
       <div class="ps-menu">
         <div class="menu-item">
           <a [routerLink]="['/playstation']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
@@ -22,19 +23,16 @@
             <span>Dashboard</span>
           </a>
         </div>
-        <!-- Add more menu items as needed -->
       </div>
     </div>
 
-    <div class="ps-content">
+    <div class="ps-content" [ngClass]="{'full-width': isDashboard}">
       <router-outlet></router-outlet>
     </div>
   </main>
 
   <!-- Footer -->
   <footer class="ps-footer">
-    <div class="container-xl">
-      <jhi-footer></jhi-footer>
-    </div>
+    <jhi-footer></jhi-footer>
   </footer>
 </div>

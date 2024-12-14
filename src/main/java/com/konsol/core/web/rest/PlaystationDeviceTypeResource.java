@@ -13,6 +13,7 @@ import java.util.Objects;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -148,7 +149,7 @@ public class PlaystationDeviceTypeResource {
      */
     @GetMapping("")
     public ResponseEntity<List<PlaystationDeviceTypeDTO>> getAllPlaystationDeviceTypes(
-        @org.springdoc.core.annotations.ParameterObject Pageable pageable
+        @ParameterObject Pageable pageable
     ) {
         LOG.debug("REST request to get a page of PlaystationDeviceTypes");
         Page<PlaystationDeviceTypeDTO> page = playstationDeviceTypeService.findAll(pageable);

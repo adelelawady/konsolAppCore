@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'jhi-playstation-layout',
@@ -6,5 +8,13 @@ import { Component } from '@angular/core';
   styleUrls: ['./playstation-layout.component.scss']
 })
 export class PlaystationLayoutComponent {
-  constructor() {}
+  isDashboard = false;
+
+  constructor(private router: Router) {
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: any) => {
+      this.isDashboard = event.url.includes('/playstation/dashboard');
+    });
+  }
 }

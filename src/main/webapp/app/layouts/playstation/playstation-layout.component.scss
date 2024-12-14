@@ -18,6 +18,13 @@
   display: flex;
   flex: 1;
   margin-top: 56px; // Adjust based on navbar height
+
+  &.no-sidebar {
+    .ps-content {
+      margin-left: 0;
+      width: 100%;
+    }
+  }
 }
 
 .ps-sidebar {
@@ -65,6 +72,12 @@
   padding: 20px;
   background: #ffffff;
   min-height: calc(100vh - 56px);
+  transition: margin-left 0.3s ease;
+
+  &.full-width {
+    margin-left: 0;
+    width: 100%;
+  }
 }
 
 .ps-footer {
