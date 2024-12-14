@@ -1,0 +1,17 @@
+.device-list {
+  padding: 1rem;
+
+  &__header {
+    margin-bottom: 1rem;
+
+    h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 500;
+    }
+  }
+
+  &__content {
+    // Styles for the content will be added as needed
+  }
+}
