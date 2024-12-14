@@ -1,18 +1,19 @@
 package com.konsol.core.service.impl;
 
 import com.konsol.core.domain.Invoice;
-import com.konsol.core.domain.PlaystationDevice;
 import com.konsol.core.domain.PlayStationSession;
+import com.konsol.core.domain.PlaystationDevice;
 import com.konsol.core.domain.enumeration.InvoiceKind;
 import com.konsol.core.repository.InvoiceRepository;
-import com.konsol.core.repository.PlaystationDeviceRepository;
 import com.konsol.core.repository.PlayStationSessionRepository;
+import com.konsol.core.repository.PlaystationDeviceRepository;
 import com.konsol.core.service.InvoiceService;
 import com.konsol.core.service.PlaystationDeviceService;
-import com.konsol.core.service.dto.PlaystationDeviceDTO;
+import com.konsol.core.service.api.dto.*;
 import com.konsol.core.service.dto.PlayStationSessionDTO;
-import com.konsol.core.service.mapper.PlaystationDeviceMapper;
+import com.konsol.core.service.dto.PlaystationDeviceDTO;
 import com.konsol.core.service.mapper.PlayStationSessionMapper;
+import com.konsol.core.service.mapper.PlaystationDeviceMapper;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Optional;
@@ -21,7 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import com.konsol.core.service.api.dto.*;
+
 /**
  * Service Implementation for managing {@link com.konsol.core.domain.PlaystationDevice}.
  */
@@ -105,9 +106,10 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
     @Override
     public PlaystationDeviceDTO startSession(String deviceId) {
         LOG.debug("Request to start session for PlaystationDevice : {}", deviceId);
-        
+
         // Find device
-        PlaystationDevice device = playstationDeviceRepository.findById(deviceId)
+        PlaystationDevice device = playstationDeviceRepository
+            .findById(deviceId)
             .orElseThrow(() -> new RuntimeException("Device not found with id: " + deviceId));
 
         // Check if device is not in use
@@ -115,18 +117,11 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
             throw new RuntimeException("Device is already in use");
         }
 
-
         // Initialize new invoice
-        InvoiceDTO invoiceDTO = invoiceService.initializeNewInvoice(InvoiceKind.SALE);
-       
-        Invoice invoice = invoiceRepository.findById(invoiceDTO.getId()).orElse(null);
+        Invoice invoice = invoiceService.initializeNewInvoiceDomein(InvoiceKind.SALE);
 
         // Create new session
-        PlayStationSession session = new PlayStationSession()
-            .active(true)
-            .startTime(Instant.now())
-            .deviceId(deviceId)
-            .invoice(invoice);
+        PlayStationSession session = new PlayStationSession().active(true).startTime(Instant.now()).deviceId(deviceId).invoice(invoice);
 
         // Update device status to active
         device.setActive(true);
@@ -141,9 +136,10 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
     @Override
     public Optional<PlayStationSessionDTO> getDeviceSession(String deviceId) {
         LOG.debug("Request to get active session for PlaystationDevice : {}", deviceId);
-        
+
         // Find device to verify it exists
-        PlaystationDevice device = playstationDeviceRepository.findById(deviceId)
+        PlaystationDevice device = playstationDeviceRepository
+            .findById(deviceId)
             .orElseThrow(() -> new RuntimeException("Device not found with id: " + deviceId));
 
         // If device is not active, return empty
@@ -152,16 +148,16 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
         }
 
         // Find active session for device
-        return playStationSessionRepository.findByDeviceIdAndActiveTrue(deviceId)
-            .map(playStationSessionMapper::toDto);
+        return playStationSessionRepository.findByDeviceIdAndActiveTrue(deviceId).map(playStationSessionMapper::toDto);
     }
 
     @Override
     public PlayStationSessionDTO stopSession(String deviceId) {
         LOG.debug("Request to stop session for PlaystationDevice : {}", deviceId);
-        
+
         // Find device
-        PlaystationDevice device = playstationDeviceRepository.findById(deviceId)
+        PlaystationDevice device = playstationDeviceRepository
+            .findById(deviceId)
             .orElseThrow(() -> new RuntimeException("Device not found with id: " + deviceId));
 
         // Check if device has active session
@@ -170,7 +166,8 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
         }
 
         // Find active session
-        PlayStationSession session = playStationSessionRepository.findByDeviceIdAndActiveTrue(deviceId)
+        PlayStationSession session = playStationSessionRepository
+            .findByDeviceIdAndActiveTrue(deviceId)
             .orElseThrow(() -> new RuntimeException("No active session found for device: " + deviceId));
 
         // Update session
@@ -180,7 +177,6 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
         // Update invoice
         Invoice invoice = session.getInvoice();
         if (invoice != null) {
-           
             invoiceRepository.save(invoice);
         }
 

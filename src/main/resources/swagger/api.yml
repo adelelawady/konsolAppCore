@@ -4229,3 +4229,27 @@ components:
         total:
           type: integer
           format: int64
+    PsDeviceDTO:
+      title: PsDeviceDTO
+      x-stoplight:
+        id: dp84jb2je1ncq
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+          x-stoplight:
+            id: 4rc4eexcxttkb
+        active:
+          type: string
+          x-stoplight:
+            id: ul3rbglgpxq6h
+    PsDeviceType:
+      title: PsDeviceType
+      x-stoplight:
+        id: 7fucva6o4731t
+      type: object
+      properties:
+        id:
+          type: string
