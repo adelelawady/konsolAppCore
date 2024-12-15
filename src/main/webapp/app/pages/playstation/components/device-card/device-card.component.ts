@@ -1,4 +1,5 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy } from '@angular/core';
 import { PlaystationService } from '../../services/playstation.service';
 import { PsDeviceDTO } from 'app/core/konsolApi';
 import { interval, Subscription } from 'rxjs';
@@ -7,14 +8,15 @@ import { startWith } from 'rxjs/operators';
 @Component({
   selector: 'jhi-device-card',
   templateUrl: './device-card.component.html',
-  styleUrls: ['./device-card.component.scss']
+  styleUrls: ['./device-card.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DeviceCardComponent implements OnInit, OnDestroy {
   @Input() device!: PsDeviceDTO;
   sessionDuration: string = '0h 0m';
   private durationSubscription?: Subscription;
 
-  constructor(private playstationService: PlaystationService) {}
+  constructor(private playstationService: PlaystationService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     if (this.device.session) {
@@ -25,6 +27,10 @@ export class DeviceCardComponent implements OnInit, OnDestroy {
           this.updateSessionDuration();
         });
     }
+
+    Promise.resolve().then(() => {
+      this.cdr.detectChanges();
+    });
   }
 
   ngOnDestroy(): void {
@@ -102,5 +108,10 @@ export class DeviceCardComponent implements OnInit, OnDestroy {
     
     // Return formatted number with 2 decimal places
     return cost.toFixed(0);
+  }
+
+  updateValue(newValue: any) {
+    this.device = newValue;
+    this.cdr.detectChanges();
   }
 }

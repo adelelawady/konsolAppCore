@@ -80,9 +80,14 @@ export class OrdersSliderComponent implements OnInit, OnDestroy {
     this.itemResourceService.getAllItemsCategories().subscribe({
       next: (categories: CategoryItem[]) => {
         this.categories = categories;
+        if (categories.length > 0 && !this.selectedCategory) {
+          this.selectCategory(categories[0]);
+        }
+        this.loading = false;
       },
       error: (error) => {
         console.error('Error loading categories:', error);
+        this.loading = false;
       }
     });
   }
