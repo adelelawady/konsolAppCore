@@ -4,28 +4,23 @@
       <h2
         id="jhi-playstation-device-heading"
         data-cy="PlaystationDeviceCreateUpdateHeading"
-        jhiTranslate="konsolCoreApp.playstationDevice.home.createOrEditLabel"
       >
-        Create or edit a Playstation Device
+        {{ device?.id ? 'Edit Device' : 'Create Device' }}
       </h2>
 
       <div>
         <jhi-alert-error></jhi-alert-error>
 
         <div class="mb-3" *ngIf="editForm.controls.id.value">
-          <label class="form-label" for="field_id" jhiTranslate="global.field.id">ID</label>
+          <label class="form-label" for="field_id">ID</label>
           <input type="text" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
         </div>
 
         <div class="mb-3">
-          <label class="form-label" for="field_name" jhiTranslate="konsolCoreApp.playstationDevice.name">Name</label>
+          <label class="form-label" for="field_name">Name</label>
           <input type="text" class="form-control" name="name" id="field_name" data-cy="name" formControlName="name" />
           <div *ngIf="editForm.get('name')?.invalid && (editForm.get('name')?.dirty || editForm.get('name')?.touched)">
-            <small 
-              class="form-text text-danger"
-              *ngIf="editForm.get('name')?.errors?.required"
-              jhiTranslate="entity.validation.required"
-            >
+            <small class="form-text text-danger" *ngIf="editForm.get('name')?.errors?.required">
               This field is required.
             </small>
           </div>
@@ -33,15 +28,21 @@
 
         <div class="mb-3">
           <label class="form-label" for="field_type">Device Type</label>
-          <select class="form-control" name="type" id="field_type" data-cy="type" formControlName="type">
-            <option [ngValue]="null">Select Type</option>
-            <option value="CONTROLLER">Controller</option>
-            <option value="CONSOLE">Console</option>
-            <option value="ACCESSORY">Accessory</option>
+          <select class="form-control" id="field_type" data-cy="type" formControlName="type">
+            <option [ngValue]="null">Select a type...</option>
+            <option *ngFor="let type of deviceTypes" [ngValue]="type">
+              {{ type.name }} - {{ type.price | currency }}
+            </option>
           </select>
+          <div *ngIf="editForm.get('type')?.invalid && (editForm.get('type')?.dirty || editForm.get('type')?.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('type')?.errors?.required">
+              This field is required.
+            </small>
+          </div>
         </div>
 
         <div class="mb-3">
+          <label class="form-label" for="field_active">Active</label>
           <div class="form-check">
             <input 
               type="checkbox" 
@@ -53,16 +54,13 @@
               (change)="onActiveChange($event)"
               [checked]="editForm.get('active')?.value === 'true'"
             />
-            <label class="form-check-label" for="field_active">
-              Active
-            </label>
           </div>
         </div>
       </div>
 
       <div>
         <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
-          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
         </button>
 
         <button
@@ -72,7 +70,7 @@
           [disabled]="editForm.invalid || isSaving"
           class="btn btn-primary"
         >
-          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
         </button>
       </div>
     </form>

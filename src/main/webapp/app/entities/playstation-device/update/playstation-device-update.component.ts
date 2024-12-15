@@ -8,6 +8,7 @@ import { SharedModule } from 'app/shared/shared.module';
 import { PsDeviceDTO } from 'app/core/konsolApi/model/psDeviceDTO';
 import { PlaystationResourceService } from 'app/core/konsolApi/api/playstationResource.service';
 import { PlaystationDeviceFormGroup, PlaystationDeviceFormService } from './playstation-device-form.service';
+import { PsDeviceType } from 'app/core/konsolApi/model/psDeviceType';
 
 @Component({
   standalone: true,
@@ -18,6 +19,7 @@ import { PlaystationDeviceFormGroup, PlaystationDeviceFormService } from './play
 export class PlaystationDeviceUpdateComponent implements OnInit {
   isSaving = false;
   device: PsDeviceDTO | null = null;
+  deviceTypes: PsDeviceType[] = [];
 
   protected playstationResourceService = inject(PlaystationResourceService);
   protected playstationDeviceFormService = inject(PlaystationDeviceFormService);
@@ -26,11 +28,18 @@ export class PlaystationDeviceUpdateComponent implements OnInit {
   editForm: PlaystationDeviceFormGroup = this.playstationDeviceFormService.createPlaystationDeviceFormGroup();
 
   ngOnInit(): void {
+    this.loadDeviceTypes();
     this.activatedRoute.data.subscribe(({ playstationDevice }) => {
       this.device = playstationDevice;
       if (playstationDevice) {
         this.updateForm(playstationDevice);
       }
+    });
+  }
+
+  loadDeviceTypes(): void {
+    this.playstationResourceService.getDevicesTypes().subscribe(types => {
+      this.deviceTypes = types;
     });
   }
 
