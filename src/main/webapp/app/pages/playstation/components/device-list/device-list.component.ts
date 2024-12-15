@@ -22,17 +22,15 @@ export class DeviceListComponent implements OnInit, OnDestroy {
     private playstationService: PlaystationService) {}
 
   ngOnInit(): void {
-
-
     this.playstationService.reloadDevices$.subscribe(() => {
-      this.loadDevices().subscribe();
+      this.loadDevices(true).subscribe();
     });
 
-    // Refresh devices every 30 seconds
+    // Refresh devices every 30 seconds without showing loading
     this.refreshSubscription = interval(30000)
       .pipe(
-        startWith(0), // Start immediately
-        switchMap(() => this.loadDevices())
+        startWith(0),
+        switchMap(() => this.loadDevices(false))
       )
       .subscribe();
   }
@@ -45,12 +43,16 @@ export class DeviceListComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  private loadDevices(): Observable<PsDeviceDTO[]> {
-    this.isLoading = true;
+  private loadDevices(showLoading: boolean = true): Observable<PsDeviceDTO[]> {
+    if (showLoading) {
+      this.isLoading = true;
+    }
     return this.playstationResourceService.getDevices().pipe(
       tap(devices => {
         this.devices = devices;
-        this.isLoading = false;
+        if (showLoading) {
+          this.isLoading = false;
+        }
       })
     );
   }
