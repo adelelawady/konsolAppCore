@@ -29,9 +29,11 @@
         </span>
         <div class="cost-details">
           <span class="cost">EGP {{ calculateSessionCost() }}</span>
-          <span class="orders-cost" *ngIf="device.session?.invoice?.netPrice">
-            (Orders: {{ device.session?.invoice?.netPrice }} EGP)
-          </span>
+          <ng-container *ngIf="device.session?.invoice?.netPrice !== undefined">
+            <span class="orders-cost">
+              (Orders: {{ device.session?.invoice?.netPrice }} EGP)
+            </span>
+          </ng-container>
         </div>
       </div>
     </ng-container>

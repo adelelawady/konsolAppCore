@@ -32,17 +32,17 @@
 
     <!-- Cost Summary -->
     <div class="cost-summary" *ngIf="selectedDevice.session">
-      <div class="cost-item">
-        <label>Session Time</label>
-        <span>{{ getSessionTimeCost() }} EGP</span>
+      <div class="cost-item session-time">
+        <label><i class="fas fa-clock"></i>Time</label>
+        <span class="value">{{ getSessionTimeCost() }} EGP</span>
       </div>
-      <div class="cost-item">
-        <label>Orders Total</label>
-        <span>{{ getOrdersTotal() }} EGP</span>
+      <div class="cost-item orders-total">
+        <label><i class="fas fa-shopping-cart"></i>Orders</label>
+        <span class="value">{{ getOrdersTotal() }} EGP</span>
       </div>
       <div class="cost-item total">
-        <label>Total Cost</label>
-        <span>{{ getTotalCost() }} EGP</span>
+        <label>Total</label>
+        <span class="value">{{ getTotalCost() }} EGP</span>
       </div>
     </div>
 
