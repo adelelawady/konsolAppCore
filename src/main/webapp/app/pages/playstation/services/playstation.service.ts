@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Device } from '../components/device-card/device-card.component';
+import { PsDeviceDTO } from 'app/core/konsolApi';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PlaystationService {
-  private selectedDeviceSubject = new BehaviorSubject<Device | null>(null);
+  private selectedDeviceSubject = new BehaviorSubject<PsDeviceDTO | null>(null);
   private ordersListVisibleSubject = new BehaviorSubject<boolean>(false);
 
   selectedDevice$ = this.selectedDeviceSubject.asObservable();
@@ -14,7 +14,7 @@ export class PlaystationService {
 
   constructor() {}
 
-  selectDevice(device: Device): void {
+  selectDevice(device: PsDeviceDTO): void {
     this.selectedDeviceSubject.next(device);
   }
 

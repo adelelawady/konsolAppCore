@@ -7,35 +7,35 @@
     <div class="details-section">
       <div class="section-header">
         <i class="fas fa-tv"></i>
-        <span>{{ selectedDevice.roomName }}</span>
+        <span>{{ selectedDevice.name }}</span>
       </div>
       
       <div class="device-info">
         <div class="info-item">
           <label>Device Type</label>
-          <span>{{ selectedDevice.deviceType }}</span>
+          <span>{{ selectedDevice.type?.name }}</span>
         </div>
         <div class="info-item">
           <label>Status</label>
-          <span [class]="'status-' + selectedDevice.status">{{ selectedDevice.status }}</span>
+          <span [class]="'status-' + selectedDevice.active">{{ selectedDevice.active ? 'Active' : 'Inactive' }}</span>
         </div>
-        <div class="info-item" *ngIf="selectedDevice.duration">
+        <div class="info-item" >
           <label>Session Duration</label>
-          <span>{{ formatDuration(selectedDevice.duration) }}</span>
+          <span>0</span>
         </div>
-        <div class="info-item" *ngIf="selectedDevice.cost">
+        <div class="info-item" >
           <label>Current Cost</label>
-          <span class="cost">{{ formatCurrency(selectedDevice.cost) }}</span>
+          <span class="cost">0</span>
         </div>
       </div>
     </div>
 
     <div class="actions-section">
-      <button class="btn-primary" *ngIf="selectedDevice.status === 'available'">
+      <button class="btn-primary" >
         <i class="fas fa-play"></i>
         Start Session
       </button>
-      <button class="btn-warning" *ngIf="selectedDevice.status === 'in-use'">
+      <button class="btn-warning" >
         <i class="fas fa-stop"></i>
         End Session
       </button>

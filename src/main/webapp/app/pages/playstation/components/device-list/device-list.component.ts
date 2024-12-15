@@ -1,36 +1,46 @@
-import { Component, OnInit } from '@angular/core';
-import { Device } from '../device-card/device-card.component';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { PlaystationResourceService } from 'app/core/konsolApi/api/playstationResource.service';
+import { PsDeviceDTO } from 'app/core/konsolApi/model/psDeviceDTO';
+import { interval, Subscription } from 'rxjs';
+import { startWith, switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'jhi-device-list',
   templateUrl: './device-list.component.html',
   styleUrls: ['./device-list.component.scss']
 })
-export class DeviceListComponent implements OnInit {
-  devices: Device[] = [
-    {
-      id: 1,
-      name: 'PS4 Station 1',
-      roomName: 'ROOM 1',
-      deviceType: 'PS4',
-      status: 'maintenance',
-      hourlyRate: 100,
-      imageUrl: 'content/images/ps4.jpg'
-    },
-    {
-      id: 2,
-      name: 'PS5 Station 1',
-      roomName: 'ROOM 2',
-      deviceType: 'PS5',
-      status: 'in-use',
-      duration: 45,
-      cost: 150,
-      hourlyRate: 150,
-      imageUrl: 'content/images/ps5.jpg'
+export class DeviceListComponent implements OnInit, OnDestroy {
+  devices: PsDeviceDTO[] = [];
+  isLoading = false;
+  private refreshSubscription?: Subscription;
+
+  constructor(private playstationResourceService: PlaystationResourceService) {}
+
+  ngOnInit(): void {
+    // Refresh devices every 30 seconds
+    this.refreshSubscription = interval(30000)
+      .pipe(
+        startWith(0), // Start immediately
+        switchMap(() => this.loadDevices())
+      )
+      .subscribe();
+  }
+
+  ngOnDestroy(): void {
+    if (this.refreshSubscription) {
+      this.refreshSubscription.unsubscribe();
     }
-  ];
+  }
 
-  constructor() {}
-
-  ngOnInit(): void {}
+  private loadDevices(): Observable<PsDeviceDTO[]> {
+    this.isLoading = true;
+    return this.playstationResourceService.getDevices().pipe(
+      tap(devices => {
+        this.devices = devices;
+        this.isLoading = false;
+      })
+    );
+  }
 }

@@ -5,13 +5,13 @@
   <div class="device-card__header">
     <div class="room-info">
       <i class="fas fa-tv"></i>
-      <span>{{ device.roomName }}</span>
+      <span>{{ device.name }}</span>
     </div>
   </div>
 
   <div class="device-card__content">
-    <div class="device-type">{{ device.deviceType }}</div>
-    <div class="device-actions" *ngIf="device.status === 'in-use'">
+    <div class="device-type">{{ device.type?.name }}</div>
+    <div class="device-actions" *ngIf="device.active">
       <button class="btn-icon settings">
         <i class="fas fa-cog"></i>
       </button>
@@ -19,13 +19,13 @@
   </div>
 
   <div class="device-card__footer">
-    <ng-container *ngIf="device.status === 'maintenance'">
-      <div class="status-badge">{{ getStatusText() }}</div>
+    <ng-container *ngIf="!device.active">
+      <div class="status-badge">status</div>
     </ng-container>
-    <ng-container *ngIf="device.status === 'in-use'">
+    <ng-container *ngIf="device.active">
       <div class="session-info">
-        <span class="duration">{{ device.duration }} m</span>
-        <span class="cost">EGP {{ device.cost }}</span>
+        <span class="duration">0 m</span>
+        <span class="cost">EGP 0</span>
       </div>
     </ng-container>
   </div>

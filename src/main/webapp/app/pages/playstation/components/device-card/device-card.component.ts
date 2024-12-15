@@ -1,22 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { PlaystationService } from '../../services/playstation.service';
+import { PsDeviceDTO } from 'app/core/konsolApi';
 
-export interface Device {
-  id: number;
-  name: string;
-  roomName: string;
-  deviceType: 'PS4' | 'PS5';
-  status: 'available' | 'in-use' | 'maintenance';
-  duration?: number;
-  cost?: number;
-  hourlyRate: number;
-  currentSession?: {
-    startTime: string;
-    duration: number;
-    cost: number;
-  };
-  imageUrl: string;
-}
+
 
 @Component({
   selector: 'jhi-device-card',
@@ -24,7 +10,7 @@ export interface Device {
   styleUrls: ['./device-card.component.scss']
 })
 export class DeviceCardComponent implements OnInit {
-  @Input() device!: Device;
+  @Input() device!: PsDeviceDTO;
 
   constructor(private playstationService: PlaystationService) {}
 
@@ -41,30 +27,18 @@ export class DeviceCardComponent implements OnInit {
     this.playstationService.showOrdersList();
   }
 
-  getStatusText(): string {
-    switch (this.device.status) {
-      case 'maintenance':
-        return 'متوقف';
-      case 'in-use':
-        return 'قيد الاستخدام';
-      default:
-        return 'متاح';
-    }
-  }
+
 
   getBorderColor(): string {
-    switch (this.device.status) {
-      case 'maintenance':
-        return 'border-red';
-      case 'in-use':
-        return 'border-blue';
-      default:
-        return 'border-green';
+    if (this.device?.active==='true') {
+      return 'border-green';
+    } else {
+      return 'border-red';
     }
   }
 
   getStatusClass(): string {
-    return `status-${this.device.status}`;
+    return `status-${this.device.active}`;
   }
 
   formatCurrency(amount: number): string {

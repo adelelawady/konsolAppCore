@@ -1,9 +1,19 @@
 <div class="device-list">
+  <div *ngIf="isLoading" class="text-center">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
   <div class="device-list__content">
     <div class="devices-grid">
       <div class="device-item" *ngFor="let device of devices">
         <jhi-device-card [device]="device"></jhi-device-card>
       </div>
     </div>
+  </div>
+
+  <div *ngIf="!isLoading && devices.length === 0" class="alert alert-info">
+    No devices available
   </div>
 </div>

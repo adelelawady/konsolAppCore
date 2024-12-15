@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Device } from '../device-card/device-card.component';
 import { PlaystationService } from '../../services/playstation.service';
 import { Subscription } from 'rxjs';
+import { PsDeviceDTO } from 'app/core/konsolApi';
 
 @Component({
   selector: 'jhi-device-details',
@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./device-details.component.scss']
 })
 export class DeviceDetailsComponent implements OnInit, OnDestroy {
-  selectedDevice?: Device;
+  selectedDevice?: PsDeviceDTO;
   private subscription?: Subscription;
   
   constructor(private playstationService: PlaystationService) {}
