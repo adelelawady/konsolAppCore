@@ -7,6 +7,7 @@ import { PlaystationLayoutComponent } from '../../layouts/playstation/playstatio
 import { DevicesControlComponent } from './devices-control/devices-control.component';
 import { PlaystationDeviceUpdateComponent } from 'app/entities/playstation-device/update/playstation-device-update.component';
 import PlaystationDeviceResolve from 'app/entities/playstation-device/route/playstation-device-routing-resolve.service';
+import { DeviceTypeControlComponent } from './device-type-control/device-type-control.component';
 
 const routes: Routes = [
   {
@@ -45,6 +46,10 @@ const routes: Routes = [
             },
           },
         ],
+      },
+      {
+        path: 'device-types',
+        component: DeviceTypeControlComponent,
       },
     ],
   },

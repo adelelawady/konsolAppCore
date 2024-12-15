@@ -1,0 +1,69 @@
+<div class="container">
+  <h1>Device Type Control</h1>
+
+  <!-- Action Buttons -->
+  <div class="mb-3">
+    <button class="btn btn-primary me-2" [routerLink]="['./new']">
+      <fa-icon icon="plus"></fa-icon>
+      <span>Add New Device Type</span>
+    </button>
+    
+    <button class="btn btn-info" (click)="loadAll()" [disabled]="isLoading">
+      <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+      <span>Refresh</span>
+    </button>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4" *ngFor="let type of deviceTypes">
+      <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="card-title mb-0">{{ type }}</h5>
+          <div class="btn-group">
+            <ng-container *ngIf="getDeviceTypeByType(type) as deviceType">
+              <button 
+                class="btn btn-sm btn-primary"
+                [routerLink]="['/playstation/device-types', deviceType.id, 'edit']"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+              </button>
+              <button 
+                class="btn btn-sm btn-danger"
+                (click)="delete(deviceType)"
+              >
+                <fa-icon icon="times"></fa-icon>
+              </button>
+            </ng-container>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="device-list">
+            <div *ngFor="let device of getDevicesByType(type)" class="device-item">
+              <span [class]="device.active === 'true' ? 'badge bg-success' : 'badge bg-danger'">
+                {{ device.name }}
+              </span>
+            </div>
+          </div>
+          <div *ngIf="getDevicesByType(type).length === 0" class="text-muted">
+            No devices of this type
+          </div>
+          
+          <!-- Device Type Details -->
+          <ng-container *ngIf="getDeviceTypeByType(type) as deviceType">
+            <div class="mt-3">
+              <small class="text-muted">
+                Default Price: {{ deviceType.defaultMainPrice | currency }}
+              </small>
+            </div>
+          </ng-container>
+        </div>
+        <div class="card-footer">
+          <button class="btn btn-primary btn-sm" [routerLink]="['/playstation/controls/new']" [queryParams]="{type: type}">
+            <fa-icon icon="plus"></fa-icon>
+            Add {{ type }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

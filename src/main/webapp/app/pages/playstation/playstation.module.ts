@@ -13,6 +13,8 @@ import { DeviceCardComponent } from './components/device-card/device-card.compon
 import { DeviceDetailsComponent } from './components/device-details/device-details.component';
 import { DevicesControlComponent } from './devices-control/devices-control.component';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+import { DeviceTypeControlComponent } from './device-type-control/device-type-control.component';
+import { DeviceTypeDeleteDialogComponent } from './device-type-control/device-type-delete-dialog.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +26,8 @@ import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
     DeviceCardComponent,
     DeviceDetailsComponent,
     DevicesControlComponent,
+    DeviceTypeControlComponent,
+    DeviceTypeDeleteDialogComponent,
   ],
   imports: [
     CommonModule,
