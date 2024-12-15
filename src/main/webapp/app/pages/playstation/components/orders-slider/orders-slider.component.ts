@@ -23,10 +23,30 @@ import { ItemSimpleDTO } from 'app/core/konsolApi/model/itemSimpleDTO';
         visibility: 'visible'
       })),
       transition('out => in', [
+        style({ visibility: 'visible' }),
         animate('300ms cubic-bezier(0.4, 0, 0.2, 1)')
       ]),
       transition('in => out', [
-        animate('300ms cubic-bezier(0.4, 0, 0.2, 1)')
+        animate('300ms cubic-bezier(0.4, 0, 0.2, 1)'),
+        style({ visibility: 'hidden' })
+      ])
+    ]),
+    trigger('backdropFade', [
+      state('out', style({
+        opacity: 0,
+        visibility: 'hidden'
+      })),
+      state('in', style({
+        opacity: 1,
+        visibility: 'visible'
+      })),
+      transition('out => in', [
+        style({ visibility: 'visible' }),
+        animate('200ms ease-out')
+      ]),
+      transition('in => out', [
+        animate('200ms ease-in'),
+        style({ visibility: 'hidden' })
       ])
     ])
   ]
@@ -37,6 +57,7 @@ export class OrdersSliderComponent implements OnInit, OnDestroy {
   categories: CategoryItem[] = [];
   selectedCategory?: CategoryItem;
   itemsByCategory: { [key: string]: ItemSimpleDTO[] } = {};
+  loading = false;
 
   constructor(
     private playstationService: PlaystationService, 
@@ -59,12 +80,6 @@ export class OrdersSliderComponent implements OnInit, OnDestroy {
     this.itemResourceService.getAllItemsCategories().subscribe({
       next: (categories: CategoryItem[]) => {
         this.categories = categories;
-        // Load items for each category
-        categories.forEach(category => {
-          if (category.name) {
-            this.loadItemsForCategory(category.name);
-          }
-        });
       },
       error: (error) => {
         console.error('Error loading categories:', error);
@@ -73,19 +88,25 @@ export class OrdersSliderComponent implements OnInit, OnDestroy {
   }
 
   private loadItemsForCategory(categoryName: string): void {
-    this.itemResourceService.getItemsByCategory(categoryName).subscribe({
+    this.loading = true;
+    const categoryItem: CategoryItem = {
+      name: categoryName
+    };
+    
+    this.itemResourceService.getItemsByCategory(categoryItem).subscribe({
       next: (items: ItemSimpleDTO[]) => {
         this.itemsByCategory[categoryName] = items;
+        this.loading = false;
       },
       error: (error) => {
         console.error(`Error loading items for category ${categoryName}:`, error);
+        this.loading = false;
       }
     });
   }
 
   selectCategory(category: CategoryItem): void {
     this.selectedCategory = category;
-    // Load items if not already loaded
     if (category.name && !this.itemsByCategory[category.name]) {
       this.loadItemsForCategory(category.name);
     }

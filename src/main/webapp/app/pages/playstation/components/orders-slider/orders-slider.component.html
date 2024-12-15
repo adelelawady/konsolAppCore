@@ -1,3 +1,5 @@
+<div class="orders-backdrop" [@backdropFade]="isVisible ? 'in' : 'out'" (click)="close()"></div>
+
 <div class="orders-slider" [@slideInOut]="isVisible ? 'in' : 'out'">
   <div class="orders-slider-header">
     <h2>Orders Menu</h2>
@@ -22,21 +24,35 @@
     <div class="items-grid">
       <ng-container *ngIf="selectedCategory?.name">
         <div class="items-container">
-          <div *ngFor="let item of getCategoryItems(selectedCategory?.name)" class="item-card">
-            <div class="item-details">
-              <h3>{{ item.name }}</h3>
-              <div class="prices">
-                <span class="price" *ngIf="item.price1">Price: {{ item.price1 }}</span>
-              </div>
-              <div class="stock" *ngIf="item.qty !== undefined">
-                Stock: {{ item.qty }}
-              </div>
-            </div>
-            <button class="add-to-order" (click)="addToOrder(item)">Add to Order</button>
+          <!-- Show loading spinner -->
+          <div *ngIf="loading" class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Loading items...</p>
           </div>
+          
+          <!-- Show items when not loading -->
+          <ng-container *ngIf="!loading">
+            <div *ngFor="let item of getCategoryItems(selectedCategory?.name)" class="item-card">
+              <div class="item-details">
+                <h3>{{ item.name }}</h3>
+                <div class="prices">
+                  <span class="price" *ngIf="item.price1">Price: {{ item.price1 }}</span>
+                </div>
+                <div class="stock" *ngIf="item.qty !== undefined">
+                  Stock: {{ item.qty }}
+                </div>
+              </div>
+              <button class="add-to-order" (click)="addToOrder(item)">Add to Order</button>
+            </div>
+          </ng-container>
         </div>
       </ng-container>
     </div>
+<!-- ... rest of the template -->
+
+
+
+
   </div>
 </div>
 
