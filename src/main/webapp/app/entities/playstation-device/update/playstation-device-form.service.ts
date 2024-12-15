@@ -3,35 +3,39 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { PsDeviceDTO } from 'app/core/konsolApi/model/psDeviceDTO';
 import { PsDeviceType } from 'app/core/konsolApi/model/psDeviceType';
 
-type PlaystationDeviceFormGroupContent = {
+export type PlaystationDeviceFormGroup = FormGroup<{
   id: FormControl<string | null>;
   name: FormControl<string | null>;
   active: FormControl<string | null>;
   type: FormControl<PsDeviceType | null>;
-};
-
-export type PlaystationDeviceFormGroup = FormGroup<PlaystationDeviceFormGroupContent>;
+}>;
 
 @Injectable({ providedIn: 'root' })
 export class PlaystationDeviceFormService {
   createPlaystationDeviceFormGroup(device: PsDeviceDTO = {}): PlaystationDeviceFormGroup {
-    return new FormGroup<PlaystationDeviceFormGroupContent>({
-      id: new FormControl<string | null>(device.id || null),
+    return new FormGroup<{
+      id: FormControl<string | null>;
+      name: FormControl<string | null>;
+      active: FormControl<string | null>;
+      type: FormControl<PsDeviceType | null>;
+    }>({
+      id: new FormControl<string | null>({ value: device.id || null, disabled: true }),
       name: new FormControl<string | null>(device.name || null, {
         validators: [Validators.required],
       }),
-      active: new FormControl<string | null>(device.active || null),
-      type: new FormControl<PsDeviceType | null>(device.type || null),
+      active: new FormControl<string | null>(device.active || 'false'),
+      type: new FormControl<PsDeviceType | null>(null, {
+        validators: [Validators.required],
+      }),
     });
   }
 
   getPlaystationDevice(form: PlaystationDeviceFormGroup): PsDeviceDTO {
-    const formValue = form.getRawValue();
     return {
-      id: formValue.id || undefined,
-      name: formValue.name || undefined,
-      active: formValue.active || undefined,
-      type: formValue.type || undefined,
+      id: form.get(['id'])?.value || undefined,
+      name: form.get(['name'])?.value || undefined,
+      active: form.get(['active'])?.value || 'false',
+      type: form.get(['type'])?.value || undefined,
     };
   }
 
@@ -48,8 +52,8 @@ export class PlaystationDeviceFormService {
   private getFormDefaults(): PsDeviceDTO {
     return {
       id: undefined,
+      name: undefined,
       active: 'false',
-      name: '',
       type: undefined
     };
   }

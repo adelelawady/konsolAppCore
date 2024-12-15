@@ -28,18 +28,32 @@ export class PlaystationDeviceUpdateComponent implements OnInit {
   editForm: PlaystationDeviceFormGroup = this.playstationDeviceFormService.createPlaystationDeviceFormGroup();
 
   ngOnInit(): void {
-    this.loadDeviceTypes();
     this.activatedRoute.data.subscribe(({ playstationDevice }) => {
       this.device = playstationDevice;
-      if (playstationDevice) {
-        this.updateForm(playstationDevice);
-      }
+      // First load device types, then update form
+      this.loadDeviceTypes().then(() => {
+        if (playstationDevice) {
+          this.updateForm(playstationDevice);
+          // Find and set the matching device type
+          if (playstationDevice.type) {
+            const matchingType = this.deviceTypes.find(t => t.id === playstationDevice.type.id);
+            if (matchingType) {
+              this.editForm.patchValue({
+                type: matchingType
+              });
+            }
+          }
+        }
+      });
     });
   }
 
-  loadDeviceTypes(): void {
-    this.playstationResourceService.getDevicesTypes().subscribe(types => {
-      this.deviceTypes = types;
+  loadDeviceTypes(): Promise<void> {
+    return new Promise((resolve) => {
+      this.playstationResourceService.getDevicesTypes().subscribe(types => {
+        this.deviceTypes = types;
+        resolve();
+      });
     });
   }
 
