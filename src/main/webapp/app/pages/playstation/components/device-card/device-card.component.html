@@ -23,9 +23,11 @@
       <div class="status-badge">status</div>
     </ng-container>
     <ng-container *ngIf="device.active">
-      <div class="session-info">
-        <span class="duration">0 m</span>
-        <span class="cost">EGP 0</span>
+      <div class="session-info" *ngIf="device.session">
+        <span class="duration">
+          <span class="session-duration">{{ sessionDuration }}</span>
+        </span>
+        <span class="cost">EGP {{ calculateSessionCost() }}</span>
       </div>
     </ng-container>
   </div>
