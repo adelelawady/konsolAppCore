@@ -20,7 +20,7 @@ public class PlayStationSession implements Serializable {
 
     @NotNull
     @Id
-    private Long id;
+    private String id;
 
     @NotNull
     @Field("active")
@@ -45,16 +45,16 @@ public class PlayStationSession implements Serializable {
     @Field("invoice")
     private Invoice invoice;
 
-    public Long getId() {
+    public String getId() {
         return this.id;
     }
 
-    public PlayStationSession id(Long id) {
+    public PlayStationSession id(String id) {
         this.setId(id);
         return this;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
