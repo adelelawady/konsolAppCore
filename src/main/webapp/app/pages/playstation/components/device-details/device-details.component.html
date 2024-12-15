@@ -7,46 +7,13 @@
   </div>
 
   <div class="device-details__content">
-    <div class="info-group">
-      <label>Type:</label>
-      <span>{{ selectedDevice.type?.name }}</span>
-    </div>
-
-    <div class="info-group">
-      <label>Status:</label>
-      <span>{{ getDeviceStatus() ? 'Active' : 'Inactive' }}</span>
-    </div>
-
-    <ng-container *ngIf="selectedDevice.session">
-      <div class="info-group">
-        <label>Session Start:</label>
-        <span>{{ selectedDevice.session.startTime | date:'medium' }}</span>
-      </div>
-
-      <div class="info-group">
-        <label>Duration:</label>
-        <span>{{ getSessionDuration() }}</span>
-      </div>
-    </ng-container>
-
-    <div class="actions" *ngIf="!isDeviceActive()">
-      <button 
-        class="btn btn-primary" 
-        (click)="startSession()" 
-        [disabled]="isStartingSession"
-      >
-        <span class="spinner-border spinner-border-sm me-1" *ngIf="isStartingSession"></span>
-        Start Session
-      </button>
-    </div>
-
     <div class="orders-section" *ngIf="selectedDevice.session">
       <h3>Current Orders</h3>
       
       <div class="orders-list" *ngIf="orderItems.length > 0">
         <div class="order-item" *ngFor="let item of orderItems">
           <div class="item-info">
-            <span class="item-name">{{ item.item?.name }}</span>
+            <div class="item-name">{{ item.item?.name }}</div>
             <div class="item-details">
               <span class="qty">Qty: {{ item.userQty }}</span>
               <span class="price">{{ item.price }} EGP</span>
@@ -77,9 +44,44 @@
         No orders yet
       </div>
     </div>
+
+    <div class="device-info">
+      <div class="info-group">
+        <label>Type</label>
+        <span>{{ selectedDevice.type?.name }}</span>
+      </div>
+
+      <div class="info-group">
+        <label>Status</label>
+        <span>{{ getDeviceStatus() ? 'Active' : 'Inactive' }}</span>
+      </div>
+
+      <ng-container *ngIf="selectedDevice.session">
+        <div class="info-group">
+          <label>Started</label>
+          <span>{{ selectedDevice.session.startTime | date:'shortTime' }}</span>
+        </div>
+
+        <div class="info-group">
+          <label>Duration</label>
+          <span>{{ getSessionDuration() }}</span>
+        </div>
+      </ng-container>
+    </div>
+
+    <div class="actions" *ngIf="!isDeviceActive()">
+      <button 
+        class="btn btn-primary" 
+        (click)="startSession()" 
+        [disabled]="isStartingSession"
+      >
+        <span class="spinner-border spinner-border-sm" *ngIf="isStartingSession"></span>
+        <span>Start Session</span>
+      </button>
+    </div>
   </div>
 </div>
 
 <div class="no-device-selected" *ngIf="!selectedDevice">
-  <p>No device selected</p>
+  <p>Select a device to view details</p>
 </div>
