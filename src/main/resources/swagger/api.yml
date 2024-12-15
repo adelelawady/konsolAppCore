@@ -1894,6 +1894,26 @@ paths:
                 $ref: '#/components/schemas/PsDeviceDTO'
       tags:
         - playstation-resource
+  '/playstation/device/{id}/session/start':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    post:
+      summary: Start Device Session
+      operationId: startDeviceSession
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PsDeviceDTO'
+      tags:
+        - playstation-resource
+      description: Start Device Session
   '/playstation/device/type/{id}':
     get:
       summary: get all playstation devices
@@ -4445,7 +4465,7 @@ components:
           x-stoplight:
             id: 4rc4eexcxttkb
         active:
-          type: string
+          type: boolean
           x-stoplight:
             id: ul3rbglgpxq6h
         type:
@@ -4481,10 +4501,7 @@ components:
           x-stoplight:
             id: 499ri7wfc3icj
           format: date-time
-        endTime:
-          type: string
-          x-stoplight:
-            id: e0lagy0etroci
-          format: date-time
         invoice:
           $ref: '#/components/schemas/InvoiceDTO'
+        type:
+          $ref: '#/components/schemas/PsDeviceType'

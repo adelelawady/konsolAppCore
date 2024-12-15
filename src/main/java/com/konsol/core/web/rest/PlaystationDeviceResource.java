@@ -317,4 +317,9 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
         playstationDeviceTypeService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id)).build();
     }
+
+    @Override
+    public ResponseEntity<PsDeviceDTO> startDeviceSession(String id) {
+        return ResponseEntity.ok(playstationDeviceService.startSession(id));
+    }
 }

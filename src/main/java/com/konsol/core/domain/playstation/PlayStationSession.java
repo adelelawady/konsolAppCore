@@ -37,6 +37,10 @@ public class PlayStationSession implements Serializable {
     @Field("device")
     private PlaystationDevice device;
 
+    @NotNull
+    @Field("type")
+    private PlaystationDeviceType type;
+
     @DBRef
     @Field("invoice")
     private Invoice invoice;
@@ -154,6 +158,19 @@ public class PlayStationSession implements Serializable {
 
     public PlayStationSession device(PlaystationDevice device) {
         this.device = device;
+        return this;
+    }
+
+    public @NotNull PlaystationDeviceType getType() {
+        return type;
+    }
+
+    public void setType(@NotNull PlaystationDeviceType type) {
+        this.type = type;
+    }
+
+    public PlayStationSession type(PlaystationDeviceType type) {
+        this.type = type;
         return this;
     }
 }

@@ -9,11 +9,12 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { PsDeviceType } from './psDeviceType';
 import { InvoiceDTO } from './invoiceDTO';
 
 export interface PsSessionDTO {
   id?: string;
   startTime?: string;
-  endTime?: string;
   invoice?: InvoiceDTO;
+  type?: PsDeviceType;
 }

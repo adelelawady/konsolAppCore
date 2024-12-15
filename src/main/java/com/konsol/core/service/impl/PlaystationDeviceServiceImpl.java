@@ -123,19 +123,28 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
             throw new RuntimeException("Device is already in use");
         }
 
+        if (device.getType() == null) {
+            throw new RuntimeException("Device Must Have Type");
+        }
+
         // Initialize new invoice
         Invoice invoice = invoiceService.initializeNewInvoiceDomein(InvoiceKind.SALE);
 
         // Create new session
-        PlayStationSession session = new PlayStationSession().active(true).startTime(Instant.now()).device(device).invoice(invoice);
+        PlayStationSession session = new PlayStationSession()
+            .type(device.getType())
+            .active(true)
+            .startTime(Instant.now())
+            .device(device)
+            .invoice(invoice);
+
+        // Save session
+        session = playStationSessionRepository.save(session);
 
         // Update device status to active
         device.setActive(true);
         device.setSession(session);
         PlaystationDevice updatedDevice = playstationDeviceRepository.save(device);
-
-        // Save session
-        playStationSessionRepository.save(session);
 
         return playstationDeviceMapper.toDto(updatedDevice);
     }

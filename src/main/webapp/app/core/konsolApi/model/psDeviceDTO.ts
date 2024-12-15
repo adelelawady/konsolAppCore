@@ -15,7 +15,7 @@ import { PsSessionDTO } from './psSessionDTO';
 export interface PsDeviceDTO {
   id?: string;
   name?: string;
-  active?: string;
+  active?: boolean;
   type?: PsDeviceType;
   session?: PsSessionDTO;
 }
