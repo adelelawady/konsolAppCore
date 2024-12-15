@@ -50,9 +50,9 @@
               name="active" 
               id="field_active" 
               data-cy="active" 
-              [value]="'true'"
+              [value]="true"
               (change)="onActiveChange($event)"
-              [checked]="editForm.get('active')?.value === 'true'"
+              [checked]="editForm.get('active')?.value === true"
             />
           </div>
         </div>

@@ -6,7 +6,7 @@ import { PsDeviceType } from 'app/core/konsolApi/model/psDeviceType';
 export type PlaystationDeviceFormGroup = FormGroup<{
   id: FormControl<string | null>;
   name: FormControl<string | null>;
-  active: FormControl<string | null>;
+  active: FormControl<boolean | null>;
   type: FormControl<PsDeviceType | null>;
 }>;
 
@@ -16,14 +16,14 @@ export class PlaystationDeviceFormService {
     return new FormGroup<{
       id: FormControl<string | null>;
       name: FormControl<string | null>;
-      active: FormControl<string | null>;
+      active: FormControl<boolean | null>;
       type: FormControl<PsDeviceType | null>;
     }>({
       id: new FormControl<string | null>({ value: device.id || null, disabled: true }),
       name: new FormControl<string | null>(device.name || null, {
         validators: [Validators.required],
       }),
-      active: new FormControl<string | null>(device.active || 'false'),
+      active: new FormControl<boolean | null>(device.active || false),
       type: new FormControl<PsDeviceType | null>(null, {
         validators: [Validators.required],
       }),
@@ -34,7 +34,7 @@ export class PlaystationDeviceFormService {
     return {
       id: form.get(['id'])?.value || undefined,
       name: form.get(['name'])?.value || undefined,
-      active: form.get(['active'])?.value || 'false',
+      active: form.get(['active'])?.value || false,
       type: form.get(['type'])?.value || undefined,
     };
   }
@@ -53,7 +53,7 @@ export class PlaystationDeviceFormService {
     return {
       id: undefined,
       name: undefined,
-      active: 'false',
+      active: false,
       type: undefined
     };
   }

@@ -29,6 +29,5 @@
 </div>
 
 <button class="orders-fab" (click)="toggle()" [class.active]="isVisible">
-  <i class="fas fa-shopping-cart"></i>
-  <span class="orders-count">1</span>
+  <fa-icon [icon]="isVisible ? 'times' : 'list'"></fa-icon>
 </button>

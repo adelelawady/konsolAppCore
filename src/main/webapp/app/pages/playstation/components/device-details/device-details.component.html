@@ -1,55 +1,47 @@
-<div class="device-details">
+<div class="device-details" *ngIf="selectedDevice">
   <div class="device-details__header">
-    <h3>Device Details</h3>
+    <h2>{{ selectedDevice.name }}</h2>
+    <div class="device-status" [ngClass]="{'active': isDeviceActive()}">
+      {{ isDeviceActive() ? 'Active' : 'Inactive' }}
+    </div>
   </div>
 
-  <div class="device-details__content" *ngIf="selectedDevice; else noDeviceSelected">
-    <div class="details-section">
-      <div class="section-header">
-        <i class="fas fa-tv"></i>
-        <span>{{ selectedDevice.name }}</span>
-      </div>
-      
-      <div class="device-info">
-        <div class="info-item">
-          <label>Device Type</label>
-          <span>{{ selectedDevice.type?.name }}</span>
-        </div>
-        <div class="info-item">
-          <label>Status</label>
-          <span [class]="'status-' + selectedDevice.active">{{ selectedDevice.active ? 'Active' : 'Inactive' }}</span>
-        </div>
-        <div class="info-item" >
-          <label>Session Duration</label>
-          <span>0</span>
-        </div>
-        <div class="info-item" >
-          <label>Current Cost</label>
-          <span class="cost">0</span>
-        </div>
-      </div>
+  <div class="device-details__content">
+    <div class="info-group">
+      <label>Type:</label>
+      <span>{{ selectedDevice.type?.name }}</span>
     </div>
 
-    <div class="actions-section">
-      <button class="btn-primary" >
-        <i class="fas fa-play"></i>
+    <div class="info-group">
+      <label>Status:</label>
+      <span>{{ getDeviceStatus() ? 'Active' : 'Inactive' }}</span>
+    </div>
+
+    <ng-container *ngIf="selectedDevice.session">
+      <div class="info-group">
+        <label>Session Start:</label>
+        <span>{{ selectedDevice.session.startTime | date:'medium' }}</span>
+      </div>
+
+      <div class="info-group">
+        <label>Duration:</label>
+        <span>{{ getSessionDuration() }}</span>
+      </div>
+    </ng-container>
+
+    <div class="actions">
+      <button 
+        class="btn btn-primary" 
+        (click)="startSession()" 
+        [disabled]="isStartingSession || isDeviceActive()"
+      >
+        <span class="spinner-border spinner-border-sm me-1" *ngIf="isStartingSession"></span>
         Start Session
       </button>
-      <button class="btn-warning" >
-        <i class="fas fa-stop"></i>
-        End Session
-      </button>
-      <button class="btn-secondary">
-        <i class="fas fa-history"></i>
-        View History
-      </button>
     </div>
   </div>
+</div>
 
-  <ng-template #noDeviceSelected>
-    <div class="no-device">
-      <i class="fas fa-tv"></i>
-      <p>Select a device to view details</p>
-    </div>
-  </ng-template>
+<div class="no-device-selected" *ngIf="!selectedDevice">
+  <p>No device selected</p>
 </div>

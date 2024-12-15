@@ -30,7 +30,7 @@ export class DeviceCardComponent implements OnInit {
 
 
   getBorderColor(): string {
-    if (this.device?.active==='true') {
+    if (this.device?.active) {
       return 'border-green';
     } else {
       return 'border-red';
@@ -38,7 +38,7 @@ export class DeviceCardComponent implements OnInit {
   }
 
   getStatusClass(): string {
-    return `status-${this.device.active}`;
+    return `status-${this.device.active ? 'active' : 'inactive'}`;
   }
 
   formatCurrency(amount: number): string {

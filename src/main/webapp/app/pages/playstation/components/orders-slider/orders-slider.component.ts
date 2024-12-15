@@ -1,7 +1,9 @@
 import { Component, OnInit, OnDestroy, HostListener, ElementRef } from '@angular/core';
-import { trigger, state, style, transition, animate } from '@angular/animations';
 import { PlaystationService } from '../../services/playstation.service';
 import { Subscription } from 'rxjs';
+import { trigger } from '@angular/animations';
+import { state, style } from '@angular/animations';
+import { animate, transition } from '@angular/animations';
 
 @Component({
   selector: 'jhi-orders-slider',
@@ -33,9 +35,9 @@ export class OrdersSliderComponent implements OnInit, OnDestroy {
   constructor(private playstationService: PlaystationService, private elementRef: ElementRef) {}
 
   ngOnInit(): void {
-    this.subscription = this.playstationService.ordersListVisible$.subscribe(
-      visible => {
-        this.isVisible = visible;
+    this.subscription = this.playstationService.showOrders$.subscribe(
+      (show: boolean) => {
+        this.isVisible = show;
       }
     );
   }
@@ -54,18 +56,14 @@ export class OrdersSliderComponent implements OnInit, OnDestroy {
   }
 
   toggle(): void {
-    this.isVisible = !this.isVisible;
-  }
-
-  hide(): void {
-    this.isVisible = false;
-  }
-
-  show(): void {
-    this.isVisible = true;
+    if (this.isVisible) {
+      this.playstationService.hideOrders();
+    } else {
+      this.playstationService.showOrdersList();
+    }
   }
 
   close(): void {
-    this.playstationService.hideOrdersList();
+    this.playstationService.hideOrders();
   }
 }

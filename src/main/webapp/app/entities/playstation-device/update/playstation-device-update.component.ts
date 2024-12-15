@@ -101,6 +101,6 @@ export class PlaystationDeviceUpdateComponent implements OnInit {
 
   onActiveChange(event: Event): void {
     const checkbox = event.target as HTMLInputElement;
-    this.editForm.get('active')?.setValue(checkbox.checked ? 'true' : 'false');
+    this.editForm.get('active')?.setValue(checkbox.checked);
   }
 }

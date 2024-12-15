@@ -1,40 +1,68 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PlaystationService } from '../../services/playstation.service';
-import { Subscription } from 'rxjs';
-import { PsDeviceDTO } from 'app/core/konsolApi';
+import { PlaystationResourceService } from 'app/core/konsolApi/api/playstationResource.service';
+import { PsDeviceDTO } from 'app/core/konsolApi/model/psDeviceDTO';
 
 @Component({
   selector: 'jhi-device-details',
   templateUrl: './device-details.component.html',
   styleUrls: ['./device-details.component.scss']
 })
-export class DeviceDetailsComponent implements OnInit, OnDestroy {
-  selectedDevice?: PsDeviceDTO;
-  private subscription?: Subscription;
-  
-  constructor(private playstationService: PlaystationService) {}
+export class DeviceDetailsComponent implements OnInit {
+  selectedDevice: PsDeviceDTO | null = null;
+  isStartingSession = false;
+
+  constructor(
+    private playstationService: PlaystationService,
+    private playstationResourceService: PlaystationResourceService
+  ) {}
 
   ngOnInit(): void {
-    this.subscription = this.playstationService.selectedDevice$.subscribe(
-      device => {
-        this.selectedDevice = device || undefined;
-      }
-    );
+    this.playstationService.selectedDevice$.subscribe(device => {
+      this.selectedDevice = device;
+    });
   }
 
-  ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
+  startSession(): void {
+    if (this.selectedDevice?.id && !this.isStartingSession) {
+      this.isStartingSession = true;
+      this.playstationResourceService.startDeviceSession(this.selectedDevice.id)
+        .subscribe({
+          next: (updatedDevice) => {
+            this.playstationService.selectDevice(updatedDevice);
+            this.playstationService.reloadDevices();
+          },
+          error: (error) => {
+            console.error('Error starting session:', error);
+          },
+          complete: () => {
+            this.isStartingSession = false;
+          }
+        });
     }
   }
 
-  formatDuration(minutes: number): string {
-    const hours = Math.floor(minutes / 60);
-    const remainingMinutes = minutes % 60;
-    return `${hours}h ${remainingMinutes}m`;
+  getSessionDuration(): string {
+    if (!this.selectedDevice?.session?.startTime) {
+      return '0h 0m';
+    }
+
+    const startTime = new Date(this.selectedDevice.session.startTime).getTime();
+    const now = new Date().getTime();
+    const duration = now - startTime;
+
+    const hours = Math.floor(duration / (1000 * 60 * 60));
+    const minutes = Math.floor((duration % (1000 * 60 * 60)) / (1000 * 60));
+
+    return `${hours}h ${minutes}m`;
   }
 
-  formatCurrency(amount: number): string {
-    return `EGP ${amount}`;
+  isDeviceActive(): boolean {
+    return this.selectedDevice?.session !== null && this.selectedDevice?.session !== undefined;
+  }
+
+  getDeviceStatus(): boolean {
+    return this.selectedDevice?.active || false;
   }
 }
+

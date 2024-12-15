@@ -39,8 +39,8 @@
         <div class="card-body">
           <div class="device-list">
             <div *ngFor="let device of getDevicesByType(type)" class="device-item">
-              <span [class]="device.active === 'true' ? 'badge bg-success' : 'badge bg-danger'">
-                {{ device.name }}
+              <span [class]="device.active ? 'badge bg-success' : 'badge bg-danger'">
+                {{ device.active ? 'Active' : 'Inactive' }}
               </span>
             </div>
           </div>

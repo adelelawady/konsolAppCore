@@ -40,8 +40,8 @@
               <tr *ngFor="let device of devices; trackBy: trackId">
                 <td>{{ device.name }}</td>
                 <td>
-                  <span [class]="device.active === 'true' ? 'badge bg-success' : 'badge bg-danger'">
-                    {{ device.active === 'true' ? 'Active' : 'Inactive' }}
+                  <span [class]="device.active ? 'badge bg-success' : 'badge bg-danger'">
+                    {{ device.active ? 'Active' : 'Inactive' }}
                   </span>
                 </td>
                 <td>{{ device.type?.name }}</td>
