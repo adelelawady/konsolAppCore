@@ -326,6 +326,6 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
 
     @Override
     public ResponseEntity<PsDeviceDTO> addOrderToDevice(String id, CreateInvoiceItemDTO createInvoiceItemDTO) {
-        return PlaystationApiDelegate.super.addOrderToDevice(id, createInvoiceItemDTO);
+        return ResponseEntity.ok(playstationDeviceService.addOrderToDevice(id, createInvoiceItemDTO));
     }
 }
