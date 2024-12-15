@@ -1,158 +1,116 @@
 .orders-slider {
   position: fixed;
-  bottom: 0;
-  left: 0;
   right: 0;
+  top: 0;
+  bottom: 0;
+  width: 80%;
+  max-width: 1000px;
   background: white;
-  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
-  height: 50vh;
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
+  z-index: 1000;
 
-  &__header {
-    padding: 1.5rem;
+  .orders-slider-header {
+    padding: 1rem;
     border-bottom: 1px solid #eee;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-top-left-radius: 16px;
-    border-top-right-radius: 16px;
 
-    h3 {
-      margin: 0;
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: #333;
-    }
-
-    .btn-close {
+    .close-button {
       background: none;
       border: none;
-      padding: 0.5rem;
+      font-size: 1.5rem;
       cursor: pointer;
-      transition: transform 0.2s;
-
+      padding: 0.5rem;
+      
       &:hover {
-        transform: rotate(90deg);
-      }
-
-      i {
-        font-size: 1.25rem;
-        color: #666;
+        color: #ff4444;
       }
     }
   }
 
-  &__content {
-    flex: 1;
-    overflow-y: auto;
-    padding: 1rem;
-  }
-}
-
-.orders-list {
-  .order-item {
-    background: #f8f9fa;
-    border-radius: 8px;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    transition: transform 0.2s;
-
-    &:hover {
-      transform: translateY(-4px);
-    }
-
-    .order-info {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 0.75rem;
-
-      .order-id {
-        font-weight: 600;
-        color: #495057;
-      }
-
-      .order-status {
-        padding: 0.25rem 0.75rem;
-        border-radius: 1rem;
-        font-size: 0.875rem;
-        
-        &.pending {
-          background: #fff3cd;
-          color: #856404;
-        }
-      }
-    }
-
-    .order-details {
-      .device-name {
-        font-weight: 500;
-        margin-bottom: 0.5rem;
-        color: #212529;
-      }
-
-      .time-info, .duration {
-        display: flex;
-        align-items: center;
-        color: #6c757d;
-        margin-bottom: 0.25rem;
-        font-size: 0.875rem;
-
-        i {
-          margin-right: 0.5rem;
-          width: 16px;
-        }
-      }
-    }
-  }
-}
-
-.orders-fab {
-  position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: #007bff;
-  border: none;
-  color: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  cursor: pointer;
-  transition: all 0.3s;
-  z-index: 999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  &:hover {
-    background: #0056b3;
-    transform: scale(1.05);
-  }
-
-  &.active {
-    background: #0056b3;
-  }
-
-  i {
-    font-size: 1.25rem;
-  }
-
-  .orders-count {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background: #dc3545;
-    color: white;
-    border-radius: 50%;
-    width: 22px;
-    height: 22px;
-    font-size: 0.75rem;
+  .orders-content {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    height: calc(100% - 60px);
+    overflow: hidden;
+
+    .categories-sidebar {
+      width: 200px;
+      border-right: 1px solid #eee;
+      overflow-y: auto;
+
+      .category-item {
+        padding: 1rem;
+        cursor: pointer;
+        transition: background-color 0.2s;
+
+        &:hover {
+          background-color: #f5f5f5;
+        }
+
+        &.active {
+          background-color: #e3f2fd;
+          border-right: 3px solid #1976d2;
+        }
+      }
+    }
+
+    .items-grid {
+      flex: 1;
+      padding: 1rem;
+      overflow-y: auto;
+
+      .items-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+
+        .item-card {
+          border: 1px solid #eee;
+          border-radius: 8px;
+          padding: 1rem;
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+
+          .item-details {
+            h3 {
+              margin: 0 0 0.5rem 0;
+              font-size: 1.1rem;
+            }
+
+            .prices {
+              display: flex;
+              flex-direction: column;
+              gap: 0.25rem;
+              color: #666;
+            }
+
+            .stock {
+              font-size: 0.9rem;
+              color: #888;
+              margin-top: 0.5rem;
+            }
+          }
+
+          .add-to-order {
+            margin-top: auto;
+            padding: 0.5rem;
+            background-color: #1976d2;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+
+            &:hover {
+              background-color: #1565c0;
+            }
+          }
+        }
+      }
+    }
   }
 }

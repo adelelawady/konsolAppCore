@@ -4,6 +4,9 @@ import { Subscription } from 'rxjs';
 import { trigger } from '@angular/animations';
 import { state, style } from '@angular/animations';
 import { animate, transition } from '@angular/animations';
+import { ItemResourceService } from 'app/core/konsolApi/api/itemResource.service';
+import { CategoryItem } from 'app/core/konsolApi/model/categoryItem';
+import { ItemDTO } from 'app/core/konsolApi/model/itemDTO';
 
 @Component({
   selector: 'jhi-orders-slider',
@@ -31,15 +34,60 @@ import { animate, transition } from '@angular/animations';
 export class OrdersSliderComponent implements OnInit, OnDestroy {
   isVisible = false;
   private subscription?: Subscription;
+  categories: CategoryItem[] = [];
+  selectedCategory?: CategoryItem;
+  itemsByCategory: { [key: string]: ItemDTO[] } = {};
 
-  constructor(private playstationService: PlaystationService, private elementRef: ElementRef) {}
+  constructor(
+    private playstationService: PlaystationService, 
+    private elementRef: ElementRef,
+    private itemResourceService: ItemResourceService
+  ) {}
 
   ngOnInit(): void {
     this.subscription = this.playstationService.showOrders$.subscribe(
       (show: boolean) => {
         this.isVisible = show;
+        if (show) {
+          this.loadCategories();
+        }
       }
     );
+  }
+
+  private loadCategories(): void {
+    this.itemResourceService.getAllItemsCategories().subscribe({
+      next: (categories: CategoryItem[]) => {
+        this.categories = categories;
+        // Load items for each category
+        categories.forEach(category => {
+          // You'll need to implement getItemsByCategory in your ItemResourceService
+          this.loadItemsForCategory(category);
+        });
+      },
+      error: (error) => {
+        console.error('Error loading categories:', error);
+      }
+    });
+  }
+
+  private loadItemsForCategory(category: CategoryItem): void {
+    // Implement this method to load items for each category
+    // This is a placeholder - you'll need to create this endpoint
+    /*
+    this.itemResourceService.getItemsByCategory(category.id).subscribe({
+      next: (items: ItemDTO[]) => {
+        this.itemsByCategory[category.id] = items;
+      },
+      error: (error) => {
+        console.error(`Error loading items for category ${category.name}:`, error);
+      }
+    });
+    */
+  }
+
+  selectCategory(category: CategoryItem): void {
+    this.selectedCategory = category;
   }
 
   ngOnDestroy(): void {

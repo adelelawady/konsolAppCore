@@ -1,29 +1,42 @@
 <div class="orders-slider" [@slideInOut]="isVisible ? 'in' : 'out'">
-  <div class="orders-slider__header">
-    <h3>Orders History</h3>
-    <button class="close-btn" (click)="close()">
-      <i class="fas fa-times"></i>
-    </button>
+  <div class="orders-slider-header">
+    <h2>Orders Menu</h2>
+    <button class="close-button" (click)="close()">×</button>
   </div>
-  <div class="orders-slider__content">
-    <div class="orders-list">
-      <div class="order-item">
-        <div class="order-info">
-          <span class="order-id">#12345</span>
-          <span class="order-status pending">Pending</span>
-        </div>
-        <div class="order-details">
-          <p class="device-name">PlayStation 5</p>
-          <div class="time-info">
-            <i class="fas fa-clock"></i>
-            <span>2:30 PM - 4:30 PM</span>
-          </div>
-          <div class="duration">
-            <i class="fas fa-hourglass-half"></i>
-            <span>2 hours</span>
-          </div>
-        </div>
+
+  
+  <div class="orders-content">
+    <!-- Categories sidebar -->
+    <div class="categories-sidebar">
+      <div 
+        *ngFor="let category of categories"
+        class="category-item"
+        [class.active]="selectedCategory?.name === category.name"
+        (click)="selectCategory(category)"
+      >
+        {{ category.name }}
       </div>
+    </div>
+
+    <!-- Items grid -->
+    <div class="items-grid">
+      <ng-container *ngIf="selectedCategory && itemsByCategory[selectedCategory.name]">
+        <div class="items-container">
+          <div *ngFor="let item of itemsByCategory[selectedCategory.name]" class="item-card">
+            <div class="item-details">
+              <h3>{{ item.name }}</h3>
+              <div class="prices">
+                <span class="price" *ngIf="item.price1">Price 1: {{ item.price1 }}</span>
+                <span class="price" *ngIf="item.price2">Price 2: {{ item.price2 }}</span>
+              </div>
+              <div class="stock" *ngIf="item.qty !== undefined">
+                Stock: {{ item.qty }}
+              </div>
+            </div>
+            <button class="add-to-order" (click)="addToOrder(item)">Add to Order</button>
+          </div>
+        </div>
+      </ng-container>
     </div>
   </div>
 </div>
