@@ -7,6 +7,46 @@
   </div>
 
   <div class="device-details__content">
+    <!-- Device Info - Condensed -->
+    <div class="device-info">
+      <div class="info-group">
+        <label>Type</label>
+        <span>{{ selectedDevice.type?.name }}</span>
+      </div>
+
+      <div class="info-group">
+        <label>Started</label>
+        <span>{{ selectedDevice.session?.startTime | date:'shortTime' }}</span>
+      </div>
+
+      <div class="info-group">
+        <label>Duration</label>
+        <span>{{ getSessionDuration() }}</span>
+      </div>
+
+      <div class="info-group">
+        <label>Rate</label>
+        <span>{{ selectedDevice.session?.type?.price }} EGP/hr</span>
+      </div>
+    </div>
+
+    <!-- Cost Summary -->
+    <div class="cost-summary" *ngIf="selectedDevice.session">
+      <div class="cost-item">
+        <label>Session Time</label>
+        <span>{{ getSessionTimeCost() }} EGP</span>
+      </div>
+      <div class="cost-item">
+        <label>Orders Total</label>
+        <span>{{ getOrdersTotal() }} EGP</span>
+      </div>
+      <div class="cost-item total">
+        <label>Total Cost</label>
+        <span>{{ getTotalCost() }} EGP</span>
+      </div>
+    </div>
+
+    <!-- Orders Section -->
     <div class="orders-section" *ngIf="selectedDevice.session">
       <h3>Current Orders</h3>
       
@@ -23,21 +63,6 @@
             {{ item.totalPrice }} EGP
           </div>
         </div>
-
-        <div class="order-summary">
-          <div class="summary-row">
-            <span>Subtotal</span>
-            <span>{{ getTotalPrice() }} EGP</span>
-          </div>
-          <div class="summary-row" *ngIf="getDiscount() > 0">
-            <span>Discount</span>
-            <span>-{{ getDiscount() }} EGP</span>
-          </div>
-          <div class="summary-row total">
-            <span>Total</span>
-            <span>{{ getNetPrice() }} EGP</span>
-          </div>
-        </div>
       </div>
 
       <div class="no-orders" *ngIf="orderItems.length === 0">
@@ -45,30 +70,7 @@
       </div>
     </div>
 
-    <div class="device-info">
-      <div class="info-group">
-        <label>Type</label>
-        <span>{{ selectedDevice.type?.name }}</span>
-      </div>
-
-      <div class="info-group">
-        <label>Status</label>
-        <span>{{ getDeviceStatus() ? 'Active' : 'Inactive' }}</span>
-      </div>
-
-      <ng-container *ngIf="selectedDevice.session">
-        <div class="info-group">
-          <label>Started</label>
-          <span>{{ selectedDevice.session.startTime | date:'shortTime' }}</span>
-        </div>
-
-        <div class="info-group">
-          <label>Duration</label>
-          <span>{{ getSessionDuration() }}</span>
-        </div>
-      </ng-container>
-    </div>
-
+    <!-- Actions -->
     <div class="actions" *ngIf="!isDeviceActive()">
       <button 
         class="btn btn-primary" 

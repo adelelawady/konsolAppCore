@@ -97,5 +97,26 @@ export class DeviceDetailsComponent implements OnInit, OnDestroy {
   getDiscount(): number {
     return this.selectedDevice?.session?.invoice?.discount || 0;
   }
+
+  getSessionTimeCost(): number {
+    if (!this.selectedDevice?.session?.type?.price || !this.selectedDevice.session?.startTime) {
+      return 0;
+    }
+
+    const startTime = new Date(this.selectedDevice.session.startTime).getTime();
+    const now = new Date().getTime();
+    const durationInMs = now - startTime;
+    const durationInHours = durationInMs / (1000 * 60 * 60);
+    const hourlyRate = Number(this.selectedDevice.session.type.price);
+    return Number((hourlyRate * durationInHours).toFixed(0));
+  }
+
+  getOrdersTotal(): number {
+    return this.selectedDevice?.session?.invoice?.netPrice || 0;
+  }
+
+  getTotalCost(): number {
+    return this.getSessionTimeCost() + this.getOrdersTotal();
+  }
 }
 
