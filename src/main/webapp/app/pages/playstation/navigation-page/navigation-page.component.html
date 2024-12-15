@@ -1,34 +1,40 @@
 <div class="container">
-  <h1>PlayStation Navigation</h1>
+  <h1>{{ 'playstation.navigation.title' | translate }}</h1>
   <div class="row mb-4">
     <div class="col-md-4">
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title">Dashboard</h5>
-          <p class="card-text">View your PlayStation dashboard</p>
-          <a [routerLink]="['/playstation/dashboard']" class="btn btn-primary">Go to Dashboard</a>
+          <h5 class="card-title">{{ 'playstation.navigation.dashboard.title' | translate }}</h5>
+          <p class="card-text">{{ 'playstation.navigation.dashboard.description' | translate }}</p>
+          <a [routerLink]="['/playstation/dashboard']" class="btn btn-primary">
+            {{ 'playstation.navigation.buttons.goToDashboard' | translate }}
+          </a>
         </div>
       </div>
     </div>
   </div>
   
-  <h2>Controls</h2>
+  <h2>{{ 'playstation.navigation.controls.title' | translate }}</h2>
   <div class="row mb-4">
     <div class="col-md-4">
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title">Control Devices</h5>
-          <p class="card-text">Manage your PlayStation controllers and accessories</p>
-          <a [routerLink]="['/playstation/controls']" class="btn btn-primary">Manage Controls</a>
+          <h5 class="card-title">{{ 'playstation.navigation.controls.devices.title' | translate }}</h5>
+          <p class="card-text">{{ 'playstation.navigation.controls.devices.description' | translate }}</p>
+          <a [routerLink]="['/playstation/controls']" class="btn btn-primary">
+            {{ 'playstation.navigation.buttons.manageControls' | translate }}
+          </a>
         </div>
       </div>
     </div>
     <div class="col-md-4">
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title">Device Types</h5>
-          <p class="card-text">Manage devices by their types</p>
-          <a [routerLink]="['/playstation/device-types']" class="btn btn-primary">Manage Types</a>
+          <h5 class="card-title">{{ 'playstation.navigation.controls.deviceTypes.title' | translate }}</h5>
+          <p class="card-text">{{ 'playstation.navigation.controls.deviceTypes.description' | translate }}</p>
+          <a [routerLink]="['/playstation/device-types']" class="btn btn-primary">
+            {{ 'playstation.navigation.buttons.manageTypes' | translate }}
+          </a>
         </div>
       </div>
     </div>

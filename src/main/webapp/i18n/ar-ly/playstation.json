@@ -1,0 +1,27 @@
+{
+  "playstation": {
+    "navigation": {
+      "title": "نظام البلايستيشن",
+      "dashboard": {
+        "title": "لوحة التحكم",
+        "description": "عرض لوحة تحكم البلايستيشن"
+      },
+      "controls": {
+        "title": "وحدات التحكم",
+        "devices": {
+          "title": "أجهزة التحكم",
+          "description": "إدارة وحدات التحكم والملحقات"
+        },
+        "deviceTypes": {
+          "title": "أنواع الأجهزة",
+          "description": "إدارة وتصنيف أنواع الأجهزة"
+        }
+      },
+      "buttons": {
+        "goToDashboard": "فتح لوحة التحكم",
+        "manageControls": "إدارة وحدات التحكم",
+        "manageTypes": "إدارة الأنواع"
+      }
+    }
+  }
+} 

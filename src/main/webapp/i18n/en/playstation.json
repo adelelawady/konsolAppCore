@@ -1,0 +1,27 @@
+{
+  "playstation": {
+    "navigation": {
+      "title": "PlayStation Navigation",
+      "dashboard": {
+        "title": "Dashboard",
+        "description": "View your PlayStation dashboard"
+      },
+      "controls": {
+        "title": "Controls",
+        "devices": {
+          "title": "Control Devices",
+          "description": "Manage your PlayStation controllers and accessories"
+        },
+        "deviceTypes": {
+          "title": "Device Types",
+          "description": "Manage devices by their types"
+        }
+      },
+      "buttons": {
+        "goToDashboard": "Go to Dashboard",
+        "manageControls": "Manage Controls",
+        "manageTypes": "Manage Types"
+      }
+    }
+  }
+} 
