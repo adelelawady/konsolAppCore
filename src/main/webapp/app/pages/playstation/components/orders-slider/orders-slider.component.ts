@@ -1,9 +1,6 @@
 import { Component, OnInit, OnDestroy, HostListener, ElementRef } from '@angular/core';
 import { PlaystationService } from '../../services/playstation.service';
 import { Subscription } from 'rxjs';
-import { trigger } from '@angular/animations';
-import { state, style } from '@angular/animations';
-import { animate, transition } from '@angular/animations';
 import { ItemResourceService } from 'app/core/konsolApi/api/itemResource.service';
 import { CategoryItem } from 'app/core/konsolApi/model/categoryItem';
 import { ItemSimpleDTO } from 'app/core/konsolApi/model/itemSimpleDTO';
@@ -14,45 +11,7 @@ import { PsDeviceDTO } from 'app/core/konsolApi/model/psDeviceDTO';
 @Component({
   selector: 'jhi-orders-slider',
   templateUrl: './orders-slider.component.html',
-  styleUrls: ['./orders-slider.component.scss'],
-  animations: [
-    trigger('slideInOut', [
-      state('out', style({
-        transform: 'translateY(100%)',
-        visibility: 'hidden'
-      })),
-      state('in', style({
-        transform: 'translateY(0)',
-        visibility: 'visible'
-      })),
-      transition('out => in', [
-        style({ visibility: 'visible' }),
-        animate('300ms cubic-bezier(0.4, 0, 0.2, 1)')
-      ]),
-      transition('in => out', [
-        animate('300ms cubic-bezier(0.4, 0, 0.2, 1)'),
-        style({ visibility: 'hidden' })
-      ])
-    ]),
-    trigger('backdropFade', [
-      state('out', style({
-        opacity: 0,
-        visibility: 'hidden'
-      })),
-      state('in', style({
-        opacity: 1,
-        visibility: 'visible'
-      })),
-      transition('out => in', [
-        style({ visibility: 'visible' }),
-        animate('200ms ease-out')
-      ]),
-      transition('in => out', [
-        animate('200ms ease-in'),
-        style({ visibility: 'hidden' })
-      ])
-    ])
-  ]
+  styleUrls: ['./orders-slider.component.scss']
 })
 export class OrdersSliderComponent implements OnInit, OnDestroy {
   isVisible = false;

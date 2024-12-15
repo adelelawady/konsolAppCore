@@ -1,12 +1,9 @@
-<div class="orders-backdrop" [@backdropFade]="isVisible ? 'in' : 'out'" (click)="close()"></div>
-
-<div class="orders-slider" [class.hidden]="!isVisible">
+<div class="orders-slider" [class.slide-in]="isVisible" [class.slide-out]="!isVisible">
   <div class="orders-slider-header">
     <h2>Orders Menu</h2>
     <button class="close-button" (click)="close()">×</button>
   </div>
 
-  
   <div class="orders-content">
     <!-- Categories sidebar -->
     <div class="categories-sidebar">
