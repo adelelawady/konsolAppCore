@@ -102,23 +102,29 @@ export class DeviceCardComponent implements OnInit, OnDestroy {
   }
 
   calculateSessionCost(): string {
-    if (!this.device?.session || !this.device?.session?.type?.price || !this.device.session?.startTime) {
+    if (!this.device?.session) {
       return '0';
     }
 
-    const startTime = new Date(this.device.session.startTime).getTime();
-    const now = new Date().getTime();
-    const durationInMs = now - startTime;
+    // Calculate session time cost
+    let totalCost = 0;
+    
+    if (this.device.session.type?.price && this.device.session.startTime) {
+      const startTime = new Date(this.device.session.startTime).getTime();
+      const now = new Date().getTime();
+      const durationInMs = now - startTime;
+      const durationInHours = durationInMs / (1000 * 60 * 60);
+      const hourlyRate = Number(this.device.session.type.price);
+      const sessionCost = hourlyRate * durationInHours;
+      totalCost += sessionCost;
+    }
 
-    // Convert duration to hours (as a decimal)
-    const durationInHours = durationInMs / (1000 * 60 * 60);
-    
-    // Calculate cost (hourly rate * duration in hours)
-    const hourlyRate = Number(this.device.session.type.price);
-    const cost = hourlyRate * durationInHours;
-    
-    // Return formatted number with 2 decimal places
-    return cost.toFixed(0);
+    // Add orders cost if there are any
+    if (this.device.session.invoice?.netPrice) {
+      totalCost += this.device.session?.invoice?.netPrice;
+    }
+
+    return totalCost.toFixed(0);
   }
 
   updateValue(newValue: any) {

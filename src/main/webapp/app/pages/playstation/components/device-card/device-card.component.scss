@@ -198,10 +198,22 @@
         font-size: 0.75rem;
       }
 
-      .cost {
-        color: #111827;
-        font-weight: 600;
-        font-size: 0.875rem;
+      .cost-details {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0.25rem;
+
+        .cost {
+          color: #111827;
+          font-weight: 600;
+          font-size: 0.875rem;
+        }
+
+        .orders-cost {
+          color: #6b7280;
+          font-size: 0.75rem;
+        }
       }
     }
 
