@@ -33,8 +33,7 @@ public class PlaystationDevice implements Serializable {
 
     @DBRef
     @Field("type")
-    //@JsonIgnoreProperties(value = { "items" }, allowSetters = true)
-    private PlaystationDeviceType deviceType;
+    private PlaystationDeviceType type;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -120,11 +119,11 @@ public class PlaystationDevice implements Serializable {
             "}";
     }
 
-    public PlaystationDeviceType getDeviceType() {
-        return deviceType;
+    public PlaystationDeviceType getType() {
+        return type;
     }
 
-    public void setDeviceType(PlaystationDeviceType deviceType) {
-        this.deviceType = deviceType;
+    public void setType(PlaystationDeviceType type) {
+        this.type = type;
     }
 }

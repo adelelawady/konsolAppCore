@@ -8,4 +8,10 @@ import org.mapstruct.*;
  * Mapper for the entity {@link PlaystationDeviceType} and its DTO {@link PsDeviceType}.
  */
 @Mapper(componentModel = "spring")
-public interface PlaystationDeviceTypeMapper extends EntityMapper<PsDeviceType, PlaystationDeviceType> {}
+public interface PlaystationDeviceTypeMapper extends EntityMapper<PsDeviceType, PlaystationDeviceType> {
+    @Override
+    PsDeviceType toDto(PlaystationDeviceType entity);
+
+    @Override
+    PlaystationDeviceType toEntity(PsDeviceType dto);
+}
