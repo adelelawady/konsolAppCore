@@ -20,14 +20,13 @@
 
     <!-- Items grid -->
     <div class="items-grid">
-      <ng-container *ngIf="selectedCategory && itemsByCategory[selectedCategory.name]">
+      <ng-container *ngIf="selectedCategory?.name">
         <div class="items-container">
-          <div *ngFor="let item of itemsByCategory[selectedCategory.name]" class="item-card">
+          <div *ngFor="let item of getCategoryItems(selectedCategory?.name)" class="item-card">
             <div class="item-details">
               <h3>{{ item.name }}</h3>
               <div class="prices">
-                <span class="price" *ngIf="item.price1">Price 1: {{ item.price1 }}</span>
-                <span class="price" *ngIf="item.price2">Price 2: {{ item.price2 }}</span>
+                <span class="price" *ngIf="item.price1">Price: {{ item.price1 }}</span>
               </div>
               <div class="stock" *ngIf="item.qty !== undefined">
                 Stock: {{ item.qty }}
