@@ -119,7 +119,7 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
             .orElseThrow(() -> new RuntimeException("Device not found with id: " + deviceId));
 
         // Check if device is not in use
-        if (device.getActive()) {
+        if (device.getActive() && device.getSession() != null) {
             throw new RuntimeException("Device is already in use");
         }
 
