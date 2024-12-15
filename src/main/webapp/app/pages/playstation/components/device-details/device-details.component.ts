@@ -1,16 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PlaystationService } from '../../services/playstation.service';
 import { PlaystationResourceService } from 'app/core/konsolApi/api/playstationResource.service';
 import { PsDeviceDTO } from 'app/core/konsolApi/model/psDeviceDTO';
+import { Subscription } from 'rxjs';
+import { InvoiceItemDTO } from 'app/core/konsolApi/model/invoiceItemDTO';
+import { InvoiceDTO } from 'app/core/konsolApi/model/invoiceDTO';
+import { PsSessionDTO } from 'app/core/konsolApi/model/psSessionDTO';
 
 @Component({
   selector: 'jhi-device-details',
   templateUrl: './device-details.component.html',
   styleUrls: ['./device-details.component.scss']
 })
-export class DeviceDetailsComponent implements OnInit {
+export class DeviceDetailsComponent implements OnInit, OnDestroy {
   selectedDevice: PsDeviceDTO | null = null;
   isStartingSession = false;
+  private subscription?: Subscription;
+  orderItems: InvoiceItemDTO[] = [];
 
   constructor(
     private playstationService: PlaystationService,
@@ -18,9 +24,24 @@ export class DeviceDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.playstationService.selectedDevice$.subscribe(device => {
+    this.subscription = this.playstationService.selectedDevice$.subscribe(device => {
       this.selectedDevice = device;
+      this.updateOrderItems(device?.session);
     });
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+
+  private updateOrderItems(session?: PsSessionDTO): void {
+    if (session?.invoice?.invoiceItems) {
+      this.orderItems = Array.from(session.invoice.invoiceItems);
+    } else {
+      this.orderItems = [];
+    }
   }
 
   startSession(): void {
@@ -63,6 +84,18 @@ export class DeviceDetailsComponent implements OnInit {
 
   getDeviceStatus(): boolean {
     return this.selectedDevice?.active || false;
+  }
+
+  getTotalPrice(): number {
+    return this.selectedDevice?.session?.invoice?.totalPrice || 0;
+  }
+
+  getNetPrice(): number {
+    return this.selectedDevice?.session?.invoice?.netPrice || 0;
+  }
+
+  getDiscount(): number {
+    return this.selectedDevice?.session?.invoice?.discount || 0;
   }
 }
 

@@ -29,15 +29,53 @@
       </div>
     </ng-container>
 
-    <div class="actions">
+    <div class="actions" *ngIf="!isDeviceActive()">
       <button 
         class="btn btn-primary" 
         (click)="startSession()" 
-        [disabled]="isStartingSession || isDeviceActive()"
+        [disabled]="isStartingSession"
       >
         <span class="spinner-border spinner-border-sm me-1" *ngIf="isStartingSession"></span>
         Start Session
       </button>
+    </div>
+
+    <div class="orders-section" *ngIf="selectedDevice.session">
+      <h3>Current Orders</h3>
+      
+      <div class="orders-list" *ngIf="orderItems.length > 0">
+        <div class="order-item" *ngFor="let item of orderItems">
+          <div class="item-info">
+            <span class="item-name">{{ item.item?.name }}</span>
+            <div class="item-details">
+              <span class="qty">Qty: {{ item.userQty }}</span>
+              <span class="price">{{ item.price }} EGP</span>
+            </div>
+          </div>
+          <div class="item-total">
+            {{ item.totalPrice }} EGP
+          </div>
+        </div>
+
+        <div class="order-summary">
+          <div class="summary-row">
+            <span>Subtotal</span>
+            <span>{{ getTotalPrice() }} EGP</span>
+          </div>
+          <div class="summary-row" *ngIf="getDiscount() > 0">
+            <span>Discount</span>
+            <span>-{{ getDiscount() }} EGP</span>
+          </div>
+          <div class="summary-row total">
+            <span>Total</span>
+            <span>{{ getNetPrice() }} EGP</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="no-orders" *ngIf="orderItems.length === 0">
+        No orders yet
+      </div>
     </div>
   </div>
 </div>
