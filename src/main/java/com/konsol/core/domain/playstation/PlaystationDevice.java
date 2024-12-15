@@ -2,6 +2,7 @@ package com.konsol.core.domain.playstation;
 
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
+import javax.annotation.Nullable;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -34,6 +35,11 @@ public class PlaystationDevice implements Serializable {
     @DBRef
     @Field("type")
     private PlaystationDeviceType type;
+
+    @Nullable
+    @DBRef
+    @Field("session")
+    private PlayStationSession session = null;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -125,5 +131,14 @@ public class PlaystationDevice implements Serializable {
 
     public void setType(PlaystationDeviceType type) {
         this.type = type;
+    }
+
+    @Nullable
+    public PlayStationSession getSession() {
+        return session;
+    }
+
+    public void setSession(@Nullable PlayStationSession session) {
+        this.session = session;
     }
 }

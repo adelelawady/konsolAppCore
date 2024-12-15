@@ -10,16 +10,10 @@
  * Do not edit the class manually.
  */
 import { InvoiceDTO } from './invoiceDTO';
-import { PsDeviceDTO } from './psDeviceDTO';
 
-/**
- *
- */
 export interface PsSessionDTO {
   id?: string;
-  active?: boolean;
   startTime?: string;
   endTime?: string;
-  device?: PsDeviceDTO;
   invoice?: InvoiceDTO;
 }

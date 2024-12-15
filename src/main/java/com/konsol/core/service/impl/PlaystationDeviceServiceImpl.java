@@ -131,6 +131,7 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
 
         // Update device status to active
         device.setActive(true);
+        device.setSession(session);
         PlaystationDevice updatedDevice = playstationDeviceRepository.save(device);
 
         // Save session
@@ -188,6 +189,7 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
 
         // Update device status
         device.setActive(false);
+        device.setSession(null);
         playstationDeviceRepository.save(device);
 
         // Save and return updated session

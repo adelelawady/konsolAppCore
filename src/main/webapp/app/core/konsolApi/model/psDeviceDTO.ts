@@ -10,10 +10,12 @@
  * Do not edit the class manually.
  */
 import { PsDeviceType } from './psDeviceType';
+import { PsSessionDTO } from './psSessionDTO';
 
 export interface PsDeviceDTO {
   id?: string;
   name?: string;
   active?: string;
   type?: PsDeviceType;
+  session?: PsSessionDTO;
 }

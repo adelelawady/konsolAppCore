@@ -4450,6 +4450,8 @@ components:
             id: ul3rbglgpxq6h
         type:
           $ref: '#/components/schemas/PsDeviceType'
+        session:
+          $ref: '#/components/schemas/PsSessionDTO'
     PsDeviceType:
       title: PsDeviceType
       x-stoplight:
@@ -4474,10 +4476,6 @@ components:
       properties:
         id:
           type: string
-        active:
-          type: boolean
-          x-stoplight:
-            id: nzatz5zf63rpo
         startTime:
           type: string
           x-stoplight:
@@ -4488,8 +4486,5 @@ components:
           x-stoplight:
             id: e0lagy0etroci
           format: date-time
-        device:
-          $ref: '#/components/schemas/PsDeviceDTO'
         invoice:
           $ref: '#/components/schemas/InvoiceDTO'
-      description: ''

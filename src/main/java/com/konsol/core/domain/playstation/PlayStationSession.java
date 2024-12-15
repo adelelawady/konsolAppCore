@@ -34,7 +34,7 @@ public class PlayStationSession implements Serializable {
     private Instant endTime;
 
     @NotNull
-    @Field("device_id")
+    @Field("device")
     private PlaystationDevice device;
 
     @DBRef
