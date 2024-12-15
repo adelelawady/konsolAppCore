@@ -45,6 +45,54 @@
     border-color: #22c55e;
   }
 
+  &.selected {
+    border: 2px solid #3498db;
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.25);
+    transform: translateY(-2px);
+    background-color: #f8fafd;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      bottom: -2px;
+      left: -2px;
+      border-radius: 12px;
+      border: 2px solid #3498db;
+      pointer-events: none;
+      animation: pulse 2s infinite;
+    }
+
+    .device-card__header {
+      background-color: rgba(52, 152, 219, 0.15);
+
+      .room-info {
+        color: #2980b9;
+        font-weight: 500;
+
+        i {
+          color: #3498db;
+        }
+      }
+    }
+
+    .device-type {
+      color: #2980b9;
+    }
+
+    .session-info {
+      .duration {
+        color: #2980b9;
+      }
+
+      .cost {
+        color: #2980b9;
+        font-weight: 600;
+      }
+    }
+  }
+
   &__header {
     padding: 0.75rem;
     display: flex;
@@ -192,5 +240,17 @@
       font-family: monospace;
       font-size: 1.1em;
     }
+  }
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 6px rgba(52, 152, 219, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(52, 152, 219, 0);
   }
 }

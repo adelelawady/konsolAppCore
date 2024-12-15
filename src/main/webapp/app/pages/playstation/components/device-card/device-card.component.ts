@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy } from '@angular/core';
 import { PlaystationService } from '../../services/playstation.service';
 import { PsDeviceDTO } from 'app/core/konsolApi';
 import { interval, Subscription } from 'rxjs';
-import { startWith } from 'rxjs/operators';
+import { startWith, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'jhi-device-card',
@@ -15,12 +15,13 @@ export class DeviceCardComponent implements OnInit, OnDestroy {
   @Input() device!: PsDeviceDTO;
   sessionDuration: string = '0h 0m';
   private durationSubscription?: Subscription;
+  isSelected = false;
+  private subscription?: Subscription;
 
   constructor(private playstationService: PlaystationService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     if (this.device.session) {
-      // Update duration every second
       this.durationSubscription = interval(1000)
         .pipe(startWith(0))
         .subscribe(() => {
@@ -28,19 +29,29 @@ export class DeviceCardComponent implements OnInit, OnDestroy {
         });
     }
 
-    Promise.resolve().then(() => {
-      this.cdr.detectChanges();
-    });
+    this.subscription = this.playstationService.selectedDevice$
+      .pipe(distinctUntilChanged((prev, curr) => prev?.id === curr?.id))
+      .subscribe(selectedDevice => {
+        this.isSelected = selectedDevice?.id === this.device.id;
+        this.cdr.detectChanges();
+      });
   }
 
   ngOnDestroy(): void {
     if (this.durationSubscription) {
       this.durationSubscription.unsubscribe();
     }
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   onSelect(): void {
-    this.playstationService.selectDevice(this.device);
+    if (this.isSelected) {
+      this.playstationService.selectDevice(null);
+    } else {
+      this.playstationService.selectDevice(this.device);
+    }
   }
 
   onDoubleClick(event: MouseEvent): void {

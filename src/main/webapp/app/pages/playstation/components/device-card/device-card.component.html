@@ -1,5 +1,5 @@
 <div class="device-card" 
-     [ngClass]="getBorderColor()" 
+     [ngClass]="[getBorderColor(), isSelected ? 'selected' : '']" 
      (click)="onSelect()"
      (dblclick)="onDoubleClick($event)">
   <div class="device-card__header">
