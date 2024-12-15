@@ -48,7 +48,7 @@ export class DeviceCardComponent implements OnInit, OnDestroy {
 
   onSelect(): void {
     if (this.isSelected) {
-      this.playstationService.selectDevice(null);
+      //this.playstationService.selectDevice(null);
     } else {
       this.playstationService.selectDevice(this.device);
     }

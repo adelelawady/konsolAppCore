@@ -22,6 +22,54 @@
         "manageControls": "Manage Controls",
         "manageTypes": "Manage Types"
       }
+    },
+    "devices": {
+      "title": "PlayStation Devices",
+      "subtitle": "Manage your PlayStation devices and controllers",
+      "actions": {
+        "add": "Add Device",
+        "edit": "Edit Device",
+        "delete": "Delete Device",
+        "save": "Save",
+        "cancel": "Cancel",
+        "search": "Search devices..."
+      },
+      "table": {
+        "name": "Device Name",
+        "type": "Device Type",
+        "status": "Status",
+        "actions": "Actions",
+        "noResults": "No devices found"
+      },
+      "form": {
+        "name": {
+          "label": "Device Name",
+          "placeholder": "Enter device name"
+        },
+        "type": {
+          "label": "Device Type",
+          "placeholder": "Select device type"
+        },
+        "status": {
+          "label": "Status",
+          "active": "Active",
+          "inactive": "Inactive",
+          "maintenance": "Under Maintenance"
+        }
+      },
+      "messages": {
+        "noDevices": "No devices found",
+        "confirmDelete": "Are you sure you want to delete this device?",
+        "createSuccess": "Device created successfully",
+        "updateSuccess": "Device updated successfully",
+        "deleteSuccess": "Device deleted successfully",
+        "error": {
+          "create": "Error creating device",
+          "update": "Error updating device",
+          "delete": "Error deleting device",
+          "load": "Error loading devices"
+        }
+      }
     }
   }
 } 
