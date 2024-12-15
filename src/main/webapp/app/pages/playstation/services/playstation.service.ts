@@ -1,26 +1,18 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { PsDeviceDTO } from 'app/core/konsolApi/model/psDeviceDTO';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { PsDeviceDTO } from 'app/core/konsolApi';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PlaystationService {
-  private selectedDeviceSubject = new BehaviorSubject<PsDeviceDTO | null>(null);
-  private reloadDevicesSubject = new BehaviorSubject<void>(undefined);
   private showOrdersSubject = new BehaviorSubject<boolean>(false);
+  private selectedDeviceSubject = new BehaviorSubject<PsDeviceDTO | null>(null);
+  private reloadDevicesSubject = new Subject<void>();
 
+  showOrders$ = this.showOrdersSubject.asObservable();
   selectedDevice$ = this.selectedDeviceSubject.asObservable();
   reloadDevices$ = this.reloadDevicesSubject.asObservable();
-  showOrders$ = this.showOrdersSubject.asObservable();
-
-  selectDevice(device: PsDeviceDTO | null): void {
-    this.selectedDeviceSubject.next(device);
-  }
-
-  reloadDevices(): void {
-    this.reloadDevicesSubject.next();
-  }
 
   showOrdersList(): void {
     this.showOrdersSubject.next(true);
@@ -28,5 +20,17 @@ export class PlaystationService {
 
   hideOrders(): void {
     this.showOrdersSubject.next(false);
+  }
+
+  selectDevice(device: PsDeviceDTO | null): void {
+    this.selectedDeviceSubject.next(device);
+  }
+
+  getSelectedDevice(): PsDeviceDTO | null {
+    return this.selectedDeviceSubject.value;
+  }
+
+  reloadDevices(): void {
+    this.reloadDevicesSubject.next();
   }
 }

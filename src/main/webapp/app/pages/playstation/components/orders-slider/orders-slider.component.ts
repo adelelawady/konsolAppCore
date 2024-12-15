@@ -7,6 +7,9 @@ import { animate, transition } from '@angular/animations';
 import { ItemResourceService } from 'app/core/konsolApi/api/itemResource.service';
 import { CategoryItem } from 'app/core/konsolApi/model/categoryItem';
 import { ItemSimpleDTO } from 'app/core/konsolApi/model/itemSimpleDTO';
+import { PlaystationResourceService } from 'app/core/konsolApi/api/playstationResource.service';
+import { CreateInvoiceItemDTO } from 'app/core/konsolApi/model/createInvoiceItemDTO';
+import { PsDeviceDTO } from 'app/core/konsolApi/model/psDeviceDTO';
 
 @Component({
   selector: 'jhi-orders-slider',
@@ -58,11 +61,13 @@ export class OrdersSliderComponent implements OnInit, OnDestroy {
   selectedCategory?: CategoryItem;
   itemsByCategory: { [key: string]: ItemSimpleDTO[] } = {};
   loading = false;
+  private selectedDevice: PsDeviceDTO | null = null;
 
   constructor(
     private playstationService: PlaystationService, 
     private elementRef: ElementRef,
-    private itemResourceService: ItemResourceService
+    private itemResourceService: ItemResourceService,
+    private playstationResourceService: PlaystationResourceService
   ) {}
 
   ngOnInit(): void {
@@ -73,6 +78,12 @@ export class OrdersSliderComponent implements OnInit, OnDestroy {
           this.loadCategories();
         }
       }
+    );
+
+    this.subscription.add(
+      this.playstationService.selectedDevice$.subscribe(device => {
+        this.selectedDevice = device;
+      })
     );
   }
 
@@ -118,8 +129,28 @@ export class OrdersSliderComponent implements OnInit, OnDestroy {
   }
 
   addToOrder(item: ItemSimpleDTO): void {
-    // Implement order addition logic here
-    console.log('Adding item to order:', item);
+    if (!this.selectedDevice?.id || !item.id) {
+      console.error('No device selected or invalid item');
+      return;
+    }
+
+    const orderItem: CreateInvoiceItemDTO = {
+      itemId: item.id,
+      price: item.price1 ? Number(item.price1) : undefined,
+      qty: 1,
+    };
+
+    this.playstationResourceService
+      .addOrderToDevice(this.selectedDevice.id, orderItem)
+      .subscribe({
+        next: (updatedDevice) => {
+          this.playstationService.selectDevice(updatedDevice);
+          console.log('Order added successfully');
+        },
+        error: (error) => {
+          console.error('Error adding order:', error);
+        }
+      });
   }
 
   ngOnDestroy(): void {
