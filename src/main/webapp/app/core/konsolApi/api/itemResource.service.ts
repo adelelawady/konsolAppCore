@@ -29,6 +29,8 @@ import { ItemAnalysisSearchDTO } from '../model/itemAnalysisSearchDTO';
 // @ts-ignore
 import { ItemDTO } from '../model/itemDTO';
 // @ts-ignore
+import { ItemSimpleDTO } from '../model/itemSimpleDTO';
+// @ts-ignore
 import { ItemUnitDTO } from '../model/itemUnitDTO';
 // @ts-ignore
 import { ItemViewDTOContainer } from '../model/itemViewDTOContainer';
@@ -1007,6 +1009,81 @@ export class ItemResourceService {
     return this.httpClient.post<ItemAnalysisDTO>(
       `${this.configuration.basePath}/items/${encodeURIComponent(String(id))}/analysis`,
       itemAnalysisSearchDTO,
+      {
+        context: localVarHttpContext,
+        responseType: <any>responseType_,
+        withCredentials: this.configuration.withCredentials,
+        headers: localVarHeaders,
+        observe: observe,
+        reportProgress: reportProgress,
+      }
+    );
+  }
+
+  /**
+   * get  all items available By Category
+   * @param category
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public getItemsByCategory(
+    category: string,
+    observe?: 'body',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
+  ): Observable<Array<ItemSimpleDTO>>;
+  public getItemsByCategory(
+    category: string,
+    observe?: 'response',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
+  ): Observable<HttpResponse<Array<ItemSimpleDTO>>>;
+  public getItemsByCategory(
+    category: string,
+    observe?: 'events',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
+  ): Observable<HttpEvent<Array<ItemSimpleDTO>>>;
+  public getItemsByCategory(
+    category: string,
+    observe: any = 'body',
+    reportProgress: boolean = false,
+    options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
+  ): Observable<any> {
+    if (category === null || category === undefined) {
+      throw new Error('Required parameter category was null or undefined when calling getItemsByCategory.');
+    }
+
+    let localVarHeaders = this.defaultHeaders;
+
+    let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+    if (localVarHttpHeaderAcceptSelected === undefined) {
+      // to determine the Accept header
+      const httpHeaderAccepts: string[] = ['application/json'];
+      localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    }
+    if (localVarHttpHeaderAcceptSelected !== undefined) {
+      localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+    }
+
+    let localVarHttpContext: HttpContext | undefined = options && options.context;
+    if (localVarHttpContext === undefined) {
+      localVarHttpContext = new HttpContext();
+    }
+
+    let responseType_: 'text' | 'json' | 'blob' = 'json';
+    if (localVarHttpHeaderAcceptSelected) {
+      if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+        responseType_ = 'text';
+      } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+        responseType_ = 'json';
+      } else {
+        responseType_ = 'blob';
+      }
+    }
+
+    return this.httpClient.get<Array<ItemSimpleDTO>>(
+      `${this.configuration.basePath}/items/${encodeURIComponent(String(category))}/allItems`,
       {
         context: localVarHttpContext,
         responseType: <any>responseType_,

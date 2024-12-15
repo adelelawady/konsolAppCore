@@ -401,4 +401,9 @@ public class ItemResource implements ItemsApiDelegate {
             )
         );
     }
+
+    @Override
+    public ResponseEntity<List<ItemSimpleDTO>> getItemsByCategory(String category) {
+        return ResponseEntity.ok(itemService.findAllItemSimpleByCategory(category));
+    }
 }

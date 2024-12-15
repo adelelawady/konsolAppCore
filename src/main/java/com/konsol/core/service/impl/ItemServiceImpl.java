@@ -726,6 +726,11 @@ public class ItemServiceImpl implements ItemService {
         }
     }
 
+    @Override
+    public List<ItemSimpleDTO> findAllItemSimpleByCategory(String category) {
+        return itemRepository.findAllByCategory(category).stream().map(itemMapper::toSimpleDTO).collect(Collectors.toList());
+    }
+
     private double safeGetDouble(Document doc, String key) {
         if (doc == null || !doc.containsKey(key)) {
             log.warn("Field {} not found in the document.", key);

@@ -26,4 +26,6 @@ public interface ItemRepository extends MongoRepository<Item, String> {
     List<Item> findAllDistinctByCategoryNotIn(List<String> categories);
 
     Optional<Item> findOneByPk(int pk);
+
+    List<Item> findAllByCategory(String category);
 }

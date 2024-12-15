@@ -160,4 +160,6 @@ public interface ItemService {
     ItemAnalysisDTO analyzeItem(String itemId, String storeId, Instant startDate, Instant endDate);
 
     ChartDataContainer getSalesChartData(String itemId, Instant startDate, Instant endDate);
+
+    List<ItemSimpleDTO> findAllItemSimpleByCategory(String category);
 }
