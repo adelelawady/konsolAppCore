@@ -1,12 +1,14 @@
 package com.konsol.core.service;
 
 import com.konsol.core.domain.playstation.PlaystationDevice;
+import com.konsol.core.service.api.dto.CreateInvoiceItemDTO;
 import com.konsol.core.service.api.dto.PsDeviceDTO;
 import com.konsol.core.service.api.dto.PsSessionDTO;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 
 /**
  * Service Interface for managing {@link PlaystationDevice}.
@@ -84,4 +86,6 @@ public interface PlaystationDeviceService {
      * @throws RuntimeException if device not found or no active session exists
      */
     PsSessionDTO stopSession(String deviceId);
+
+    PsDeviceDTO addOrderToDevice(String id, CreateInvoiceItemDTO createInvoiceItemDTO);
 }

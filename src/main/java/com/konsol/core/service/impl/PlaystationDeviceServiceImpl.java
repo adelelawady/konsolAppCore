@@ -9,6 +9,7 @@ import com.konsol.core.repository.PlayStationSessionRepository;
 import com.konsol.core.repository.PlaystationDeviceRepository;
 import com.konsol.core.service.InvoiceService;
 import com.konsol.core.service.PlaystationDeviceService;
+import com.konsol.core.service.api.dto.CreateInvoiceItemDTO;
 import com.konsol.core.service.api.dto.PsDeviceDTO;
 import com.konsol.core.service.api.dto.PsSessionDTO;
 import com.konsol.core.service.mapper.PlayStationSessionMapper;
@@ -204,5 +205,22 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
         // Save and return updated session
         PlayStationSession updatedSession = playStationSessionRepository.save(session);
         return playStationSessionMapper.toDto(updatedSession);
+    }
+
+    @Override
+    public PsDeviceDTO addOrderToDevice(String deviceId, CreateInvoiceItemDTO createInvoiceItemDTO) {
+        LOG.debug("Request to start session for PlaystationDevice : {}", deviceId);
+        // Find device
+        PlaystationDevice device = playstationDeviceRepository
+            .findById(deviceId)
+            .orElseThrow(() -> new RuntimeException("Device not found with id: " + deviceId));
+        // Check if device is not in use
+        if (device.getSession() == null) {
+            throw new RuntimeException("Device is Not Active");
+        }
+        invoiceService.addInvoiceItem(device.getSession().getInvoice().getId(), createInvoiceItemDTO);
+        return playstationDeviceMapper.toDto(
+            playstationDeviceRepository.findById(deviceId).orElseThrow(() -> new RuntimeException("Device not found with id: " + deviceId))
+        );
     }
 }

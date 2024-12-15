@@ -5,6 +5,7 @@ import com.konsol.core.repository.PlaystationDeviceRepository;
 import com.konsol.core.repository.PlaystationDeviceTypeRepository;
 import com.konsol.core.service.PlaystationDeviceService;
 import com.konsol.core.service.PlaystationDeviceTypeService;
+import com.konsol.core.service.api.dto.CreateInvoiceItemDTO;
 import com.konsol.core.service.api.dto.PsDeviceDTO;
 import com.konsol.core.service.api.dto.PsDeviceType;
 import com.konsol.core.web.api.PlaystationApiDelegate;
@@ -321,5 +322,10 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
     @Override
     public ResponseEntity<PsDeviceDTO> startDeviceSession(String id) {
         return ResponseEntity.ok(playstationDeviceService.startSession(id));
+    }
+
+    @Override
+    public ResponseEntity<PsDeviceDTO> addOrderToDevice(String id, CreateInvoiceItemDTO createInvoiceItemDTO) {
+        return PlaystationApiDelegate.super.addOrderToDevice(id, createInvoiceItemDTO);
     }
 }

@@ -1813,6 +1813,31 @@ paths:
               $ref: '#/components/schemas/PsDeviceDTO'
       tags:
         - playstation-resource
+  '/playstation/device/{id}/orders':
+    post:
+      summary: ''
+      operationId: addOrderToDevice
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PsDeviceDTO'
+      description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateInvoiceItemDTO'
+      tags:
+        - playstation-resource
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
   /playstation/device/type:
     get:
       summary: get all playstation devices types
