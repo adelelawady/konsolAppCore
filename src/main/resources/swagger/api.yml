@@ -960,12 +960,11 @@ paths:
                   $ref: '#/components/schemas/CategoryItem'
       description: 'get categories from all items available '
     parameters: []
-  '/items/{category}/allItems':
-    get:
-      tags:
-        - item-resource
+  /items/category/listItems:
+    parameters: []
+    post:
+      summary: ''
       operationId: getItemsByCategory
-      parameters: []
       responses:
         '200':
           description: OK
@@ -975,13 +974,13 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ItemSimpleDTO'
-      description: get  all items available By Category
-    parameters:
-      - schema:
-          type: string
-        name: category
-        in: path
-        required: true
+      tags:
+        - item-resource
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryItem'
   '/items/pk/{PkId}':
     get:
       tags:

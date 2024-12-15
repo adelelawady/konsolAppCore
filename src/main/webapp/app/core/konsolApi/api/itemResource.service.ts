@@ -1021,39 +1021,35 @@ export class ItemResourceService {
   }
 
   /**
-   * get  all items available By Category
-   * @param category
+   *
+   * @param categoryItem
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public getItemsByCategory(
-    category: string,
+    categoryItem?: CategoryItem,
     observe?: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
   ): Observable<Array<ItemSimpleDTO>>;
   public getItemsByCategory(
-    category: string,
+    categoryItem?: CategoryItem,
     observe?: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
   ): Observable<HttpResponse<Array<ItemSimpleDTO>>>;
   public getItemsByCategory(
-    category: string,
+    categoryItem?: CategoryItem,
     observe?: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
   ): Observable<HttpEvent<Array<ItemSimpleDTO>>>;
   public getItemsByCategory(
-    category: string,
+    categoryItem?: CategoryItem,
     observe: any = 'body',
     reportProgress: boolean = false,
     options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
   ): Observable<any> {
-    if (category === null || category === undefined) {
-      throw new Error('Required parameter category was null or undefined when calling getItemsByCategory.');
-    }
-
     let localVarHeaders = this.defaultHeaders;
 
     let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
@@ -1071,6 +1067,13 @@ export class ItemResourceService {
       localVarHttpContext = new HttpContext();
     }
 
+    // to determine the Content-Type header
+    const consumes: string[] = ['application/json'];
+    const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+    if (httpContentTypeSelected !== undefined) {
+      localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+    }
+
     let responseType_: 'text' | 'json' | 'blob' = 'json';
     if (localVarHttpHeaderAcceptSelected) {
       if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
@@ -1082,17 +1085,14 @@ export class ItemResourceService {
       }
     }
 
-    return this.httpClient.get<Array<ItemSimpleDTO>>(
-      `${this.configuration.basePath}/items/${encodeURIComponent(String(category))}/allItems`,
-      {
-        context: localVarHttpContext,
-        responseType: <any>responseType_,
-        withCredentials: this.configuration.withCredentials,
-        headers: localVarHeaders,
-        observe: observe,
-        reportProgress: reportProgress,
-      }
-    );
+    return this.httpClient.post<Array<ItemSimpleDTO>>(`${this.configuration.basePath}/items/category/listItems`, categoryItem, {
+      context: localVarHttpContext,
+      responseType: <any>responseType_,
+      withCredentials: this.configuration.withCredentials,
+      headers: localVarHeaders,
+      observe: observe,
+      reportProgress: reportProgress,
+    });
   }
 
   /**
