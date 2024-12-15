@@ -2,6 +2,7 @@ package com.konsol.core.service;
 
 import com.konsol.core.domain.playstation.PlaystationDeviceType;
 import com.konsol.core.service.api.dto.PsDeviceType;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,6 +43,7 @@ public interface PlaystationDeviceTypeService {
      */
     Page<PsDeviceType> findAll(Pageable pageable);
 
+    List<PsDeviceType> findAll();
     /**
      * Get the "id" playstationDeviceType.
      *

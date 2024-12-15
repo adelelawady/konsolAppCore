@@ -1792,6 +1792,41 @@ paths:
               $ref: '#/components/schemas/PsDeviceDTO'
       tags:
         - playstation-resource
+  /playstation/device/type:
+    get:
+      summary: get all playstation devices types
+      tags:
+        - playstation-resource
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PsDeviceType'
+      operationId: getDevicesTypes
+      description: get all playstation devices types
+    post:
+      summary: ''
+      operationId: createPlayStationDeviceType
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PsDeviceType'
+      description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PsDeviceType'
+      tags:
+        - playstation-resource
+    parameters: []
   '/playstation/device/{id}':
     get:
       summary: get all playstation devices
@@ -1857,6 +1892,73 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PsDeviceDTO'
+      tags:
+        - playstation-resource
+  '/playstation/device/type/{id}':
+    get:
+      summary: get all playstation devices
+      tags:
+        - playstation-resource
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PsDeviceType'
+      operationId: getDeviceType
+      description: get playstation device type
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    put:
+      summary: ''
+      operationId: updateDeviceType
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PsDeviceType'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PsDeviceType'
+        description: ''
+      tags:
+        - playstation-resource
+    patch:
+      summary: ''
+      operationId: partialUpdateDeviceType
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PsDeviceType'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PsDeviceType'
+      tags:
+        - playstation-resource
+    delete:
+      summary: ''
+      operationId: deleteDeviceType
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PsDeviceType'
       tags:
         - playstation-resource
 components:

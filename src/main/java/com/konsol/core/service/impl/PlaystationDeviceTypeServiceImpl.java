@@ -5,7 +5,9 @@ import com.konsol.core.repository.PlaystationDeviceTypeRepository;
 import com.konsol.core.service.PlaystationDeviceTypeService;
 import com.konsol.core.service.api.dto.PsDeviceType;
 import com.konsol.core.service.mapper.PlaystationDeviceTypeMapper;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -67,6 +69,12 @@ public class PlaystationDeviceTypeServiceImpl implements PlaystationDeviceTypeSe
     public Page<PsDeviceType> findAll(Pageable pageable) {
         LOG.debug("Request to get all PlaystationDeviceTypes");
         return playstationDeviceTypeRepository.findAll(pageable).map(playstationDeviceTypeMapper::toDto);
+    }
+
+    @Override
+    public List<PsDeviceType> findAll() {
+        LOG.debug("Request to get all PlaystationDeviceTypes");
+        return playstationDeviceTypeRepository.findAll().stream().map(playstationDeviceTypeMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
