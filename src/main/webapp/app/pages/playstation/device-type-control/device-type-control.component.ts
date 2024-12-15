@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { PlaystationResourceService } from 'app/core/konsolApi/api/playstationResource.service';
 import { PsDeviceDTO } from 'app/core/konsolApi/model/psDeviceDTO';
 import { PsDeviceType } from 'app/core/konsolApi/model/psDeviceType';
-import { PlaystationDeviceTypeService } from 'app/entities/playstation-device-type/service/playstation-device-type.service';
-import { IPlaystationDeviceType } from 'app/entities/playstation-device-type/playstation-device-type.model';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ITEM_DELETED_EVENT } from 'app/config/navigation.constants';
 import { DeviceTypeDeleteDialogComponent } from './device-type-delete-dialog.component';
@@ -14,14 +12,13 @@ import { DeviceTypeDeleteDialogComponent } from './device-type-delete-dialog.com
   styleUrls: ['./device-type-control.component.scss']
 })
 export class DeviceTypeControlComponent implements OnInit {
-  deviceTypes: PsDeviceType[] = [];
+  deviceTypes: string[] = [];
   devices: PsDeviceDTO[] = [];
-  deviceTypeList?: IPlaystationDeviceType[];
+  deviceTypeList?: PsDeviceType[];
   isLoading = false;
 
   constructor(
     private playstationResourceService: PlaystationResourceService,
-    private deviceTypeService: PlaystationDeviceTypeService,
     private modalService: NgbModal
   ) {}
 
@@ -50,28 +47,31 @@ export class DeviceTypeControlComponent implements OnInit {
 
   loadDeviceTypes(): Promise<void> {
     return new Promise((resolve) => {
-      this.deviceTypeService.query().subscribe(res => {
-        this.deviceTypeList = res.body ?? [];
+      this.playstationResourceService.getDevicesTypes().subscribe(types => {
+        this.deviceTypeList = types;
+        this.deviceTypes = types.map(type => type.name).filter((name): name is string => name !== undefined);
         resolve();
       });
     });
   }
 
-  getDevicesByType(type: PsDeviceType): PsDeviceDTO[] {
+  getDevicesByType(type: string): PsDeviceDTO[] {
     return this.devices.filter(device => device.type === type);
   }
 
-  getDeviceTypeByType(type: PsDeviceType): IPlaystationDeviceType | undefined {
+  getDeviceTypeByType(type: string): PsDeviceType | undefined {
     return this.deviceTypeList?.find(dt => dt.name === type);
   }
 
-  delete(deviceType: IPlaystationDeviceType): void {
-    const modalRef = this.modalService.open(DeviceTypeDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
-    modalRef.componentInstance.deviceType = deviceType;
-    modalRef.closed.subscribe(reason => {
-      if (reason === ITEM_DELETED_EVENT) {
-        this.loadAll();
-      }
-    });
+  delete(deviceType: PsDeviceType): void {
+    if (deviceType.id) {
+      const modalRef = this.modalService.open(DeviceTypeDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
+      modalRef.componentInstance.deviceType = deviceType;
+      modalRef.closed.subscribe(reason => {
+        if (reason === ITEM_DELETED_EVENT) {
+          this.loadAll();
+        }
+      });
+    }
   }
 } 

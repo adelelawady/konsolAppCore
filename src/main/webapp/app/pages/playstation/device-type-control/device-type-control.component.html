@@ -52,7 +52,7 @@
           <ng-container *ngIf="getDeviceTypeByType(type) as deviceType">
             <div class="mt-3">
               <small class="text-muted">
-                Default Price: {{ deviceType.defaultMainPrice | currency }}
+                Default Price: {{ deviceType.price | currency }}
               </small>
             </div>
           </ng-container>

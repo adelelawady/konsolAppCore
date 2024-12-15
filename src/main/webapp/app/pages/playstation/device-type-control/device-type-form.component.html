@@ -1,0 +1,56 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-device-type-heading">
+        {{ deviceType?.id ? 'Edit Device Type' : 'Create Device Type' }}
+      </h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="mb-3" *ngIf="editForm.controls.id.value">
+          <label class="form-label" for="field_id">ID</label>
+          <input type="text" class="form-control" name="id" id="field_id" formControlName="id" readonly />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_name">Name</label>
+          <input type="text" class="form-control" name="name" id="field_name" formControlName="name" />
+          <div *ngIf="editForm.get('name')?.invalid && (editForm.get('name')?.dirty || editForm.get('name')?.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('name')?.errors?.required">
+              This field is required.
+            </small>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_price">Price</label>
+          <input type="number" class="form-control" name="price" id="field_price" formControlName="price" />
+          <div *ngIf="editForm.get('price')?.invalid && (editForm.get('price')?.dirty || editForm.get('price')?.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('price')?.errors?.required">
+              This field is required.
+            </small>
+            <small class="form-text text-danger" *ngIf="editForm.get('price')?.errors?.min">
+              Price must be greater than 0.
+            </small>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div> 

@@ -15,6 +15,8 @@ import { DevicesControlComponent } from './devices-control/devices-control.compo
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { DeviceTypeControlComponent } from './device-type-control/device-type-control.component';
 import { DeviceTypeDeleteDialogComponent } from './device-type-control/device-type-delete-dialog.component';
+import { DeviceTypeFormComponent } from './device-type-control/device-type-form.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -28,6 +30,7 @@ import { DeviceTypeDeleteDialogComponent } from './device-type-control/device-ty
     DevicesControlComponent,
     DeviceTypeControlComponent,
     DeviceTypeDeleteDialogComponent,
+    DeviceTypeFormComponent,
   ],
   imports: [
     CommonModule,
@@ -36,6 +39,7 @@ import { DeviceTypeDeleteDialogComponent } from './device-type-control/device-ty
     PlaystationRoutingModule,
     LayoutsModule,
     NgbPaginationModule,
+    ReactiveFormsModule,
   ],
   exports: [
     DeviceListComponent,
