@@ -215,6 +215,18 @@
           }
         }
       }
+    },
+    "orders": {
+      "slider": {
+        "title": "Orders Menu",
+        "loading": {
+          "text": "Loading items..."
+        },
+        "item": {
+          "stock": "Stock",
+          "currency": "EGP"
+        }
+      }
     }
   }
 } 

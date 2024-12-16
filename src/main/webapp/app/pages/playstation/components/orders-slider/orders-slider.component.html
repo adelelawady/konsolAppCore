@@ -4,7 +4,7 @@
      [class.show]="isVisible"
      [class.order-change]="orderChangeAnimation">
   <div class="orders-slider-header">
-    <h2>Orders Menu</h2>
+    <h2>{{ 'playstation.orders.slider.title' | translate }}</h2>
     <button class="close-button" (click)="close()">×</button>
   </div>
 
@@ -28,7 +28,7 @@
           <!-- Show loading spinner -->
           <div *ngIf="loading" class="loading-spinner">
             <div class="spinner"></div>
-            <p>Loading items...</p>
+            <p>{{ 'playstation.orders.slider.loading.text' | translate }}</p>
           </div>
           
           <!-- Show items when not loading -->
@@ -39,10 +39,10 @@
               <div class="item-details">
                 <h3>{{ item.name }}</h3>
                 <div class="prices">
-                  <span class="price" *ngIf="item.price1">{{ item.price1 }} EGP</span>
+                  <span class="price" *ngIf="item.price1">{{ item.price1 }} {{ 'playstation.orders.slider.item.currency' | translate }}</span>
                 </div>
                 <div class="stock" *ngIf="item.qty !== undefined">
-                  Stock: {{ item.qty }}
+                  {{ 'playstation.orders.slider.item.stock' | translate }}: {{ item.qty }}
                 </div>
               </div>
             </div>
@@ -50,14 +50,5 @@
         </div>
       </ng-container>
     </div>
-<!-- ... rest of the template -->
-
-
-
-
   </div>
 </div>
-
-<button class="orders-fab" (click)="toggle()" [class.active]="isVisible">
-  <fa-icon [icon]="isVisible ? 'times' : 'list'"></fa-icon>
-</button>
