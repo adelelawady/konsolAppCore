@@ -5,9 +5,8 @@ import { PlaystationResourceService } from 'app/core/konsolApi/api/playstationRe
 import { PsDeviceDTO } from 'app/core/konsolApi/model/psDeviceDTO';
 import { InvoiceUpdateDTO } from 'app/core/konsolApi/model/invoiceUpdateDTO';
 import { HttpErrorResponse } from '@angular/common/http';
-import { finalize } from 'rxjs/operators';
+import { finalize, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { InvoiceResourceService } from 'app/core/konsolApi/api/invoiceResource.service';
-import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'jhi-checkout',
@@ -21,6 +20,7 @@ export class CheckoutComponent implements OnInit {
   selectedDevice: PsDeviceDTO | null = null;
   isProcessing = false;
   isUpdating = false;
+  private lastUserNetPrice: number = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -41,31 +41,54 @@ export class CheckoutComponent implements OnInit {
     this.playstationService.selectedDevice$.subscribe(device => {
       this.selectedDevice = device;
       if (device?.session?.invoice) {
+        const userNetPrice = device.session.invoice.userNetPrice || this.getFinalTotal();
+        this.lastUserNetPrice = userNetPrice;
+        
         this.checkoutForm.patchValue({
           discount: device.session.invoice.discount || 0,
           additions: device.session.invoice.additions || 0,
           notes: device.session.invoice.additionsType || '',
           userNetCost: this.getTotalBeforeDiscount(),
-          userNetPrice: device.session.invoice.userNetPrice || this.getFinalTotal()
+          userNetPrice: userNetPrice
         });
       }
     });
 
-    // Subscribe to form changes with debounce
-    this.checkoutForm.valueChanges
+    // Subscribe to discount and additions changes only
+    this.checkoutForm.get('discount')?.valueChanges
       .pipe(
-        debounceTime(500)
+        debounceTime(500),
+        distinctUntilChanged()
       )
-      .subscribe(() => {
-        this.updateInvoice();
-      });
+      .subscribe(() => this.updateInvoice());
 
-    // Update userNetCost whenever relevant values change
-    this.checkoutForm.get('userNetPrice')?.valueChanges.subscribe(value => {
-      if (value !== this.getFinalTotal()) {
-        this.updateInvoice();
-      }
-    });
+    this.checkoutForm.get('additions')?.valueChanges
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged()
+      )
+      .subscribe(() => this.updateInvoice());
+
+    // Handle notes changes
+    this.checkoutForm.get('notes')?.valueChanges
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged()
+      )
+      .subscribe(() => this.updateInvoice());
+
+    // Handle userNetPrice changes separately
+    this.checkoutForm.get('userNetPrice')?.valueChanges
+      .pipe(
+        debounceTime(1000),
+        distinctUntilChanged()
+      )
+      .subscribe(value => {
+        if (value !== this.lastUserNetPrice) {
+          this.lastUserNetPrice = value;
+          this.updateInvoice();
+        }
+      });
   }
 
   getSessionTimeCost(): number {
@@ -102,7 +125,7 @@ export class CheckoutComponent implements OnInit {
     this.isUpdating = true;
     const totalBeforeDiscount = this.getTotalBeforeDiscount();
     
-    // Update the userNetCost field
+    // Update the userNetCost field without triggering valueChanges
     this.checkoutForm.patchValue({
       userNetCost: totalBeforeDiscount
     }, { emitEvent: false });
@@ -113,10 +136,10 @@ export class CheckoutComponent implements OnInit {
       additions: this.checkoutForm.get('additions')?.value || 0,
       additionsType: this.checkoutForm.get('notes')?.value,
       userNetCost: totalBeforeDiscount,
-      userNetPrice: this.checkoutForm.get('userNetPrice')?.value || this.getFinalTotal()
+      userNetPrice: this.checkoutForm.get('userNetPrice')?.value
     };
 
-    this.invoiceResourceService.updateInvoice(this.selectedDevice?.session?.invoice?.id , invoiceUpdate)
+    this.invoiceResourceService.updateInvoice(this.selectedDevice?.session?.invoice?.id, invoiceUpdate)
       .pipe(
         finalize(() => {
           this.isUpdating = false;
