@@ -21,19 +21,31 @@
       <table class="table">
         <thead>
           <tr>
-            <th>{{ 'playstation.session.table.id' | translate }}</th>
             <th>{{ 'playstation.session.table.startTime' | translate }}</th>
-            <th>{{ 'playstation.session.table.invoice' | translate }}</th>
             <th>{{ 'playstation.session.table.type' | translate }}</th>
+            <th>{{ 'playstation.session.table.invoice.pk' | translate }}</th>
+            <th>{{ 'playstation.session.table.invoice.netPrice' | translate }}</th>
+         
+            <th>{{ 'playstation.session.table.invoice.discount' | translate }}</th>
+            <th>{{ 'playstation.session.table.invoice.additions' | translate }}</th>
+            <th>{{ 'playstation.session.table.invoice.userNetPrice' | translate }}</th>
+            <th>{{ 'playstation.session.table.invoice.total' | translate }}</th>
             <th>{{ 'playstation.session.table.actions' | translate }}</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let session of sessions; trackBy: trackById">
-            <td>{{ session.id }}</td>
             <td>{{ session.startTime | date:'medium' }}</td>
-            <td>{{ session.invoice?.id }}</td>
             <td>{{ session.type?.name }}</td>
+            <td>{{ session.invoice?.pk }}</td>
+            <td>{{ session.invoice?.netPrice | currency:'EGP':'symbol':'1.0-0' }}</td>
+           
+            <td>{{ session.invoice?.discount | currency:'EGP':'symbol':'1.0-0' }}</td>
+            <td>{{ session.invoice?.additions | currency:'EGP':'symbol':'1.0-0' }}</td>
+            <td>{{ session.invoice?.userNetPrice | currency:'EGP':'symbol':'1.0-0' }}</td>
+            <td class="font-weight-bold">
+              {{ session.invoice?.netPrice  | currency:'EGP':'symbol':'1.0-0' }}
+            </td>
             <td>
               <div class="btn-group">
                 <button class="btn btn-sm btn-info" (click)="viewSession(session)">

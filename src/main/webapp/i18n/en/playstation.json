@@ -286,7 +286,15 @@
       "table": {
         "id": "ID",
         "startTime": "Start Time",
-        "invoice": "Invoice",
+        "invoice": {
+          "id": "Invoice ID",
+          "netPrice": "Net Price",
+          "discount": "Discount",
+          "additions": "Additions",
+          "total": "Total",
+          "pk": "Invoice #",
+          "userNetPrice": "Custom Price"
+        },
         "type": "Type",
         "actions": "Actions"
       }

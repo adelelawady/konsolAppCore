@@ -61,4 +61,6 @@ export class SessionListComponent implements OnInit {
   trackById(index: number, session: PsSessionDTO): string | undefined {
     return session.id;
   }
+
+ 
 } 
