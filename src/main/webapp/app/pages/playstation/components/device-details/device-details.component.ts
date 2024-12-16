@@ -7,6 +7,7 @@ import { InvoiceItemDTO } from 'app/core/konsolApi/model/invoiceItemDTO';
 import { InvoiceDTO } from 'app/core/konsolApi/model/invoiceDTO';
 import { PsSessionDTO } from 'app/core/konsolApi/model/psSessionDTO';
 import { CreateInvoiceItemDTO } from 'app/core/konsolApi/model/createInvoiceItemDTO';
+import { InvoiceItemUpdateDTO } from 'app/core/konsolApi';
 
 @Component({
   selector: 'jhi-device-details',
@@ -100,15 +101,16 @@ export class DeviceDetailsComponent implements OnInit, OnDestroy {
   }
 
   updateDeviceOrder(item: InvoiceItemDTO, increment: boolean): void {
-    if (!this.selectedDevice?.id) return;
+    if (!this.selectedDevice?.id || !item || !item.id) return;
+
 
     const newQty = increment ? (item.userQty || 0) + 1 : Math.max((item.userQty || 0) - 1, 0);
-    const updateItemDTO: CreateInvoiceItemDTO = {
-      itemId: item.item?.id,
-      userQty: newQty
+    const updateItemDTO: InvoiceItemUpdateDTO = {
+      id: item.id,
+      qty: newQty
     };
 
-    this.playstationResourceService.addOrderToDevice(this.selectedDevice.id, updateItemDTO)
+    this.playstationResourceService.updateDeviceOrder(this.selectedDevice?.id, item?.id, updateItemDTO)
       .subscribe({
         next: (updatedDevice) => {
           this.playstationService.selectDevice(updatedDevice);
