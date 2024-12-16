@@ -104,6 +104,7 @@ export class OrdersSliderComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (updatedDevice) => {
           this.playstationService.selectDevice(updatedDevice);
+          this.playstationService.reloadDevices();
           console.log('Order added successfully');
         },
         error: (error) => {

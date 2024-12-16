@@ -55,7 +55,11 @@
           <div class="item-info">
             <div class="item-name">{{ item.item?.name }}</div>
             <div class="item-details">
-              <span class="qty">Qty: {{ item.userQty }}</span>
+              <span class="qty">
+                <button class="btn btn-sm btn-icon" (click)="updateDeviceOrder(item, false)"><i class="fas fa-minus"></i></button>
+                Qty: {{ item.userQty }}
+                <button class="btn btn-sm btn-icon" (click)="updateDeviceOrder(item, true)"><i class="fas fa-plus"></i></button>
+              </span>
               <span class="price">{{ item.price }} EGP</span>
             </div>
           </div>

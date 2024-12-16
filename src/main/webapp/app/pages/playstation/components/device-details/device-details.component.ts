@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { InvoiceItemDTO } from 'app/core/konsolApi/model/invoiceItemDTO';
 import { InvoiceDTO } from 'app/core/konsolApi/model/invoiceDTO';
 import { PsSessionDTO } from 'app/core/konsolApi/model/psSessionDTO';
+import { CreateInvoiceItemDTO } from 'app/core/konsolApi/model/createInvoiceItemDTO';
 
 @Component({
   selector: 'jhi-device-details',
@@ -98,6 +99,27 @@ export class DeviceDetailsComponent implements OnInit, OnDestroy {
     return this.selectedDevice?.session?.invoice?.discount || 0;
   }
 
+  updateDeviceOrder(item: InvoiceItemDTO, increment: boolean): void {
+    if (!this.selectedDevice?.id) return;
+
+    const newQty = increment ? (item.userQty || 0) + 1 : Math.max((item.userQty || 0) - 1, 0);
+    const updateItemDTO: CreateInvoiceItemDTO = {
+      itemId: item.item?.id,
+      userQty: newQty
+    };
+
+    this.playstationResourceService.addOrderToDevice(this.selectedDevice.id, updateItemDTO)
+      .subscribe({
+        next: (updatedDevice) => {
+          this.playstationService.selectDevice(updatedDevice);
+          this.playstationService.reloadDevices();
+        },
+        error: (error) => {
+          console.error('Error updating order:', error);
+        }
+      });
+  }
+
   getSessionTimeCost(): number {
     if (!this.selectedDevice?.session?.type?.price || !this.selectedDevice.session?.startTime) {
       return 0;
@@ -119,4 +141,3 @@ export class DeviceDetailsComponent implements OnInit, OnDestroy {
     return this.getSessionTimeCost() + this.getOrdersTotal();
   }
 }
-
