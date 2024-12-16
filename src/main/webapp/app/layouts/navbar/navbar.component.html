@@ -46,46 +46,91 @@
             </span>
           </a>
           <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="playstation-menu">
-            <li>
-              <a class="dropdown-item" routerLink="playstation/dashboard">
-                <fa-icon icon="tachometer-alt" [fixedWidth]="true"></fa-icon>
-                <span jhiTranslate="global.menu.playstation.dashboard">Dashboard</span>
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" routerLink="playstation/devices">
-                <fa-icon icon="gamepad" [fixedWidth]="true"></fa-icon>
-                <span jhiTranslate="global.menu.playstation.devices">Devices</span>
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" routerLink="playstation/device-types">
-                <fa-icon icon="list" [fixedWidth]="true"></fa-icon>
-                <span jhiTranslate="global.menu.playstation.deviceTypes">Device Types</span>
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" routerLink="playstation/products">
-                <fa-icon icon="box" [fixedWidth]="true"></fa-icon>
-                <span jhiTranslate="global.menu.playstation.products">Products</span>
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" routerLink="playstation/sessions">
-                <fa-icon icon="clock" [fixedWidth]="true"></fa-icon>
-                <span jhiTranslate="global.menu.playstation.sessions">Sessions</span>
-              </a>
-            </li>
+            <!-- Navigation -->
             <li>
               <a
                 class="dropdown-item"
-                routerLink="playstation/navigation"
+                routerLink="playstation"
                 routerLinkActive="active"
                 [routerLinkActiveOptions]="{ exact: true }"
                 (click)="collapseNavbar()"
               >
-                <fa-icon icon="compass" [fixedWidth]="true"></fa-icon>
+                <fa-icon icon="compass" [fixedWidth]="true" class="me-2"></fa-icon>
                 <span jhiTranslate="global.menu.playstation.navigation">Navigation</span>
+              </a>
+            </li>
+
+            <!-- Dashboard -->
+            <li>
+              <a
+                class="dropdown-item"
+                routerLink="playstation/dashboard"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: true }"
+                (click)="collapseNavbar()"
+              >
+                <fa-icon icon="tachometer-alt" [fixedWidth]="true" class="me-2"></fa-icon>
+                <span jhiTranslate="global.menu.playstation.dashboard">Dashboard</span>
+              </a>
+            </li>
+
+            <li class="dropdown-divider"></li>
+
+            <!-- Devices -->
+            <li>
+              <a
+                class="dropdown-item"
+                routerLink="playstation/control"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: true }"
+                (click)="collapseNavbar()"
+              >
+                <fa-icon icon="gamepad" [fixedWidth]="true" class="me-2"></fa-icon>
+                <span jhiTranslate="global.menu.playstation.devices">Devices</span>
+              </a>
+            </li>
+
+            <!-- Device Types -->
+            <li>
+              <a
+                class="dropdown-item"
+                routerLink="playstation/device-types"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: true }"
+                (click)="collapseNavbar()"
+              >
+                <fa-icon icon="list" [fixedWidth]="true" class="me-2"></fa-icon>
+                <span jhiTranslate="global.menu.playstation.deviceTypes">Device Types</span>
+              </a>
+            </li>
+
+            <li class="dropdown-divider"></li>
+
+            <!-- Products -->
+            <li>
+              <a
+                class="dropdown-item"
+                routerLink="playstation/products"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: true }"
+                (click)="collapseNavbar()"
+              >
+                <fa-icon icon="box" [fixedWidth]="true" class="me-2"></fa-icon>
+                <span jhiTranslate="global.menu.playstation.products">Products</span>
+              </a>
+            </li>
+
+            <!-- Sessions -->
+            <li>
+              <a
+                class="dropdown-item"
+                routerLink="playstation/sessions"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: true }"
+                (click)="collapseNavbar()"
+              >
+                <fa-icon icon="clock" [fixedWidth]="true" class="me-2"></fa-icon>
+                <span jhiTranslate="global.menu.playstation.sessions">Sessions</span>
               </a>
             </li>
           </ul>

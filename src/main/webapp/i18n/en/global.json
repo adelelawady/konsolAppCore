@@ -62,6 +62,7 @@
       "support": "Support",
       "playstation": {
         "main": "PlayStation",
+        "navigation": "Navigation",
         "dashboard": "Dashboard",
         "devices": "Devices",
         "deviceTypes": "Device Types",
