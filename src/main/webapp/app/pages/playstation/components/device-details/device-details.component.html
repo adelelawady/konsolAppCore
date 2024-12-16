@@ -85,6 +85,16 @@
         <span>Start Session</span>
       </button>
     </div>
+    <div class="actions" *ngIf="isDeviceActive()">
+      <button 
+        class="btn btn-danger" 
+        (click)="stopSession()" 
+        [disabled]="isStoppingSession"
+      >
+        <span class="spinner-border spinner-border-sm" *ngIf="isStoppingSession"></span>
+        <span>Stop Session</span>
+      </button>
+    </div>
   </div>
 </div>
 

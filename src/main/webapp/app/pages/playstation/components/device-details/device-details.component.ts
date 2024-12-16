@@ -17,6 +17,7 @@ import { InvoiceItemUpdateDTO } from 'app/core/konsolApi';
 export class DeviceDetailsComponent implements OnInit, OnDestroy {
   selectedDevice: PsDeviceDTO | null = null;
   isStartingSession = false;
+  isStoppingSession = false;
   private subscription?: Subscription;
   orderItems: InvoiceItemDTO[] = [];
 
@@ -60,6 +61,25 @@ export class DeviceDetailsComponent implements OnInit, OnDestroy {
           },
           complete: () => {
             this.isStartingSession = false;
+          }
+        });
+    }
+  }
+
+  stopSession(): void {
+    if (this.selectedDevice?.id && !this.isStoppingSession) {
+      this.isStoppingSession = true;
+      this.playstationResourceService.stopDeviceSession(this.selectedDevice.id)
+        .subscribe({
+          next: (updatedDevice) => {
+            this.playstationService.selectDevice(updatedDevice);
+            this.playstationService.reloadDevices();
+          },
+          error: (error) => {
+            console.error('Error stopping session:', error);
+          },
+          complete: () => {
+            this.isStoppingSession = false;
           }
         });
     }
