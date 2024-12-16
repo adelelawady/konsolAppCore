@@ -1838,6 +1838,44 @@ paths:
         name: id
         in: path
         required: true
+  '/playstation/device/{id}/orders/{orderId}':
+    post:
+      summary: ''
+      operationId: updateDeviceOrder
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PsDeviceDTO'
+      description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvoiceItemUpdateDTO'
+      tags:
+        - playstation-resource
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: orderId
+        in: path
+        required: true
+    delete:
+      summary: ''
+      operationId: deleteDeviceOrder
+      responses:
+        '200':
+          description: OK
+      tags:
+        - playstation-resource
   /playstation/device/type:
     get:
       summary: get all playstation devices types

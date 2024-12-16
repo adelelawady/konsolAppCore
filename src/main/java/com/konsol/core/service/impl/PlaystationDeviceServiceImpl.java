@@ -10,6 +10,7 @@ import com.konsol.core.repository.PlaystationDeviceRepository;
 import com.konsol.core.service.InvoiceService;
 import com.konsol.core.service.PlaystationDeviceService;
 import com.konsol.core.service.api.dto.CreateInvoiceItemDTO;
+import com.konsol.core.service.api.dto.InvoiceItemUpdateDTO;
 import com.konsol.core.service.api.dto.PsDeviceDTO;
 import com.konsol.core.service.api.dto.PsSessionDTO;
 import com.konsol.core.service.mapper.PlayStationSessionMapper;
@@ -209,7 +210,7 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
 
     @Override
     public PsDeviceDTO addOrderToDevice(String deviceId, CreateInvoiceItemDTO createInvoiceItemDTO) {
-        LOG.debug("Request to start session for PlaystationDevice : {}", deviceId);
+        LOG.debug("Request to add order for PlaystationDevice : {}", deviceId);
         // Find device
         PlaystationDevice device = playstationDeviceRepository
             .findById(deviceId)
@@ -222,5 +223,36 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
         return playstationDeviceMapper.toDto(
             playstationDeviceRepository.findById(deviceId).orElseThrow(() -> new RuntimeException("Device not found with id: " + deviceId))
         );
+    }
+
+    @Override
+    public PsDeviceDTO updateDeviceOrder(String deviceId, String orderId, InvoiceItemUpdateDTO invoiceItemUpdateDTO) {
+        LOG.debug("Request to update order for PlaystationDevice : {}", deviceId);
+        // Find device
+        PlaystationDevice device = playstationDeviceRepository
+            .findById(deviceId)
+            .orElseThrow(() -> new RuntimeException("Device not found with id: " + deviceId));
+        // Check if device is not in use
+        if (device.getSession() == null) {
+            throw new RuntimeException("Device is Not Active");
+        }
+        invoiceService.updateInvoiceItem(orderId, invoiceItemUpdateDTO);
+        return playstationDeviceMapper.toDto(
+            playstationDeviceRepository.findById(deviceId).orElseThrow(() -> new RuntimeException("Device not found with id: " + deviceId))
+        );
+    }
+
+    @Override
+    public void deleteDeviceOrder(String deviceId, String orderId) {
+        LOG.debug("Request to update order for PlaystationDevice : {}", deviceId);
+        // Find device
+        PlaystationDevice device = playstationDeviceRepository
+            .findById(deviceId)
+            .orElseThrow(() -> new RuntimeException("Device not found with id: " + deviceId));
+        // Check if device is not in use
+        if (device.getSession() == null) {
+            throw new RuntimeException("Device is Not Active");
+        }
+        invoiceService.deleteInvoiceItem(orderId);
     }
 }
