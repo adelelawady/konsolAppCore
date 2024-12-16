@@ -5,7 +5,9 @@ import com.konsol.core.repository.PlayStationSessionRepository;
 import com.konsol.core.service.PlayStationSessionService;
 import com.konsol.core.service.api.dto.PsSessionDTO;
 import com.konsol.core.service.mapper.PlayStationSessionMapper;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -67,6 +69,12 @@ public class PlayStationSessionServiceImpl implements PlayStationSessionService 
     public Page<PsSessionDTO> findAll(Pageable pageable) {
         LOG.debug("Request to get all PlayStationSessions");
         return playStationSessionRepository.findAll(pageable).map(playStationSessionMapper::toDto);
+    }
+
+    @Override
+    public List<PsSessionDTO> findAll() {
+        LOG.debug("Request to get all PlayStationSessions");
+        return playStationSessionRepository.findAll().stream().map(playStationSessionMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
