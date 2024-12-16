@@ -125,6 +125,14 @@
           "cancel": "Cancel",
           "save": "Save"
         }
+      },
+      "delete": {
+        "title": "Confirm Delete",
+        "question": "Are you sure you want to delete device",
+        "actions": {
+          "confirm": "Delete",
+          "cancel": "Cancel"
+        }
       }
     },
     "deviceType": {

@@ -125,6 +125,14 @@
           "cancel": "إلغاء",
           "save": "حفظ"
         }
+      },
+      "delete": {
+        "title": "تأكيد الحذف",
+        "question": "هل أنت متأكد من حذف الجهاز",
+        "actions": {
+          "confirm": "حذف",
+          "cancel": "إلغاء"
+        }
       }
     },
     "deviceType": {
