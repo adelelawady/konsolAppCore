@@ -7,10 +7,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 import javax.validation.constraints.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -21,8 +17,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 /**
  * A Item.
  */
-@Entity
-@Table(name = "item")
+@Document(collection = "items")
 @SuppressWarnings("common-java:DuplicatedBlocks")
 public class Item extends AbstractAuditingEntity<String> implements Serializable {
 
@@ -62,7 +57,6 @@ public class Item extends AbstractAuditingEntity<String> implements Serializable
     @Field("checkQty")
     private boolean checkQty = true; //QuantityCheckRequired
 
-
     @Field("deletable")
     private boolean deletable = true; //QuantityCheckRequired
 
@@ -73,10 +67,6 @@ public class Item extends AbstractAuditingEntity<String> implements Serializable
 
     @Field("price_options")
     private List<ItemPriceOptions> PriceOptions = new ArrayList<>();
-
-    @ManyToOne
-    @JoinColumn(name = "device_type_id")
-    private PlaystationDeviceType deviceType;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -255,11 +245,11 @@ public class Item extends AbstractAuditingEntity<String> implements Serializable
         PriceOptions = priceOptions;
     }
 
-    public PlaystationDeviceType getDeviceType() {
-        return deviceType;
+    public boolean isDeletable() {
+        return deletable;
     }
 
-    public void setDeviceType(PlaystationDeviceType deviceType) {
-        this.deviceType = deviceType;
+    public void setDeletable(boolean deletable) {
+        this.deletable = deletable;
     }
 }

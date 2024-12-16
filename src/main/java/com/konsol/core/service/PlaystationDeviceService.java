@@ -85,7 +85,7 @@ public interface PlaystationDeviceService {
      * @return the stopped session DTO
      * @throws RuntimeException if device not found or no active session exists
      */
-    PsSessionDTO stopSession(String deviceId);
+    PsDeviceDTO stopSession(String deviceId);
 
     PsDeviceDTO addOrderToDevice(String id, CreateInvoiceItemDTO createInvoiceItemDTO);
 

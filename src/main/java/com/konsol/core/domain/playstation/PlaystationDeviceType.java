@@ -3,23 +3,18 @@ package com.konsol.core.domain.playstation;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.OneToMany;
-import java.util.Set;
-import java.util.HashSet;
 
 /**
  * A PlaystationDeviceType.
  */
 @Document(collection = "ps_device_type")
 @SuppressWarnings("common-java:DuplicatedBlocks")
-@Entity
-@Table(name = "playstation_device_type")
 public class PlaystationDeviceType implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -39,9 +34,6 @@ public class PlaystationDeviceType implements Serializable {
     @DBRef
     @Field("product")
     private com.konsol.core.domain.Item Item;
-
-    @OneToMany(mappedBy = "deviceType")
-    private Set<Item> items = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 

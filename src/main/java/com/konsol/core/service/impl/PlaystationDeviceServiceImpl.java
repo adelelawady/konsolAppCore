@@ -1,20 +1,23 @@
 package com.konsol.core.service.impl;
 
 import com.konsol.core.domain.Invoice;
+import com.konsol.core.domain.Item;
 import com.konsol.core.domain.enumeration.InvoiceKind;
 import com.konsol.core.domain.playstation.PlayStationSession;
 import com.konsol.core.domain.playstation.PlaystationDevice;
 import com.konsol.core.repository.InvoiceRepository;
 import com.konsol.core.repository.PlayStationSessionRepository;
 import com.konsol.core.repository.PlaystationDeviceRepository;
+import com.konsol.core.repository.PlaystationDeviceTypeRepository;
 import com.konsol.core.service.InvoiceService;
+import com.konsol.core.service.ItemService;
 import com.konsol.core.service.PlaystationDeviceService;
-import com.konsol.core.service.api.dto.CreateInvoiceItemDTO;
-import com.konsol.core.service.api.dto.InvoiceItemUpdateDTO;
-import com.konsol.core.service.api.dto.PsDeviceDTO;
-import com.konsol.core.service.api.dto.PsSessionDTO;
+import com.konsol.core.service.api.dto.*;
 import com.konsol.core.service.mapper.PlayStationSessionMapper;
 import com.konsol.core.service.mapper.PlaystationDeviceMapper;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -39,6 +42,9 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
     private final PlayStationSessionMapper playStationSessionMapper;
     private final InvoiceRepository invoiceRepository;
     private final InvoiceService invoiceService;
+    private final PlaystationDeviceTypeRepository playstationDeviceTypeRepository;
+
+    private final ItemService itemService;
 
     public PlaystationDeviceServiceImpl(
         PlaystationDeviceRepository playstationDeviceRepository,
@@ -46,7 +52,9 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
         PlayStationSessionRepository playStationSessionRepository,
         PlayStationSessionMapper playStationSessionMapper,
         InvoiceRepository invoiceRepository,
-        InvoiceService invoiceService
+        InvoiceService invoiceService,
+        PlaystationDeviceTypeRepository playstationDeviceTypeRepository,
+        ItemService itemService
     ) {
         this.playstationDeviceRepository = playstationDeviceRepository;
         this.playstationDeviceMapper = playstationDeviceMapper;
@@ -54,6 +62,8 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
         this.playStationSessionMapper = playStationSessionMapper;
         this.invoiceRepository = invoiceRepository;
         this.invoiceService = invoiceService;
+        this.playstationDeviceTypeRepository = playstationDeviceTypeRepository;
+        this.itemService = itemService;
     }
 
     @Override
@@ -170,7 +180,7 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
     }
 
     @Override
-    public PsSessionDTO stopSession(String deviceId) {
+    public PsDeviceDTO stopSession(String deviceId) {
         LOG.debug("Request to stop session for PlaystationDevice : {}", deviceId);
 
         // Find device
@@ -183,6 +193,29 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
             throw new RuntimeException("No active session found for device: " + deviceId);
         }
 
+        Item itemProduct = device.getSession().getType().getItem();
+
+        if (itemProduct == null) {
+            // Create corresponding Item/Product
+            Item item = new Item();
+            item.setName(device.getSession().getType().getName() + " - [PlayStation]");
+            item.setPrice1(String.valueOf(device.getSession().getType().getPrice()));
+            item.setCategory("PlayStation"); // Or appropriate category
+            item.setCheckQty(false);
+            item.setDeletable(false);
+            // Save the item
+            ItemDTO itemDTO = itemService.save(item);
+            itemProduct = itemService.findOneById(itemDTO.getId()).get();
+            device.getSession().getType().setItem(item);
+            playstationDeviceTypeRepository.save(device.getSession().getType());
+        }
+        CreateInvoiceItemDTO createInvoiceItemDTO = new CreateInvoiceItemDTO();
+        createInvoiceItemDTO.setQty(new BigDecimal(1));
+        createInvoiceItemDTO.setItemId(itemProduct.getId());
+        createInvoiceItemDTO.setPrice(calculateSessionTimePrice(device.getSession()));
+
+        invoiceService.addInvoiceItem(device.getSession().getInvoice().getId(), createInvoiceItemDTO);
+
         // Find active session
         PlayStationSession session = playStationSessionRepository
             .findByDeviceIdAndActiveTrue(deviceId)
@@ -192,20 +225,14 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
         session.setActive(false);
         session.setEndTime(Instant.now());
 
-        // Update invoice
-        Invoice invoice = session.getInvoice();
-        if (invoice != null) {
-            invoiceRepository.save(invoice);
-        }
-
+        invoiceService.saveInvoice(device.getSession().getInvoice().getId());
         // Update device status
         device.setActive(false);
         device.setSession(null);
-        playstationDeviceRepository.save(device);
-
+        device = playstationDeviceRepository.save(device);
         // Save and return updated session
         PlayStationSession updatedSession = playStationSessionRepository.save(session);
-        return playStationSessionMapper.toDto(updatedSession);
+        return playstationDeviceMapper.toDto(device);
     }
 
     @Override
@@ -254,5 +281,20 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
             throw new RuntimeException("Device is Not Active");
         }
         invoiceService.deleteInvoiceItem(orderId);
+    }
+
+    private BigDecimal calculateSessionTimePrice(PlayStationSession session) {
+        // Calculate duration in minutes and then convert to BigDecimal for precision
+        Duration duration = Duration.between(session.getStartTime(), Instant.now());
+        long minutes = duration.toMinutes(); // Get minutes as a long
+        BigDecimal hours = BigDecimal.valueOf(minutes).divide(BigDecimal.valueOf(60), 2, RoundingMode.HALF_UP); // Convert to hours (2 decimal places)
+
+        // Calculate price based on hours and session type price
+        BigDecimal totalPriceCalculatedTime = session.getType().getPrice().multiply(hours);
+
+        // Round to 2 decimal places for currency precision
+        totalPriceCalculatedTime = totalPriceCalculatedTime.setScale(2, RoundingMode.HALF_UP);
+
+        return totalPriceCalculatedTime;
     }
 }

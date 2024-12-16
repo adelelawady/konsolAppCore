@@ -326,6 +326,11 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
     }
 
     @Override
+    public ResponseEntity<PsDeviceDTO> stopDeviceSession(String id) {
+        return ResponseEntity.ok(playstationDeviceService.stopSession(id));
+    }
+
+    @Override
     public ResponseEntity<PsDeviceDTO> addOrderToDevice(String id, CreateInvoiceItemDTO createInvoiceItemDTO) {
         return ResponseEntity.ok(playstationDeviceService.addOrderToDevice(id, createInvoiceItemDTO));
     }

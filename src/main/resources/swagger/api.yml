@@ -1998,6 +1998,26 @@ paths:
       tags:
         - playstation-resource
       description: Start Device Session
+  '/playstation/device/{id}/session/stop':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    post:
+      summary: Start Device Session
+      operationId: stopDeviceSession
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PsDeviceDTO'
+      tags:
+        - playstation-resource
+      description: Stop Device Session
   '/playstation/device/type/{id}':
     get:
       summary: get all playstation devices
