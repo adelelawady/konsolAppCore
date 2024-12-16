@@ -133,6 +133,30 @@
           "confirm": "حذف",
           "cancel": "إلغاء"
         }
+      },
+      "details": {
+        "noDeviceSelected": "اختر جهازاً لعرض التفاصيل",
+        "info": {
+          "type": "النوع",
+          "started": "بدأ في",
+          "duration": "المدة",
+          "rate": "السعر",
+          "perHour": "جنيه/ساعة"
+        },
+        "costs": {
+          "sessionTime": "تكلفة الجلسة",
+          "ordersTotal": "إجمالي الطلبات",
+          "total": "الإجمالي"
+        },
+        "orders": {
+          "title": "الطلبات",
+          "quantity": "الكمية",
+          "noOrders": "لا توجد طلبات"
+        },
+        "actions": {
+          "startSession": "بدء جلسة",
+          "stopSession": "إنهاء الجلسة"
+        }
       }
     },
     "deviceType": {

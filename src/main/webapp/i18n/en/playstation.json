@@ -133,6 +133,30 @@
           "confirm": "Delete",
           "cancel": "Cancel"
         }
+      },
+      "details": {
+        "noDeviceSelected": "Select a device to view details",
+        "info": {
+          "type": "Type",
+          "started": "Started",
+          "duration": "Duration",
+          "rate": "Rate",
+          "perHour": "EGP/hr"
+        },
+        "costs": {
+          "sessionTime": "Session Time",
+          "ordersTotal": "Orders Total",
+          "total": "Total"
+        },
+        "orders": {
+          "title": "Orders",
+          "quantity": "Qty",
+          "noOrders": "No orders yet"
+        },
+        "actions": {
+          "startSession": "Start Session",
+          "stopSession": "Stop Session"
+        }
       }
     },
     "deviceType": {
