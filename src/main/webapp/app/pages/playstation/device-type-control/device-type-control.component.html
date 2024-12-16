@@ -1,16 +1,16 @@
 <div class="container">
-  <h1>Device Type Control</h1>
+  <h1>{{ 'playstation.deviceType.title' | translate }}</h1>
 
   <!-- Action Buttons -->
   <div class="mb-3">
     <button class="btn btn-primary me-2" [routerLink]="['./new']">
       <fa-icon icon="plus"></fa-icon>
-      <span>Add New Device Type</span>
+      <span>{{ 'playstation.deviceType.actions.addNew' | translate }}</span>
     </button>
     
     <button class="btn btn-info" (click)="loadAll()" [disabled]="isLoading">
       <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
-      <span>Refresh</span>
+      <span>{{ 'playstation.deviceType.actions.refresh' | translate }}</span>
     </button>
   </div>
 
@@ -24,12 +24,14 @@
               <button 
                 class="btn btn-sm btn-primary"
                 [routerLink]="['/playstation/device-types', deviceType.id, 'edit']"
+                [title]="'playstation.deviceType.actions.edit' | translate"
               >
                 <fa-icon icon="pencil-alt"></fa-icon>
               </button>
               <button 
                 class="btn btn-sm btn-danger"
                 (click)="delete(deviceType)"
+                [title]="'playstation.deviceType.actions.delete' | translate"
               >
                 <fa-icon icon="times"></fa-icon>
               </button>
@@ -40,7 +42,7 @@
           <div class="device-list">
             <div *ngFor="let device of getDevicesByType(type)" class="device-item">
               <span [class]="device.active ? 'badge bg-success' : 'badge bg-danger'">
-                {{ device.active ? 'Active' : 'Inactive' }}
+                {{ device.active ? ('playstation.deviceType.labels.status.active' | translate) : ('playstation.deviceType.labels.status.inactive' | translate) }}
               </span>
             </div>
           </div>
@@ -48,7 +50,7 @@
           <ng-container *ngIf="getDeviceTypeByType(type) as deviceType">
             <div class="mt-3">
               <small class="text-muted">
-                Default Price: {{ deviceType.price | currency }}
+                {{ 'playstation.deviceType.labels.defaultPrice' | translate }}: {{ deviceType.price | currency }}
               </small>
             </div>
           </ng-container>

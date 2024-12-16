@@ -1,20 +1,25 @@
-<form *ngIf="deviceType" name="deleteForm" (ngSubmit)="confirmDelete(deviceType.id)">
+<form *ngIf="deviceType" name="deleteForm" (ngSubmit)="confirmDelete(deviceType.id!)">
   <div class="modal-header">
-    <h4 class="modal-title">Confirm delete operation</h4>
+    <h4 class="modal-title">{{ 'playstation.deviceType.delete.title' | translate }}</h4>
+
+    <button type="button" class="btn-close" data-dismiss="modal" aria-hidden="true"
+            (click)="cancel()">&times;
+    </button>
   </div>
 
   <div class="modal-body">
     <jhi-alert-error></jhi-alert-error>
-    <p>Are you sure you want to delete Device Type {{ deviceType.name }}?</p>
+    <p>{{ 'playstation.deviceType.delete.question' | translate }} {{ deviceType.name }}?</p>
   </div>
 
   <div class="modal-footer">
     <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="cancel()">
-      <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+      <span>{{ 'playstation.deviceType.delete.cancel' | translate }}</span>
     </button>
 
     <button type="submit" class="btn btn-danger">
-      <fa-icon icon="times"></fa-icon>&nbsp;<span>Delete</span>
+      <span class="fas fa-times"></span>&nbsp;
+      <span>{{ 'playstation.deviceType.delete.confirm' | translate }}</span>
     </button>
   </div>
 </form> 
