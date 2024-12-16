@@ -98,6 +98,38 @@
         "question": "Are you sure you want to delete device type",
         "confirm": "Delete",
         "cancel": "Cancel"
+      },
+      "form": {
+        "title": {
+          "edit": "Edit Device Type",
+          "create": "Create Device Type"
+        },
+        "name": {
+          "label": "Name",
+          "placeholder": "Enter device type name"
+        },
+        "price": {
+          "label": "Price",
+          "placeholder": "Enter hourly rate"
+        },
+        "actions": {
+          "save": "Save",
+          "cancel": "Cancel",
+          "back": "Back"
+        },
+        "messages": {
+          "validate": {
+            "name": {
+              "required": "Name is required",
+              "minlength": "Name should be at least 2 characters",
+              "maxlength": "Name cannot be longer than 50 characters"
+            },
+            "price": {
+              "required": "Price is required",
+              "min": "Price must be greater than 0"
+            }
+          }
+        }
       }
     }
   }

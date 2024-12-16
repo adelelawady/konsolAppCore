@@ -1,56 +1,61 @@
-<div class="d-flex justify-content-center">
-  <div class="col-8">
-    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
-      <h2 id="jhi-device-type-heading">
-        {{ deviceType?.id ? 'Edit Device Type' : 'Create Device Type' }}
-      </h2>
+<div class="container">
+  <div class="card">
+    <div class="card-header">
+      <h2>{{ (isEditing ? 'playstation.deviceType.form.title.edit' : 'playstation.deviceType.form.title.create') | translate }}</h2>
+    </div>
 
-      <div>
-        <jhi-alert-error></jhi-alert-error>
-
-        <div class="mb-3" *ngIf="editForm.controls.id.value">
-          <label class="form-label" for="field_id">ID</label>
-          <input type="text" class="form-control" name="id" id="field_id" formControlName="id" readonly />
-        </div>
-
+    <div class="card-body">
+      <form [formGroup]="deviceTypeForm" (ngSubmit)="save()">
         <div class="mb-3">
-          <label class="form-label" for="field_name">Name</label>
-          <input type="text" class="form-control" name="name" id="field_name" formControlName="name" />
-          <div *ngIf="editForm.get('name')?.invalid && (editForm.get('name')?.dirty || editForm.get('name')?.touched)">
-            <small class="form-text text-danger" *ngIf="editForm.get('name')?.errors?.required">
-              This field is required.
+          <label class="form-label">{{ 'playstation.deviceType.form.name.label' | translate }}</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="name"
+            [placeholder]="'playstation.deviceType.form.name.placeholder' | translate"
+          />
+          <div *ngIf="deviceTypeForm.get('name')?.invalid && (deviceTypeForm.get('name')?.dirty || deviceTypeForm.get('name')?.touched)">
+            <small class="text-danger" *ngIf="deviceTypeForm.get('name')?.errors?.['required']">
+              {{ 'playstation.deviceType.form.messages.validate.name.required' | translate }}
+            </small>
+            <small class="text-danger" *ngIf="deviceTypeForm.get('name')?.errors?.['minlength']">
+              {{ 'playstation.deviceType.form.messages.validate.name.minlength' | translate }}
+            </small>
+            <small class="text-danger" *ngIf="deviceTypeForm.get('name')?.errors?.['maxlength']">
+              {{ 'playstation.deviceType.form.messages.validate.name.maxlength' | translate }}
             </small>
           </div>
         </div>
 
         <div class="mb-3">
-          <label class="form-label" for="field_price">Price</label>
-          <input type="number" class="form-control" name="price" id="field_price" formControlName="price" />
-          <div *ngIf="editForm.get('price')?.invalid && (editForm.get('price')?.dirty || editForm.get('price')?.touched)">
-            <small class="form-text text-danger" *ngIf="editForm.get('price')?.errors?.required">
-              This field is required.
+          <label class="form-label">{{ 'playstation.deviceType.form.price.label' | translate }}</label>
+          <input
+            type="number"
+            class="form-control"
+            formControlName="price"
+            [placeholder]="'playstation.deviceType.form.price.placeholder' | translate"
+          />
+          <div *ngIf="deviceTypeForm.get('price')?.invalid && (deviceTypeForm.get('price')?.dirty || deviceTypeForm.get('price')?.touched)">
+            <small class="text-danger" *ngIf="deviceTypeForm.get('price')?.errors?.['required']">
+              {{ 'playstation.deviceType.form.messages.validate.price.required' | translate }}
             </small>
-            <small class="form-text text-danger" *ngIf="editForm.get('price')?.errors?.min">
-              Price must be greater than 0.
+            <small class="text-danger" *ngIf="deviceTypeForm.get('price')?.errors?.['min']">
+              {{ 'playstation.deviceType.form.messages.validate.price.min' | translate }}
             </small>
           </div>
         </div>
-      </div>
 
-      <div>
-        <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
-          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
-        </button>
+        <div class="d-flex justify-content-between">
+          <button type="button" class="btn btn-secondary" (click)="previousState()">
+            <span>{{ 'playstation.deviceType.form.actions.back' | translate }}</span>
+          </button>
 
-        <button
-          type="submit"
-          id="save-entity"
-          [disabled]="editForm.invalid || isSaving"
-          class="btn btn-primary"
-        >
-          <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
-        </button>
-      </div>
-    </form>
+          <button type="submit" class="btn btn-primary" [disabled]="deviceTypeForm.invalid || isSaving">
+            <span class="spinner-border spinner-border-sm" *ngIf="isSaving"></span>
+            <span>{{ 'playstation.deviceType.form.actions.save' | translate }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 </div> 

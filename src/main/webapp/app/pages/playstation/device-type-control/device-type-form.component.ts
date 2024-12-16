@@ -2,79 +2,88 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { PlaystationResourceService } from 'app/core/konsolApi/api/playstationResource.service';
-import { PsDeviceType } from 'app/core/konsolApi/model/psDeviceType';
 import { Observable } from 'rxjs';
-import { finalize } from 'rxjs/operators';
+import { HttpResponse } from '@angular/common/http';
+import { finalize, map } from 'rxjs/operators';
+import { PsDeviceType } from 'app/core/konsolApi/model/psDeviceType';
 
 @Component({
   selector: 'jhi-device-type-form',
-  templateUrl: './device-type-form.component.html',
+  templateUrl: './device-type-form.component.html'
 })
 export class DeviceTypeFormComponent implements OnInit {
+  deviceTypeForm: FormGroup;
   isSaving = false;
-  deviceType?: PsDeviceType;
-  editForm: FormGroup;
+  isEditing = false;
 
   constructor(
+    private fb: FormBuilder,
     private playstationResourceService: PlaystationResourceService,
-    private formBuilder: FormBuilder,
-    private activatedRoute: ActivatedRoute
+    private route: ActivatedRoute
   ) {
-    this.editForm = this.formBuilder.group({
-      id: [{ value: null, disabled: true }],
-      name: ['', [Validators.required]],
-      price: [null, [Validators.required, Validators.min(0)]]
+    this.deviceTypeForm = this.fb.group({
+      id: [],
+      name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
+      price: ['', [Validators.required, Validators.min(0)]]
     });
   }
 
   ngOnInit(): void {
-    this.activatedRoute.data.subscribe(({ deviceType }) => {
+    this.route.data.subscribe(({ deviceType }) => {
       if (deviceType) {
-        this.deviceType = deviceType;
+        this.isEditing = true;
         this.updateForm(deviceType);
       }
     });
   }
 
-  save(): void {
-    this.isSaving = true;
-    const deviceType = this.createFromForm();
-    if (deviceType.id) {
-      this.subscribeToSaveResponse(
-        this.playstationResourceService.updateDeviceType(deviceType.id, deviceType)
-      );
-    } else {
-      this.subscribeToSaveResponse(
-        this.playstationResourceService.createPlayStationDeviceType(deviceType)
-      );
-    }
-  }
-
-  previousState(): void {
-    window.history.back();
-  }
-
-  private createFromForm(): PsDeviceType {
-    return {
-      ...this.deviceType,
-      id: this.editForm.get(['id'])?.value,
-      name: this.editForm.get(['name'])?.value,
-      price: this.editForm.get(['price'])?.value
-    };
-  }
-
   private updateForm(deviceType: PsDeviceType): void {
-    this.editForm.patchValue({
+    this.deviceTypeForm.patchValue({
       id: deviceType.id,
       name: deviceType.name,
       price: deviceType.price
     });
   }
 
-  private subscribeToSaveResponse(result: Observable<PsDeviceType>): void {
+  previousState(): void {
+    window.history.back();
+  }
+
+  save(): void {
+    if (this.deviceTypeForm.invalid) {
+      return;
+    }
+
+    this.isSaving = true;
+    const deviceType = this.createFromForm();
+
+    if (deviceType.id) {
+      this.subscribeToSaveResponse(
+        this.playstationResourceService.updateDeviceType(deviceType.id, deviceType).pipe(
+          map(res => new HttpResponse({ body: res }))
+        )
+      );
+    } else {
+      this.subscribeToSaveResponse(
+        this.playstationResourceService.createPlayStationDeviceType(deviceType).pipe(
+          map(res => new HttpResponse({ body: res }))
+        )
+      );
+    }
+  }
+
+  private createFromForm(): PsDeviceType {
+    return {
+      id: this.deviceTypeForm.get(['id'])?.value,
+      name: this.deviceTypeForm.get(['name'])?.value,
+      price: this.deviceTypeForm.get(['price'])?.value
+    };
+  }
+
+  private subscribeToSaveResponse(result: Observable<HttpResponse<PsDeviceType>>): void {
     result.pipe(finalize(() => this.onSaveFinalize())).subscribe({
       next: () => this.onSaveSuccess(),
-      error: () => this.onSaveError(),
+      error: () => this.onSaveError()
     });
   }
 
