@@ -32,17 +32,23 @@
         <div class="col-md-6">
           <div class="form-group">
             <label>{{ 'playstation.checkout.form.discount.label' | translate }}</label>
-            <input type="number" class="form-control" formControlName="discount" [class.disabled]="isUpdating">
+            <input type="number" class="form-control" formControlName="discount" 
+                   [placeholder]="'playstation.checkout.form.discount.placeholder' | translate"
+                   [class.disabled]="isUpdating">
           </div>
 
           <div class="form-group">
             <label>{{ 'playstation.checkout.form.additions.label' | translate }}</label>
-            <input type="number" class="form-control" formControlName="additions" [class.disabled]="isUpdating">
+            <input type="number" class="form-control" formControlName="additions" 
+                   [placeholder]="'playstation.checkout.form.additions.placeholder' | translate"
+                   [class.disabled]="isUpdating">
           </div>
 
           <div class="form-group">
             <label>{{ 'playstation.checkout.form.notes.label' | translate }}</label>
-            <textarea class="form-control" formControlName="notes" rows="3" [class.disabled]="isUpdating"></textarea>
+            <textarea class="form-control" formControlName="notes" rows="3" 
+                     [placeholder]="'playstation.checkout.form.notes.placeholder' | translate"
+                     [class.disabled]="isUpdating"></textarea>
           </div>
         </div>
 
@@ -50,11 +56,14 @@
           <div class="form-group">
             <label>{{ 'playstation.checkout.form.userNetCost.label' | translate }}</label>
             <input type="number" class="form-control" formControlName="userNetCost" readonly>
+            <small class="text-muted">{{ 'playstation.checkout.form.userNetCost.info' | translate }}</small>
           </div>
 
           <div class="form-group">
             <label>{{ 'playstation.checkout.form.userNetPrice.label' | translate }}</label>
-            <input type="number" class="form-control" formControlName="userNetPrice" [class.disabled]="isUpdating">
+            <input type="number" class="form-control" formControlName="userNetPrice" 
+                   [placeholder]="'playstation.checkout.form.userNetPrice.placeholder' | translate"
+                   [class.disabled]="isUpdating">
             <small class="text-muted" *ngIf="checkoutForm.get('userNetPrice')?.value !== getFinalTotal()">
               {{ 'playstation.checkout.form.userNetPrice.customized' | translate }}
             </small>

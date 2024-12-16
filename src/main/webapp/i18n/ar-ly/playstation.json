@@ -240,15 +240,41 @@
       }
     },
     "checkout": {
+      "title": "إنهاء الجلسة",
+      "summary": {
+        "title": "ملخص الجلسة",
+        "sessionTime": "تكلفة وقت الجلسة",
+        "orders": "إجمالي الطلبات",
+        "subtotal": "المجموع الفرعي",
+        "finalTotal": "المجموع النهائي"
+      },
       "form": {
+        "discount": {
+          "label": "الخصم",
+          "placeholder": "أدخل قيمة الخصم"
+        },
+        "additions": {
+          "label": "الإضافات",
+          "placeholder": "أدخل قيمة الإضافات"
+        },
+        "notes": {
+          "label": "الملاحظات",
+          "placeholder": "أدخل الملاحظات"
+        },
         "userNetCost": {
-          "label": "التكلفة الصافية"
+          "label": "التكلفة الصافية",
+          "info": "التكلفة الإجمالية قبل التعديلات"
         },
         "userNetPrice": {
           "label": "السعر النهائي",
+          "placeholder": "أدخل السعر النهائي المخصص",
           "customized": "تم تعيين سعر مخصص"
         },
         "updating": "جاري التحديث..."
+      },
+      "actions": {
+        "endSession": "إنهاء الجلسة",
+        "cancel": "إلغاء"
       }
     }
   }

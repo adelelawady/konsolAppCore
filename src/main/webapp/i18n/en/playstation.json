@@ -243,26 +243,31 @@
       "title": "Checkout Session",
       "summary": {
         "title": "Session Summary",
-        "sessionTime": "Session Time",
-        "orders": "Orders",
+        "sessionTime": "Session Time Cost",
+        "orders": "Orders Total",
         "subtotal": "Subtotal",
         "finalTotal": "Final Total"
       },
       "form": {
         "discount": {
-          "label": "Discount"
+          "label": "Discount",
+          "placeholder": "Enter discount amount"
         },
         "additions": {
-          "label": "Additional Charges"
+          "label": "Additional Charges",
+          "placeholder": "Enter additional charges"
         },
         "notes": {
-          "label": "Notes"
+          "label": "Notes",
+          "placeholder": "Enter notes"
         },
         "userNetCost": {
-          "label": "Net Cost"
+          "label": "Net Cost",
+          "info": "Total cost before adjustments"
         },
         "userNetPrice": {
           "label": "Final Price",
+          "placeholder": "Enter custom final price",
           "customized": "Custom price set"
         },
         "updating": "Updating..."
