@@ -1,71 +1,72 @@
 <div class="container">
-  <h1>{{ 'playstation.navigation.title' | translate }}</h1>
-  <div class="row mb-4">
-    <div class="col-md-4">
-      <div class="card">
+  <h1 class="text-primary mb-4">{{ 'playstation.navigation.title' | translate }}</h1>
+  
+  <!-- Dashboard Section -->
+  <div class="row mb-5">
+    <div class="col-md-6">
+      <div class="card shadow-sm h-100">
         <div class="card-body">
-          <h5 class="card-title">{{ 'playstation.navigation.dashboard.title' | translate }}</h5>
+          <h5 class="card-title text-primary">{{ 'playstation.navigation.dashboard.title' | translate }}</h5>
           <p class="card-text">{{ 'playstation.navigation.dashboard.description' | translate }}</p>
           <a [routerLink]="['/playstation/dashboard']" class="btn btn-primary">
-            {{ 'playstation.navigation.buttons.goToDashboard' | translate }}
+            <i class="fas fa-tachometer-alt me-2"></i>{{ 'playstation.navigation.buttons.goToDashboard' | translate }}
           </a>
         </div>
       </div>
     </div>
   </div>
   
-  <h2>{{ 'playstation.navigation.controls.title' | translate }}</h2>
-  <div class="row mb-4">
-    <div class="col-md-4">
-      <div class="card">
+  <!-- Controls Section -->
+  <h2 class="text-secondary mb-4">{{ 'playstation.navigation.controls.title' | translate }}</h2>
+  <div class="row mb-5">
+    <div class="col-md-6 mb-4">
+      <div class="card shadow-sm h-100">
         <div class="card-body">
-          <h5 class="card-title">{{ 'playstation.navigation.controls.devices.title' | translate }}</h5>
+          <h5 class="card-title text-primary">{{ 'playstation.navigation.controls.devices.title' | translate }}</h5>
           <p class="card-text">{{ 'playstation.navigation.controls.devices.description' | translate }}</p>
           <a [routerLink]="['/playstation/controls']" class="btn btn-primary">
-            {{ 'playstation.navigation.buttons.manageControls' | translate }}
+            <i class="fas fa-gamepad me-2"></i>{{ 'playstation.navigation.buttons.manageControls' | translate }}
           </a>
         </div>
       </div>
     </div>
-    <div class="col-md-4">
-      <div class="card">
+    <div class="col-md-6 mb-4">
+      <div class="card shadow-sm h-100">
         <div class="card-body">
-          <h5 class="card-title">{{ 'playstation.navigation.controls.deviceTypes.title' | translate }}</h5>
+          <h5 class="card-title text-primary">{{ 'playstation.navigation.controls.deviceTypes.title' | translate }}</h5>
           <p class="card-text">{{ 'playstation.navigation.controls.deviceTypes.description' | translate }}</p>
           <a [routerLink]="['/playstation/device-types']" class="btn btn-primary">
-            {{ 'playstation.navigation.buttons.manageTypes' | translate }}
+            <i class="fas fa-list me-2"></i>{{ 'playstation.navigation.buttons.manageTypes' | translate }}
           </a>
         </div>
       </div>
     </div>
+  </div>
 
-
+  <!-- Management Section -->
+  <div class="row">
     <div class="col-md-6 mb-4">
-      <div class="card h-100">
+      <div class="card shadow-sm h-100">
         <div class="card-body">
-          <h5 class="card-title">{{ 'playstation.navigation.products.control.title' | translate }}</h5>
+          <h5 class="card-title text-primary">{{ 'playstation.navigation.products.control.title' | translate }}</h5>
           <p class="card-text">{{ 'playstation.navigation.products.control.description' | translate }}</p>
           <a routerLink="products" class="btn btn-primary">
-            {{ 'playstation.navigation.buttons.manageProducts' | translate }}
+            <i class="fas fa-box me-2"></i>{{ 'playstation.navigation.buttons.manageProducts' | translate }}
           </a>
         </div>
       </div>
     </div>
     <div class="col-md-6 mb-4">
-      <div class="card h-100">
+      <div class="card shadow-sm h-100">
         <div class="card-body">
-          <h5 class="card-title">{{ 'playstation.navigation.sessions.title' | translate }}</h5>
+          <h5 class="card-title text-primary">{{ 'playstation.navigation.sessions.title' | translate }}</h5>
           <p class="card-text">{{ 'playstation.navigation.sessions.description' | translate }}</p>
           <a routerLink="sessions" class="btn btn-primary">
-            {{ 'playstation.navigation.buttons.manageSessions' | translate }}
+            <i class="fas fa-clock me-2"></i>{{ 'playstation.navigation.buttons.manageSessions' | translate }}
           </a>
         </div>
       </div>
     </div>
-
-    
   </div>
-  
-  
 </div>
 

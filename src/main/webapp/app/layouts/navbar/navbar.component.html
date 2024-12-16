@@ -76,6 +76,18 @@
                 <span jhiTranslate="global.menu.playstation.sessions">Sessions</span>
               </a>
             </li>
+            <li>
+              <a
+                class="dropdown-item"
+                routerLink="playstation/navigation"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: true }"
+                (click)="collapseNavbar()"
+              >
+                <fa-icon icon="compass" [fixedWidth]="true"></fa-icon>
+                <span jhiTranslate="global.menu.playstation.navigation">Navigation</span>
+              </a>
+            </li>
           </ul>
         </li>
 

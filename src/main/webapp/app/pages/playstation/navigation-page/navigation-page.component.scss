@@ -1,1 +1,29 @@
 /* Add your styles here */
+
+.card {
+  transition: transform 0.2s ease-in-out;
+  
+  &:hover {
+    transform: translateY(-5px);
+  }
+  
+  .card-title {
+    font-weight: 600;
+  }
+  
+  .btn {
+    transition: all 0.2s ease-in-out;
+    
+    &:hover {
+      transform: translateY(-2px);
+    }
+  }
+}
+
+h1, h2 {
+  font-weight: 600;
+}
+
+.shadow-sm {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
