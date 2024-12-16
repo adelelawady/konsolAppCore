@@ -23,7 +23,7 @@ export class DeviceCardComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.device.session) {
-      this.durationSubscription = interval(1000)
+      this.durationSubscription = interval(500)
         .pipe(startWith(0))
         .subscribe(() => {
           this.updateSessionDuration();
