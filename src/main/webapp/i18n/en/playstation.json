@@ -157,6 +157,9 @@
           "startSession": "Start Session",
           "stopSession": "Stop Session"
         }
+      },
+      "list": {
+        "noDevices": "No devices available"
       }
     },
     "deviceType": {

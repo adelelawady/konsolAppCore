@@ -157,6 +157,9 @@
           "startSession": "بدء جلسة",
           "stopSession": "إنهاء الجلسة"
         }
+      },
+      "list": {
+        "noDevices": "لا توجد أجهزة متاحة"
       }
     },
     "deviceType": {
