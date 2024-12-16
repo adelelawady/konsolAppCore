@@ -21,6 +21,7 @@ export class OrdersSliderComponent implements OnInit, OnDestroy {
   itemsByCategory: { [key: string]: ItemSimpleDTO[] } = {};
   loading = false;
   private selectedDevice: PsDeviceDTO | null = null;
+  orderChangeAnimation = false;
 
   constructor(
     private playstationService: PlaystationService, 
@@ -42,6 +43,12 @@ export class OrdersSliderComponent implements OnInit, OnDestroy {
     this.subscription.add(
       this.playstationService.selectedDevice$.subscribe(device => {
         this.selectedDevice = device;
+      })
+    );
+
+    this.subscription.add(
+      this.playstationService.orderChange$.subscribe(() => {
+        this.triggerOrderChangeAnimation();
       })
     );
   }
@@ -105,6 +112,7 @@ export class OrdersSliderComponent implements OnInit, OnDestroy {
         next: (updatedDevice) => {
           this.playstationService.selectDevice(updatedDevice);
           this.playstationService.reloadDevices();
+          this.playstationService.notifyOrderChange();
           console.log('Order added successfully');
         },
         error: (error) => {
@@ -141,5 +149,12 @@ export class OrdersSliderComponent implements OnInit, OnDestroy {
   getCategoryItems(categoryName: string | undefined): ItemSimpleDTO[] {
     if (!categoryName) return [];
     return this.itemsByCategory[categoryName] || [];
+  }
+
+  private triggerOrderChangeAnimation(): void {
+    this.orderChangeAnimation = true;
+    setTimeout(() => {
+      this.orderChangeAnimation = false;
+    }, 1000); // Animation duration
   }
 }

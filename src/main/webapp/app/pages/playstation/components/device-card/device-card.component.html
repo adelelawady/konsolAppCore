@@ -1,5 +1,6 @@
 <div class="device-card" 
-     [ngClass]="[getBorderColor(), isSelected ? 'selected' : '']" 
+     [ngClass]="[getBorderColor(), isSelected ? 'selected' : '', orderChangeAnimation ? 'order-change' : '']" 
+     [class.active]="device.active"
      (click)="onSelect()"
      (dblclick)="onDoubleClick($event)">
   <div class="device-card__header">

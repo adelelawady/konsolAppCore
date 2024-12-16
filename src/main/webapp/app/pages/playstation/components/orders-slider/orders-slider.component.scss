@@ -109,6 +109,10 @@
             border-color: #3498db;
           }
 
+          &.order-change {
+            animation: borderPulse 1s ease-in-out;
+          }
+
           .item-details {
             h3 {
               margin: 0 0 1rem 0;
@@ -187,4 +191,17 @@
 
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+@keyframes borderPulse {
+  0% {
+    border-color: transparent;
+  }
+  50% {
+    border-color: #4CAF50;
+    border-width: 3px;
+  }
+  100% {
+    border-color: transparent;
+  }
 }

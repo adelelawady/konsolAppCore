@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, ChangeDetectorRef, OnInit, OnDestroy, ElementRef } from '@angular/core';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { PlaystationService } from '../../services/playstation.service';
 import { PsDeviceDTO } from 'app/core/konsolApi';
@@ -13,12 +13,13 @@ import { startWith, distinctUntilChanged } from 'rxjs/operators';
 })
 export class DeviceCardComponent implements OnInit, OnDestroy {
   @Input() device!: PsDeviceDTO;
+  @Input() isSelected = false;
   sessionDuration: string = '0h 0m';
   private durationSubscription?: Subscription;
-  isSelected = false;
+  orderChangeAnimation = false;
   private subscription?: Subscription;
 
-  constructor(private playstationService: PlaystationService, private cdr: ChangeDetectorRef) {}
+  constructor(private playstationService: PlaystationService, private cdr: ChangeDetectorRef, private elementRef: ElementRef) {}
 
   ngOnInit(): void {
     if (this.device.session) {
@@ -29,12 +30,33 @@ export class DeviceCardComponent implements OnInit, OnDestroy {
         });
     }
 
-    this.subscription = this.playstationService.selectedDevice$
-      .pipe(distinctUntilChanged((prev, curr) => prev?.id === curr?.id))
-      .subscribe(selectedDevice => {
-        this.isSelected = selectedDevice?.id === this.device.id;
-        this.cdr.detectChanges();
-      });
+    // Initialize subscription if not already set
+    if (!this.subscription) {
+      this.subscription = new Subscription();
+    }
+
+    // Add device selection subscription
+    this.subscription.add(
+      this.playstationService.selectedDevice$
+        .pipe(distinctUntilChanged((prev, curr) => prev?.id === curr?.id))
+        .subscribe(selectedDevice => {
+          this.isSelected = selectedDevice?.id === this.device.id;
+          this.cdr.detectChanges();
+        })
+    );
+
+    // Add order change subscription
+    this.subscription.add(
+      this.playstationService.orderChange$.subscribe(() => {
+        console.log('Order change event received in device card', this.device?.id);
+        console.log('Selected device:', this.playstationService.getSelectedDevice()?.id);
+        if (this.device?.id === this.playstationService.getSelectedDevice()?.id) {
+          console.log('Triggering animation for device', this.device?.id);
+          this.triggerOrderChangeAnimation();
+          this.cdr.markForCheck(); // Use markForCheck instead of detectChanges
+        }
+      })
+    );
   }
 
   ngOnDestroy(): void {
@@ -62,6 +84,9 @@ export class DeviceCardComponent implements OnInit, OnDestroy {
   }
 
   getBorderColor(): string {
+    if (this.orderChangeAnimation) {
+      return 'border-animation';
+    }
     if (this.device?.active) {
       return 'border-green';
     } else {
@@ -130,5 +155,15 @@ export class DeviceCardComponent implements OnInit, OnDestroy {
   updateValue(newValue: any) {
     this.device = newValue;
     this.cdr.detectChanges();
+  }
+
+  private triggerOrderChangeAnimation(): void {
+    this.orderChangeAnimation = true;
+    this.cdr.detectChanges();
+
+    setTimeout(() => {
+      this.orderChangeAnimation = false;
+      this.cdr.detectChanges();
+    }, 3000);
   }
 }

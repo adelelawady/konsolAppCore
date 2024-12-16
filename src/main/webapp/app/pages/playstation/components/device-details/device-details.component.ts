@@ -110,17 +110,54 @@ export class DeviceDetailsComponent implements OnInit, OnDestroy {
       qty: newQty
     };
 
+    if (newQty === 0) {
+      this.deleteDeviceOrder(item);
+      return;
+    }
+
+
     this.playstationResourceService.updateDeviceOrder(this.selectedDevice?.id, item?.id, updateItemDTO)
       .subscribe({
         next: (updatedDevice) => {
           this.playstationService.selectDevice(updatedDevice);
           this.playstationService.reloadDevices();
+          this.playstationService.notifyOrderChange();
         },
         error: (error) => {
           console.error('Error updating order:', error);
         }
       });
   }
+
+
+  deleteDeviceOrder(item: InvoiceItemDTO): void {
+    if (!this.selectedDevice?.id || !item || !item.id) return;
+
+
+    this.playstationResourceService.deleteDeviceOrder(this.selectedDevice?.id, item?.id)
+      .subscribe({
+        next: () => {
+          if (this.selectedDevice?.id && item?.id) {
+          this.playstationResourceService.getDevice(this.selectedDevice?.id)
+            .subscribe({
+              next: (updatedDevice) => {
+                this.selectedDevice = updatedDevice;
+                this.playstationService.selectDevice(updatedDevice);
+                this.playstationService.reloadDevices();
+                this.playstationService.notifyOrderChange();
+              },
+              error: (error) => {
+                console.error('Error getting device:', error);
+              }
+            });
+          }
+        },
+        error: (error) => {
+          console.error('Error deleting order:', error);
+        }
+      });
+  }
+
 
   getSessionTimeCost(): number {
     if (!this.selectedDevice?.session?.type?.price || !this.selectedDevice.session?.startTime) {

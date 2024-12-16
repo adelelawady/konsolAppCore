@@ -9,10 +9,12 @@ export class PlaystationService {
   private showOrdersSubject = new BehaviorSubject<boolean>(false);
   private selectedDeviceSubject = new BehaviorSubject<PsDeviceDTO | null>(null);
   private reloadDevicesSubject = new Subject<void>();
+  private orderChangeSubject = new Subject<void>();
 
   showOrders$ = this.showOrdersSubject.asObservable();
   selectedDevice$ = this.selectedDeviceSubject.asObservable();
   reloadDevices$ = this.reloadDevicesSubject.asObservable();
+  orderChange$ = this.orderChangeSubject.asObservable();
 
   showOrdersList(): void {
     this.showOrdersSubject.next(true);
@@ -32,5 +34,10 @@ export class PlaystationService {
 
   reloadDevices(): void {
     this.reloadDevicesSubject.next();
+  }
+
+  notifyOrderChange(): void {
+    console.log('PlaystationService: Notifying order change');
+    this.orderChangeSubject.next();
   }
 }

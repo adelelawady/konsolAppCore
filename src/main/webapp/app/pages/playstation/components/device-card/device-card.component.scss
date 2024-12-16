@@ -13,7 +13,7 @@
   flex-direction: column;
   transition: all 0.3s ease;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 
   &:hover {
@@ -45,9 +45,13 @@
     border-color: #22c55e;
   }
 
+  &.border-animation {
+    animation: borderPulse 3s ease-in-out;
+  }
+
   &.selected {
     border: 2px solid #3498db;
-    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.25);
+    box-shadow: 0 0 10px rgba(52, 152, 219, 0.3);
     transform: translateY(-2px);
     background-color: #f8fafd;
 
@@ -91,6 +95,10 @@
         font-weight: 600;
       }
     }
+  }
+
+  &.order-change {
+    animation: flashBackground 1s ease-out;
   }
 
   &__header {
@@ -264,5 +272,50 @@
   }
   100% {
     box-shadow: 0 0 0 0 rgba(52, 152, 219, 0);
+  }
+}
+
+@keyframes flashBackground {
+  0% {
+    background-color: white;
+  }
+  25% {
+    background-color: rgba(76, 175, 80, 0.3);
+  }
+  100% {
+    background-color: white;
+  }
+}
+
+@keyframes borderPulse {
+  0% {
+    border-color: #4CAF50;
+    border-width: 2px;
+    transform: scale(1);
+    box-shadow: none;
+  }
+  15% {
+    border-color: #45a049;
+    border-width: 3px;
+    transform: scale(1.03);
+    box-shadow: 0 0 15px rgba(52, 152, 219, 0.8); // Blue glow
+  }
+  30% {
+    border-color: #4CAF50;
+    border-width: 2px;
+    transform: scale(1.01);
+    box-shadow: 0 0 10px rgba(155, 89, 182, 0.7); // Purple glow
+  }
+  45% {
+    border-color: #45a049;
+    border-width: 3px;
+    transform: scale(1.02);
+    box-shadow: 0 0 12px rgba(241, 196, 15, 0.8); // Yellow glow
+  }
+  100% {
+    border-color: inherit;
+    border-width: 2px;
+    transform: scale(1);
+    box-shadow: none;
   }
 }
