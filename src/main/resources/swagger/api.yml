@@ -1838,6 +1838,66 @@ paths:
         name: id
         in: path
         required: true
+  '/playstation/device/{id}/move/{deviceId}':
+    post:
+      summary: ''
+      operationId: moveDevice
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PsDeviceDTO'
+      description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PsDeviceDTO'
+      tags:
+        - playstation-resource
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: deviceId
+        in: path
+        required: true
+  '/playstation/device/{id}/session/updateType/{typeId}':
+    post:
+      summary: ''
+      operationId: updateDeviceSessionType
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PsDeviceDTO'
+      description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PsDeviceDTO'
+      tags:
+        - playstation-resource
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: typeId
+        in: path
+        required: true
   '/playstation/device/{id}/orders/{orderId}':
     post:
       summary: ''
@@ -1911,6 +1971,42 @@ paths:
       tags:
         - playstation-resource
     parameters: []
+  /playstation/session:
+    get:
+      summary: get all playstation devices types
+      tags:
+        - playstation-resource
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PsSessionDTO'
+      operationId: getSessions
+      description: get all playstation devices sessions
+    post:
+      summary: ''
+      operationId: createPlayStationSession
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PsSessionDTO'
+      description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PsSessionDTO'
+        description: ''
+      tags:
+        - playstation-resource
+    parameters: []
   '/playstation/device/{id}':
     get:
       summary: get all playstation devices
@@ -1978,6 +2074,73 @@ paths:
                 $ref: '#/components/schemas/PsDeviceDTO'
       tags:
         - playstation-resource
+  '/playstation/session/{id}':
+    get:
+      summary: get all playstation devices
+      tags:
+        - playstation-resource
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PsSessionDTO'
+      operationId: getSession
+      description: get playstation session
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    put:
+      summary: ''
+      operationId: updateSession
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PsSessionDTO'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PsSessionDTO'
+        description: ''
+      tags:
+        - playstation-resource
+    patch:
+      summary: ''
+      operationId: partialUpdateSession
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PsSessionDTO'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PsSessionDTO'
+      tags:
+        - playstation-resource
+    delete:
+      summary: ''
+      operationId: deleteSession
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PsSessionDTO'
+      tags:
+        - playstation-resource
   '/playstation/device/{id}/session/start':
     parameters:
       - schema:
@@ -2018,6 +2181,26 @@ paths:
       tags:
         - playstation-resource
       description: Stop Device Session
+  '/playstation/device/{id}/session/pause':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    post:
+      summary: Stop Device Session
+      operationId: pauseDeviceSession
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PsDeviceDTO'
+      tags:
+        - playstation-resource
+      description: Pause Device Session
   '/playstation/device/type/{id}':
     get:
       summary: get all playstation devices
