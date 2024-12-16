@@ -74,6 +74,14 @@ public class Invoice extends AbstractAuditingEntity<String> implements Serializa
     @Field("net_price")
     private BigDecimal netPrice = new BigDecimal(0);
 
+    @DecimalMin(value = "0")
+    @Field("user_net_cost")
+    private BigDecimal userNetCost = new BigDecimal(0);
+
+    @DecimalMin(value = "0")
+    @Field("user_net_price")
+    private BigDecimal userNetPrice = new BigDecimal(0);
+
     @Field("net_result")
     private BigDecimal netResult = new BigDecimal(0);
 
@@ -396,5 +404,21 @@ public class Invoice extends AbstractAuditingEntity<String> implements Serializa
 
     public void setDetails(String details) {
         this.details = details;
+    }
+
+    public @DecimalMin(value = "0") BigDecimal getUserNetCost() {
+        return userNetCost;
+    }
+
+    public void setUserNetCost(@DecimalMin(value = "0") BigDecimal userNetCost) {
+        this.userNetCost = userNetCost;
+    }
+
+    public @DecimalMin(value = "0") BigDecimal getUserNetPrice() {
+        return userNetPrice;
+    }
+
+    public void setUserNetPrice(@DecimalMin(value = "0") BigDecimal userNetPrice) {
+        this.userNetPrice = userNetPrice;
     }
 }

@@ -2908,6 +2908,14 @@ components:
             id: 7skmkczs1v9fp
         store:
           $ref: '#/components/schemas/StoreDTO'
+        userNetCost:
+          type: number
+          x-stoplight:
+            id: u1gev2i5c512j
+        userNetPrice:
+          type: number
+          x-stoplight:
+            id: eyghgkmne2e9y
     InvoiceViewDTO:
       type: object
       x-examples:
@@ -3179,6 +3187,16 @@ components:
           type: boolean
           x-stoplight:
             id: mv94k3lxb22ol
+        userNetCost:
+          type: number
+          x-stoplight:
+            id: jk74e9fi84jty
+          default: 0
+        userNetPrice:
+          type: number
+          x-stoplight:
+            id: o1l7i2va9tjwp
+          default: 0
     InvoiceItemDTO:
       type: object
       properties:
