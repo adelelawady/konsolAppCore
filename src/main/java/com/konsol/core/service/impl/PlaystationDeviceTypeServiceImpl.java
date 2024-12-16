@@ -5,6 +5,8 @@ import com.konsol.core.repository.PlaystationDeviceTypeRepository;
 import com.konsol.core.service.PlaystationDeviceTypeService;
 import com.konsol.core.service.api.dto.PsDeviceType;
 import com.konsol.core.service.mapper.PlaystationDeviceTypeMapper;
+import com.konsol.core.service.ItemService;
+import com.konsol.core.domain.Item;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -13,11 +15,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service Implementation for managing {@link com.konsol.core.domain.playstation.PlaystationDeviceType}.
  */
 @Service
+@Transactional
 public class PlaystationDeviceTypeServiceImpl implements PlaystationDeviceTypeService {
 
     private static final Logger LOG = LoggerFactory.getLogger(PlaystationDeviceTypeServiceImpl.class);
@@ -26,20 +30,39 @@ public class PlaystationDeviceTypeServiceImpl implements PlaystationDeviceTypeSe
 
     private final PlaystationDeviceTypeMapper playstationDeviceTypeMapper;
 
+    private final ItemService itemService;
+
     public PlaystationDeviceTypeServiceImpl(
         PlaystationDeviceTypeRepository playstationDeviceTypeRepository,
-        PlaystationDeviceTypeMapper playstationDeviceTypeMapper
+        PlaystationDeviceTypeMapper playstationDeviceTypeMapper,
+        ItemService itemService
     ) {
         this.playstationDeviceTypeRepository = playstationDeviceTypeRepository;
         this.playstationDeviceTypeMapper = playstationDeviceTypeMapper;
+        this.itemService = itemService;
     }
 
     @Override
-    public PsDeviceType save(PsDeviceType PsDeviceType) {
-        LOG.debug("Request to save PlaystationDeviceType : {}", PsDeviceType);
-        PlaystationDeviceType playstationDeviceType = playstationDeviceTypeMapper.toEntity(PsDeviceType);
-        playstationDeviceType = playstationDeviceTypeRepository.save(playstationDeviceType);
-        return playstationDeviceTypeMapper.toDto(playstationDeviceType);
+    @Transactional
+    public PsDeviceType save(PsDeviceType psDeviceType) {
+        LOG.debug("Request to save PlaystationDeviceType : {}", psDeviceType);
+        PlaystationDeviceType deviceType = playstationDeviceTypeMapper.toEntity(psDeviceType);
+        deviceType = playstationDeviceTypeRepository.save(deviceType);
+        
+        // Create corresponding Item/Product
+        Item item = new Item();
+        item.setName(deviceType.getName());
+        item.setPrice1(deviceType.getPrice());
+        item.setCategory("PlayStation");  // Or appropriate category
+        item.setCheckQty(false);
+        
+        // Save the item
+        itemService.save(item);
+        
+        deviceType.setItem(item);
+
+         deviceType = playstationDeviceTypeRepository.save(deviceType);
+        return playstationDeviceTypeMapper.toDto(deviceType);
     }
 
     @Override
