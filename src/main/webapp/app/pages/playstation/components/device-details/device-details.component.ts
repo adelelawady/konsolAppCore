@@ -132,8 +132,6 @@ export class DeviceDetailsComponent implements OnInit, OnDestroy {
 
   deleteDeviceOrder(item: InvoiceItemDTO): void {
     if (!this.selectedDevice?.id || !item || !item.id) return;
-
-
     this.playstationResourceService.deleteDeviceOrder(this.selectedDevice?.id, item?.id)
       .subscribe({
         next: () => {

@@ -6,8 +6,10 @@ import { ProductDetailsComponent } from './details/product-details.component';
 import { AddProductComponent } from './add-product/add-product.component';
 import { Chart } from 'chart.js/auto';
 
+
 @NgModule({
   imports: [SharedModule, ProductsRoutingModule],
   declarations: [ProductsComponent, AddProductComponent, ProductDetailsComponent],
+  exports: [ProductsComponent],
 })
 export class ProductsModule {}

@@ -11,6 +11,7 @@ import { DeviceTypeControlComponent } from './device-type-control/device-type-co
 import { DeviceTypeFormComponent } from './device-type-control/device-type-form.component';
 import { PlaystationResourceService } from 'app/core/konsolApi/api/playstationResource.service';
 import { of } from 'rxjs';
+import { ProductsControlComponent } from './products-control/products-control.component';
 
 const routes: Routes = [
   {
@@ -75,6 +76,11 @@ const routes: Routes = [
             },
           },
         ],
+      },
+      {
+        path: 'products-control',
+        component: ProductsControlComponent,
+        data: { pageTitle: 'Products Control' }
       },
     ],
   },

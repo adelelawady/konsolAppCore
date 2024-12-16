@@ -1,0 +1,34 @@
+{
+  "playstation": {
+    "navigation": {
+      "title": "قائمة البلايستيشن",
+      "dashboard": {
+        "title": "لوحة التحكم",
+        "description": "عرض لوحة تحكم البلايستيشن"
+      },
+      "controls": {
+        "title": "التحكم",
+        "devices": {
+          "title": "التحكم في الأجهزة",
+          "description": "إدارة وحدات التحكم والملحقات"
+        },
+        "deviceTypes": {
+          "title": "أنواع الأجهزة",
+          "description": "إدارة الأجهزة حسب نوعها"
+        }
+      },
+      "buttons": {
+        "goToDashboard": "الذهاب إلى لوحة التحكم",
+        "manageControls": "إدارة وحدات التحكم",
+        "manageTypes": "إدارة الأنواع",
+        "manageProducts": "إدارة المنتجات"
+      },
+      "products": {
+        "control": {
+          "title": "إدارة المنتجات",
+          "description": "إدارة المنتجات والمخزون"
+        }
+      }
+    }
+  }
+} 

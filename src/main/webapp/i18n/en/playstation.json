@@ -20,7 +20,14 @@
       "buttons": {
         "goToDashboard": "Go to Dashboard",
         "manageControls": "Manage Controls",
-        "manageTypes": "Manage Types"
+        "manageTypes": "Manage Types",
+        "manageProducts": "Manage Products"
+      },
+      "products": {
+        "control": {
+          "title": "Products Control",
+          "description": "Manage products and inventory items"
+        }
       }
     },
     "devices": {

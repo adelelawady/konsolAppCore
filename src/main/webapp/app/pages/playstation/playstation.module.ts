@@ -17,6 +17,8 @@ import { DeviceTypeControlComponent } from './device-type-control/device-type-co
 import { DeviceTypeDeleteDialogComponent } from './device-type-control/device-type-delete-dialog.component';
 import { DeviceTypeFormComponent } from './device-type-control/device-type-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ProductsModule } from '../products/products.module';
+import { ProductsControlComponent } from './products-control/products-control.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +32,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     DevicesControlComponent,
     DeviceTypeControlComponent,
     DeviceTypeDeleteDialogComponent,
-    DeviceTypeFormComponent,
+      DeviceTypeFormComponent,
+    ProductsControlComponent,
   ],
   imports: [
     CommonModule,
@@ -40,6 +43,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     LayoutsModule,
     NgbPaginationModule,
     ReactiveFormsModule,
+    ProductsModule,
   ],
   exports: [
     DeviceListComponent,
