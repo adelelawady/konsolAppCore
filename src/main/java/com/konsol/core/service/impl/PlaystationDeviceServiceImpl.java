@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -213,7 +214,7 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
         CreateInvoiceItemDTO createInvoiceItemDTO = new CreateInvoiceItemDTO();
         createInvoiceItemDTO.setQty(new BigDecimal(1));
         createInvoiceItemDTO.setItemId(itemProduct.getId());
-        createInvoiceItemDTO.setPrice(calculateSessionTimePrice(device.getSession()));
+        createInvoiceItemDTO.setPrice(calculateSessionTimePrice(device));
 
         invoiceService.addInvoiceItem(device.getSession().getInvoice().getId(), createInvoiceItemDTO);
 
@@ -283,14 +284,26 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
         invoiceService.deleteInvoiceItem(orderId);
     }
 
-    private BigDecimal calculateSessionTimePrice(PlayStationSession session) {
-        Instant startTime = session.getStartTime();
-        Instant now = Instant.now();
-        // Calculate the duration in hours between the two instants
-        long durationInSeconds = Duration.between(startTime, now).getSeconds();
-        BigDecimal durationInHours = new BigDecimal(durationInSeconds).divide(new BigDecimal(3600), RoundingMode.HALF_UP); // 3600 seconds in an hour
-        BigDecimal hourlyRate = session.getType().getPrice();
-        BigDecimal cost = hourlyRate.multiply(durationInHours);
-        return cost.setScale(0, RoundingMode.HALF_UP); // Rounds to the nearest whole number
+    private BigDecimal calculateSessionTimePrice(PlaystationDevice device) {
+        if (device.getSession() == null || device.getSession().getStartTime() == null || device.getSession().getType() == null) {
+            return BigDecimal.ZERO;
+        }
+
+        // Calculate time difference in milliseconds
+        long startTime = Date.from(device.getSession().getStartTime()).getTime();
+        long now = System.currentTimeMillis();
+        long durationInMs = now - startTime;
+        
+        // Convert to hours
+        double durationInHours = durationInMs / (1000.0 * 60.0 * 60.0);
+        
+        // Get hourly rate
+        BigDecimal hourlyRate = device.getSession().getType().getPrice();
+        
+        // Calculate total cost and round to whole number
+        BigDecimal totalCost = hourlyRate.multiply(BigDecimal.valueOf(durationInHours))
+            .setScale(0, RoundingMode.HALF_UP);
+
+        return totalCost;
     }
 }
