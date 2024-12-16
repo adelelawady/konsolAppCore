@@ -2,6 +2,7 @@ package com.konsol.core.service;
 
 import com.konsol.core.domain.playstation.PlayStationSession;
 import com.konsol.core.service.api.dto.PsSessionDTO;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -41,6 +42,13 @@ public interface PlayStationSessionService {
      * @return the list of entities.
      */
     Page<PsSessionDTO> findAll(Pageable pageable);
+
+    /**
+     * Get all the playStationSessions.
+     *
+     * @return the list of entities.
+     */
+    List<PsSessionDTO> findAll();
 
     /**
      * Get the "id" playStationSession.
