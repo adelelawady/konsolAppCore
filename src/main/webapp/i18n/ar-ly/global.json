@@ -107,7 +107,14 @@
       "language": "اللغة",
       "docs": "الوثائق",
       "license": "الترخيص",
-      "support": "الدعم"
+      "support": "الدعم",
+      "playstation": {
+        "main": "بلايستيشن",
+        "dashboard": "لوحة التحكم",
+        "devices": "الأجهزة",
+        "deviceTypes": "أنواع الأجهزة",
+        "products": "المنتجات"
+      }
     },
     "form": {
       "username.label": "اسم المستخدم",

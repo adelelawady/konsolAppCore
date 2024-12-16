@@ -116,7 +116,7 @@ export class CheckoutComponent implements OnInit {
     const total = this.getTotalBeforeDiscount();
     const discount = this.checkoutForm.get('discount')?.value || 0;
     const additions = this.checkoutForm.get('additions')?.value || 0;
-    return total - discount + additions;
+    return total ;
   }
 
   updateInvoice(): void {

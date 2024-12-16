@@ -38,11 +38,39 @@
           </a>
         </li>
         <!-- Playstation -->
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/playstation" routerLinkActive="active">
-            <i class="fa fa-gamepad"></i>
-            <span>Playstation</span>
+        <li class="nav-item dropdown pointer" ngbDropdown>
+          <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="playstation-menu">
+            <span>
+              <fa-icon icon="gamepad"></fa-icon>
+              <span jhiTranslate="global.menu.playstation.main">PlayStation</span>
+            </span>
           </a>
+          <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="playstation-menu">
+            <li>
+              <a class="dropdown-item" routerLink="playstation/dashboard">
+                <fa-icon icon="tachometer-alt" [fixedWidth]="true"></fa-icon>
+                <span jhiTranslate="global.menu.playstation.dashboard">Dashboard</span>
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" routerLink="playstation/devices">
+                <fa-icon icon="gamepad" [fixedWidth]="true"></fa-icon>
+                <span jhiTranslate="global.menu.playstation.devices">Devices</span>
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" routerLink="playstation/device-types">
+                <fa-icon icon="list" [fixedWidth]="true"></fa-icon>
+                <span jhiTranslate="global.menu.playstation.deviceTypes">Device Types</span>
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" routerLink="playstation/products">
+                <fa-icon icon="box" [fixedWidth]="true"></fa-icon>
+                <span jhiTranslate="global.menu.playstation.products">Products</span>
+              </a>
+            </li>
+          </ul>
         </li>
 
         <!-- Admin Menu -->

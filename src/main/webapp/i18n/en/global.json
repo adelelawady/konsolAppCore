@@ -59,7 +59,14 @@
       "language": "Language",
       "docs": "Documentation",
       "license": "License",
-      "support": "Support"
+      "support": "Support",
+      "playstation": {
+        "main": "PlayStation",
+        "dashboard": "Dashboard",
+        "devices": "Devices",
+        "deviceTypes": "Device Types",
+        "products": "Products"
+      }
     },
     "form": {
       "username.label": "Username",
