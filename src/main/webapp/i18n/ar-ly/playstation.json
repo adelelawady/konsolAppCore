@@ -77,6 +77,28 @@
           "load": "خطأ في تحميل الأجهزة"
         }
       }
+    },
+    "deviceType": {
+      "title": "إدارة أنواع الأجهزة",
+      "actions": {
+        "addNew": "إضافة نوع جديد",
+        "refresh": "تحديث",
+        "edit": "تعديل",
+        "delete": "حذف"
+      },
+      "labels": {
+        "defaultPrice": "السعر الافتراضي",
+        "status": {
+          "active": "نشط",
+          "inactive": "غير نشط"
+        }
+      },
+      "delete": {
+        "title": "حذف نوع الجهاز",
+        "question": "هل أنت متأكد من حذف نوع الجهاز",
+        "confirm": "حذف",
+        "cancel": "إلغاء"
+      }
     }
   }
 } 

@@ -77,6 +77,28 @@
           "load": "Error loading devices"
         }
       }
+    },
+    "deviceType": {
+      "title": "Device Type Control",
+      "actions": {
+        "addNew": "Add New Device Type",
+        "refresh": "Refresh",
+        "edit": "Edit",
+        "delete": "Delete"
+      },
+      "labels": {
+        "defaultPrice": "Default Price",
+        "status": {
+          "active": "Active",
+          "inactive": "Inactive"
+        }
+      },
+      "delete": {
+        "title": "Delete Device Type",
+        "question": "Are you sure you want to delete device type",
+        "confirm": "Delete",
+        "cancel": "Cancel"
+      }
     }
   }
 } 
