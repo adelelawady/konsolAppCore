@@ -217,16 +217,15 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
 
         invoiceService.addInvoiceItem(device.getSession().getInvoice().getId(), createInvoiceItemDTO);
 
+        invoiceService.saveInvoice(device.getSession().getInvoice().getId());
         // Find active session
         PlayStationSession session = playStationSessionRepository
             .findByDeviceIdAndActiveTrue(deviceId)
             .orElseThrow(() -> new RuntimeException("No active session found for device: " + deviceId));
-
         // Update session
         session.setActive(false);
         session.setEndTime(Instant.now());
 
-        invoiceService.saveInvoice(device.getSession().getInvoice().getId());
         // Update device status
         device.setActive(false);
         device.setSession(null);
@@ -285,17 +284,13 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
     }
 
     private BigDecimal calculateSessionTimePrice(PlayStationSession session) {
-        // Calculate duration in minutes and then convert to BigDecimal for precision
-        Duration duration = Duration.between(session.getStartTime(), Instant.now());
-        long minutes = duration.toMinutes(); // Get minutes as a long
-        BigDecimal hours = BigDecimal.valueOf(minutes).divide(BigDecimal.valueOf(60), 2, RoundingMode.HALF_UP); // Convert to hours (2 decimal places)
-
-        // Calculate price based on hours and session type price
-        BigDecimal totalPriceCalculatedTime = session.getType().getPrice().multiply(hours);
-
-        // Round to 2 decimal places for currency precision
-        totalPriceCalculatedTime = totalPriceCalculatedTime.setScale(2, RoundingMode.HALF_UP);
-
-        return totalPriceCalculatedTime;
+        Instant startTime = session.getStartTime();
+        Instant now = Instant.now();
+        // Calculate the duration in hours between the two instants
+        long durationInSeconds = Duration.between(startTime, now).getSeconds();
+        BigDecimal durationInHours = new BigDecimal(durationInSeconds).divide(new BigDecimal(3600), RoundingMode.HALF_UP); // 3600 seconds in an hour
+        BigDecimal hourlyRate = session.getType().getPrice();
+        BigDecimal cost = hourlyRate.multiply(durationInHours);
+        return cost.setScale(0, RoundingMode.HALF_UP); // Rounds to the nearest whole number
     }
 }
