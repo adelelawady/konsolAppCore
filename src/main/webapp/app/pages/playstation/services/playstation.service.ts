@@ -1,28 +1,27 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { PsDeviceDTO } from 'app/core/konsolApi';
+import { PsDeviceDTO } from 'app/core/konsolApi/model/psDeviceDTO';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PlaystationService {
-  private showOrdersSubject = new BehaviorSubject<boolean>(false);
   private selectedDeviceSubject = new BehaviorSubject<PsDeviceDTO | null>(null);
-  private reloadDevicesSubject = new Subject<void>();
-  private orderChangeSubject = new Subject<void>();
-
-  showOrders$ = this.showOrdersSubject.asObservable();
   selectedDevice$ = this.selectedDeviceSubject.asObservable();
+
+  private showOrdersSubject = new BehaviorSubject<boolean>(false);
+  showOrders$ = this.showOrdersSubject.asObservable();
+
+  private checkoutSubject = new BehaviorSubject<boolean>(false);
+  checkout$ = this.checkoutSubject.asObservable();
+
+  private reloadDevicesSubject = new Subject<void>();
   reloadDevices$ = this.reloadDevicesSubject.asObservable();
+
+  private orderChangeSubject = new Subject<void>();
   orderChange$ = this.orderChangeSubject.asObservable();
 
-  showOrdersList(): void {
-    this.showOrdersSubject.next(true);
-  }
-
-  hideOrders(): void {
-    this.showOrdersSubject.next(false);
-  }
+  constructor() {}
 
   selectDevice(device: PsDeviceDTO | null): void {
     this.selectedDeviceSubject.next(device);
@@ -32,12 +31,27 @@ export class PlaystationService {
     return this.selectedDeviceSubject.value;
   }
 
+  showOrdersList(): void {
+    this.showOrdersSubject.next(true);
+  }
+
+  hideOrders(): void {
+    this.showOrdersSubject.next(false);
+  }
+
+  showCheckout(): void {
+    this.checkoutSubject.next(true);
+  }
+
+  hideCheckout(): void {
+    this.checkoutSubject.next(false);
+  }
+
   reloadDevices(): void {
     this.reloadDevicesSubject.next();
   }
 
   notifyOrderChange(): void {
-    console.log('PlaystationService: Notifying order change');
     this.orderChangeSubject.next();
   }
 }

@@ -1,7 +1,12 @@
 <div class="dashboard-container">
   <div class="row">
     <div class="col-md-8">
-      <jhi-device-list></jhi-device-list>
+      <ng-container *ngIf="!checkoutMode; else checkoutTemplate">
+        <jhi-device-list></jhi-device-list>
+      </ng-container>
+      <ng-template #checkoutTemplate>
+        <jhi-checkout (cancelCheckout)="checkoutMode = false"></jhi-checkout>
+      </ng-template>
     </div>
 
     <div class="col-md-4">

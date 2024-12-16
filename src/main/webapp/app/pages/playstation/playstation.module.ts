@@ -19,6 +19,8 @@ import { DeviceTypeFormComponent } from './device-type-control/device-type-form.
 import { ReactiveFormsModule } from '@angular/forms';
 import { ProductsModule } from '../products/products.module';
 import { ProductsControlComponent } from './products-control/products-control.component';
+import { PlaystationService } from './services/playstation.service';
+import { CheckoutComponent } from './components/checkout/checkout.component';
 
 @NgModule({
   declarations: [
@@ -32,8 +34,9 @@ import { ProductsControlComponent } from './products-control/products-control.co
     DevicesControlComponent,
     DeviceTypeControlComponent,
     DeviceTypeDeleteDialogComponent,
-      DeviceTypeFormComponent,
+    DeviceTypeFormComponent,
     ProductsControlComponent,
+    CheckoutComponent,
   ],
   imports: [
     CommonModule,
@@ -48,6 +51,9 @@ import { ProductsControlComponent } from './products-control/products-control.co
   exports: [
     DeviceListComponent,
     OrdersSliderComponent
+  ],
+  providers: [
+    PlaystationService
   ]
 })
 export class PlaystationModule { }

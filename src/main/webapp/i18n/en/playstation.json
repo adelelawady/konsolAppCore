@@ -238,6 +238,31 @@
           "currency": "EGP"
         }
       }
+    },
+    "checkout": {
+      "title": "Checkout Session",
+      "summary": {
+        "title": "Session Summary",
+        "sessionTime": "Session Time",
+        "orders": "Orders",
+        "subtotal": "Subtotal",
+        "finalTotal": "Final Total"
+      },
+      "form": {
+        "discount": {
+          "label": "Discount"
+        },
+        "additions": {
+          "label": "Additional Charges"
+        },
+        "notes": {
+          "label": "Notes"
+        }
+      },
+      "actions": {
+        "endSession": "End Session",
+        "cancel": "Cancel"
+      }
     }
   }
 } 

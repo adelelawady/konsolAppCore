@@ -1,0 +1,59 @@
+<div class="checkout-container">
+  <div class="checkout-header">
+    <h2>{{ 'playstation.checkout.title' | translate }}</h2>
+    <button class="btn btn-outline-secondary" (click)="cancel()">
+      <fa-icon icon="times"></fa-icon>
+      <span>{{ 'playstation.checkout.actions.cancel' | translate }}</span>
+    </button>
+  </div>
+
+  <div class="checkout-content" *ngIf="selectedDevice">
+    <div class="session-summary">
+      <h3>{{ 'playstation.checkout.summary.title' | translate }}</h3>
+      
+      <div class="summary-item">
+        <span>{{ 'playstation.checkout.summary.sessionTime' | translate }}</span>
+        <span class="amount">{{ getSessionTimeCost() | currency }}</span>
+      </div>
+      
+      <div class="summary-item">
+        <span>{{ 'playstation.checkout.summary.orders' | translate }}</span>
+        <span class="amount">{{ getOrdersTotal() | currency }}</span>
+      </div>
+      
+      <div class="summary-item total">
+        <span>{{ 'playstation.checkout.summary.subtotal' | translate }}</span>
+        <span class="amount">{{ getTotalBeforeDiscount() | currency }}</span>
+      </div>
+    </div>
+
+    <form [formGroup]="checkoutForm" class="adjustments-form">
+      <div class="form-group">
+        <label>{{ 'playstation.checkout.form.discount.label' | translate }}</label>
+        <input type="number" class="form-control" formControlName="discount" (change)="updateInvoice()">
+      </div>
+
+      <div class="form-group">
+        <label>{{ 'playstation.checkout.form.additions.label' | translate }}</label>
+        <input type="number" class="form-control" formControlName="additions" (change)="updateInvoice()">
+      </div>
+
+      <div class="form-group">
+        <label>{{ 'playstation.checkout.form.notes.label' | translate }}</label>
+        <textarea class="form-control" formControlName="notes" rows="3" (blur)="updateInvoice()"></textarea>
+      </div>
+    </form>
+
+    <div class="final-total">
+      <h4>{{ 'playstation.checkout.summary.finalTotal' | translate }}</h4>
+      <span class="amount">{{ getFinalTotal() | currency }}</span>
+    </div>
+
+    <div class="checkout-actions">
+      <button class="btn btn-danger btn-lg" (click)="endSession()" [disabled]="isProcessing">
+        <fa-icon icon="power-off"></fa-icon>
+        <span>{{ 'playstation.checkout.actions.endSession' | translate }}</span>
+      </button>
+    </div>
+  </div>
+</div> 
