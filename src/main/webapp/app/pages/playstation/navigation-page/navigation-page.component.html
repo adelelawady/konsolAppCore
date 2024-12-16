@@ -40,13 +40,24 @@
     </div>
 
 
-    <div class="col-md-4">
-      <div class="card">
+    <div class="col-md-6 mb-4">
+      <div class="card h-100">
         <div class="card-body">
           <h5 class="card-title">{{ 'playstation.navigation.products.control.title' | translate }}</h5>
           <p class="card-text">{{ 'playstation.navigation.products.control.description' | translate }}</p>
-          <a [routerLink]="['/playstation/products-control']" class="btn btn-primary">
+          <a routerLink="products" class="btn btn-primary">
             {{ 'playstation.navigation.buttons.manageProducts' | translate }}
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mb-4">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">{{ 'playstation.navigation.sessions.title' | translate }}</h5>
+          <p class="card-text">{{ 'playstation.navigation.sessions.description' | translate }}</p>
+          <a routerLink="sessions" class="btn btn-primary">
+            {{ 'playstation.navigation.buttons.manageSessions' | translate }}
           </a>
         </div>
       </div>

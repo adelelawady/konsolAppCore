@@ -113,7 +113,8 @@
         "dashboard": "لوحة التحكم",
         "devices": "الأجهزة",
         "deviceTypes": "أنواع الأجهزة",
-        "products": "المنتجات"
+        "products": "المنتجات",
+        "sessions": "الجلسات"
       }
     },
     "form": {

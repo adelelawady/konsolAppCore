@@ -21,13 +21,18 @@
         "goToDashboard": "Go to Dashboard",
         "manageControls": "Manage Controls",
         "manageTypes": "Manage Types",
-        "manageProducts": "Manage Products"
+        "manageProducts": "Manage Products",
+        "manageSessions": "Manage Sessions"
       },
       "products": {
         "control": {
           "title": "Products Control",
           "description": "Manage products and inventory items"
         }
+      },
+      "sessions": {
+        "title": "Sessions Management",
+        "description": "View and manage PlayStation sessions"
       }
     },
     "devices": {
@@ -271,6 +276,19 @@
       "actions": {
         "endSession": "End Session",
         "cancel": "Cancel"
+      }
+    },
+    "session": {
+      "title": "Sessions",
+      "refresh": "Refresh",
+      "loading": "Loading sessions...",
+      "noSessions": "No sessions found",
+      "table": {
+        "id": "ID",
+        "startTime": "Start Time",
+        "invoice": "Invoice",
+        "type": "Type",
+        "actions": "Actions"
       }
     }
   }

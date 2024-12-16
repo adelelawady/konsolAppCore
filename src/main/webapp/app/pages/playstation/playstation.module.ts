@@ -21,6 +21,7 @@ import { ProductsModule } from '../products/products.module';
 import { ProductsControlComponent } from './products-control/products-control.component';
 import { PlaystationService } from './services/playstation.service';
 import { CheckoutComponent } from './components/checkout/checkout.component';
+import { SessionListComponent } from './components/session/session-list.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { CheckoutComponent } from './components/checkout/checkout.component';
     DeviceTypeFormComponent,
     ProductsControlComponent,
     CheckoutComponent,
+    SessionListComponent,
   ],
   imports: [
     CommonModule,
@@ -50,7 +52,8 @@ import { CheckoutComponent } from './components/checkout/checkout.component';
   ],
   exports: [
     DeviceListComponent,
-    OrdersSliderComponent
+    OrdersSliderComponent,
+    SessionListComponent,
   ],
   providers: [
     PlaystationService

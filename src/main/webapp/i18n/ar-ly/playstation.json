@@ -21,13 +21,18 @@
         "goToDashboard": "الذهاب إلى لوحة التحكم",
         "manageControls": "إدارة وحدات التحكم",
         "manageTypes": "إدارة الأنواع",
-        "manageProducts": "إدارة المنتجات"
+        "manageProducts": "إدارة المنتجات",
+        "manageSessions": "إدارة الجلسات"
       },
       "products": {
         "control": {
           "title": "إدارة المنتجات",
           "description": "إدارة المنتجات والمخزون"
         }
+      },
+      "sessions": {
+        "title": "إدارة الجلسات",
+        "description": "عرض وإدارة جلسات البلايستيشن"
       }
     },
     "devices": {
@@ -271,6 +276,19 @@
       "actions": {
         "endSession": "إنهاء الجلسة",
         "cancel": "إلغاء"
+      }
+    },
+    "session": {
+      "title": "الجلسات",
+      "refresh": "تحديث",
+      "loading": "جاري تحميل الجلسات...",
+      "noSessions": "لا توجد جلسات",
+      "table": {
+        "id": "المعرف",
+        "startTime": "وقت البدء",
+        "invoice": "الفاتورة",
+        "type": "النوع",
+        "actions": "الإجراءات"
       }
     }
   }

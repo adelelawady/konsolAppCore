@@ -65,7 +65,8 @@
         "dashboard": "Dashboard",
         "devices": "Devices",
         "deviceTypes": "Device Types",
-        "products": "Products"
+        "products": "Products",
+        "sessions": "Sessions"
       }
     },
     "form": {
