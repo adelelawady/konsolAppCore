@@ -28,19 +28,43 @@
     </div>
 
     <form [formGroup]="checkoutForm" class="adjustments-form">
-      <div class="form-group">
-        <label>{{ 'playstation.checkout.form.discount.label' | translate }}</label>
-        <input type="number" class="form-control" formControlName="discount" (change)="updateInvoice()">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>{{ 'playstation.checkout.form.discount.label' | translate }}</label>
+            <input type="number" class="form-control" formControlName="discount" [class.disabled]="isUpdating">
+          </div>
+
+          <div class="form-group">
+            <label>{{ 'playstation.checkout.form.additions.label' | translate }}</label>
+            <input type="number" class="form-control" formControlName="additions" [class.disabled]="isUpdating">
+          </div>
+
+          <div class="form-group">
+            <label>{{ 'playstation.checkout.form.notes.label' | translate }}</label>
+            <textarea class="form-control" formControlName="notes" rows="3" [class.disabled]="isUpdating"></textarea>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>{{ 'playstation.checkout.form.userNetCost.label' | translate }}</label>
+            <input type="number" class="form-control" formControlName="userNetCost" readonly>
+          </div>
+
+          <div class="form-group">
+            <label>{{ 'playstation.checkout.form.userNetPrice.label' | translate }}</label>
+            <input type="number" class="form-control" formControlName="userNetPrice" [class.disabled]="isUpdating">
+            <small class="text-muted" *ngIf="checkoutForm.get('userNetPrice')?.value !== getFinalTotal()">
+              {{ 'playstation.checkout.form.userNetPrice.customized' | translate }}
+            </small>
+          </div>
+        </div>
       </div>
 
-      <div class="form-group">
-        <label>{{ 'playstation.checkout.form.additions.label' | translate }}</label>
-        <input type="number" class="form-control" formControlName="additions" (change)="updateInvoice()">
-      </div>
-
-      <div class="form-group">
-        <label>{{ 'playstation.checkout.form.notes.label' | translate }}</label>
-        <textarea class="form-control" formControlName="notes" rows="3" (blur)="updateInvoice()"></textarea>
+      <div class="text-center" *ngIf="isUpdating">
+        <span class="spinner-border spinner-border-sm"></span>
+        <small class="text-muted ms-2">{{ 'playstation.checkout.form.updating' | translate }}</small>
       </div>
     </form>
 
@@ -50,8 +74,9 @@
     </div>
 
     <div class="checkout-actions">
-      <button class="btn btn-danger btn-lg" (click)="endSession()" [disabled]="isProcessing">
+      <button class="btn btn-danger btn-lg" (click)="endSession()" [disabled]="isProcessing || isUpdating">
         <fa-icon icon="power-off"></fa-icon>
+        <span class="spinner-border spinner-border-sm ms-1" *ngIf="isUpdating"></span>
         <span>{{ 'playstation.checkout.actions.endSession' | translate }}</span>
       </button>
     </div>

@@ -5,6 +5,9 @@ import { PlaystationResourceService } from 'app/core/konsolApi/api/playstationRe
 import { PsDeviceDTO } from 'app/core/konsolApi/model/psDeviceDTO';
 import { InvoiceUpdateDTO } from 'app/core/konsolApi/model/invoiceUpdateDTO';
 import { HttpErrorResponse } from '@angular/common/http';
+import { finalize } from 'rxjs/operators';
+import { InvoiceResourceService } from 'app/core/konsolApi/api/invoiceResource.service';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'jhi-checkout',
@@ -17,16 +20,20 @@ export class CheckoutComponent implements OnInit {
   checkoutForm: FormGroup;
   selectedDevice: PsDeviceDTO | null = null;
   isProcessing = false;
+  isUpdating = false;
 
   constructor(
     private fb: FormBuilder,
     private playstationService: PlaystationService,
-    private playstationResourceService: PlaystationResourceService
+    private playstationResourceService: PlaystationResourceService,
+    private invoiceResourceService: InvoiceResourceService
   ) {
     this.checkoutForm = this.fb.group({
       discount: [0, [Validators.min(0)]],
       additions: [0, [Validators.min(0)]],
-      notes: ['']
+      notes: [''],
+      userNetCost: [{ value: 0, disabled: true }, [Validators.min(0)]],
+      userNetPrice: [0, [Validators.min(0)]]
     });
   }
 
@@ -37,8 +44,26 @@ export class CheckoutComponent implements OnInit {
         this.checkoutForm.patchValue({
           discount: device.session.invoice.discount || 0,
           additions: device.session.invoice.additions || 0,
-          notes: device.session.invoice.additionsType || ''
+          notes: device.session.invoice.additionsType || '',
+          userNetCost: this.getTotalBeforeDiscount(),
+          userNetPrice: device.session.invoice.userNetPrice || this.getFinalTotal()
         });
+      }
+    });
+
+    // Subscribe to form changes with debounce
+    this.checkoutForm.valueChanges
+      .pipe(
+        debounceTime(500)
+      )
+      .subscribe(() => {
+        this.updateInvoice();
+      });
+
+    // Update userNetCost whenever relevant values change
+    this.checkoutForm.get('userNetPrice')?.valueChanges.subscribe(value => {
+      if (value !== this.getFinalTotal()) {
+        this.updateInvoice();
       }
     });
   }
@@ -72,32 +97,58 @@ export class CheckoutComponent implements OnInit {
   }
 
   updateInvoice(): void {
-    if (!this.selectedDevice?.session?.invoice?.id) return;
+    if (!this.selectedDevice?.session?.invoice?.id || this.isUpdating) return;
+
+    this.isUpdating = true;
+    const totalBeforeDiscount = this.getTotalBeforeDiscount();
+    
+    // Update the userNetCost field
+    this.checkoutForm.patchValue({
+      userNetCost: totalBeforeDiscount
+    }, { emitEvent: false });
 
     const invoiceUpdate: InvoiceUpdateDTO = {
       id: this.selectedDevice.session.invoice.id,
       discount: this.checkoutForm.get('discount')?.value || 0,
       additions: this.checkoutForm.get('additions')?.value || 0,
-      additionsType : this.checkoutForm.get('notes')?.value,
-     // netPrice: this.getOrdersTotal(),
-      //totalPrice: this.getFinalTotal()
+      additionsType: this.checkoutForm.get('notes')?.value,
+      userNetCost: totalBeforeDiscount,
+      userNetPrice: this.checkoutForm.get('userNetPrice')?.value || this.getFinalTotal()
     };
 
-    /*
-    this.playstationResourceService.saveInvoice(invoiceUpdate.id)
+    this.invoiceResourceService.updateInvoice(this.selectedDevice?.session?.invoice?.id , invoiceUpdate)
+      .pipe(
+        finalize(() => {
+          this.isUpdating = false;
+        })
+      )
       .subscribe({
         next: () => {
-          this.playstationService.reloadDevices();
+          this.reloadDevice();
         },
         error: (error: HttpErrorResponse) => {
           console.error('Error updating invoice:', error);
         }
       });
-      */
+  }
+
+  private reloadDevice(): void {
+    if (!this.selectedDevice?.id) return;
+
+    this.playstationResourceService.getDevice(this.selectedDevice.id)
+      .subscribe({
+        next: (device) => {
+            this.selectedDevice = device;
+          this.playstationService.selectDevice(device);
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error('Error reloading device:', error);
+        }
+      });
   }
 
   endSession(): void {
-    if (!this.selectedDevice?.id || this.isProcessing) return;
+    if (!this.selectedDevice?.id || this.isProcessing || this.isUpdating) return;
 
     this.isProcessing = true;
     this.playstationResourceService.stopDeviceSession(this.selectedDevice.id)

@@ -257,7 +257,15 @@
         },
         "notes": {
           "label": "Notes"
-        }
+        },
+        "userNetCost": {
+          "label": "Net Cost"
+        },
+        "userNetPrice": {
+          "label": "Final Price",
+          "customized": "Custom price set"
+        },
+        "updating": "Updating..."
       },
       "actions": {
         "endSession": "End Session",

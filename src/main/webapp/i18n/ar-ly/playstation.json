@@ -238,6 +238,18 @@
           "currency": "جنيه"
         }
       }
+    },
+    "checkout": {
+      "form": {
+        "userNetCost": {
+          "label": "التكلفة الصافية"
+        },
+        "userNetPrice": {
+          "label": "السعر النهائي",
+          "customized": "تم تعيين سعر مخصص"
+        },
+        "updating": "جاري التحديث..."
+      }
     }
   }
 } 
