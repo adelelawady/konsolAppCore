@@ -261,10 +261,6 @@
           "label": "Notes",
           "placeholder": "Enter notes"
         },
-        "userNetCost": {
-          "label": "Net Cost",
-          "info": "Total cost before adjustments"
-        },
         "userNetPrice": {
           "label": "Final Price",
           "placeholder": "Enter custom final price",

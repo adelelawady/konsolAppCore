@@ -32,7 +32,6 @@ export class CheckoutComponent implements OnInit {
       discount: [0, [Validators.min(0)]],
       additions: [0, [Validators.min(0)]],
       notes: [''],
-      userNetCost: [{ value: 0, disabled: true }, [Validators.min(0)]],
       userNetPrice: [0, [Validators.min(0)]]
     });
   }
@@ -48,7 +47,6 @@ export class CheckoutComponent implements OnInit {
           discount: device.session.invoice.discount || 0,
           additions: device.session.invoice.additions || 0,
           notes: device.session.invoice.additionsType || '',
-          userNetCost: this.getTotalBeforeDiscount(),
           userNetPrice: userNetPrice
         });
       }
@@ -125,17 +123,11 @@ export class CheckoutComponent implements OnInit {
     this.isUpdating = true;
     const totalBeforeDiscount = this.getTotalBeforeDiscount();
     
-    // Update the userNetCost field without triggering valueChanges
-    this.checkoutForm.patchValue({
-      userNetCost: totalBeforeDiscount
-    }, { emitEvent: false });
-
     const invoiceUpdate: InvoiceUpdateDTO = {
       id: this.selectedDevice.session.invoice.id,
       discount: this.checkoutForm.get('discount')?.value || 0,
       additions: this.checkoutForm.get('additions')?.value || 0,
       additionsType: this.checkoutForm.get('notes')?.value,
-      userNetCost: totalBeforeDiscount,
       userNetPrice: this.checkoutForm.get('userNetPrice')?.value
     };
 

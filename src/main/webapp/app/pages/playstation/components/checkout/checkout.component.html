@@ -1,6 +1,11 @@
 <div class="checkout-container">
   <div class="checkout-header">
     <h2>{{ 'playstation.checkout.title' | translate }}</h2>
+
+    <div class="text-center" *ngIf="isUpdating">
+        <span class="spinner-border spinner-border-sm"></span>
+        <small class="text-muted ms-2">{{ 'playstation.checkout.form.updating' | translate }}</small>
+      </div>
     <button class="btn btn-outline-secondary" (click)="cancel()">
       <fa-icon icon="times"></fa-icon>
       <span>{{ 'playstation.checkout.actions.cancel' | translate }}</span>
@@ -54,12 +59,6 @@
 
         <div class="col-md-6">
           <div class="form-group">
-            <label>{{ 'playstation.checkout.form.userNetCost.label' | translate }}</label>
-            <input type="number" class="form-control" formControlName="userNetCost" readonly>
-            <small class="text-muted">{{ 'playstation.checkout.form.userNetCost.info' | translate }}</small>
-          </div>
-
-          <div class="form-group">
             <label>{{ 'playstation.checkout.form.userNetPrice.label' | translate }}</label>
             <input type="number" class="form-control" formControlName="userNetPrice" 
                    [placeholder]="'playstation.checkout.form.userNetPrice.placeholder' | translate"
@@ -71,10 +70,7 @@
         </div>
       </div>
 
-      <div class="text-center" *ngIf="isUpdating">
-        <span class="spinner-border spinner-border-sm"></span>
-        <small class="text-muted ms-2">{{ 'playstation.checkout.form.updating' | translate }}</small>
-      </div>
+      
     </form>
 
     <div class="final-total">
