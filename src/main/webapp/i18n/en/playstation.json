@@ -76,6 +76,28 @@
           "delete": "Error deleting device",
           "load": "Error loading devices"
         }
+      },
+      "control": {
+        "title": "Control Devices",
+        "subtitle": "Connected Devices",
+        "actions": {
+          "addNew": "Add New Device",
+          "refresh": "Refresh List",
+          "edit": "Edit",
+          "delete": "Delete"
+        },
+        "table": {
+          "name": "Name",
+          "status": "Status",
+          "type": "Type",
+          "actions": "Actions"
+        },
+        "status": {
+          "active": "Active",
+          "inactive": "Inactive"
+        },
+        "loading": "Loading...",
+        "noDevices": "No devices found"
       }
     },
     "deviceType": {
