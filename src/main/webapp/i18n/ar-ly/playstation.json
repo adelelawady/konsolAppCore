@@ -98,12 +98,39 @@
         },
         "loading": "جاري التحميل...",
         "noDevices": "لم يتم العثور على أجهزة"
+      },
+      "update": {
+        "title": {
+          "edit": "تعديل الجهاز",
+          "create": "إضافة جهاز جديد"
+        },
+        "form": {
+          "id": {
+            "label": "المعرف"
+          },
+          "name": {
+            "label": "الاسم",
+            "required": "هذا الحقل مطلوب."
+          },
+          "type": {
+            "label": "نوع الجهاز",
+            "placeholder": "اختر نوعاً...",
+            "required": "هذا الحقل مطلوب."
+          },
+          "active": {
+            "label": "نشط"
+          }
+        },
+        "actions": {
+          "cancel": "إلغاء",
+          "save": "حفظ"
+        }
       }
     },
     "deviceType": {
       "title": "إدارة أنواع الأجهزة",
       "actions": {
-        "addNew": "إضافة نوع جديد",
+        "addNew": "إضافة وع جديد",
         "refresh": "تحديث",
         "edit": "تعديل",
         "delete": "حذف"

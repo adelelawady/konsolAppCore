@@ -98,6 +98,33 @@
         },
         "loading": "Loading...",
         "noDevices": "No devices found"
+      },
+      "update": {
+        "title": {
+          "edit": "Edit Device",
+          "create": "Create Device"
+        },
+        "form": {
+          "id": {
+            "label": "ID"
+          },
+          "name": {
+            "label": "Name",
+            "required": "This field is required."
+          },
+          "type": {
+            "label": "Device Type",
+            "placeholder": "Select a type...",
+            "required": "This field is required."
+          },
+          "active": {
+            "label": "Active"
+          }
+        },
+        "actions": {
+          "cancel": "Cancel",
+          "save": "Save"
+        }
       }
     },
     "deviceType": {
