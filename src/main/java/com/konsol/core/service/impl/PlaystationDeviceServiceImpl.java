@@ -203,6 +203,7 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
             item.setCategory("PlayStation"); // Or appropriate category
             item.setCheckQty(false);
             item.setDeletable(false);
+            item.setCost(new BigDecimal(0));
             // Save the item
             ItemDTO itemDTO = itemService.save(item);
             itemProduct = itemService.findOneById(itemDTO.getId()).get();

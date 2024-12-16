@@ -52,7 +52,7 @@ public class Item extends AbstractAuditingEntity<String> implements Serializable
 
     @DecimalMin(value = "0")
     @Field("cost")
-    private BigDecimal cost;
+    private BigDecimal cost = new BigDecimal(0);
 
     @Field("checkQty")
     private boolean checkQty = true; //QuantityCheckRequired

@@ -2006,7 +2006,7 @@ paths:
         in: path
         required: true
     post:
-      summary: Start Device Session
+      summary: Stop Device Session
       operationId: stopDeviceSession
       responses:
         '200':
