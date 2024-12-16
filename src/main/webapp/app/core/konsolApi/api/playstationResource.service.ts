@@ -19,6 +19,8 @@ import { Observable } from 'rxjs';
 // @ts-ignore
 import { CreateInvoiceItemDTO } from '../model/createInvoiceItemDTO';
 // @ts-ignore
+import { InvoiceItemUpdateDTO } from '../model/invoiceItemUpdateDTO';
+// @ts-ignore
 import { PsDeviceDTO } from '../model/psDeviceDTO';
 // @ts-ignore
 import { PsDeviceType } from '../model/psDeviceType';
@@ -397,6 +399,89 @@ export class PlaystationResourceService {
       observe: observe,
       reportProgress: reportProgress,
     });
+  }
+
+  /**
+   *
+   * @param id
+   * @param orderId
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public deleteDeviceOrder(
+    id: string,
+    orderId: string,
+    observe?: 'body',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: undefined; context?: HttpContext }
+  ): Observable<any>;
+  public deleteDeviceOrder(
+    id: string,
+    orderId: string,
+    observe?: 'response',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: undefined; context?: HttpContext }
+  ): Observable<HttpResponse<any>>;
+  public deleteDeviceOrder(
+    id: string,
+    orderId: string,
+    observe?: 'events',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: undefined; context?: HttpContext }
+  ): Observable<HttpEvent<any>>;
+  public deleteDeviceOrder(
+    id: string,
+    orderId: string,
+    observe: any = 'body',
+    reportProgress: boolean = false,
+    options?: { httpHeaderAccept?: undefined; context?: HttpContext }
+  ): Observable<any> {
+    if (id === null || id === undefined) {
+      throw new Error('Required parameter id was null or undefined when calling deleteDeviceOrder.');
+    }
+    if (orderId === null || orderId === undefined) {
+      throw new Error('Required parameter orderId was null or undefined when calling deleteDeviceOrder.');
+    }
+
+    let localVarHeaders = this.defaultHeaders;
+
+    let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+    if (localVarHttpHeaderAcceptSelected === undefined) {
+      // to determine the Accept header
+      const httpHeaderAccepts: string[] = [];
+      localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    }
+    if (localVarHttpHeaderAcceptSelected !== undefined) {
+      localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+    }
+
+    let localVarHttpContext: HttpContext | undefined = options && options.context;
+    if (localVarHttpContext === undefined) {
+      localVarHttpContext = new HttpContext();
+    }
+
+    let responseType_: 'text' | 'json' | 'blob' = 'json';
+    if (localVarHttpHeaderAcceptSelected) {
+      if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+        responseType_ = 'text';
+      } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+        responseType_ = 'json';
+      } else {
+        responseType_ = 'blob';
+      }
+    }
+
+    return this.httpClient.delete<any>(
+      `${this.configuration.basePath}/playstation/device/${encodeURIComponent(String(id))}/orders/${encodeURIComponent(String(orderId))}`,
+      {
+        context: localVarHttpContext,
+        responseType: <any>responseType_,
+        withCredentials: this.configuration.withCredentials,
+        headers: localVarHeaders,
+        observe: observe,
+        reportProgress: reportProgress,
+      }
+    );
   }
 
   /**
@@ -1078,6 +1163,103 @@ export class PlaystationResourceService {
     return this.httpClient.put<PsDeviceDTO>(
       `${this.configuration.basePath}/playstation/device/${encodeURIComponent(String(id))}`,
       psDeviceDTO,
+      {
+        context: localVarHttpContext,
+        responseType: <any>responseType_,
+        withCredentials: this.configuration.withCredentials,
+        headers: localVarHeaders,
+        observe: observe,
+        reportProgress: reportProgress,
+      }
+    );
+  }
+
+  /**
+   *
+   *
+   * @param id
+   * @param orderId
+   * @param invoiceItemUpdateDTO
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public updateDeviceOrder(
+    id: string,
+    orderId: string,
+    invoiceItemUpdateDTO?: InvoiceItemUpdateDTO,
+    observe?: 'body',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
+  ): Observable<PsDeviceDTO>;
+  public updateDeviceOrder(
+    id: string,
+    orderId: string,
+    invoiceItemUpdateDTO?: InvoiceItemUpdateDTO,
+    observe?: 'response',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
+  ): Observable<HttpResponse<PsDeviceDTO>>;
+  public updateDeviceOrder(
+    id: string,
+    orderId: string,
+    invoiceItemUpdateDTO?: InvoiceItemUpdateDTO,
+    observe?: 'events',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
+  ): Observable<HttpEvent<PsDeviceDTO>>;
+  public updateDeviceOrder(
+    id: string,
+    orderId: string,
+    invoiceItemUpdateDTO?: InvoiceItemUpdateDTO,
+    observe: any = 'body',
+    reportProgress: boolean = false,
+    options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
+  ): Observable<any> {
+    if (id === null || id === undefined) {
+      throw new Error('Required parameter id was null or undefined when calling updateDeviceOrder.');
+    }
+    if (orderId === null || orderId === undefined) {
+      throw new Error('Required parameter orderId was null or undefined when calling updateDeviceOrder.');
+    }
+
+    let localVarHeaders = this.defaultHeaders;
+
+    let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+    if (localVarHttpHeaderAcceptSelected === undefined) {
+      // to determine the Accept header
+      const httpHeaderAccepts: string[] = ['application/json'];
+      localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    }
+    if (localVarHttpHeaderAcceptSelected !== undefined) {
+      localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+    }
+
+    let localVarHttpContext: HttpContext | undefined = options && options.context;
+    if (localVarHttpContext === undefined) {
+      localVarHttpContext = new HttpContext();
+    }
+
+    // to determine the Content-Type header
+    const consumes: string[] = ['application/json'];
+    const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+    if (httpContentTypeSelected !== undefined) {
+      localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+    }
+
+    let responseType_: 'text' | 'json' | 'blob' = 'json';
+    if (localVarHttpHeaderAcceptSelected) {
+      if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+        responseType_ = 'text';
+      } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+        responseType_ = 'json';
+      } else {
+        responseType_ = 'blob';
+      }
+    }
+
+    return this.httpClient.post<PsDeviceDTO>(
+      `${this.configuration.basePath}/playstation/device/${encodeURIComponent(String(id))}/orders/${encodeURIComponent(String(orderId))}`,
+      invoiceItemUpdateDTO,
       {
         context: localVarHttpContext,
         responseType: <any>responseType_,
