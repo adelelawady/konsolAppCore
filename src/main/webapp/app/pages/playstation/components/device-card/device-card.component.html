@@ -21,7 +21,7 @@
 
   <div class="device-card__footer">
     <ng-container *ngIf="!device.active">
-      <div class="status-badge">status</div>
+      <div class="status-badge">{{ 'playstation.devices.card.status.stopped' | translate }}</div>
     </ng-container>
     <ng-container *ngIf="device.active">
       <div class="session-info" *ngIf="device.session">
@@ -29,10 +29,10 @@
           <span class="session-duration">{{ sessionDuration }}</span>
         </span>
         <div class="cost-details">
-          <span class="cost">EGP {{ calculateSessionCost() }}</span>
+          <span class="cost">{{ 'playstation.devices.card.session.currency' | translate }} {{ calculateSessionCost() }}</span>
           <ng-container *ngIf="device.session?.invoice?.netPrice !== undefined">
             <span class="orders-cost">
-              (Orders: {{ device.session.invoice?.netPrice }} EGP)
+              ({{ 'playstation.devices.card.session.orders' | translate }}: {{ device.session.invoice?.netPrice }} {{ 'playstation.devices.card.session.currency' | translate }})
             </span>
           </ng-container>
         </div>

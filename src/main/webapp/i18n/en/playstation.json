@@ -160,6 +160,17 @@
       },
       "list": {
         "noDevices": "No devices available"
+      },
+      "card": {
+        "status": {
+          "stopped": "Stopped",
+          "active": "Active",
+          "inactive": "Inactive"
+        },
+        "session": {
+          "orders": "Orders",
+          "currency": "EGP"
+        }
       }
     },
     "deviceType": {

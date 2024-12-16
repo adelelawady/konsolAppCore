@@ -160,6 +160,17 @@
       },
       "list": {
         "noDevices": "لا توجد أجهزة متاحة"
+      },
+      "card": {
+        "status": {
+          "stopped": "متوقف",
+          "active": "نشط",
+          "inactive": "غير نشط"
+        },
+        "session": {
+          "orders": "الطلبات",
+          "currency": "جنيه"
+        }
       }
     },
     "deviceType": {
