@@ -38,6 +38,11 @@
                 "glob": "**/*",
                 "input": "src/main/webapp/content/assets",
                 "output": "assets"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/main/webapp/content/fonts",
+                "output": "/content/fonts"
               }
             ],
             "styles": [
