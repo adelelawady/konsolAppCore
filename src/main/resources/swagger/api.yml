@@ -4815,3 +4815,8 @@ components:
           type: number
           x-stoplight:
             id: cj8dn8k0regje
+        endTime:
+          type: string
+          x-stoplight:
+            id: 7o0mztgx5nh0e
+          format: date-time

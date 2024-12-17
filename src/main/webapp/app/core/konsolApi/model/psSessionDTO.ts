@@ -19,4 +19,5 @@ export interface PsSessionDTO {
   type?: PsDeviceType;
   deviceSessions?: Array<PsSessionDTO>;
   deviceSessionsNetPrice?: number;
+  endTime?: string;
 }
