@@ -284,6 +284,62 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
         invoiceService.deleteInvoiceItem(orderId);
     }
 
+    @Override
+    public PsDeviceDTO moveDevice(String id, String deviceId) {
+        // Find device
+        PlaystationDevice fromDevice = playstationDeviceRepository
+            .findById(id)
+            .orElseThrow(() -> new RuntimeException("Device not found with id: " + deviceId));
+        // Check if device is not in use
+        if (fromDevice.getSession() == null) {
+            throw new RuntimeException("Device is Not Active");
+        }
+
+        // Find device
+        PlaystationDevice toDevice = playstationDeviceRepository
+            .findById(deviceId)
+            .orElseThrow(() -> new RuntimeException("Device not found with id: " + deviceId));
+
+        if (toDevice.getSession() != null) {
+            throw new RuntimeException("Device is already Active");
+        }
+
+        if (toDevice.getType() == null) {
+            throw new RuntimeException("Device Must Have Type");
+        }
+
+        // Find active session
+        PlayStationSession session = playStationSessionRepository
+            .findByDeviceIdAndActiveTrue(id)
+            .orElseThrow(() -> new RuntimeException("No active session found for device: " + deviceId));
+
+        PlayStationSession lastSession = new PlayStationSession();
+        lastSession.setDevice(session.getDevice());
+        lastSession.setType(session.getType());
+        lastSession.setStartTime(session.getStartTime());
+        lastSession.setEndTime(Instant.now());
+        lastSession.setInvoice(null);
+        lastSession.setDeviceSessions(null);
+
+        session.setDeviceSessionsNetPrice(session.getDeviceSessionsNetPrice().add(this.calculateSessionTimePrice(fromDevice)));
+
+        session.getDeviceSessions().add(lastSession);
+        //TODO CHECK TYPE
+
+        session.setType(toDevice.getType());
+        session.setDevice(toDevice);
+        session = playStationSessionRepository.save(session);
+
+        fromDevice.setActive(false);
+        fromDevice.setSession(null);
+        playstationDeviceRepository.save(fromDevice);
+        toDevice.setSession(session);
+        toDevice.setActive(true);
+
+        playstationDeviceRepository.save(toDevice);
+        return playstationDeviceMapper.toDto(playstationDeviceRepository.save(fromDevice));
+    }
+
     private BigDecimal calculateSessionTimePrice(PlaystationDevice device) {
         if (device.getSession() == null || device.getSession().getStartTime() == null || device.getSession().getType() == null) {
             return BigDecimal.ZERO;
@@ -293,16 +349,15 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
         long startTime = Date.from(device.getSession().getStartTime()).getTime();
         long now = System.currentTimeMillis();
         long durationInMs = now - startTime;
-        
+
         // Convert to hours
         double durationInHours = durationInMs / (1000.0 * 60.0 * 60.0);
-        
+
         // Get hourly rate
         BigDecimal hourlyRate = device.getSession().getType().getPrice();
-        
+
         // Calculate total cost and round to whole number
-        BigDecimal totalCost = hourlyRate.multiply(BigDecimal.valueOf(durationInHours))
-            .setScale(0, RoundingMode.HALF_UP);
+        BigDecimal totalCost = hourlyRate.multiply(BigDecimal.valueOf(durationInHours)).setScale(0, RoundingMode.HALF_UP);
 
         return totalCost;
     }

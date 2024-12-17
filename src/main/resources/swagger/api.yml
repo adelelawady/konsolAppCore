@@ -1850,11 +1850,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/PsDeviceDTO'
       description: ''
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PsDeviceDTO'
       tags:
         - playstation-resource
     parameters:

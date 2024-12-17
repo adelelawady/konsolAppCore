@@ -92,4 +92,6 @@ public interface PlaystationDeviceService {
     PsDeviceDTO updateDeviceOrder(String id, String orderId, InvoiceItemUpdateDTO invoiceItemUpdateDTO);
 
     void deleteDeviceOrder(String id, String orderId);
+
+    PsDeviceDTO moveDevice(String id, String deviceId);
 }

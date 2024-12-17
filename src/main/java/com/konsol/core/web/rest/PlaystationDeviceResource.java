@@ -354,8 +354,8 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
     }
 
     @Override
-    public ResponseEntity<PsDeviceDTO> moveDevice(String id, String deviceId, PsDeviceDTO psDeviceDTO) {
-        return PlaystationApiDelegate.super.moveDevice(id, deviceId, psDeviceDTO);
+    public ResponseEntity<PsDeviceDTO> moveDevice(String id, String deviceId) {
+        return ResponseEntity.ok(playstationDeviceService.moveDevice(id, deviceId));
     }
 
     /**

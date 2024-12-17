@@ -3,7 +3,10 @@ package com.konsol.core.domain.playstation;
 import com.konsol.core.domain.Invoice;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -40,6 +43,12 @@ public class PlayStationSession implements Serializable {
     @NotNull
     @Field("type")
     private PlaystationDeviceType type;
+
+    @Field("device_sessions")
+    private List<PlayStationSession> deviceSessions = new ArrayList<>();
+
+    @Field("device_sessions_net_price")
+    private BigDecimal deviceSessionsNetPrice = new BigDecimal(0);
 
     @DBRef
     @Field("invoice")
@@ -172,5 +181,21 @@ public class PlayStationSession implements Serializable {
     public PlayStationSession type(PlaystationDeviceType type) {
         this.type = type;
         return this;
+    }
+
+    public List<PlayStationSession> getDeviceSessions() {
+        return deviceSessions;
+    }
+
+    public void setDeviceSessions(List<PlayStationSession> deviceSessions) {
+        this.deviceSessions = deviceSessions;
+    }
+
+    public BigDecimal getDeviceSessionsNetPrice() {
+        return deviceSessionsNetPrice;
+    }
+
+    public void setDeviceSessionsNetPrice(BigDecimal deviceSessionsNetPrice) {
+        this.deviceSessionsNetPrice = deviceSessionsNetPrice;
     }
 }
