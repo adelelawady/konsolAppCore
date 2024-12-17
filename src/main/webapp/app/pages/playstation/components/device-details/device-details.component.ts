@@ -67,28 +67,7 @@ export class DeviceDetailsComponent implements OnInit, OnDestroy {
   }
 
   stopSession(): void {
-
     this.playstationService.showCheckout();
-    return;
-
-    /*
-    if (this.selectedDevice?.id && !this.isStoppingSession) {
-      this.isStoppingSession = true;
-      this.playstationResourceService.stopDeviceSession(this.selectedDevice.id)
-        .subscribe({
-          next: (updatedDevice) => {
-            this.playstationService.selectDevice(updatedDevice);
-            this.playstationService.reloadDevices();
-          },
-          error: (error) => {
-            console.error('Error stopping session:', error);
-          },
-          complete: () => {
-            this.isStoppingSession = false;
-          }
-        });
-    }
-    */
   }
 
   getSessionDuration(): string {
