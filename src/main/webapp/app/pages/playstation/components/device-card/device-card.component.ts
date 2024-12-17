@@ -198,6 +198,7 @@ export class DeviceCardComponent implements OnInit, OnDestroy {
       if (result === 'confirm' && this.device?.id) {
         this.playstationResourceService.moveDevice(this.device.id, targetDeviceId).subscribe({
           next: () => {
+            this.playstationService.reloadDevices();
             this.deviceMoved.emit();
             // Show success message
           },
