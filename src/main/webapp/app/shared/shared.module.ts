@@ -21,6 +21,7 @@ import { StoreSelectorComponent } from './components/store-selector/store-select
 import { BankSelectorComponent } from './components/bank-selector/bank-selector.component';
 import { AccountSelectorComponent } from './components/account-selector/account-selector.component';
 import { TranslationModule } from '../shared/language/translation.module';
+import { CustomCurrencyPipe } from './pipes/custom-currency.pipe';
 
 @NgModule({
   imports: [SharedLibsModule],
@@ -44,6 +45,7 @@ import { TranslationModule } from '../shared/language/translation.module';
     StoreSelectorComponent,
     BankSelectorComponent,
     AccountSelectorComponent,
+    CustomCurrencyPipe
   ],
   exports: [
     SharedLibsModule,
@@ -66,6 +68,7 @@ import { TranslationModule } from '../shared/language/translation.module';
     StoreSelectorComponent,
     BankSelectorComponent,
     AccountSelectorComponent,
+    CustomCurrencyPipe
   ],
   providers: [
     AppCurrencyPipe,
