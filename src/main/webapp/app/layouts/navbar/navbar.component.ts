@@ -2,6 +2,29 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { SessionStorageService } from 'ngx-webstorage';
+import { 
+  faGamepad, 
+  faCompass, 
+  faClock,
+  faTachometerAlt,
+  faList,
+  faBox,
+  faUsersCog,
+  faUsers,
+  faHeart,
+  faCogs,
+  faTasks,
+  faBook,
+  faFlag,
+  faFlagUsa,
+  faUser,
+  faWrench,
+  faLock,
+  faSignOutAlt,
+  faSignInAlt,
+  faUserPlus,
+  faAsterisk,
+} from '@fortawesome/free-solid-svg-icons';
 
 import { VERSION } from 'app/app.constants';
 import { LANGUAGES } from 'app/config/language.constants';
@@ -23,6 +46,29 @@ export class NavbarComponent implements OnInit {
   version = '';
   account: Account | null = null;
   entitiesNavbarItems: any[] = [];
+
+  // Icons
+  faGamepad = faGamepad;
+  faCompass = faCompass;
+  faClock = faClock;
+  faTachometerAlt = faTachometerAlt;
+  faList = faList;
+  faBox = faBox;
+  faUsersCog = faUsersCog;
+  faUsers = faUsers;
+  faHeart = faHeart;
+  faCogs = faCogs;
+  faTasks = faTasks;
+  faBook = faBook;
+  faFlag = faFlag;
+  faFlagUsa = faFlagUsa;
+  faUser = faUser;
+  faWrench = faWrench;
+  faLock = faLock;
+  faSignOutAlt = faSignOutAlt;
+  faSignInAlt = faSignInAlt;
+  faUserPlus = faUserPlus;
+  faAsterisk = faAsterisk;
 
   constructor(
     private loginService: LoginService,

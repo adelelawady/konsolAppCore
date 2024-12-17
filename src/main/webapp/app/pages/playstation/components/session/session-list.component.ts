@@ -11,6 +11,9 @@ import {
   faClock,
   faSpinner
 } from '@fortawesome/free-solid-svg-icons';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { SessionInvoiceViewComponent } from './session-invoice-view.component';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'jhi-session-list',
@@ -28,7 +31,11 @@ export class SessionListComponent implements OnInit {
   faClock = faClock;
   faSpinner = faSpinner;
 
-  constructor(private playstationResourceService: PlaystationResourceService) {}
+  constructor(
+    private playstationResourceService: PlaystationResourceService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
     this.loadSessions();
@@ -49,13 +56,9 @@ export class SessionListComponent implements OnInit {
   }
 
   viewSession(session: PsSessionDTO): void {
-    // Implement view logic
-    console.log('View session:', session);
-  }
-
-  editSession(session: PsSessionDTO): void {
-    // Implement edit logic
-    console.log('Edit session:', session);
+    if (session.id) {
+      this.router.navigate([session.id, 'view'], { relativeTo: this.route });
+    }
   }
 
   trackById(index: number, session: PsSessionDTO): string | undefined {

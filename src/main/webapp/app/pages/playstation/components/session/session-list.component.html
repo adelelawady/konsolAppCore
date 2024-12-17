@@ -47,14 +47,9 @@
               {{ session.invoice?.netPrice  | currency:'EGP':'symbol':'1.0-0' }}
             </td>
             <td>
-              <div class="btn-group">
-                <button class="btn btn-sm btn-info" (click)="viewSession(session)">
-                  <fa-icon [icon]="faEye"></fa-icon>
-                </button>
-                <button class="btn btn-sm btn-primary" (click)="editSession(session)">
-                  <fa-icon [icon]="faEdit"></fa-icon>
-                </button>
-              </div>
+              <button class="btn btn-sm btn-info" (click)="viewSession(session)">
+                <fa-icon [icon]="faEye"></fa-icon>
+              </button>
             </td>
           </tr>
         </tbody>

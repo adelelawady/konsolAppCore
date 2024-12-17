@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
  * Spring Data MongoDB repository for the PlayStationSession entity.
  */
 @Repository
-public interface PlayStationSessionRepository extends MongoRepository<PlayStationSession, Long> {
+public interface PlayStationSessionRepository extends MongoRepository<PlayStationSession, String> {
     /**
      * Find active session for a device.
      *

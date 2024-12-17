@@ -56,12 +56,12 @@ public interface PlayStationSessionService {
      * @param id the id of the entity.
      * @return the entity.
      */
-    Optional<PsSessionDTO> findOne(Long id);
+    Optional<PsSessionDTO> findOne(String id);
 
     /**
      * Delete the "id" playStationSession.
      *
      * @param id the id of the entity.
      */
-    void delete(Long id);
+    void delete(String id);
 }

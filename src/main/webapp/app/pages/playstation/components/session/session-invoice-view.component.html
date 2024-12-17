@@ -1,0 +1,101 @@
+<div class="invoice-view">
+  <div class="invoice-view__header">
+    <h2>{{ 'playstation.session.invoice.title' | translate }}</h2>
+    <button class="btn btn-secondary" (click)="back()">
+      <span>{{ 'entity.action.back' | translate }}</span>
+    </button>
+  </div>
+
+  <div class="invoice-view__content">
+    <div *ngIf="isLoading" class="loading-spinner">
+      <fa-icon [icon]="faSpinner" [spin]="true"></fa-icon>
+      <span>{{ 'playstation.session.loading' | translate }}</span>
+    </div>
+
+    <div *ngIf="!isLoading && session" class="invoice-details">
+      <div class="row mb-3">
+        <div class="col-sm-6">
+          <strong>{{ 'playstation.session.table.startTime' | translate }}:</strong>
+          <p>{{ session.startTime | date:'medium' }}</p>
+        </div>
+        <div class="col-sm-6">
+          <strong>{{ 'playstation.session.table.type' | translate }}:</strong>
+          <p>{{ session.type?.name }}</p>
+        </div>
+      </div>
+
+      <div class="invoice-amounts">
+        <h4>{{ 'playstation.session.invoice.details' | translate }}</h4>
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <strong>{{ 'playstation.session.table.invoice.pk' | translate }}:</strong>
+            <p>{{ session.invoice?.pk }}</p>
+          </div>
+          <div class="col-sm-6">
+            <strong>{{ 'playstation.session.table.invoice.netPrice' | translate }}:</strong>
+            <p>{{ session.invoice?.netPrice | currency:'EGP':'symbol':'1.0-0' }}</p>
+          </div>
+        </div>
+
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <strong>{{ 'playstation.session.table.invoice.discount' | translate }}:</strong>
+            <p>{{ session.invoice?.discount | currency:'EGP':'symbol':'1.0-0' }}</p>
+          </div>
+          <div class="col-sm-6">
+            <strong>{{ 'playstation.session.table.invoice.additions' | translate }}:</strong>
+            <p>{{ session.invoice?.additions | currency:'EGP':'symbol':'1.0-0' }}</p>
+          </div>
+        </div>
+
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <strong>{{ 'playstation.session.table.invoice.userNetPrice' | translate }}:</strong>
+            <p>{{ session.invoice?.userNetPrice | currency:'EGP':'symbol':'1.0-0' }}</p>
+          </div>
+          <div class="col-sm-6">
+            <strong>{{ 'playstation.session.table.invoice.total' | translate }}:</strong>
+            <p class="font-weight-bold">{{ session.invoice?.netPrice | currency:'EGP':'symbol':'1.0-0' }}</p>
+          </div>
+        </div>
+
+        <div class="invoice-items mt-4">
+          <h4>{{ 'playstation.session.invoice.items' | translate }}</h4>
+          <div class="table-responsive">
+            <table class="table table-striped" *ngIf="hasInvoiceItems()">
+              <thead>
+                <tr>
+                  <th>{{ 'playstation.session.invoice.items.name' | translate }}</th>
+                  <th>{{ 'playstation.session.invoice.items.quantity' | translate }}</th>
+                  <th>{{ 'playstation.session.invoice.items.price' | translate }}</th>
+                  <th>{{ 'playstation.session.invoice.items.total' | translate }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of getInvoiceItemsArray()">
+                  <td>{{ item.item?.name }}</td>
+                  <td>{{ item.qty }}</td>
+                  <td>{{ item.item?.price | currency:'EGP':'symbol':'1.0-0' }}</td>
+                  <td>{{ item.qty * item.price | currency:'EGP':'symbol':'1.0-0' }}</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="3" class="text-right font-weight-bold">
+                    {{ 'playstation.session.invoice.items.subtotal' | translate }}
+                  </td>
+                  <td class="font-weight-bold">
+                    {{ calculateItemsTotal() | currency:'EGP':'symbol':'1.0-0' }}
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+            <div *ngIf="!hasInvoiceItems()" class="no-items">
+              {{ 'playstation.session.invoice.noItems' | translate }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

@@ -13,6 +13,7 @@ import playstationDeviceResolve from 'app/entities/playstation-device/route/play
 import { DeviceTypeFormComponent } from './device-type-control/device-type-form.component';
 import { PlaystationResourceService } from 'app/core/konsolApi/api/playstationResource.service';
 import { of } from 'rxjs';
+import { SessionInvoiceViewComponent } from './components/session/session-invoice-view.component';
 
 
 const routes: Routes = [
@@ -87,8 +88,27 @@ const routes: Routes = [
 
       {
         path: 'sessions',
-        component: SessionListComponent,
-        data: { pageTitle: 'Sessions History' }
+        children: [
+          {
+            path: '',
+            component: SessionListComponent,
+            data: { pageTitle: 'Sessions History' }
+          },
+          {
+            path: ':id/view',
+            component: SessionInvoiceViewComponent,
+            resolve: {
+              session: (route: ActivatedRouteSnapshot) => {
+                const id = route.paramMap.get('id');
+                if (id) {
+                  return inject(PlaystationResourceService).getSession(id);
+                }
+                return of(null);
+              },
+            },
+            data: { pageTitle: 'playstation.session.invoice.title' }
+          }
+        ]
       },
     ],
   },

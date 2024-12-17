@@ -403,7 +403,7 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
-        if (!playStationSessionRepository.existsById(Long.valueOf(id))) {
+        if (!playStationSessionRepository.existsById(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
@@ -435,7 +435,7 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
-        if (!playStationSessionRepository.existsById(Long.valueOf(id))) {
+        if (!playStationSessionRepository.existsById(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
@@ -477,7 +477,7 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
     @Override
     public ResponseEntity<PsSessionDTO> getSession(String id) {
         LOG.debug("REST request to get PlayStationSession : {}", id);
-        Optional<PsSessionDTO> PsSessionDTO = playStationSessionService.findOne(Long.valueOf(id));
+        Optional<PsSessionDTO> PsSessionDTO = playStationSessionService.findOne(id);
         return ResponseUtil.wrapOrNotFound(PsSessionDTO);
     }
 
@@ -490,7 +490,7 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
     @Override
     public ResponseEntity<PsSessionDTO> deleteSession(String id) {
         LOG.debug("REST request to delete PlayStationSession : {}", id);
-        playStationSessionService.delete(Long.valueOf(id));
+        playStationSessionService.delete(id);
         return ResponseEntity
             .noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))

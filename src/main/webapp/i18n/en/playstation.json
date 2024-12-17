@@ -297,6 +297,24 @@
         },
         "type": "Type",
         "actions": "Actions"
+      },
+      "invoice": {
+        "title": "Invoice Details",
+        "details": "Invoice Details",
+        "items": "Invoice Items",
+        "noItems": "No items in this invoice",
+        "items": {
+          "name": "Item Name",
+          "quantity": "Quantity",
+          "price": "Price",
+          "total": "Total",
+          "subtotal": "Subtotal"
+        }
+      },
+      "table": {
+        "endTime": "End Time",
+        "duration": "Duration",
+        "minutes": "minutes"
       }
     }
   }

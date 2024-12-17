@@ -55,7 +55,7 @@ public class PlayStationSessionServiceImpl implements PlayStationSessionService 
         LOG.debug("Request to partially update PlayStationSession : {}", PsSessionDTO);
 
         return playStationSessionRepository
-            .findById(Long.valueOf(PsSessionDTO.getId()))
+            .findById(PsSessionDTO.getId())
             .map(existingPlayStationSession -> {
                 playStationSessionMapper.partialUpdate(existingPlayStationSession, PsSessionDTO);
 
@@ -78,13 +78,13 @@ public class PlayStationSessionServiceImpl implements PlayStationSessionService 
     }
 
     @Override
-    public Optional<PsSessionDTO> findOne(Long id) {
+    public Optional<PsSessionDTO> findOne(String id) {
         LOG.debug("Request to get PlayStationSession : {}", id);
         return playStationSessionRepository.findById(id).map(playStationSessionMapper::toDto);
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(String id) {
         LOG.debug("Request to delete PlayStationSession : {}", id);
         playStationSessionRepository.deleteById(id);
     }

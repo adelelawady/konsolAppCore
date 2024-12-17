@@ -22,6 +22,7 @@ import { ProductsControlComponent } from './products-control/products-control.co
 import { PlaystationService } from './services/playstation.service';
 import { CheckoutComponent } from './components/checkout/checkout.component';
 import { SessionListComponent } from './components/session/session-list.component';
+import { SessionInvoiceViewComponent } from './components/session/session-invoice-view.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { SessionListComponent } from './components/session/session-list.componen
     ProductsControlComponent,
     CheckoutComponent,
     SessionListComponent,
+    SessionInvoiceViewComponent,
   ],
   imports: [
     CommonModule,
