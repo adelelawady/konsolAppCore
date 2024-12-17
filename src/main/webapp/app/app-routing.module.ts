@@ -17,16 +17,19 @@ import { PagesModule } from './pages/pages.module';
           path: 'admin',
           data: {
             authorities: [Authority.ADMIN],
+            breadcrumb: 'Administration'
           },
           canActivate: [UserRouteAccessService],
           loadChildren: () => import('./admin/admin-routing.module').then(m => m.AdminRoutingModule),
         },
         {
           path: 'account',
+          data: { breadcrumb: 'Account' },
           loadChildren: () => import('./account/account.module').then(m => m.AccountModule),
         },
         {
           path: 'login',
+          data: { breadcrumb: 'Login' },
           loadChildren: () => import('./login/login.module').then(m => m.LoginModule),
         },
         {
@@ -35,6 +38,7 @@ import { PagesModule } from './pages/pages.module';
         },
         {
           path: 'banks',
+          data: { breadcrumb: 'Banks' },
           loadChildren: () => import('./pages/banks/banks.module').then(m => m.BanksModule),
         },
         navbarRoute,

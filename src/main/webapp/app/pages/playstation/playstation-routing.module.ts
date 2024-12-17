@@ -20,19 +20,23 @@ const routes: Routes = [
   {
     path: '',
     component: PlaystationLayoutComponent,
+    data: { breadcrumb: 'PlayStation' },
     children: [
       {
         path: '',
         component: NavigationPageComponent,
+        data: { breadcrumb: 'Overview' },
         canActivate: [UserRouteAccessService],
       },
       {
         path: 'dashboard',
         component: DashboardComponent,
+        data: { breadcrumb: 'Dashboard' },
         canActivate: [UserRouteAccessService],
       },
       {
         path: 'controls',
+        data: { breadcrumb: 'Devices' },
         children: [
           {
             path: '',
@@ -41,6 +45,7 @@ const routes: Routes = [
           {
             path: 'new',
             component: PlaystationDeviceUpdateComponent,
+            data: { breadcrumb: 'New Device' },
             resolve: {
               playstationDevice: playstationDeviceResolve,
             },
@@ -48,6 +53,7 @@ const routes: Routes = [
           {
             path: ':id/edit',
             component: PlaystationDeviceUpdateComponent,
+            data: { breadcrumb: 'Edit Device' },
             resolve: {
               playstationDevice: playstationDeviceResolve,
             },
@@ -56,6 +62,7 @@ const routes: Routes = [
       },
       {
         path: 'device-types',
+        data: { breadcrumb: 'Device Types' },
         children: [
           {
             path: '',
@@ -64,17 +71,16 @@ const routes: Routes = [
           {
             path: 'new',
             component: DeviceTypeFormComponent,
+            data: { breadcrumb: 'New Type' },
           },
           {
             path: ':id/edit',
             component: DeviceTypeFormComponent,
+            data: { breadcrumb: 'Edit Type' },
             resolve: {
               deviceType: (route: ActivatedRouteSnapshot) => {
                 const id = route.paramMap.get('id');
-                if (id) {
-                  return inject(PlaystationResourceService).getDeviceType(id);
-                }
-                return of(null);
+                return id ? inject(PlaystationResourceService).getDeviceType(id) : of(null);
               },
             },
           },
@@ -83,30 +89,26 @@ const routes: Routes = [
       {
         path: 'products',
         component: ProductsControlComponent,
-        data: { pageTitle: 'Products Control' }
+        data: { breadcrumb: 'Products' }
       },
-
       {
         path: 'sessions',
+        data: { breadcrumb: 'Sessions' },
         children: [
           {
             path: '',
             component: SessionListComponent,
-            data: { pageTitle: 'Sessions History' }
           },
           {
             path: ':id/view',
             component: SessionInvoiceViewComponent,
+            data: { breadcrumb: 'Session Details' },
             resolve: {
               session: (route: ActivatedRouteSnapshot) => {
                 const id = route.paramMap.get('id');
-                if (id) {
-                  return inject(PlaystationResourceService).getSession(id);
-                }
-                return of(null);
+                return id ? inject(PlaystationResourceService).getSession(id) : of(null);
               },
             },
-            data: { pageTitle: 'playstation.session.invoice.title' }
           }
         ]
       },

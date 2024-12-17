@@ -1,11 +1,19 @@
 import { Component, OnInit, RendererFactory2, Renderer2 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { Router, ActivatedRouteSnapshot, NavigationEnd } from '@angular/router';
+import { Router, ActivatedRouteSnapshot, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 import dayjs from 'dayjs/esm';
+import { filter } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map, distinctUntilChanged } from 'rxjs/operators';
 
 import { AccountService } from 'app/core/auth/account.service';
 import { FindLanguageFromKeyPipe } from 'app/shared/language/find-language-from-key.pipe';
+
+interface Breadcrumb {
+  label: string;
+  url: string;
+}
 
 @Component({
   selector: 'jhi-main',
@@ -13,6 +21,7 @@ import { FindLanguageFromKeyPipe } from 'app/shared/language/find-language-from-
 })
 export class MainComponent implements OnInit {
   private renderer: Renderer2;
+  breadcrumbs$: Observable<Breadcrumb[]> = of([]);
 
   constructor(
     private accountService: AccountService,
@@ -20,7 +29,8 @@ export class MainComponent implements OnInit {
     private router: Router,
     private findLanguageFromKeyPipe: FindLanguageFromKeyPipe,
     private translateService: TranslateService,
-    rootRenderer: RendererFactory2
+    rootRenderer: RendererFactory2,
+    private activatedRoute: ActivatedRoute
   ) {
     this.renderer = rootRenderer.createRenderer(document.querySelector('html'), null);
   }
@@ -42,6 +52,28 @@ export class MainComponent implements OnInit {
 
       this.updatePageDirection();
     });
+
+    this.breadcrumbs$ = this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd),
+      distinctUntilChanged(),
+      map(event => {
+        let route = this.activatedRoute.root;
+        const breadcrumbs: Breadcrumb[] = [];
+        
+        while (route.children.length) {
+          const childRoute = route.children[0];
+          if (childRoute.snapshot.data['breadcrumb']) {
+            const url = this.router.url.split('?')[0].split('/').slice(0, breadcrumbs.length + 2).join('/');
+            breadcrumbs.push({
+              label: childRoute.snapshot.data['breadcrumb'],
+              url: url
+            });
+          }
+          route = childRoute;
+        }
+        return breadcrumbs;
+      })
+    );
   }
 
   private getPageTitle(routeSnapshot: ActivatedRouteSnapshot): string {

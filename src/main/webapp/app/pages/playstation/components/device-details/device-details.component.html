@@ -35,17 +35,17 @@
     <div class="cost-summary">
       <div class="cost-item session-time">
         <label>{{ 'playstation.devices.details.costs.sessionTime' | translate }}</label>
-        <span class="value">{{ getSessionTimeCost() | currency }}</span>
+        <span class="value">{{ getSessionTimeCost() | currencyK }}</span>
       </div>
 
       <div class="cost-item orders-total">
         <label>{{ 'playstation.devices.details.costs.ordersTotal' | translate }}</label>
-        <span class="value">{{ getOrdersTotal() | currency }}</span>
+        <span class="value">{{ getOrdersTotal() | currencyK }}</span>
       </div>
 
       <div class="cost-item total">
         <label>{{ 'playstation.devices.details.costs.total' | translate }}</label>
-        <span class="value">{{ getTotalCost() | currency }}</span>
+        <span class="value">{{ getTotalCost() | currencyK }}</span>
       </div>
     </div>
 

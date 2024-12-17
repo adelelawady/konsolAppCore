@@ -12,7 +12,25 @@
       <div class="container-fixed">
         <div class="row g-2 align-items-center">
           <div class="col">
-            <!-- Page title will go here if needed -->
+            <!-- Breadcrumb navigation -->
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                  <a routerLink="/" class="text-muted">
+                    <i class="fa fa-home"></i>
+                    <span class="ms-1">Home</span>
+                  </a>
+                </li>
+                <li class="breadcrumb-item" *ngFor="let breadcrumb of breadcrumbs$ | async; let last = last" [class.active]="last">
+                  <ng-container *ngIf="!last">
+                    <a [routerLink]="breadcrumb.url" class="text-muted">{{ breadcrumb.label }}</a>
+                  </ng-container>
+                  <ng-container *ngIf="last">
+                    <span class="text-primary">{{ breadcrumb.label }}</span>
+                  </ng-container>
+                </li>
+              </ol>
+            </nav>
           </div>
         </div>
       </div>

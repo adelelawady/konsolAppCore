@@ -38,13 +38,13 @@
             <td>{{ session.startTime | date:'medium' }}</td>
             <td>{{ session.type?.name }}</td>
             <td>{{ session.invoice?.pk }}</td>
-            <td>{{ session.invoice?.netPrice | currency:'EGP':'symbol':'1.0-0' }}</td>
+            <td>{{ session.invoice?.netPrice | currencyK }}</td>
            
-            <td>{{ session.invoice?.discount | currency:'EGP':'symbol':'1.0-0' }}</td>
-            <td>{{ session.invoice?.additions | currency:'EGP':'symbol':'1.0-0' }}</td>
-            <td>{{ session.invoice?.userNetPrice | currency:'EGP':'symbol':'1.0-0' }}</td>
+            <td>{{ session.invoice?.discount | currencyK }}</td>
+            <td>{{ session.invoice?.additions | currencyK }}</td>
+            <td>{{ session.invoice?.userNetPrice | currencyK }}</td>
             <td class="font-weight-bold">
-              {{ session.invoice?.netPrice  | currency:'EGP':'symbol':'1.0-0' }}
+              {{ session.invoice?.netPrice  | currencyK }}
             </td>
             <td>
               <button class="btn btn-sm btn-info" (click)="viewSession(session)">

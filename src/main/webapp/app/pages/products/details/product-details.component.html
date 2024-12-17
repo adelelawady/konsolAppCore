@@ -65,7 +65,7 @@
                     <i class="fas fa-dollar-sign text-primary"></i>
                     <span class="text-muted">{{ 'products.fields.price' | translate }}</span>
                   </div>
-                  <strong class="text-success">{{ getPrice() | currency: 'EGP' }}</strong>
+                  <strong class="text-success">{{ getPrice() | currencyK }}</strong>
                 </div>
               </div>
               <div class="list-group-item px-0 py-2">
@@ -74,7 +74,7 @@
                     <i class="fas fa-shopping-cart text-primary"></i>
                     <span class="text-muted">{{ 'products.fields.cost' | translate }}</span>
                   </div>
-                  <strong>{{ getCost() | currency: 'EGP' }}</strong>
+                  <strong>{{ getCost() | currencyK }}</strong>
                 </div>
               </div>
               <div class="list-group-item px-0 py-2">
@@ -109,7 +109,7 @@
                       <i class="fas fa-money-bill-wave text-success"></i>
                       <h6 class="card-subtitle text-muted mb-0">{{ 'products.fields.totalSales' | translate }}</h6>
                     </div>
-                    <h4 class="mb-0">{{ productAnalysis.totalSales | currency: 'EGP' }}</h4>
+                    <h4 class="mb-0">{{ productAnalysis.totalSales | currencyK }}</h4>
                   </div>
                 </div>
               </div>
@@ -120,7 +120,7 @@
                       <i class="fas fa-hand-holding-usd text-primary"></i>
                       <h6 class="card-subtitle text-muted mb-0">{{ 'products.fields.netSales' | translate }}</h6>
                     </div>
-                    <h4 class="mb-0">{{ productAnalysis.netSales | currency: 'EGP' }}</h4>
+                    <h4 class="mb-0">{{ productAnalysis.netSales | currencyK }}</h4>
                   </div>
                 </div>
               </div>
@@ -131,7 +131,7 @@
                       <i class="fas fa-chart-line text-info"></i>
                       <h6 class="card-subtitle text-muted mb-0">{{ 'products.fields.totalProfit' | translate }}</h6>
                     </div>
-                    <h4 class="mb-0">{{ productAnalysis.totalProfit | currency: 'EGP' }}</h4>
+                    <h4 class="mb-0">{{ productAnalysis.totalProfit | currencyK }}</h4>
                   </div>
                 </div>
               </div>
@@ -142,7 +142,7 @@
                       <i class="fas fa-tags text-warning"></i>
                       <h6 class="card-subtitle text-muted mb-0">{{ 'products.fields.totalDiscounts' | translate }}</h6>
                     </div>
-                    <h4 class="mb-0">{{ productAnalysis.totalDiscount | currency: 'EGP' }}</h4>
+                    <h4 class="mb-0">{{ productAnalysis.totalDiscount | currencyK }}</h4>
                   </div>
                 </div>
               </div>
@@ -164,7 +164,7 @@
                       <i class="fas fa-shopping-cart text-danger"></i>
                       <h6 class="card-subtitle text-muted mb-0">{{ 'products.fields.totalCost' | translate }}</h6>
                     </div>
-                    <h4 class="mb-0">{{ productAnalysis.totalCost | currency: 'EGP' }}</h4>
+                    <h4 class="mb-0">{{ productAnalysis.totalCost | currencyK }}</h4>
                   </div>
                 </div>
               </div>

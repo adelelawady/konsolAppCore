@@ -1,4 +1,5 @@
 import { DEFAULT_CURRENCY_CODE, NgModule } from '@angular/core';
+import { CurrencyPipe } from '@angular/common';
 
 import { SharedLibsModule } from './shared-libs.module';
 import { FindLanguageFromKeyPipe } from './language/find-language-from-key.pipe';
@@ -21,7 +22,7 @@ import { StoreSelectorComponent } from './components/store-selector/store-select
 import { BankSelectorComponent } from './components/bank-selector/bank-selector.component';
 import { AccountSelectorComponent } from './components/account-selector/account-selector.component';
 import { TranslationModule } from '../shared/language/translation.module';
-import { CustomCurrencyPipe } from './pipes/custom-currency.pipe';
+import { CurrencySpacePipe } from './pipes/currency-space.pipe';
 
 @NgModule({
   imports: [SharedLibsModule],
@@ -45,7 +46,7 @@ import { CustomCurrencyPipe } from './pipes/custom-currency.pipe';
     StoreSelectorComponent,
     BankSelectorComponent,
     AccountSelectorComponent,
-    CustomCurrencyPipe
+    CurrencySpacePipe
   ],
   exports: [
     SharedLibsModule,
@@ -68,11 +69,11 @@ import { CustomCurrencyPipe } from './pipes/custom-currency.pipe';
     StoreSelectorComponent,
     BankSelectorComponent,
     AccountSelectorComponent,
-    CustomCurrencyPipe
+    CurrencySpacePipe
   ],
   providers: [
     AppCurrencyPipe,
-
+    CurrencyPipe,
     { provide: DEFAULT_CURRENCY_CODE, useValue: 'EGP' }, // Replace 'USD' with your desired default currency code
   ],
 })

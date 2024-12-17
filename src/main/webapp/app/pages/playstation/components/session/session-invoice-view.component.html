@@ -69,32 +69,32 @@
                   <td>{{ item.item?.name }}</td>
                   <td class="text-center">{{ item.unit }}</td>
                   <td class="text-center">{{ item.userQty }}</td>
-                  <td class="text-end">{{ item.unitPrice | currency:'EGP':'symbol':'1.0-2' }}</td>
+                  <td class="text-end">{{ item.unitPrice | currencyK }}</td>
                   <td class="text-end">
                     <span *ngIf="item.discount" class="text-danger">
-                      -{{ item.discount | currency:'EGP':'symbol':'1.0-2' }}
+                      -{{ item.discount | currencyK }}
                     </span>
                     <span *ngIf="!item.discount">-</span>
                   </td>
-                  <td class="text-end">{{ item.netPrice | currency:'EGP':'symbol':'1.0-2' }}</td>
+                  <td class="text-end">{{ item.netPrice | currencyK:'EGP':'symbol':'1.0-2' }}</td>
                 </tr>
               </tbody>
               <tfoot class="table-group-divider">
                 <tr>
                   <td colspan="5" class="text-end fw-bold">{{ 'playstation.session.invoice.subtotal' | translate }}</td>
-                  <td class="text-end fw-bold">{{ calculateItemsSubtotal() | currency:'EGP':'symbol':'1.0-2' }}</td>
+                  <td class="text-end fw-bold">{{ calculateItemsSubtotal() | currencyK }}</td>
                 </tr>
                 <tr>
                   <td colspan="5" class="text-end">{{ 'playstation.session.invoice.discount' | translate }}</td>
-                  <td class="text-end text-danger">-{{ session.invoice?.discount | currency:'EGP':'symbol':'1.0-2' }}</td>
+                  <td class="text-end text-danger">-{{ session.invoice?.discount | currencyK }}</td>
                 </tr>
                 <tr>
                   <td colspan="5" class="text-end">{{ 'playstation.session.invoice.additions' | translate }}</td>
-                  <td class="text-end">{{ session.invoice?.additions | currency:'EGP':'symbol':'1.0-2' }}</td>
+                  <td class="text-end">{{ session.invoice?.additions | currencyK }}</td>
                 </tr>
                 <tr class="table-active">
                   <td colspan="5" class="text-end fw-bold">{{ 'playstation.session.invoice.total' | translate }}</td>
-                  <td class="text-end fw-bold fs-5">{{ session.invoice?.netPrice | currency:'EGP':'symbol':'1.0-2' }}</td>
+                  <td class="text-end fw-bold fs-5">{{ session.invoice?.netPrice | currencyK }}</td>
                 </tr>
               </tfoot>
             </table>

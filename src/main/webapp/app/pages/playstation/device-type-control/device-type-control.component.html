@@ -50,7 +50,7 @@
           <ng-container *ngIf="getDeviceTypeByType(type) as deviceType">
             <div class="mt-3">
               <small class="text-muted">
-                {{ 'playstation.deviceType.labels.defaultPrice' | translate }}: {{ deviceType.price | currency }}
+                {{ 'playstation.deviceType.labels.defaultPrice' | translate }}: {{ deviceType.price | currencyK }}
               </small>
             </div>
           </ng-container>

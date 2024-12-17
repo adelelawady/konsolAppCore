@@ -7,5 +7,6 @@ export const HOME_ROUTE: Route = {
   component: HomeComponent,
   data: {
     pageTitle: 'home.title',
+    breadcrumb: 'Home'
   },
 };

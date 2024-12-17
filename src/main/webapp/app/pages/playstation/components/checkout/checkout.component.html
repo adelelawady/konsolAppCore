@@ -18,17 +18,17 @@
       
       <div class="summary-item">
         <span>{{ 'playstation.checkout.summary.sessionTime' | translate }}</span>
-        <span class="amount">{{ getSessionTimeCost() | currency }}</span>
+        <span class="amount">{{ getSessionTimeCost() | currencyK }}</span>
       </div>
       
       <div class="summary-item">
         <span>{{ 'playstation.checkout.summary.orders' | translate }}</span>
-        <span class="amount">{{ getOrdersTotal() | currency }}</span>
+        <span class="amount">{{ getOrdersTotal() | currencyK }}</span>
       </div>
       
       <div class="summary-item total">
         <span>{{ 'playstation.checkout.summary.subtotal' | translate }}</span>
-        <span class="amount">{{ getTotalBeforeDiscount() | currency }}</span>
+        <span class="amount">{{ getTotalBeforeDiscount() | currencyK }}</span>
       </div>
     </div>
 
@@ -75,7 +75,7 @@
 
     <div class="final-total">
       <h4>{{ 'playstation.checkout.summary.finalTotal' | translate }}</h4>
-      <span class="amount">{{ getFinalTotal() | currency }}</span>
+      <span class="amount">{{ getFinalTotal() | currencyK }}</span>
     </div>
 
     <div class="checkout-actions">

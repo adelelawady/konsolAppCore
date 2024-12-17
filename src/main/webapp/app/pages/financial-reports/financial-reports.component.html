@@ -53,20 +53,20 @@
                 <span class="trend-indicator positive d-none"> <i class="fas fa-arrow-up"></i> 12% </span>
               </div>
               <span class="metric-value highlight">
-                {{ salesMetrics?.totalSales | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
+                {{ salesMetrics?.totalSales | currencyK: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
               </span>
               <div class="metric-details">
                 <span class="metric-label">
                   <i class="fas fa-money-bill-alt"></i> {{ 'financialReports.metrics.salesRevenue.netSales' | translate }}:
-                  {{ salesMetrics?.netSales | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
+                  {{ salesMetrics?.netSales | currencyK: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
                 </span>
                 <span class="metric-label">
                   <i class="fas fa-chart-line"></i> {{ 'financialReports.metrics.salesRevenue.dailyRevenue' | translate }}:
-                  {{ salesMetrics?.dailyRevenue | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
+                  {{ salesMetrics?.dailyRevenue | currencyK: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
                 </span>
                 <span class="metric-label">
                   <i class="fas fa-calendar-alt"></i> {{ 'financialReports.metrics.salesRevenue.monthlyRevenue' | translate }}:
-                  {{ salesMetrics?.monthlyRevenue | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
+                  {{ salesMetrics?.monthlyRevenue | currencyK: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
                 </span>
               </div>
             </div>
@@ -75,7 +75,7 @@
             <div class="metric-content">
               <h4><i class="fas fa-hand-holding-usd"></i> {{ 'financialReports.metrics.salesRevenue.netProfit' | translate }}</h4>
               <p class="metric-value">
-                {{ salesMetrics?.netProfit | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
+                {{ salesMetrics?.netProfit | currencyK: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
               </p>
             </div>
           </div>
@@ -83,11 +83,11 @@
             <div class="metric-content">
               <h4><i class="fas fa-coins"></i> {{ 'financialReports.metrics.salesRevenue.totalCost' | translate }}</h4>
               <p class="metric-value">
-                {{ salesMetrics?.totalCost | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
+                {{ salesMetrics?.totalCost | currencyK: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
               </p>
               <span class="metric-label">
                 <i class="fas fa-calculator"></i> {{ 'financialReports.metrics.salesRevenue.netCost' | translate }}:
-                {{ salesMetrics?.netCost | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
+                {{ salesMetrics?.netCost | currencyK: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
               </span>
             </div>
           </div>
@@ -166,8 +166,8 @@
             <tr *ngFor="let item of topSellingItems">
               <td>{{ item.itemName }}</td>
               <td>{{ item.quantity }}</td>
-              <td>{{ item.revenue | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}</td>
-              <td>{{ item.profit | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}</td>
+              <td>{{ item.revenue | currencyK: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}</td>
+              <td>{{ item.profit | currencyK: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}</td>
               <td>{{ item.profitMargin | number: '1.2-2' }}%</td>
             </tr>
           </tbody>
@@ -186,11 +186,11 @@
               <div class="store-metrics">
                 <p>
                   <span><i class="fas fa-chart-line"></i> {{ 'financialReports.storePerformance.metrics.revenue' | translate }}:</span>
-                  {{ store.totalRevenue | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
+                  {{ store.totalRevenue | currencyK: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
                 </p>
                 <p>
                   <span><i class="fas fa-money-bill-alt"></i> {{ 'financialReports.storePerformance.metrics.cost' | translate }}:</span>
-                  {{ store.totalCost | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
+                  {{ store.totalCost | currencyK: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
                 </p>
                 <p>
                   <span><i class="fas fa-percentage"></i> {{ 'financialReports.storePerformance.metrics.profitMargin' | translate }}:</span>
@@ -204,7 +204,7 @@
                   <span
                     ><i class="fas fa-wallet"></i> {{ 'financialReports.storePerformance.metrics.averageTransaction' | translate }}:</span
                   >
-                  {{ store.averageTransactionValue | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
+                  {{ store.averageTransactionValue | currencyK: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
                 </p>
               </div>
             </div>
@@ -224,7 +224,7 @@
                 <span class="metric-label"
                   >{{ 'financialReports.invoiceAnalysis.discounts.average' | translate }}:
                   {{
-                    invoiceAnalysis?.averageDiscount | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2'
+                    invoiceAnalysis?.averageDiscount | currencyK: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2'
                   }}</span
                 >
                 <span class="metric-label"
@@ -239,13 +239,13 @@
             <div class="metric-content">
               <h4>{{ 'financialReports.invoiceAnalysis.expenses.title' | translate }}</h4>
               <p class="metric-value">
-                {{ invoiceAnalysis?.totalExpenses | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
+                {{ invoiceAnalysis?.totalExpenses | currencyK: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
               </p>
               <div class="metric-details">
                 <span class="metric-label"
                   >{{ 'financialReports.invoiceAnalysis.expenses.totalAdditions' | translate }}:
                   {{
-                    invoiceAnalysis?.totalAdditions | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2'
+                    invoiceAnalysis?.totalAdditions | currencyK: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2'
                   }}</span
                 >
                 <span class="metric-label"
@@ -270,11 +270,11 @@
                 </p>
                 <p>
                   <span>{{ 'financialReports.topItemsAnalysis.revenue' | translate }}:</span>
-                  {{ item.revenue | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
+                  {{ item.revenue | currencyK: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
                 </p>
                 <p>
                   <span>{{ 'financialReports.topItemsAnalysis.profit' | translate }}:</span>
-                  {{ item.profit | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
+                  {{ item.profit | currencyK: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
                 </p>
                 <p>
                   <span>{{ 'financialReports.topItemsAnalysis.margin' | translate }}:</span> {{ item.profitMargin | number: '1.2-2' }}%
@@ -297,20 +297,20 @@
                 <span class="metric-label"
                   >{{ 'financialReports.cashFlow.moneyFlow.moneyIn' | translate }}:
                   {{
-                    cashFlowMetrics?.totalMoneyIn | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2'
+                    cashFlowMetrics?.totalMoneyIn | currencyK: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2'
                   }}</span
                 >
                 <span class="metric-label"
                   >{{ 'financialReports.cashFlow.moneyFlow.moneyOut' | translate }}:
                   {{
-                    cashFlowMetrics?.totalMoneyOut | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2'
+                    cashFlowMetrics?.totalMoneyOut | currencyK: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2'
                   }}</span
                 >
                 <span class="metric-label"
                   >{{ 'financialReports.cashFlow.moneyFlow.currentPosition' | translate }}:
                   {{
                     cashFlowMetrics?.currentCashPosition
-                      | currency: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2'
+                      | currencyK: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2'
                   }}</span
                 >
               </div>

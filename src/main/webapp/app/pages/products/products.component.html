@@ -141,14 +141,14 @@
                             <i class="fas fa-dollar-sign text-primary"></i>
                             <span class="text-muted">{{ 'products.fields.price' | translate }}</span>
                           </div>
-                          <strong class="text-success">{{ selectedItem.price1 | currency: 'EGP' }}</strong>
+                          <strong class="text-success">{{ selectedItem.price1 | currencyK }}</strong>
                         </div>
                         <div class="list-group-item px-0 d-flex justify-content-between align-items-center p-1">
                           <div class="d-flex align-items-center gap-2">
                             <i class="fas fa-shopping-cart text-primary"></i>
                             <span class="text-muted">{{ 'products.fields.cost' | translate }}</span>
                           </div>
-                          <strong>{{ selectedItem.cost | currency: 'EGP' }}</strong>
+                          <strong>{{ selectedItem.cost | currencyK }}</strong>
                         </div>
                       </div>
                     </div>

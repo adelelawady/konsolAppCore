@@ -8,7 +8,6 @@ import { InventoryComponent } from './inventory/inventory.component';
 import { PurchaseComponent } from './purchase/purchase.component';
 import { SalesComponent } from './sales/sales.component';
 import { MoneyComponent } from './money/money.component';
-
 import { NavigationComponent } from './navigation/navigation.component';
 import { ProductsComponent } from './products/products.component';
 import { AccountDetailsComponent } from './accounts/account-details/account-details.component';
@@ -19,78 +18,102 @@ const routes: Routes = [
     path: '',
     component: NavigationComponent,
     canActivate: [UserRouteAccessService],
+    data: { breadcrumb: 'Dashboard' }
   },
   {
     path: 'invoices',
-    component: InvoicesComponent,
-    canActivate: [UserRouteAccessService],
-  },
-  {
-    path: 'invoices/:invoiceId',
-    component: InvoiceDetailsComponent,
-    data: {
-      pageTitle: 'Invoice Details',
-    },
+    data: { breadcrumb: 'Invoices' },
+    children: [
+      {
+        path: '',
+        component: InvoicesComponent,
+        canActivate: [UserRouteAccessService],
+      },
+      {
+        path: ':invoiceId',
+        component: InvoiceDetailsComponent,
+        canActivate: [UserRouteAccessService],
+        data: { breadcrumb: 'Invoice Details' }
+      }
+    ]
   },
   {
     path: 'products',
+    data: { breadcrumb: 'Products' },
     loadChildren: () => import('./products/products.module').then(m => m.ProductsModule),
-    data: { title: 'Products' },
   },
   {
     path: 'financial-reports',
+    data: { breadcrumb: 'Financial Reports' },
     loadChildren: () => import('./financial-reports/financial-reports.module').then(m => m.FinancialReportsModule),
   },
   {
     path: 'accounts',
-    component: AccountsComponent,
-    canActivate: [UserRouteAccessService],
-  },
-  {
-    path: 'accounts/:id',
-    component: AccountDetailsComponent,
-    data: {
-      pageTitle: 'accounts.details.title',
-    },
+    data: { breadcrumb: 'Accounts' },
+    children: [
+      {
+        path: '',
+        component: AccountsComponent,
+        canActivate: [UserRouteAccessService],
+      },
+      {
+        path: ':id',
+        component: AccountDetailsComponent,
+        canActivate: [UserRouteAccessService],
+        data: { breadcrumb: 'Account Details' }
+      }
+    ]
   },
   {
     path: 'inventory',
     component: InventoryComponent,
     canActivate: [UserRouteAccessService],
+    data: { breadcrumb: 'Inventory' }
   },
   {
     path: 'purchase',
-    component: PurchaseComponent,
-    canActivate: [UserRouteAccessService],
-  },
-  {
-    path: 'purchase/:invoiceId',
-    component: PurchaseComponent,
-    canActivate: [UserRouteAccessService],
+    data: { breadcrumb: 'Purchase' },
+    children: [
+      {
+        path: '',
+        component: PurchaseComponent,
+        canActivate: [UserRouteAccessService],
+      },
+      {
+        path: ':invoiceId',
+        component: PurchaseComponent,
+        canActivate: [UserRouteAccessService],
+        data: { breadcrumb: 'Purchase Details' }
+      }
+    ]
   },
   {
     path: 'sales',
-    component: SalesComponent,
-    canActivate: [UserRouteAccessService],
-  },
-  {
-    path: 'sales/:invoiceId',
-    component: SalesComponent,
-    canActivate: [UserRouteAccessService],
+    data: { breadcrumb: 'Sales' },
+    children: [
+      {
+        path: '',
+        component: SalesComponent,
+        canActivate: [UserRouteAccessService],
+      },
+      {
+        path: ':invoiceId',
+        component: SalesComponent,
+        canActivate: [UserRouteAccessService],
+        data: { breadcrumb: 'Sale Details' }
+      }
+    ]
   },
   {
     path: 'money',
     component: MoneyComponent,
     canActivate: [UserRouteAccessService],
-    data: { title: 'Money Transactions' },
+    data: { breadcrumb: 'Money Transactions' }
   },
-
-  // PLAYSTATION
-
   {
     path: 'playstation',
+   
     loadChildren: () => import('./playstation/playstation.module').then(m => m.PlaystationModule),
-    data: { title: 'playstation' },
   },
 ];
 

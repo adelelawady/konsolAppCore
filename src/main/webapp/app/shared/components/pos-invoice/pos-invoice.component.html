@@ -78,7 +78,7 @@
                 <!-- Selected Item Info -->
                 <div class="mt-2 small text-muted" *ngIf="selectedItem">
                   <span class="me-2">{{ 'global.posInvoice.product' | translate }}: {{ selectedItem.name }}</span>
-                  <span>{{ 'global.posInvoice.defaultPrice' | translate }}: {{ selectedItem.price1 | currency }}</span>
+                  <span>{{ 'global.posInvoice.defaultPrice' | translate }}: {{ selectedItem.price1 | currencyK }}</span>
                 </div>
               </div>
               <div class="col-md-12">
@@ -347,24 +347,24 @@
             <div class="card-body">
               <div class="d-flex justify-content-between mb-2">
                 <span class="text-muted">{{ 'global.posInvoice.totals.beforeDiscount' | translate }} </span>
-                <span *ngIf="currentInvoice.kind == 'SALE'" class="font-weight-medium">{{ currentInvoice?.totalPrice | currency }}</span>
-                <span *ngIf="currentInvoice.kind == 'PURCHASE'" class="font-weight-medium">{{ currentInvoice?.totalCost | currency }}</span>
+                <span *ngIf="currentInvoice.kind == 'SALE'" class="font-weight-medium">{{ currentInvoice?.totalPrice | currencyK }}</span>
+                <span *ngIf="currentInvoice.kind == 'PURCHASE'" class="font-weight-medium">{{ currentInvoice?.totalCost | currencyK }}</span>
               </div>
               <div class="d-flex justify-content-between mb-2">
                 <span class="text-muted">{{ 'global.posInvoice.totals.discount' | translate }} </span>
-                <span class="text-danger">{{ currentInvoice?.discount | currency }}</span>
+                <span class="text-danger">{{ currentInvoice?.discount | currencyK }}</span>
               </div>
               <div class="d-flex justify-content-between mb-2">
                 <span class="text-muted">{{ 'global.posInvoice.additions.label' | translate }} </span>
-                <span class="text-muted">{{ additions | currency }}</span>
+                <span class="text-muted">{{ additions | currencyK }}</span>
               </div>
               <div class="d-flex justify-content-between">
                 <span class="font-weight-bold">{{ 'global.posInvoice.totals.total' | translate }} </span>
                 <span *ngIf="currentInvoice.kind == 'SALE'" class="font-weight-bold text-primary h4 mb-0">{{
-                  currentInvoice?.netPrice | currency
+                  currentInvoice?.netPrice | currencyK
                 }}</span>
                 <span *ngIf="currentInvoice.kind == 'PURCHASE'" class="font-weight-bold text-primary h4 mb-0">{{
-                  currentInvoice?.netCost | currency
+                  currentInvoice?.netCost | currencyK
                 }}</span>
               </div>
             </div>

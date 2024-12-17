@@ -287,3 +287,31 @@ angular-cli removes postcss-rtl processed inline css, processed rules must be ad
     padding-left: 0.5rem;
   }
 }
+
+// Add these styles for the breadcrumb
+.breadcrumb {
+  margin: 0;
+  padding: 0.5rem 0;
+  background: transparent;
+  
+  .breadcrumb-item {
+    font-size: 0.875rem;
+    
+    & + .breadcrumb-item::before {
+      content: "•";
+      color: #6c757d;
+    }
+    
+    a {
+      text-decoration: none;
+      
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+    
+    &.active {
+      font-weight: 500;
+    }
+  }
+}

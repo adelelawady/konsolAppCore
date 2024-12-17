@@ -31,7 +31,7 @@
           <select class="form-control" id="field_type" data-cy="type" formControlName="type">
             <option [ngValue]="null">{{ 'playstation.devices.update.form.type.placeholder' | translate }}</option>
             <option *ngFor="let type of deviceTypes" [ngValue]="type">
-              {{ type.name }} - {{ type.price | currency }}
+              {{ type.name }} - {{ type.price | currencyK }}
             </option>
           </select>
           <div *ngIf="editForm.get('type')?.invalid && (editForm.get('type')?.dirty || editForm.get('type')?.touched)">

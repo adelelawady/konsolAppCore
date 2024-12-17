@@ -35,27 +35,6 @@ import { LayoutsModule } from './layouts/layouts.module';
 
 import { TranslateDirective } from './shared/language/translate.directive';
 
-@Pipe({
-  name: 'customCurrency',
-  pure: true
-})
-export class CustomCurrencyPipe extends CurrencyPipe {
-  override transform(value: string | number, currencyCode?: string, display?: string | boolean, digitsInfo?: string, locale?: string): string | null;
-  override transform(value: null | undefined, currencyCode?: string, display?: string | boolean, digitsInfo?: string, locale?: string): null;
-  override transform(
-    value: string | number | null | undefined,
-    currencyCode?: string,
-    display?: string | boolean,
-    digitsInfo?: string,
-    locale?: string
-  ): string | null {
-    const currencyStr = super.transform(value as any, currencyCode || 'EGP', display || 'symbol', digitsInfo || '1.2-2', locale);
-    if (!currencyStr) return null;
-    // Add space between currency code and number
-    return currencyStr.replace(/^([A-Z]{3})(\d)/, '$1 $2');
-  }
-}
-
 @NgModule({
   imports: [
     BrowserModule,
@@ -81,19 +60,15 @@ export class CustomCurrencyPipe extends CurrencyPipe {
     }),
     LayoutsModule,
   ],
-  exports: [CustomCurrencyPipe],
   providers: [
     Title,
     { provide: LOCALE_ID, useValue: 'en' },
     { provide: DEFAULT_CURRENCY_CODE, useValue: 'EGP' },
-    CustomCurrencyPipe,
-    { provide: CurrencyPipe, useClass: CustomCurrencyPipe },
     { provide: NgbDateAdapter, useClass: NgbDateDayjsAdapter },
     httpInterceptorProviders,
-    //CurrencyConfigService,
     FindLanguageFromKeyPipe,
   ],
-  declarations: [CustomCurrencyPipe,MainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, ActiveMenuDirective],
+  declarations: [MainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, ActiveMenuDirective],
   bootstrap: [MainComponent],
 })
 export class AppModule {
