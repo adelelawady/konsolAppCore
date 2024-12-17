@@ -283,21 +283,7 @@
       "refresh": "Refresh",
       "loading": "Loading sessions...",
       "noSessions": "No sessions found",
-      "table": {
-        "id": "ID",
-        "startTime": "Start Time",
-        "invoice": {
-          "id": "Invoice ID",
-          "netPrice": "Net Price",
-          "discount": "Discount",
-          "additions": "Additions",
-          "total": "Total",
-          "pk": "Invoice #",
-          "userNetPrice": "Custom Price"
-        },
-        "type": "Type",
-        "actions": "Actions"
-      },
+      "info": "Session Information",
       "invoice": {
         "title": "Invoice Details",
         "details": "Invoice Details",
@@ -308,13 +294,36 @@
           "quantity": "Quantity",
           "price": "Price",
           "total": "Total",
-          "subtotal": "Subtotal"
-        }
+          "subtotal": "Subtotal",
+          "count": "Items",
+          "unit": "Unit",
+          "qty": "Quantity",
+          "unitPrice": "Unit Price",
+          "discount": "Discount"
+        },
+        "subtotal": "Subtotal",
+        "discount": "Discount",
+        "additions": "Additional Charges",
+        "total": "Total Amount"
       },
       "table": {
+        "id": "ID",
+        "startTime": "Start Time",
         "endTime": "End Time",
         "duration": "Duration",
-        "minutes": "minutes"
+        "minutes": "minutes",
+        "device": "Device",
+        "type": "Type",
+        "actions": "Actions",
+        "invoice": {
+          "id": "Invoice ID",
+          "netPrice": "Net Price",
+          "discount": "Discount",
+          "additions": "Additions",
+          "total": "Total",
+          "pk": "Invoice #",
+          "userNetPrice": "Custom Price"
+        }
       }
     }
   }

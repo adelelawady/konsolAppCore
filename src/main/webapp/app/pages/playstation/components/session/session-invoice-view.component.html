@@ -2,6 +2,7 @@
   <div class="invoice-view__header">
     <h2>{{ 'playstation.session.invoice.title' | translate }}</h2>
     <button class="btn btn-secondary" (click)="back()">
+      <fa-icon [icon]="faArrowLeft" class="me-2"></fa-icon>
       <span>{{ 'entity.action.back' | translate }}</span>
     </button>
   </div>
@@ -13,84 +14,92 @@
     </div>
 
     <div *ngIf="!isLoading && session" class="invoice-details">
-      <div class="row mb-3">
-        <div class="col-sm-6">
-          <strong>{{ 'playstation.session.table.startTime' | translate }}:</strong>
-          <p>{{ session.startTime | date:'medium' }}</p>
+      <!-- Session Info Card -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5 class="mb-0">{{ 'playstation.session.info' | translate }}</h5>
         </div>
-        <div class="col-sm-6">
-          <strong>{{ 'playstation.session.table.type' | translate }}:</strong>
-          <p>{{ session.type?.name }}</p>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="info-item">
+                <label>{{ 'playstation.session.table.startTime' | translate }}</label>
+                <p>{{ session.startTime | date:'medium' }}</p>
+              </div>
+              <div class="info-item">
+                <label>{{ 'playstation.session.table.type' | translate }}</label>
+                <p>{{ session.type?.name }}</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="info-item">
+                <label>{{ 'playstation.session.table.invoice.pk' | translate }}</label>
+                <p>#{{ session.invoice?.pk }}</p>
+              </div>
+              <div class="info-item">
+                <label>{{ 'playstation.session.table.device' | translate }}</label>
+               <!--<p>{{ session.playstationDevice?.name }}</p>--> 
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="invoice-amounts">
-        <h4>{{ 'playstation.session.invoice.details' | translate }}</h4>
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <strong>{{ 'playstation.session.table.invoice.pk' | translate }}:</strong>
-            <p>{{ session.invoice?.pk }}</p>
-          </div>
-          <div class="col-sm-6">
-            <strong>{{ 'playstation.session.table.invoice.netPrice' | translate }}:</strong>
-            <p>{{ session.invoice?.netPrice | currency:'EGP':'symbol':'1.0-0' }}</p>
-          </div>
+      <!-- Invoice Items Table -->
+      <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">{{ 'playstation.session.invoice.items' | translate }}</h5>
+          <span class="badge bg-primary">{{ getInvoiceItemsCount() }} {{ 'playstation.session.invoice.items.count' | translate }}</span>
         </div>
-
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <strong>{{ 'playstation.session.table.invoice.discount' | translate }}:</strong>
-            <p>{{ session.invoice?.discount | currency:'EGP':'symbol':'1.0-0' }}</p>
-          </div>
-          <div class="col-sm-6">
-            <strong>{{ 'playstation.session.table.invoice.additions' | translate }}:</strong>
-            <p>{{ session.invoice?.additions | currency:'EGP':'symbol':'1.0-0' }}</p>
-          </div>
-        </div>
-
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <strong>{{ 'playstation.session.table.invoice.userNetPrice' | translate }}:</strong>
-            <p>{{ session.invoice?.userNetPrice | currency:'EGP':'symbol':'1.0-0' }}</p>
-          </div>
-          <div class="col-sm-6">
-            <strong>{{ 'playstation.session.table.invoice.total' | translate }}:</strong>
-            <p class="font-weight-bold">{{ session.invoice?.netPrice | currency:'EGP':'symbol':'1.0-0' }}</p>
-          </div>
-        </div>
-
-        <div class="invoice-items mt-4">
-          <h4>{{ 'playstation.session.invoice.items' | translate }}</h4>
+        <div class="card-body">
           <div class="table-responsive">
-            <table class="table table-striped" *ngIf="hasInvoiceItems()">
+            <table class="table table-striped table-hover" *ngIf="hasInvoiceItems()">
               <thead>
                 <tr>
                   <th>{{ 'playstation.session.invoice.items.name' | translate }}</th>
-                  <th>{{ 'playstation.session.invoice.items.quantity' | translate }}</th>
-                  <th>{{ 'playstation.session.invoice.items.price' | translate }}</th>
-                  <th>{{ 'playstation.session.invoice.items.total' | translate }}</th>
+                  <th class="text-center">{{ 'playstation.session.invoice.items.unit' | translate }}</th>
+                  <th class="text-center">{{ 'playstation.session.invoice.items.qty' | translate }}</th>
+                  <th class="text-end">{{ 'playstation.session.invoice.items.unitPrice' | translate }}</th>
+                  <th class="text-end">{{ 'playstation.session.invoice.items.discount' | translate }}</th>
+                  <th class="text-end">{{ 'playstation.session.invoice.items.total' | translate }}</th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let item of getInvoiceItemsArray()">
                   <td>{{ item.item?.name }}</td>
-                  <td>{{ item.qty }}</td>
-                  <td>{{ item.item?.price | currency:'EGP':'symbol':'1.0-0' }}</td>
-                  <td>{{ item.qty * item.price | currency:'EGP':'symbol':'1.0-0' }}</td>
+                  <td class="text-center">{{ item.unit }}</td>
+                  <td class="text-center">{{ item.userQty }}</td>
+                  <td class="text-end">{{ item.unitPrice | currency:'EGP':'symbol':'1.0-2' }}</td>
+                  <td class="text-end">
+                    <span *ngIf="item.discount" class="text-danger">
+                      -{{ item.discount | currency:'EGP':'symbol':'1.0-2' }}
+                    </span>
+                    <span *ngIf="!item.discount">-</span>
+                  </td>
+                  <td class="text-end">{{ item.netPrice | currency:'EGP':'symbol':'1.0-2' }}</td>
                 </tr>
               </tbody>
-              <tfoot>
+              <tfoot class="table-group-divider">
                 <tr>
-                  <td colspan="3" class="text-right font-weight-bold">
-                    {{ 'playstation.session.invoice.items.subtotal' | translate }}
-                  </td>
-                  <td class="font-weight-bold">
-                    {{ calculateItemsTotal() | currency:'EGP':'symbol':'1.0-0' }}
-                  </td>
+                  <td colspan="5" class="text-end fw-bold">{{ 'playstation.session.invoice.subtotal' | translate }}</td>
+                  <td class="text-end fw-bold">{{ calculateItemsSubtotal() | currency:'EGP':'symbol':'1.0-2' }}</td>
+                </tr>
+                <tr>
+                  <td colspan="5" class="text-end">{{ 'playstation.session.invoice.discount' | translate }}</td>
+                  <td class="text-end text-danger">-{{ session.invoice?.discount | currency:'EGP':'symbol':'1.0-2' }}</td>
+                </tr>
+                <tr>
+                  <td colspan="5" class="text-end">{{ 'playstation.session.invoice.additions' | translate }}</td>
+                  <td class="text-end">{{ session.invoice?.additions | currency:'EGP':'symbol':'1.0-2' }}</td>
+                </tr>
+                <tr class="table-active">
+                  <td colspan="5" class="text-end fw-bold">{{ 'playstation.session.invoice.total' | translate }}</td>
+                  <td class="text-end fw-bold fs-5">{{ session.invoice?.netPrice | currency:'EGP':'symbol':'1.0-2' }}</td>
                 </tr>
               </tfoot>
             </table>
             <div *ngIf="!hasInvoiceItems()" class="no-items">
+              <fa-icon [icon]="faBox" class="me-2"></fa-icon>
               {{ 'playstation.session.invoice.noItems' | translate }}
             </div>
           </div>

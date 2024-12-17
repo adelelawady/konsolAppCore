@@ -14,50 +14,66 @@
 }
 
 .invoice-details {
-  background: #fff;
-  border-radius: 0.25rem;
-  padding: 1.5rem;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-
-  h4 {
-    color: #495057;
-    margin-bottom: 1.5rem;
+  .card {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    border: none;
+    
+    .card-header {
+      background-color: #f8f9fa;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+      
+      h5 {
+        color: #495057;
+      }
+    }
   }
 
-  strong {
-    color: #495057;
-    display: block;
-    margin-bottom: 0.5rem;
+  .info-item {
+    margin-bottom: 1rem;
+
+    label {
+      display: block;
+      color: #6c757d;
+      font-size: 0.875rem;
+      margin-bottom: 0.25rem;
+    }
+
+    p {
+      margin: 0;
+      color: #212529;
+      font-weight: 500;
+    }
   }
 
-  p {
-    margin-bottom: 0.5rem;
-  }
-}
-
-.invoice-amounts {
-  margin-top: 1.5rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid #dee2e6;
-}
-
-.invoice-items {
   .table {
+    margin-bottom: 0;
+
     th {
       background-color: #f8f9fa;
+      border-bottom: 2px solid #dee2e6;
+      font-weight: 600;
     }
 
     td, th {
       vertical-align: middle;
+      padding: 0.75rem;
+    }
+
+    tbody tr:hover {
+      background-color: rgba(0, 0, 0, 0.02);
     }
   }
+}
 
-  .no-items {
-    text-align: center;
-    padding: 2rem;
-    background-color: #f8f9fa;
-    border-radius: 0.25rem;
-    color: #6c757d;
+.no-items {
+  text-align: center;
+  padding: 2rem;
+  color: #6c757d;
+  background-color: #f8f9fa;
+  border-radius: 0.25rem;
+  
+  fa-icon {
+    font-size: 1.25rem;
   }
 }
 
@@ -70,4 +86,9 @@
   fa-icon {
     margin-right: 0.5rem;
   }
+}
+
+.badge {
+  font-size: 0.875rem;
+  padding: 0.5em 0.75em;
 } 

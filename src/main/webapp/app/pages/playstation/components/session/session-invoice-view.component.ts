@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PsSessionDTO } from 'app/core/konsolApi/model/psSessionDTO';
-import { faSpinner, faClock } from '@fortawesome/free-solid-svg-icons';
+import { InvoiceItemDTO } from 'app/core/konsolApi/model/invoiceItemDTO';
+import { faSpinner, faArrowLeft, faBox } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'jhi-session-invoice-view',
@@ -14,7 +15,8 @@ export class SessionInvoiceViewComponent implements OnInit {
 
   // Icons
   faSpinner = faSpinner;
-  faClock = faClock;
+  faArrowLeft = faArrowLeft;
+  faBox = faBox;
 
   constructor(
     private route: ActivatedRoute,
@@ -31,16 +33,22 @@ export class SessionInvoiceViewComponent implements OnInit {
     });
   }
 
-  calculateItemsTotal(): number {
-    return !this.session?.invoice?.netPrice ? 0 : this.session.invoice.netPrice;
-  }
-
   hasInvoiceItems(): boolean {
     return this.session?.invoice?.invoiceItems !== undefined;
   }
 
-  getInvoiceItemsArray(): any{
-    return this.session?.invoice?.invoiceItems ;
+  getInvoiceItemsArray(): InvoiceItemDTO[] {
+    return this.session?.invoice?.invoiceItems ? Array.from(this.session.invoice.invoiceItems) : [];
+  }
+
+  getInvoiceItemsCount(): number {
+    return this.getInvoiceItemsArray().length;
+  }
+
+  calculateItemsSubtotal(): number {
+    return this.getInvoiceItemsArray().reduce((total, item) => {
+      return total + (item.netPrice || 0);
+    }, 0);
   }
 
   back(): void {
