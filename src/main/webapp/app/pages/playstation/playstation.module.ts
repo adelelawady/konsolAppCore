@@ -23,6 +23,7 @@ import { PlaystationService } from './services/playstation.service';
 import { CheckoutComponent } from './components/checkout/checkout.component';
 import { SessionListComponent } from './components/session/session-list.component';
 import { SessionInvoiceViewComponent } from './components/session/session-invoice-view.component';
+import { ConfirmationModalComponent } from 'app/shared/components/confirmation-modal/confirmation-modal.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { SessionInvoiceViewComponent } from './components/session/session-invoic
     CheckoutComponent,
     SessionListComponent,
     SessionInvoiceViewComponent,
+    ConfirmationModalComponent
   ],
   imports: [
     CommonModule,

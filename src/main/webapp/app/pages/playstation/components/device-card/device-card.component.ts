@@ -1,9 +1,12 @@
-import { Component, Input, ChangeDetectorRef, OnInit, OnDestroy, ElementRef } from '@angular/core';
+import { Component, Input, ChangeDetectorRef, OnInit, OnDestroy, ElementRef, Output, EventEmitter } from '@angular/core';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { PlaystationService } from '../../services/playstation.service';
 import { PsDeviceDTO } from 'app/core/konsolApi';
 import { interval, Subscription } from 'rxjs';
 import { startWith, distinctUntilChanged } from 'rxjs/operators';
+import { PlaystationResourceService } from 'app/core/konsolApi/api/playstationResource.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ConfirmationModalComponent } from 'app/shared/components/confirmation-modal/confirmation-modal.component';
 
 @Component({
   selector: 'jhi-device-card',
@@ -18,8 +21,17 @@ export class DeviceCardComponent implements OnInit, OnDestroy {
   private durationSubscription?: Subscription;
   orderChangeAnimation = false;
   private subscription?: Subscription;
+  @Output() deviceMoved = new EventEmitter<void>();
+  
+  availableDevices: any[] = [];
 
-  constructor(private playstationService: PlaystationService, private cdr: ChangeDetectorRef, private elementRef: ElementRef) {}
+  constructor(
+    private playstationService: PlaystationService,
+    private cdr: ChangeDetectorRef,
+    private elementRef: ElementRef,
+    private playstationResourceService: PlaystationResourceService,
+    private modalService: NgbModal
+  ) {}
 
   ngOnInit(): void {
     if (this.device.session) {
@@ -57,6 +69,8 @@ export class DeviceCardComponent implements OnInit, OnDestroy {
         }
       })
     );
+
+    this.loadAvailableDevices();
   }
 
   ngOnDestroy(): void {
@@ -165,5 +179,34 @@ export class DeviceCardComponent implements OnInit, OnDestroy {
       this.orderChangeAnimation = false;
       this.cdr.detectChanges();
     }, 3000);
+  }
+
+  loadAvailableDevices(): void {
+    this.playstationResourceService.getDevices().subscribe(devices => {
+      // Filter out the current device and active devices
+      this.availableDevices = devices.filter(d => 
+        d.id !== this.device.id && !d.active
+      );
+    });
+  }
+
+  moveDevice(targetDeviceId: string): void {
+    const confirmModal = this.modalService.open(ConfirmationModalComponent);
+    confirmModal.componentInstance.message = `Are you sure you want to move this device?`;
+    
+    confirmModal.result.then((result) => {
+      if (result === 'confirm' && this.device?.id) {
+        this.playstationResourceService.moveDevice(this.device.id, targetDeviceId).subscribe({
+          next: () => {
+            this.deviceMoved.emit();
+            // Show success message
+          },
+          error: (error) => {
+            // Handle error
+            console.error('Error moving device:', error);
+          }
+        });
+      }
+    });
   }
 }

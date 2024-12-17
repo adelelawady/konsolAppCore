@@ -8,14 +8,32 @@
       <i class="fas fa-tv"></i>
       <span>{{ device.name }}</span>
     </div>
+    
   </div>
 
   <div class="device-card__content">
     <div class="device-type">{{ device.type?.name }}</div>
     <div class="device-actions" *ngIf="device.active">
-      <button class="btn-icon settings">
-        <i class="fas fa-cog"></i>
-      </button>
+      <div class="dropdown">
+        <button class="btn btn-link" type="button" (click)="loadAvailableDevices()" data-bs-toggle="dropdown">
+          <i class="fas fa-cog"></i>
+        </button>
+        <ul class="dropdown-menu">
+          <li class="dropdown-submenu">
+            <a class="dropdown-item dropdown-toggle" href="#">Move Device</a>
+            <ul class="dropdown-menu">
+              <li *ngFor="let targetDevice of availableDevices">
+                <a class="dropdown-item" (click)="moveDevice(targetDevice.id)">
+                  {{ targetDevice.name || targetDevice.id }}
+                </a>
+              </li>
+              <li *ngIf="availableDevices.length === 0">
+                <span class="dropdown-item disabled">No available devices</span>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 
