@@ -43,6 +43,11 @@
                 "glob": "**/*",
                 "input": "src/main/webapp/content/fonts",
                 "output": "/content/fonts"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/main/webapp/content/icons",
+                "output": "/content/icons"
               }
             ],
             "styles": [
