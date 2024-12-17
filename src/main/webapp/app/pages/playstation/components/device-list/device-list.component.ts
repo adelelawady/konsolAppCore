@@ -15,6 +15,7 @@ import { PlaystationService } from '../../services/playstation.service';
 export class DeviceListComponent implements OnInit, OnDestroy {
   devices: PsDeviceDTO[] = [];
   isLoading = false;
+  firstLoad = false;
   private refreshSubscription?: Subscription;
   private destroy$ = new Subject<void>();
 
@@ -50,6 +51,9 @@ export class DeviceListComponent implements OnInit, OnDestroy {
     return this.playstationResourceService.getDevices().pipe(
       tap(devices => {
         this.devices = devices;
+        if (!this.firstLoad){
+          this.firstLoad = true;
+        }
         if (showLoading) {
           this.isLoading = false;
         }
