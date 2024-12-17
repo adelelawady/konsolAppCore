@@ -4805,3 +4805,13 @@ components:
           $ref: '#/components/schemas/InvoiceDTO'
         type:
           $ref: '#/components/schemas/PsDeviceType'
+        deviceSessions:
+          type: array
+          x-stoplight:
+            id: v2p7x2hrihbku
+          items:
+            $ref: '#/components/schemas/PsSessionDTO'
+        deviceSessionsNetPrice:
+          type: number
+          x-stoplight:
+            id: cj8dn8k0regje

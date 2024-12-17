@@ -17,4 +17,6 @@ export interface PsSessionDTO {
   startTime?: string;
   invoice?: InvoiceDTO;
   type?: PsDeviceType;
+  deviceSessions?: Array<PsSessionDTO>;
+  deviceSessionsNetPrice?: number;
 }
