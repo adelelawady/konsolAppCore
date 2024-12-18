@@ -3,9 +3,9 @@
     <h2>{{ 'playstation.checkout.title' | translate }}</h2>
 
     <div class="text-center" *ngIf="isUpdating">
-        <span class="spinner-border spinner-border-sm"></span>
-        <small class="text-muted ms-2">{{ 'playstation.checkout.form.updating' | translate }}</small>
-      </div>
+      <span class="spinner-border spinner-border-sm"></span>
+      <small class="text-muted ms-2">{{ 'playstation.checkout.form.updating' | translate }}</small>
+    </div>
     <button class="btn btn-outline-secondary" (click)="cancel()">
       <fa-icon icon="times"></fa-icon>
       <span>{{ 'playstation.checkout.actions.cancel' | translate }}</span>
@@ -20,6 +20,40 @@
         <span>{{ 'playstation.checkout.summary.sessionTime' | translate }}</span>
         <span class="amount">{{ getSessionTimeCost() | currencyK }}</span>
       </div>
+
+      <!-- Previous Sessions Section -->
+      <ng-container *ngIf="selectedDevice?.session?.deviceSessions?.length">
+        <div class="previous-sessions-section">
+          <div class="section-header">
+            <i class="fas fa-history"></i>
+            <span>{{ 'playstation.checkout.summary.previousSessions' | translate }} ({{ selectedDevice?.session?.deviceSessions?.length }})</span>
+          </div>
+          <div class="previous-sessions-list">
+            <ng-container *ngIf="selectedDevice?.session?.deviceSessions as deviceSessions">
+              <div class="session-item" *ngFor="let prevSession of deviceSessions">
+                <div class="session-info">
+                  <span class="session-time">{{ prevSession.startTime | date:'short' }}</span>
+                  <div class="session-details">
+                    <span class="session-duration">{{ getDuration(prevSession.startTime, prevSession.endTime) }}</span>
+                    <span class="session-type">({{ prevSession.type?.name }})</span>
+                  </div>
+                </div>
+                <div class="session-costs">
+                  <div class="cost-breakdown">
+                    <small class="text-muted">Time: {{ calculateSessionCost(prevSession.startTime, prevSession.endTime, prevSession.type?.price) | currencyK }}</small>
+                    <small class="text-muted" *ngIf="prevSession.invoice?.netPrice">Orders: {{ prevSession.invoice?.netPrice | currencyK }}</small>
+                  </div>
+                  <span class="session-cost">{{ getSessionTotalCost(prevSession) | currencyK }}</span>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+          <div class="previous-sessions-total">
+            <span>{{ 'playstation.checkout.summary.previousTotal' | translate }}</span>
+            <span>{{ selectedDevice?.session?.deviceSessionsNetPrice || 0 }} {{ 'playstation.devices.card.session.currency' | translate }}</span>
+          </div>
+        </div>
+      </ng-container>
       
       <div class="summary-item">
         <span>{{ 'playstation.checkout.summary.orders' | translate }}</span>
@@ -69,8 +103,6 @@
           </div>
         </div>
       </div>
-
-      
     </form>
 
     <div class="final-total">

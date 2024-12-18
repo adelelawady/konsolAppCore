@@ -252,7 +252,9 @@
         "sessionTime": "تكلفة وقت الجلسة",
         "orders": "إجمالي الطلبات",
         "subtotal": "المجموع الفرعي",
-        "finalTotal": "المجموع النهائي"
+        "finalTotal": "المجموع النهائي",
+        "previousSessions": "الجلسات السابقة",
+        "previousTotal": "إجمالي الجلسات السابقة"
       },
       "form": {
         "discount": {

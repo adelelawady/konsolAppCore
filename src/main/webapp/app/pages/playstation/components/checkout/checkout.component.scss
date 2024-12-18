@@ -108,4 +108,120 @@
       }
     }
   }
+}
+
+.previous-sessions-section {
+  margin: 1rem 0;
+  background-color: #f3f4f6;
+  border-radius: 0.5rem;
+  padding: 1rem;
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #64748b;
+    margin-bottom: 0.75rem;
+    
+    i {
+      font-size: 0.875rem;
+    }
+  }
+
+  .previous-sessions-list {
+    max-height: 200px;
+    overflow-y: auto;
+    margin-bottom: 0.75rem;
+
+    .session-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem;
+      border-bottom: 1px solid #e2e8f0;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .session-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+
+        .session-time {
+          font-size: 0.875rem;
+          color: #334155;
+        }
+
+        .session-duration {
+          font-size: 0.75rem;
+          color: #64748b;
+        }
+
+        .session-details {
+          display: flex;
+          gap: 0.5rem;
+          align-items: center;
+
+          .session-type {
+            color: #64748b;
+            font-size: 0.75rem;
+          }
+        }
+      }
+
+      .session-costs {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0.25rem;
+
+        .cost-breakdown {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 0.125rem;
+          
+          small {
+            font-size: 0.75rem;
+          }
+        }
+
+        .session-cost {
+          font-weight: 600;
+          color: #334155;
+        }
+      }
+    }
+  }
+
+  .previous-sessions-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 0.75rem;
+    border-top: 1px dashed #e2e8f0;
+    font-weight: 500;
+    color: #334155;
+  }
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  
+  &.subtotal {
+    font-weight: 600;
+    font-size: 1.125rem;
+    color: #1e293b;
+  }
+}
+
+.divider {
+  height: 1px;
+  background-color: #e2e8f0;
+  margin: 1rem 0;
 } 

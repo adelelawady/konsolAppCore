@@ -107,14 +107,18 @@ export class CheckoutComponent implements OnInit {
   }
 
   getTotalBeforeDiscount(): number {
-    return this.getSessionTimeCost() + this.getOrdersTotal();
+    const sessionCost = this.getSessionTimeCost();
+    const ordersTotal = this.getOrdersTotal();
+    const previousSessionsTotal = this.selectedDevice?.session?.deviceSessionsNetPrice || 0;
+    
+    return sessionCost + ordersTotal + previousSessionsTotal;
   }
 
   getFinalTotal(): number {
     const total = this.getTotalBeforeDiscount();
     const discount = this.checkoutForm.get('discount')?.value || 0;
     const additions = this.checkoutForm.get('additions')?.value || 0;
-    return total ;
+    return total + additions - discount;
   }
 
   updateInvoice(): void {
@@ -184,5 +188,37 @@ export class CheckoutComponent implements OnInit {
 
   cancel(): void {
     this.cancelCheckout.emit();
+  }
+
+  getDuration(startTime: string | undefined, endTime: string | undefined): string {
+    if (!startTime || !endTime) return '0h 0m';
+    
+    const start = new Date(startTime);
+    const end = new Date(endTime);
+    const durationMs = end.getTime() - start.getTime();
+    const hours = Math.floor(durationMs / (1000 * 60 * 60));
+    const minutes = Math.floor((durationMs % (1000 * 60 * 60)) / (1000 * 60));
+    return `${hours}h ${minutes}m`;
+  }
+
+  calculateSessionCost(startTime: string | undefined, endTime: string | undefined, price: string | number | undefined): number {
+    if (!startTime || !endTime || !price) return 0;
+    
+    const start = new Date(startTime).getTime();
+    const end = new Date(endTime).getTime();
+    const durationInMs = end - start;
+    const durationInHours = durationInMs / (1000 * 60 * 60);
+    const hourlyRate = Number(price);
+    return Number((hourlyRate * durationInHours).toFixed(0));
+  }
+
+  getSessionTotalCost(prevSession: any): number {
+    const timeCost = this.calculateSessionCost(
+      prevSession.startTime,
+      prevSession.endTime,
+      prevSession.type?.price
+    );
+    const ordersCost = prevSession.invoice?.netPrice || 0;
+    return timeCost + ordersCost;
   }
 } 

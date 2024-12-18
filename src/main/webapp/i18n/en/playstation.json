@@ -252,7 +252,9 @@
         "sessionTime": "Session Time Cost",
         "orders": "Orders Total",
         "subtotal": "Subtotal",
-        "finalTotal": "Final Total"
+        "finalTotal": "Final Total",
+        "previousSessions": "Previous Sessions",
+        "previousTotal": "Previous Sessions Total"
       },
       "form": {
         "discount": {
