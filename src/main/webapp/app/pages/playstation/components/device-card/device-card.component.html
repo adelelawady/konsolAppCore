@@ -64,7 +64,7 @@
           </ng-container>
           <ng-container *ngIf="device.session?.deviceSessionsNetPrice">
             <span class="previous-sessions-cost">
-              (Previous Sessions: {{ device.session.deviceSessionsNetPrice }} {{ 'playstation.devices.card.session.currency' | translate }})
+              ({{ 'playstation.devices.card.session.previous' | translate }}: {{ device.session.deviceSessionsNetPrice }} {{ 'playstation.devices.card.session.currency' | translate }})
             </span>
           </ng-container>
         </div>
