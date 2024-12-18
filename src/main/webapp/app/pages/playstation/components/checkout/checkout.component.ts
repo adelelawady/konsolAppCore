@@ -11,16 +11,16 @@ import { InvoiceResourceService } from 'app/core/konsolApi/api/invoiceResource.s
 @Component({
   selector: 'jhi-checkout',
   templateUrl: './checkout.component.html',
-  styleUrls: ['./checkout.component.scss']
+  styleUrls: ['./checkout.component.scss'],
 })
 export class CheckoutComponent implements OnInit {
   @Output() cancelCheckout = new EventEmitter<void>();
-  
+
   checkoutForm: FormGroup;
   selectedDevice: PsDeviceDTO | null = null;
   isProcessing = false;
   isUpdating = false;
-  private lastUserNetPrice: number = 0;
+  private lastUserNetPrice = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -32,7 +32,7 @@ export class CheckoutComponent implements OnInit {
       discount: [0, [Validators.min(0)]],
       additions: [0, [Validators.min(0)]],
       notes: [''],
-      userNetPrice: [0, [Validators.min(0)]]
+      userNetPrice: [0, [Validators.min(0)]],
     });
   }
 
@@ -40,47 +40,39 @@ export class CheckoutComponent implements OnInit {
     this.playstationService.selectedDevice$.subscribe(device => {
       this.selectedDevice = device;
       if (device?.session?.invoice) {
-        const userNetPrice = device.session.invoice.userNetPrice || this.getFinalTotal();
+        const userNetPrice = device.session.invoice.userNetPrice ?? this.getFinalTotal();
         this.lastUserNetPrice = userNetPrice;
-        
+
         this.checkoutForm.patchValue({
-          discount: device.session.invoice.discount || 0,
-          additions: device.session.invoice.additions || 0,
-          notes: device.session.invoice.additionsType || '',
-          userNetPrice: userNetPrice
+          discount: device.session.invoice.discount ?? 0,
+          additions: device.session.invoice.additions ?? 0,
+          notes: device.session.invoice.additionsType ?? '',
+          userNetPrice,
         });
       }
     });
 
     // Subscribe to discount and additions changes only
-    this.checkoutForm.get('discount')?.valueChanges
-      .pipe(
-        debounceTime(500),
-        distinctUntilChanged()
-      )
+    this.checkoutForm
+      .get('discount')
+      ?.valueChanges.pipe(debounceTime(500), distinctUntilChanged())
       .subscribe(() => this.updateInvoice());
 
-    this.checkoutForm.get('additions')?.valueChanges
-      .pipe(
-        debounceTime(500),
-        distinctUntilChanged()
-      )
+    this.checkoutForm
+      .get('additions')
+      ?.valueChanges.pipe(debounceTime(500), distinctUntilChanged())
       .subscribe(() => this.updateInvoice());
 
     // Handle notes changes
-    this.checkoutForm.get('notes')?.valueChanges
-      .pipe(
-        debounceTime(500),
-        distinctUntilChanged()
-      )
+    this.checkoutForm
+      .get('notes')
+      ?.valueChanges.pipe(debounceTime(500), distinctUntilChanged())
       .subscribe(() => this.updateInvoice());
 
     // Handle userNetPrice changes separately
-    this.checkoutForm.get('userNetPrice')?.valueChanges
-      .pipe(
-        debounceTime(1000),
-        distinctUntilChanged()
-      )
+    this.checkoutForm
+      .get('userNetPrice')
+      ?.valueChanges.pipe(debounceTime(1000), distinctUntilChanged())
       .subscribe(value => {
         if (value !== this.lastUserNetPrice) {
           this.lastUserNetPrice = value;
@@ -110,32 +102,37 @@ export class CheckoutComponent implements OnInit {
     const sessionCost = this.getSessionTimeCost();
     const ordersTotal = this.getOrdersTotal();
     const previousSessionsTotal = this.selectedDevice?.session?.deviceSessionsNetPrice || 0;
-    
+
+    if (!this.selectedDevice?.timeManagement) {
+      return ordersTotal;
+    }
     return sessionCost + ordersTotal + previousSessionsTotal;
   }
 
   getFinalTotal(): number {
     const total = this.getTotalBeforeDiscount();
-    const discount = this.checkoutForm.get('discount')?.value || 0;
-    const additions = this.checkoutForm.get('additions')?.value || 0;
-    return total + additions - discount;
+    // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+    return total;
   }
 
   updateInvoice(): void {
-    if (!this.selectedDevice?.session?.invoice?.id || this.isUpdating) return;
+    if (!this.selectedDevice?.session?.invoice?.id || this.isUpdating) {
+      return;
+    }
 
     this.isUpdating = true;
     const totalBeforeDiscount = this.getTotalBeforeDiscount();
-    
+
     const invoiceUpdate: InvoiceUpdateDTO = {
       id: this.selectedDevice.session.invoice.id,
       discount: this.checkoutForm.get('discount')?.value || 0,
       additions: this.checkoutForm.get('additions')?.value || 0,
       additionsType: this.checkoutForm.get('notes')?.value,
-      userNetPrice: this.checkoutForm.get('userNetPrice')?.value
+      userNetPrice: this.checkoutForm.get('userNetPrice')?.value,
     };
 
-    this.invoiceResourceService.updateInvoice(this.selectedDevice?.session?.invoice?.id, invoiceUpdate)
+    this.invoiceResourceService
+      .updateInvoice(this.selectedDevice?.session?.invoice?.id, invoiceUpdate)
       .pipe(
         finalize(() => {
           this.isUpdating = false;
@@ -145,45 +142,47 @@ export class CheckoutComponent implements OnInit {
         next: () => {
           this.reloadDevice();
         },
-        error: (error: HttpErrorResponse) => {
+        error(error: HttpErrorResponse) {
           console.error('Error updating invoice:', error);
-        }
+        },
       });
   }
 
-  private reloadDevice(): void {
-    if (!this.selectedDevice?.id) return;
+  reloadDevice(): void {
+    if (!this.selectedDevice?.id) {
+      return;
+    }
 
-    this.playstationResourceService.getDevice(this.selectedDevice.id)
-      .subscribe({
-        next: (device) => {
-            this.selectedDevice = device;
-          this.playstationService.selectDevice(device);
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error reloading device:', error);
-        }
-      });
+    this.playstationResourceService.getDevice(this.selectedDevice.id).subscribe({
+      next: device => {
+        this.selectedDevice = device;
+        this.playstationService.selectDevice(device);
+      },
+      error(error: HttpErrorResponse) {
+        console.error('Error reloading device:', error);
+      },
+    });
   }
 
   endSession(): void {
-    if (!this.selectedDevice?.id || this.isProcessing || this.isUpdating) return;
+    if (!this.selectedDevice?.id || this.isProcessing || this.isUpdating) {
+      return;
+    }
 
     this.isProcessing = true;
-    this.playstationResourceService.stopDeviceSession(this.selectedDevice.id)
-      .subscribe({
-        next: () => {
-          this.playstationService.reloadDevices();
-          this.playstationService.selectDevice(null);
-          this.cancelCheckout.emit();
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error ending session:', error);
-        },
-        complete: () => {
-          this.isProcessing = false;
-        }
-      });
+    this.playstationResourceService.stopDeviceSession(this.selectedDevice.id).subscribe({
+      next: () => {
+        this.playstationService.reloadDevices();
+        this.playstationService.selectDevice(null);
+        this.cancelCheckout.emit();
+      },
+      error(error: HttpErrorResponse) {
+        console.error('Error ending session:', error);
+      },
+      complete: () => {
+        this.isProcessing = false;
+      },
+    });
   }
 
   cancel(): void {
@@ -191,8 +190,10 @@ export class CheckoutComponent implements OnInit {
   }
 
   getDuration(startTime: string | undefined, endTime: string | undefined): string {
-    if (!startTime || !endTime) return '0h 0m';
-    
+    if (!startTime || !endTime) {
+      return '0h 0m';
+    }
+
     const start = new Date(startTime);
     const end = new Date(endTime);
     const durationMs = end.getTime() - start.getTime();
@@ -202,8 +203,10 @@ export class CheckoutComponent implements OnInit {
   }
 
   calculateSessionCost(startTime: string | undefined, endTime: string | undefined, price: string | number | undefined): number {
-    if (!startTime || !endTime || !price) return 0;
-    
+    if (!startTime || !endTime || !price) {
+      return 0;
+    }
+
     const start = new Date(startTime).getTime();
     const end = new Date(endTime).getTime();
     const durationInMs = end - start;
@@ -213,12 +216,9 @@ export class CheckoutComponent implements OnInit {
   }
 
   getSessionTotalCost(prevSession: any): number {
-    const timeCost = this.calculateSessionCost(
-      prevSession.startTime,
-      prevSession.endTime,
-      prevSession.type?.price
-    );
+    const timeCost = this.calculateSessionCost(prevSession.startTime, prevSession.endTime, prevSession.type?.price);
     const ordersCost = prevSession.invoice?.netPrice || 0;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/restrict-plus-operands
     return timeCost + ordersCost;
   }
-} 
+}

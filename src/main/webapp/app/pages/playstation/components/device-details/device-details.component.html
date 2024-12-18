@@ -1,14 +1,14 @@
 <div class="device-details" *ngIf="selectedDevice">
   <div class="device-details__header">
     <h2>{{ selectedDevice.name }}</h2>
-    <div class="device-status" [ngClass]="{'active': isDeviceActive()}">
+    <div class="device-status" [ngClass]="{ active: isDeviceActive() }">
       {{ isDeviceActive() ? 'Active' : 'Inactive' }}
     </div>
   </div>
 
   <div class="device-details__content">
     <!-- Device Info - Condensed -->
-    <div class="device-info">
+    <div class="device-info" *ngIf="selectedDevice.timeManagement">
       <div class="info-group">
         <label>{{ 'playstation.devices.details.info.type' | translate }}</label>
         <span>{{ selectedDevice.type?.name }}</span>
@@ -16,7 +16,7 @@
 
       <div class="info-group">
         <label>{{ 'playstation.devices.details.info.started' | translate }}</label>
-        <span>{{ selectedDevice.session?.startTime | date:'shortTime' }}</span>
+        <span>{{ selectedDevice.session?.startTime | date: 'shortTime' }}</span>
       </div>
 
       <div class="info-group">
@@ -26,14 +26,13 @@
 
       <div class="info-group">
         <label>{{ 'playstation.devices.details.info.rate' | translate }}</label>
-        <span>{{ selectedDevice.session?.type?.price }} {{ 'playstation.devices.details.info.perHour' | translate
-          }}</span>
+        <span>{{ selectedDevice.session?.type?.price }} {{ 'playstation.devices.details.info.perHour' | translate }}</span>
       </div>
     </div>
 
     <!-- Cost Summary -->
     <div class="cost-summary">
-      <div class="cost-item session-time">
+      <div class="cost-item session-time" *ngIf="selectedDevice.timeManagement">
         <label>{{ 'playstation.devices.details.costs.sessionTime' | translate }}</label>
         <span class="value">{{ getSessionTimeCost() | currencyK }}</span>
       </div>
@@ -49,8 +48,6 @@
       </div>
     </div>
 
-
-
     <!-- Orders Section -->
     <div class="orders-section" *ngIf="selectedDevice.session">
       <h6>{{ 'playstation.devices.details.orders.title' | translate }}</h6>
@@ -61,44 +58,37 @@
             <div class="item-name">{{ item.item?.name }}</div>
             <div class="item-details">
               <span class="qty">
-                <button class="btn btn-sm btn-icon" (click)="updateDeviceOrder(item, false)"><i
-                    class="fas fa-minus"></i></button>
+                <button class="btn btn-sm btn-icon" (click)="updateDeviceOrder(item, false)"><i class="fas fa-minus"></i></button>
                 {{ 'playstation.devices.details.orders.quantity' | translate }}: {{ item.userQty }}
-                <button class="btn btn-sm btn-icon" (click)="updateDeviceOrder(item, true)"><i
-                    class="fas fa-plus"></i></button>
+                <button class="btn btn-sm btn-icon" (click)="updateDeviceOrder(item, true)"><i class="fas fa-plus"></i></button>
               </span>
               <span class="price">{{ item.price }} EGP</span>
             </div>
           </div>
-          <div class="item-total">
-            {{ item.totalPrice }} EGP
-          </div>
+          <div class="item-total">{{ item.totalPrice }} EGP</div>
           <div *ngIf="!orderItems?.length" class="no-orders">
             {{ 'playstation.devices.details.orders.noOrders' | translate }}
           </div>
         </div>
-
-
-        </div>
-        </div>
-
-
-        <!-- Actions -->
-        <div class="actions" *ngIf="!isDeviceActive()">
-          <button class="btn btn-primary" (click)="startSession()" [disabled]="isStartingSession">
-            <span class="spinner-border spinner-border-sm" *ngIf="isStartingSession"></span>
-            <span>{{ 'playstation.devices.details.actions.startSession' | translate }}</span>
-          </button>
-        </div>
-        <div class="actions" *ngIf="isDeviceActive()">
-          <button class="btn btn-danger" (click)="stopSession()" [disabled]="isStoppingSession">
-            <span class="spinner-border spinner-border-sm" *ngIf="isStoppingSession"></span>
-            <span>{{ 'playstation.devices.details.actions.stopSession' | translate }}</span>
-          </button>
-        </div>
       </div>
     </div>
 
-    <div class="no-device-selected" *ngIf="!selectedDevice">
-      <p>{{ 'playstation.devices.details.noDeviceSelected' | translate }}</p>
+    <!-- Actions -->
+    <div class="actions" *ngIf="!isDeviceActive()">
+      <button class="btn btn-primary" (click)="startSession()" [disabled]="isStartingSession">
+        <span class="spinner-border spinner-border-sm" *ngIf="isStartingSession"></span>
+        <span>{{ 'playstation.devices.details.actions.startSession' | translate }}</span>
+      </button>
     </div>
+    <div class="actions" *ngIf="isDeviceActive()">
+      <button class="btn btn-danger" (click)="stopSession()" [disabled]="isStoppingSession">
+        <span class="spinner-border spinner-border-sm" *ngIf="isStoppingSession"></span>
+        <span>{{ 'playstation.devices.details.actions.stopSession' | translate }}</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="no-device-selected" *ngIf="!selectedDevice">
+  <p>{{ 'playstation.devices.details.noDeviceSelected' | translate }}</p>
+</div>

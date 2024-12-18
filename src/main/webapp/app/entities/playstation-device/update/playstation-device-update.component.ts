@@ -21,9 +21,9 @@ export class PlaystationDeviceUpdateComponent implements OnInit {
   device: PsDeviceDTO | null = null;
   deviceTypes: PsDeviceType[] = [];
 
-  protected playstationResourceService = inject(PlaystationResourceService);
-  protected playstationDeviceFormService = inject(PlaystationDeviceFormService);
-  protected activatedRoute = inject(ActivatedRoute);
+  playstationResourceService = inject(PlaystationResourceService);
+  playstationDeviceFormService = inject(PlaystationDeviceFormService);
+  activatedRoute = inject(ActivatedRoute);
 
   editForm: PlaystationDeviceFormGroup = this.playstationDeviceFormService.createPlaystationDeviceFormGroup();
 
@@ -39,7 +39,7 @@ export class PlaystationDeviceUpdateComponent implements OnInit {
             const matchingType = this.deviceTypes.find(t => t.id === playstationDevice.type.id);
             if (matchingType) {
               this.editForm.patchValue({
-                type: matchingType
+                type: matchingType,
               });
             }
           }
@@ -49,7 +49,7 @@ export class PlaystationDeviceUpdateComponent implements OnInit {
   }
 
   loadDeviceTypes(): Promise<void> {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       this.playstationResourceService.getDevicesTypes().subscribe(types => {
         this.deviceTypes = types;
         resolve();
@@ -65,14 +65,21 @@ export class PlaystationDeviceUpdateComponent implements OnInit {
     this.isSaving = true;
     const device = this.playstationDeviceFormService.getPlaystationDevice(this.editForm);
     if (device.id) {
-      this.subscribeToSaveResponse(
-        this.playstationResourceService.updateDevice(device.id, device)
-      );
+      this.subscribeToSaveResponse(this.playstationResourceService.updateDevice(device.id, device));
     } else {
-      this.subscribeToSaveResponse(
-        this.playstationResourceService.createPlayStationDevice(device)
-      );
+      this.subscribeToSaveResponse(this.playstationResourceService.createPlayStationDevice(device));
     }
+  }
+  onActiveChange(event: Event): void {
+    const checkbox = event.target as HTMLInputElement;
+    this.editForm.get('active')?.setValue(checkbox.checked);
+  }
+
+  onTimeManagemnetChange(event: Event): void {
+    const checkbox = event.target as HTMLInputElement;
+    // eslint-disable-next-line no-console
+    console.log(checkbox.checked);
+    this.editForm.get('timeManagement')?.setValue(checkbox.checked);
   }
 
   protected subscribeToSaveResponse(result: Observable<PsDeviceDTO>): void {
@@ -97,10 +104,5 @@ export class PlaystationDeviceUpdateComponent implements OnInit {
   protected updateForm(device: PsDeviceDTO): void {
     this.device = device;
     this.playstationDeviceFormService.resetForm(this.editForm, device);
-  }
-
-  onActiveChange(event: Event): void {
-    const checkbox = event.target as HTMLInputElement;
-    this.editForm.get('active')?.setValue(checkbox.checked);
   }
 }
