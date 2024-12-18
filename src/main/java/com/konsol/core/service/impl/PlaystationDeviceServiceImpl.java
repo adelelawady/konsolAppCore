@@ -15,10 +15,13 @@ import com.konsol.core.service.PlaystationDeviceService;
 import com.konsol.core.service.api.dto.*;
 import com.konsol.core.service.mapper.PlayStationSessionMapper;
 import com.konsol.core.service.mapper.PlaystationDeviceMapper;
+import com.mongodb.client.DistinctIterable;
+import com.mongodb.client.MongoCursor;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 /**
@@ -46,6 +50,7 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
     private final PlaystationDeviceTypeRepository playstationDeviceTypeRepository;
 
     private final ItemService itemService;
+    private final MongoTemplate mongoTemplate;
 
     public PlaystationDeviceServiceImpl(
         PlaystationDeviceRepository playstationDeviceRepository,
@@ -55,7 +60,8 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
         InvoiceRepository invoiceRepository,
         InvoiceService invoiceService,
         PlaystationDeviceTypeRepository playstationDeviceTypeRepository,
-        ItemService itemService
+        ItemService itemService,
+        MongoTemplate mongoTemplate
     ) {
         this.playstationDeviceRepository = playstationDeviceRepository;
         this.playstationDeviceMapper = playstationDeviceMapper;
@@ -65,6 +71,7 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
         this.invoiceService = invoiceService;
         this.playstationDeviceTypeRepository = playstationDeviceTypeRepository;
         this.itemService = itemService;
+        this.mongoTemplate = mongoTemplate;
     }
 
     @Override
@@ -108,6 +115,30 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
     public List<PsDeviceDTO> findAll() {
         LOG.debug("Request to get all PlaystationDevices");
         return playstationDeviceRepository.findAll().stream().map(playstationDeviceMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CategoryItem> getAllItemCategories() {
+        List<CategoryItem> categoryList = new ArrayList<>();
+        DistinctIterable distinctIterable = mongoTemplate.getCollection("ps_device").distinct("category", String.class);
+        MongoCursor cursor = distinctIterable.iterator();
+        while (cursor.hasNext()) {
+            String category = (String) cursor.next();
+            CategoryItem categoryItem = new CategoryItem();
+            categoryItem.setName(category);
+            categoryList.add(categoryItem);
+        }
+        return categoryList;
+    }
+
+    @Override
+    public List<PsDeviceDTO> findAllByCategory(String category) {
+        LOG.debug("Request to get all PlaystationDevices");
+        return playstationDeviceRepository
+            .findAllByCategory(category)
+            .stream()
+            .map(playstationDeviceMapper::toDto)
+            .collect(Collectors.toList());
     }
 
     @Override

@@ -1813,6 +1813,43 @@ paths:
               $ref: '#/components/schemas/PsDeviceDTO'
       tags:
         - playstation-resource
+  /playstation/device/category:
+    post:
+      summary: ''
+      operationId: getDevicesByCategory
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PsDeviceDTO'
+      description: get all devices by category
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryItem'
+        description: get all devices by category
+      tags:
+        - playstation-resource
+    parameters: []
+    get:
+      summary: ''
+      operationId: getDevicesCategories
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CategoryItem'
+      tags:
+        - playstation-resource
   '/playstation/device/{id}/orders':
     post:
       summary: ''
@@ -1824,7 +1861,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PsDeviceDTO'
-      description: ''
       requestBody:
         content:
           application/json:
@@ -4772,6 +4808,16 @@ components:
           $ref: '#/components/schemas/PsDeviceType'
         session:
           $ref: '#/components/schemas/PsSessionDTO'
+        timeManagement:
+          type: boolean
+          x-stoplight:
+            id: rgtzxzra2h25z
+          default: true
+        category:
+          type: string
+          x-stoplight:
+            id: j2zbmv9lc5io8
+          default: PLAYSTATION
     PsDeviceType:
       title: PsDeviceType
       x-stoplight:

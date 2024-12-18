@@ -1,10 +1,7 @@
 package com.konsol.core.service;
 
 import com.konsol.core.domain.playstation.PlaystationDevice;
-import com.konsol.core.service.api.dto.CreateInvoiceItemDTO;
-import com.konsol.core.service.api.dto.InvoiceItemUpdateDTO;
-import com.konsol.core.service.api.dto.PsDeviceDTO;
-import com.konsol.core.service.api.dto.PsSessionDTO;
+import com.konsol.core.service.api.dto.*;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -47,6 +44,14 @@ public interface PlaystationDeviceService {
     Page<PsDeviceDTO> findAll(Pageable pageable);
 
     List<PsDeviceDTO> findAll();
+
+    /**
+     * get all items categories in items list
+     * @return list of string contains all categories distinct
+     */
+    List<CategoryItem> getAllItemCategories();
+
+    List<PsDeviceDTO> findAllByCategory(String category);
     /**
      * Get the "id" playstationDevice.
      *

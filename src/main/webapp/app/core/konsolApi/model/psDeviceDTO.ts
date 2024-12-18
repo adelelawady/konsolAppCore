@@ -18,4 +18,6 @@ export interface PsDeviceDTO {
   active?: boolean;
   type?: PsDeviceType;
   session?: PsSessionDTO;
+  timeManagement?: boolean;
+  category?: string;
 }

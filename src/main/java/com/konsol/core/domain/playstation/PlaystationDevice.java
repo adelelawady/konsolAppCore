@@ -41,6 +41,14 @@ public class PlaystationDevice implements Serializable {
     @Field("session")
     private PlayStationSession session = null;
 
+    @NotNull
+    @Field("hasTimeManagement")
+    private Boolean timeManagement = true;
+
+    @NotNull
+    @Field("category")
+    private String category = "PLAYSTATION";
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
     public String getId() {
@@ -140,5 +148,21 @@ public class PlaystationDevice implements Serializable {
 
     public void setSession(@Nullable PlayStationSession session) {
         this.session = session;
+    }
+
+    public @NotNull String getCategory() {
+        return category;
+    }
+
+    public void setCategory(@NotNull String category) {
+        this.category = category;
+    }
+
+    public @NotNull Boolean getTimeManagement() {
+        return timeManagement;
+    }
+
+    public void setTimeManagement(@NotNull Boolean timeManagement) {
+        this.timeManagement = timeManagement;
     }
 }

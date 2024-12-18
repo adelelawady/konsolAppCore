@@ -173,6 +173,19 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
         return ResponseEntity.ok().body(page);
     }
 
+    @Override
+    public ResponseEntity<List<PsDeviceDTO>> getDevicesByCategory(CategoryItem categoryItem) {
+        LOG.debug("REST request to get a page of PlaystationDevices");
+        List<PsDeviceDTO> page = playstationDeviceService.findAllByCategory(categoryItem.getName());
+        return ResponseEntity.ok().body(page);
+    }
+
+    @Override
+    public ResponseEntity<List<CategoryItem>> getDevicesCategories() {
+        List<CategoryItem> page = playstationDeviceService.getAllItemCategories();
+        return ResponseEntity.ok().body(page);
+    }
+
     /**
      * {@code GET  /playstation-devices/:id} : get the "id" playstationDevice.
      *

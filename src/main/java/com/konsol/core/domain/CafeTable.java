@@ -1,8 +1,11 @@
 package com.konsol.core.domain;
 
+import com.konsol.core.domain.playstation.PlayStationSession;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
+import javax.annotation.Nullable;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -33,6 +36,11 @@ public class CafeTable implements Serializable {
     @NotNull
     @Field("active")
     private Boolean active;
+
+    @Nullable
+    @DBRef
+    @Field("session")
+    private PlayStationSession session = null;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
