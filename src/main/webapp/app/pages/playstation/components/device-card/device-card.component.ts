@@ -160,7 +160,12 @@ export class DeviceCardComponent implements OnInit, OnDestroy {
 
     // Add orders cost if there are any
     if (this.device.session.invoice?.netPrice) {
-      totalCost += this.device.session?.invoice?.netPrice;
+      totalCost += this.device.session.invoice.netPrice;
+    }
+
+    // Add deviceSessionsNetPrice if exists
+    if (this.device.session.deviceSessionsNetPrice) {
+      totalCost += this.device.session.deviceSessionsNetPrice;
     }
 
     return totalCost.toFixed(0);
@@ -209,5 +214,13 @@ export class DeviceCardComponent implements OnInit, OnDestroy {
         });
       }
     });
+  }
+
+  getPreviousSessionsCount(): number {
+    return this.device.session?.deviceSessions?.length || 0;
+  }
+
+  hasPreviousSessions(): boolean {
+    return this.getPreviousSessionsCount() > 0;
   }
 }

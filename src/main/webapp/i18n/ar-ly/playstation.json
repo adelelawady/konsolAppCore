@@ -174,7 +174,8 @@
         },
         "session": {
           "orders": "الطلبات",
-          "currency": "جنيه"
+          "currency": "جنيه",
+          "previous": "الجلسات السابقة"
         }
       }
     },

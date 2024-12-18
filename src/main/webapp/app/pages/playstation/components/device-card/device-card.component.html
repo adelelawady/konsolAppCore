@@ -12,7 +12,13 @@
   </div>
 
   <div class="device-card__content">
-    <div class="device-type">{{ device.type?.name }}</div>
+    <div class="device-type">
+      {{ device.type?.name }}
+      <span class="previous-sessions-badge" *ngIf="hasPreviousSessions()">
+        <i class="fas fa-history"></i>
+        {{ getPreviousSessionsCount() }}
+      </span>
+    </div>
     <div class="device-actions" *ngIf="device.active">
       <div class="dropdown">
         <button class="btn btn-link" type="button" (click)="loadAvailableDevices()" data-bs-toggle="dropdown">
@@ -54,6 +60,11 @@
           <ng-container *ngIf="device.session?.invoice?.netPrice !== undefined">
             <span class="orders-cost">
               ({{ 'playstation.devices.card.session.orders' | translate }}: {{ device.session.invoice?.netPrice }} {{ 'playstation.devices.card.session.currency' | translate }})
+            </span>
+          </ng-container>
+          <ng-container *ngIf="device.session?.deviceSessionsNetPrice">
+            <span class="previous-sessions-cost">
+              (Previous Sessions: {{ device.session.deviceSessionsNetPrice }} {{ 'playstation.devices.card.session.currency' | translate }})
             </span>
           </ng-container>
         </div>
