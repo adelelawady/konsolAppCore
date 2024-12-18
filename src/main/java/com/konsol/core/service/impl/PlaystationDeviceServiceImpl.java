@@ -352,9 +352,10 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
 
         session.getDeviceSessions().add(lastSession);
         //TODO CHECK TYPE
-
+        session.setStartTime(Instant.now());
         session.setType(toDevice.getType());
         session.setDevice(toDevice);
+        session.setEndTime(null);
         session = playStationSessionRepository.save(session);
 
         fromDevice.setActive(false);

@@ -7,5 +7,9 @@ import org.mapstruct.*;
 /**
  * Mapper for the entity {@link PlayStationSession} and its DTO {@link PsSessionDTO}.
  */
-@Mapper(componentModel = "spring", uses = { UtilitsMapper.class, InvoiceMapper.class })
+@Mapper(
+    componentModel = "spring",
+    uses = { UtilitsMapper.class, InvoiceMapper.class },
+    nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS
+)
 public interface PlayStationSessionMapper extends EntityMapper<PsSessionDTO, PlayStationSession> {}
