@@ -1,0 +1,182 @@
+<div>
+  <h2 id="page-heading" data-cy="PlaystationContainerHeading">
+    <span jhiTranslate="konsolCoreApp.playstationContainer.home.title">Playstation Containers</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <fa-icon icon="sync" [animation]="isLoading ? 'spin' : undefined"></fa-icon>
+        <span jhiTranslate="konsolCoreApp.playstationContainer.home.refreshListLabel">Refresh list</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-playstation-container"
+        [routerLink]="['/playstation-container/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span jhiTranslate="konsolCoreApp.playstationContainer.home.createLabel">Create a new Playstation Container</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  @if (playstationContainers?.length === 0) {
+  <div class="alert alert-warning" id="no-result">
+    <span jhiTranslate="konsolCoreApp.playstationContainer.home.notFound">No Playstation Containers found</span>
+  </div>
+  } @if (playstationContainers && playstationContainers.length > 0) {
+  <div class="table-responsive table-entities" id="entities">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [sortState]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+          <th scope="col" jhiSortBy="id">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.playstationContainer.id">Id</span>
+
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="name">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.playstationContainer.name">Name</span>
+
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="category">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.playstationContainer.category">Category</span>
+
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="defaultIcon">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.playstationContainer.defaultIcon">Default Icon</span>
+
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="hasTimeManagement">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.playstationContainer.hasTimeManagement">Has Time Management</span>
+
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="showType">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.playstationContainer.showType">Show Type</span>
+
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="showTime">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.playstationContainer.showTime">Show Time</span>
+
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="canMoveDevice">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.playstationContainer.canMoveDevice">Can Move Device</span>
+
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="canHaveMultiTimeManagement">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.playstationContainer.canHaveMultiTimeManagement">Can Have Multi Time Management</span>
+
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="acceptedOrderCategories">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.playstationContainer.acceptedOrderCategories">Accepted Order Categories</span>
+
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="orderSelectedPriceCategory">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.playstationContainer.orderSelectedPriceCategory">Order Selected Price Category</span>
+
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (playstationContainer of playstationContainers; track trackId(playstationContainer)) {
+        <tr data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/playstation-container', playstationContainer.id, 'view']">{{ playstationContainer.id }}</a>
+          </td>
+          <td>{{ playstationContainer.name }}</td>
+          <td>{{ playstationContainer.category }}</td>
+          <td>{{ playstationContainer.defaultIcon }}</td>
+          <td>{{ playstationContainer.hasTimeManagement }}</td>
+          <td>{{ playstationContainer.showType }}</td>
+          <td>{{ playstationContainer.showTime }}</td>
+          <td>{{ playstationContainer.canMoveDevice }}</td>
+          <td>{{ playstationContainer.canHaveMultiTimeManagement }}</td>
+          <td>{{ playstationContainer.acceptedOrderCategories }}</td>
+          <td>{{ playstationContainer.orderSelectedPriceCategory }}</td>
+          <td class="text-end">
+            <div class="btn-group">
+              <a
+                [routerLink]="['/playstation-container', playstationContainer.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+              </a>
+
+              <a
+                [routerLink]="['/playstation-container', playstationContainer.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+              </a>
+
+              <button type="submit" (click)="delete(playstationContainer)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  } @if (playstationContainers && playstationContainers.length > 0) {
+  <div>
+    <div class="d-flex justify-content-center">
+      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
+    </div>
+
+    <div class="d-flex justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [page]="page"
+        [pageSize]="itemsPerPage"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="navigateToPage($event)"
+      ></ngb-pagination>
+    </div>
+  </div>
+  }
+</div>

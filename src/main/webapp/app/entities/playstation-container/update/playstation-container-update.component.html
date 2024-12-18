@@ -1,0 +1,230 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2
+        id="jhi-playstation-container-heading"
+        data-cy="PlaystationContainerCreateUpdateHeading"
+        jhiTranslate="konsolCoreApp.playstationContainer.home.createOrEditLabel"
+      >
+        Create or edit a Playstation Container
+      </h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        @if (editForm.controls.id.value !== null) { @let idRef = editForm.get('id')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_id" jhiTranslate="konsolCoreApp.playstationContainer.id">Id</label>
+          <input type="text" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          @if (idRef.invalid && (idRef.dirty || idRef.touched)) {
+          <div>
+            @if (editForm.get('id')?.errors?.required) {
+            <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+            }
+          </div>
+          }
+        </div>
+        } @let nameRef = editForm.get('name')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_name" jhiTranslate="konsolCoreApp.playstationContainer.name">Name</label>
+          <input type="text" class="form-control" name="name" id="field_name" data-cy="name" formControlName="name" />
+          @if (nameRef.invalid && (nameRef.dirty || nameRef.touched)) {
+          <div>
+            @if (editForm.get('name')?.errors?.required) {
+            <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+            }
+          </div>
+          }
+        </div>
+
+        @let categoryRef = editForm.get('category')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_category" jhiTranslate="konsolCoreApp.playstationContainer.category">Category</label>
+          <input type="text" class="form-control" name="category" id="field_category" data-cy="category" formControlName="category" />
+          @if (categoryRef.invalid && (categoryRef.dirty || categoryRef.touched)) {
+          <div>
+            @if (editForm.get('category')?.errors?.required) {
+            <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+            }
+          </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_defaultIcon" jhiTranslate="konsolCoreApp.playstationContainer.defaultIcon"
+            >Default Icon</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="defaultIcon"
+            id="field_defaultIcon"
+            data-cy="defaultIcon"
+            formControlName="defaultIcon"
+          />
+        </div>
+
+        @let hasTimeManagementRef = editForm.get('hasTimeManagement')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_hasTimeManagement" jhiTranslate="konsolCoreApp.playstationContainer.hasTimeManagement"
+            >Has Time Management</label
+          >
+          <input
+            type="checkbox"
+            class="form-check"
+            name="hasTimeManagement"
+            id="field_hasTimeManagement"
+            data-cy="hasTimeManagement"
+            formControlName="hasTimeManagement"
+          />
+          @if (hasTimeManagementRef.invalid && (hasTimeManagementRef.dirty || hasTimeManagementRef.touched)) {
+          <div>
+            @if (editForm.get('hasTimeManagement')?.errors?.required) {
+            <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+            }
+          </div>
+          }
+        </div>
+
+        @let showTypeRef = editForm.get('showType')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_showType" jhiTranslate="konsolCoreApp.playstationContainer.showType">Show Type</label>
+          <input type="checkbox" class="form-check" name="showType" id="field_showType" data-cy="showType" formControlName="showType" />
+          @if (showTypeRef.invalid && (showTypeRef.dirty || showTypeRef.touched)) {
+          <div>
+            @if (editForm.get('showType')?.errors?.required) {
+            <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+            }
+          </div>
+          }
+        </div>
+
+        @let showTimeRef = editForm.get('showTime')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_showTime" jhiTranslate="konsolCoreApp.playstationContainer.showTime">Show Time</label>
+          <input type="checkbox" class="form-check" name="showTime" id="field_showTime" data-cy="showTime" formControlName="showTime" />
+          @if (showTimeRef.invalid && (showTimeRef.dirty || showTimeRef.touched)) {
+          <div>
+            @if (editForm.get('showTime')?.errors?.required) {
+            <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+            }
+          </div>
+          }
+        </div>
+
+        @let canMoveDeviceRef = editForm.get('canMoveDevice')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_canMoveDevice" jhiTranslate="konsolCoreApp.playstationContainer.canMoveDevice"
+            >Can Move Device</label
+          >
+          <input
+            type="checkbox"
+            class="form-check"
+            name="canMoveDevice"
+            id="field_canMoveDevice"
+            data-cy="canMoveDevice"
+            formControlName="canMoveDevice"
+          />
+          @if (canMoveDeviceRef.invalid && (canMoveDeviceRef.dirty || canMoveDeviceRef.touched)) {
+          <div>
+            @if (editForm.get('canMoveDevice')?.errors?.required) {
+            <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+            }
+          </div>
+          }
+        </div>
+
+        @let canHaveMultiTimeManagementRef = editForm.get('canHaveMultiTimeManagement')!;
+        <div class="mb-3">
+          <label
+            class="form-label"
+            for="field_canHaveMultiTimeManagement"
+            jhiTranslate="konsolCoreApp.playstationContainer.canHaveMultiTimeManagement"
+            >Can Have Multi Time Management</label
+          >
+          <input
+            type="checkbox"
+            class="form-check"
+            name="canHaveMultiTimeManagement"
+            id="field_canHaveMultiTimeManagement"
+            data-cy="canHaveMultiTimeManagement"
+            formControlName="canHaveMultiTimeManagement"
+          />
+          @if (canHaveMultiTimeManagementRef.invalid && (canHaveMultiTimeManagementRef.dirty || canHaveMultiTimeManagementRef.touched)) {
+          <div>
+            @if (editForm.get('canHaveMultiTimeManagement')?.errors?.required) {
+            <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+            }
+          </div>
+          }
+        </div>
+
+        @let acceptedOrderCategoriesRef = editForm.get('acceptedOrderCategories')!;
+        <div class="mb-3">
+          <label
+            class="form-label"
+            for="field_acceptedOrderCategories"
+            jhiTranslate="konsolCoreApp.playstationContainer.acceptedOrderCategories"
+            >Accepted Order Categories</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="acceptedOrderCategories"
+            id="field_acceptedOrderCategories"
+            data-cy="acceptedOrderCategories"
+            formControlName="acceptedOrderCategories"
+          />
+          @if (acceptedOrderCategoriesRef.invalid && (acceptedOrderCategoriesRef.dirty || acceptedOrderCategoriesRef.touched)) {
+          <div>
+            @if (editForm.get('acceptedOrderCategories')?.errors?.required) {
+            <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+            }
+          </div>
+          }
+        </div>
+
+        @let orderSelectedPriceCategoryRef = editForm.get('orderSelectedPriceCategory')!;
+        <div class="mb-3">
+          <label
+            class="form-label"
+            for="field_orderSelectedPriceCategory"
+            jhiTranslate="konsolCoreApp.playstationContainer.orderSelectedPriceCategory"
+            >Order Selected Price Category</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="orderSelectedPriceCategory"
+            id="field_orderSelectedPriceCategory"
+            data-cy="orderSelectedPriceCategory"
+            formControlName="orderSelectedPriceCategory"
+          />
+          @if (orderSelectedPriceCategoryRef.invalid && (orderSelectedPriceCategoryRef.dirty || orderSelectedPriceCategoryRef.touched)) {
+          <div>
+            @if (editForm.get('orderSelectedPriceCategory')?.errors?.required) {
+            <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+            }
+          </div>
+          }
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

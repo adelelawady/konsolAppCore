@@ -1,0 +1,33 @@
+{
+  "konsolCoreApp": {
+    "playstationContainer": {
+      "home": {
+        "title": "Playstation Containers",
+        "refreshListLabel": "تحديث القائمة",
+        "createLabel": "إنشاء Playstation Container جديد",
+        "createOrEditLabel": "إنشاء أو تعديل Playstation Container",
+        "notFound": "لم يتم العثور على Playstation Containers"
+      },
+      "created": "Playstation Container جديد تم إنشاؤه بالمعرف {{ param }}",
+      "updated": "Playstation Container تم تحديثه بالمعرف {{ param }}",
+      "deleted": "Playstation Container تم حذفه بالمعرف {{ param }}",
+      "delete": {
+        "question": "هل أنت متأكد أنك تريد حذف Playstation Container {{ id }}؟"
+      },
+      "detail": {
+        "title": "Playstation Container"
+      },
+      "id": "Id",
+      "name": "Name",
+      "category": "Category",
+      "defaultIcon": "Default Icon",
+      "hasTimeManagement": "Has Time Management",
+      "showType": "Show Type",
+      "showTime": "Show Time",
+      "canMoveDevice": "Can Move Device",
+      "canHaveMultiTimeManagement": "Can Have Multi Time Management",
+      "acceptedOrderCategories": "Accepted Order Categories",
+      "orderSelectedPriceCategory": "Order Selected Price Category"
+    }
+  }
+}
