@@ -118,6 +118,17 @@ public class PlaystationDeviceTypeServiceImpl implements PlaystationDeviceTypeSe
     @Override
     public void delete(String id) {
         LOG.debug("Request to delete PlaystationDeviceType : {}", id);
+
+        Optional<PlaystationDeviceType> playstationDeviceTypeOp = playstationDeviceTypeRepository.findById(id);
+        if (playstationDeviceTypeOp.isEmpty()) {
+            return;
+        }
+        playstationDeviceTypeOp.ifPresent(playstationDeviceType -> {
+            if (playstationDeviceType.getItem() != null) {
+                itemService.delete(playstationDeviceType.getItem().getId());
+            }
+        });
+
         playstationDeviceTypeRepository.deleteById(id);
     }
 }
