@@ -180,59 +180,86 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
         return playStationSessionRepository.findByDeviceIdAndActiveTrue(deviceId).map(playStationSessionMapper::toDto);
     }
 
+    /**
+     * Stops the active session for a PlayStation device.
+     *
+     * @param deviceId The unique identifier of the PlayStation device.
+     * @return PsDeviceDTO containing updated device details.
+     * @throws RuntimeException if the device is not found or there is no active session.
+     */
     @Override
     public PsDeviceDTO stopSession(String deviceId) {
-        LOG.debug("Request to stop session for PlaystationDevice : {}", deviceId);
+        // Log the request to stop a session
+        LOG.debug("Request to stop session for PlayStationDevice : {}", deviceId);
 
-        // Find device
+        // Step 1: Find the device by ID
         PlaystationDevice device = playstationDeviceRepository
             .findById(deviceId)
             .orElseThrow(() -> new RuntimeException("Device not found with id: " + deviceId));
 
-        // Check if device has active session
+        // Step 2: Check if the device has an active session
         if (!device.getActive()) {
             throw new RuntimeException("No active session found for device: " + deviceId);
         }
 
+        // Step 3: Handle product association for the session
+        assert device.getSession() != null;
         Item itemProduct = device.getSession().getType().getItem();
 
         if (itemProduct == null) {
-            // Create corresponding Item/Product
+            // Create a new Item/Product if it doesn't exist
             Item item = new Item();
             item.setName(device.getSession().getType().getName() + " - [PlayStation]");
             item.setPrice1(String.valueOf(device.getSession().getType().getPrice()));
-            item.setCategory("PlayStation"); // Or appropriate category
+            item.setCategory("PlayStation"); // Assign an appropriate category
             item.setCheckQty(false);
             item.setDeletable(false);
             item.setCost(new BigDecimal(0));
-            // Save the item
+
+            // Save the new item
             ItemDTO itemDTO = itemService.save(item);
             itemProduct = itemService.findOneById(itemDTO.getId()).get();
+
+            // Update the session type with the created item
             device.getSession().getType().setItem(item);
             playstationDeviceTypeRepository.save(device.getSession().getType());
         }
+
+        // Step 4: Add the current session to the invoice
         CreateInvoiceItemDTO createInvoiceItemDTO = new CreateInvoiceItemDTO();
-        createInvoiceItemDTO.setQty(new BigDecimal(1));
+        createInvoiceItemDTO.setQty(BigDecimal.ONE);
         createInvoiceItemDTO.setItemId(itemProduct.getId());
-        createInvoiceItemDTO.setPrice(calculateSessionTimePrice(device));
+        createInvoiceItemDTO.setPrice(calculateSessionTimePrice(device.getSession()));
 
         invoiceService.addInvoiceItem(device.getSession().getInvoice().getId(), createInvoiceItemDTO);
 
+        // Step 5: Add older session items to the invoice
+        for (PlayStationSession session : device.getSession().getDeviceSessions()) {
+            CreateInvoiceItemDTO sessionInvoiceItem = new CreateInvoiceItemDTO();
+            sessionInvoiceItem.setQty(BigDecimal.ONE);
+            sessionInvoiceItem.setItemId(session.getType().getItem().getId());
+            sessionInvoiceItem.setPrice(calculateSessionTimePrice(session));
+            invoiceService.addInvoiceItem(device.getSession().getInvoice().getId(), sessionInvoiceItem);
+        }
+
+        // Step 6: Finalize and save the invoice
         invoiceService.saveInvoice(device.getSession().getInvoice().getId());
-        // Find active session
+
+        // Step 7: Update the active session
         PlayStationSession session = playStationSessionRepository
             .findByDeviceIdAndActiveTrue(deviceId)
             .orElseThrow(() -> new RuntimeException("No active session found for device: " + deviceId));
-        // Update session
+
         session.setActive(false);
         session.setEndTime(Instant.now());
 
-        // Update device status
+        // Step 8: Update the device status
         device.setActive(false);
         device.setSession(null);
         device = playstationDeviceRepository.save(device);
-        // Save and return updated session
-        PlayStationSession updatedSession = playStationSessionRepository.save(session);
+
+        // Step 9: Save and return the updated session
+        playStationSessionRepository.save(session);
         return playstationDeviceMapper.toDto(device);
     }
 
@@ -321,7 +348,7 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
         lastSession.setInvoice(null);
         lastSession.setDeviceSessions(null);
 
-        session.setDeviceSessionsNetPrice(session.getDeviceSessionsNetPrice().add(this.calculateSessionTimePrice(fromDevice)));
+        session.setDeviceSessionsNetPrice(session.getDeviceSessionsNetPrice().add(this.calculateSessionTimePrice(fromDevice.getSession())));
 
         session.getDeviceSessions().add(lastSession);
         //TODO CHECK TYPE
@@ -340,25 +367,27 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
         return playstationDeviceMapper.toDto(playstationDeviceRepository.save(fromDevice));
     }
 
-    private BigDecimal calculateSessionTimePrice(PlaystationDevice device) {
-        if (device.getSession() == null || device.getSession().getStartTime() == null || device.getSession().getType() == null) {
+    private BigDecimal calculateSessionTimePrice(PlayStationSession session) {
+        if (session == null || session.getStartTime() == null || session.getType() == null) {
             return BigDecimal.ZERO;
         }
 
         // Calculate time difference in milliseconds
-        long startTime = Date.from(device.getSession().getStartTime()).getTime();
+        long startTime = Date.from(session.getStartTime()).getTime();
         long now = System.currentTimeMillis();
+        if (session.getEndTime() != null) {
+            now = Date.from(session.getEndTime()).getTime();
+        }
         long durationInMs = now - startTime;
 
         // Convert to hours
         double durationInHours = durationInMs / (1000.0 * 60.0 * 60.0);
 
         // Get hourly rate
-        BigDecimal hourlyRate = device.getSession().getType().getPrice();
+        BigDecimal hourlyRate = session.getType().getPrice();
 
         // Calculate total cost and round to whole number
-        BigDecimal totalCost = hourlyRate.multiply(BigDecimal.valueOf(durationInHours)).setScale(0, RoundingMode.HALF_UP);
 
-        return totalCost;
+        return hourlyRate.multiply(BigDecimal.valueOf(durationInHours)).setScale(0, RoundingMode.HALF_UP);
     }
 }
