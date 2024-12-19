@@ -14,6 +14,7 @@ import { InvoicesModule } from './invoices/invoices.module';
 import { BanksModule } from './banks/banks.module';
 import { MoneyModule } from './money/money.module';
 import { PlaystationModule } from './playstation/playstation.module';
+import { AdminModule } from './admin/admin.module';
 
 @NgModule({
   declarations: [InventoryComponent, PurchaseComponent, SalesComponent],
@@ -28,6 +29,7 @@ import { PlaystationModule } from './playstation/playstation.module';
     BanksModule,
     MoneyModule,
     PlaystationModule,
+    AdminModule
   ],
   exports: [],
 })
