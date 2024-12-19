@@ -1,55 +1,48 @@
 <div class="page">
   <!-- Navbar -->
-  <header class="header-wrapper">
-    <div class="header-container">
+  <header class="">
+    <div style="width: -webkit-fill-available" class="">
       <router-outlet name="navbar"></router-outlet>
     </div>
   </header>
 
   <div class="page-wrapper">
-    <!-- Page header with improved spacing and hierarchy -->
+    <!-- Page header -->
     <div class="page-header d-print-none">
-      <div class="container-fluid">
-        <div class="header-content">
-          <!-- Breadcrumb navigation with enhanced visibility -->
-          <nav aria-label="breadcrumb" class="breadcrumb-wrapper">
-            <ol class="breadcrumb">
-              <li class="breadcrumb-item">
-                <a routerLink="/" class="breadcrumb-link">
-                  <i class="fa fa-home"></i>
-                  <span class="breadcrumb-text">Home</span>
-                </a>
-              </li>
-              <li 
-                class="breadcrumb-item" 
-                *ngFor="let breadcrumb of breadcrumbs$ | async; let last = last" 
-                [class.active]="last"
-              >
-                <ng-container *ngIf="!last">
-                  <a [routerLink]="breadcrumb.url" class="breadcrumb-link">
-                    {{ breadcrumb.label }}
+      <div class="container-fixed">
+        <div class="row g-2 align-items-center">
+          <div class="col">
+            <!-- Breadcrumb navigation -->
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                  <a routerLink="/" class="text-muted">
+                    <i class="fa fa-home"></i>
+                    <span class="ms-1">Home</span>
                   </a>
-                </ng-container>
-                <ng-container *ngIf="last">
-                  <span class="breadcrumb-current">{{ breadcrumb.label }}</span>
-                </ng-container>
-              </li>
-            </ol>
-          </nav>
+                </li>
+                <li class="breadcrumb-item" *ngFor="let breadcrumb of breadcrumbs$ | async; let last = last" [class.active]="last">
+                  <ng-container *ngIf="!last">
+                    <a [routerLink]="breadcrumb.url" class="text-muted">{{ breadcrumb.label }}</a>
+                  </ng-container>
+                  <ng-container *ngIf="last">
+                    <span class="text-primary">{{ breadcrumb.label }}</span>
+                  </ng-container>
+                </li>
+              </ol>
+            </nav>
+          </div>
         </div>
       </div>
     </div>
+    <!-- Page body -->
+    <div class="page-body">
+      <router-outlet></router-outlet>
+    </div>
 
-    <!-- Page body with improved spacing -->
-    <main class="page-body">
-      <div class="container-fluid">
-        <router-outlet></router-outlet>
-      </div>
-    </main>
-
-    <!-- Footer with consistent styling -->
-    <footer class="footer">
-      <div class="container-fluid">
+    <!-- Page footer -->
+    <footer class="footer" style="padding: 0px !important">
+      <div class="container-xl">
         <jhi-footer></jhi-footer>
       </div>
     </footer>

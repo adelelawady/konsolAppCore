@@ -1,273 +1,43 @@
-// Variables
-$max-content-width: 1400px;
-$container-padding: clamp(1rem, 3vw, 2rem);
-$mobile-container-padding: 1rem;
-$header-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-$transition-speed: 0.3s;
-$border-radius: 0.75rem;
-$spacing-unit: 1rem;
-
-// Color variables
-$surface-color: var(--tblr-bg-surface, #ffffff);
-$border-color: var(--tblr-border-color, #e5e7eb);
-$text-muted: var(--tblr-secondary, #6c757d);
-$primary-color: var(--tblr-primary, #206bc4);
-
-// Mixins
-@mixin flex-center {
-  display: flex;
-  align-items: center;
-}
-
-@mixin container-base {
-  width: 100%;
-  margin: 0 auto;
-  padding: 0 $container-padding;
-}
-
-@mixin card-shadow {
-  box-shadow: 
-    0 1px 3px rgba(0, 0, 0, 0.05),
-    0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-// Base layout
 .page {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: var(--tblr-body-bg);
-  overflow-x: hidden;
 }
 
 .page-wrapper {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: $spacing-unit * 1.5;
-  padding-top: $spacing-unit;
 }
 
-// Container utilities
-.container-fluid {
-  @include container-base;
-  max-width: $max-content-width;
-}
-
-// Header styles
-.header-wrapper {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  background-color: rgba($surface-color, 0.98);
-  backdrop-filter: blur(8px);
-  border-bottom: 1px solid $border-color;
-  transition: all $transition-speed ease;
-
-  &.scrolled {
-    box-shadow: $header-shadow;
-    background-color: rgba($surface-color, 0.95);
-  }
+.navbar {
+  border-bottom: 1px solid var(--tblr-border-color);
 
   .navbar-brand-image {
-    height: 2.25rem;
-    transition: transform $transition-speed ease;
-
-    &:hover {
-      transform: scale(1.05);
-    }
+    height: 2rem;
   }
 }
 
-// Page header and breadcrumbs
-.page-header {
-  padding: $spacing-unit * 1.5 0;
-  background-color: $surface-color;
-  border-bottom: 1px solid $border-color;
-  margin-bottom: $spacing-unit;
-
-  .header-content {
-    @include flex-center;
-    justify-content: space-between;
-    gap: $spacing-unit;
-    
-    h1 {
-      font-size: clamp(1.5rem, 3vw, 2rem);
-      font-weight: 600;
-      color: var(--tblr-body-color);
-      margin: 0;
-    }
-  }
-}
-
-.breadcrumb-wrapper {
-  margin: $spacing-unit * 0.5 0;
-
-  .breadcrumb {
-    @include flex-center;
-    flex-wrap: wrap;
-    gap: $spacing-unit;
-    margin: 0;
-    padding: 0;
-    background: transparent;
-    list-style: none;
-    font-size: 0.875rem;
-
-    &-item {
-      @include flex-center;
-      position: relative;
-
-      &:not(:last-child)::after {
-        content: '›';
-        margin-left: $spacing-unit;
-        color: $text-muted;
-        font-size: 1.2em;
-      }
-    }
-  }
-
-  .breadcrumb-link {
-    @include flex-center;
-    color: $text-muted;
-    text-decoration: none;
-    transition: all $transition-speed ease;
-    padding: $spacing-unit * 0.25 $spacing-unit * 0.5;
-    border-radius: $border-radius * 0.5;
-    
-    &:hover {
-      color: $primary-color;
-      background-color: rgba($primary-color, 0.08);
-    }
-  }
-
-  .breadcrumb-text {
-    margin-left: $spacing-unit * 0.5;
-  }
-
-  .breadcrumb-current {
-    color: $primary-color;
-    font-weight: 500;
-  }
-}
-
-// Main content area
-.page-body {
-  flex: 1;
-  padding: $spacing-unit 0 $spacing-unit * 2;
-  
-  > * {
-    animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-}
-
-// Footer
 .footer {
+  border-top: 1px solid var(--tblr-border-color);
+  background: var(--tblr-body-bg);
   margin-top: auto;
-  padding: $spacing-unit * 1.5 0;
-  background-color: $surface-color;
-  border-top: 1px solid $border-color;
-  font-size: 0.875rem;
-  color: $text-muted;
 
-  a {
-    color: inherit;
-    text-decoration: none;
-    transition: color $transition-speed ease;
-
-    &:hover {
-      color: $primary-color;
-    }
+  @media print {
+    display: none;
   }
 }
 
-// Utility classes
+// Specific styles for centered pages like login
 .page-center {
-  min-height: calc(100vh - 200px);
+  min-height: 100vh;
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: $spacing-unit * 2 $container-padding;
 }
 
 .container-tight {
-  @include container-base;
-  max-width: 32rem;
-  background-color: $surface-color;
-  border-radius: $border-radius;
-  @include card-shadow;
-  padding: $spacing-unit * 2;
-}
-
-// Animations
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY($spacing-unit * 0.5);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-// Responsive adjustments
-@media (max-width: 768px) {
-  .container-fluid,
-  .container-tight {
-    padding-left: $mobile-container-padding;
-    padding-right: $mobile-container-padding;
-  }
-  
-  .page-wrapper {
-    gap: $spacing-unit;
-  }
-  
-  .breadcrumb-wrapper {
-    .breadcrumb-text {
-      display: none;
-    }
-
-    .breadcrumb {
-      gap: $spacing-unit * 0.5;
-
-      &-item::after {
-        margin-left: $spacing-unit * 0.5;
-      }
-    }
-  }
-
-  .page-header {
-    padding: $spacing-unit 0;
-
-    .header-content {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: $spacing-unit * 0.75;
-    }
-  }
-
-  .container-tight {
-    padding: $spacing-unit * 1.5;
-  }
-}
-
-// Print styles
-@media print {
-  .header-wrapper {
-    position: static;
-    box-shadow: none;
-    background: none;
-    backdrop-filter: none;
-  }
-
-  .page-header {
-    margin-bottom: $spacing-unit;
-    border-bottom: none;
-    padding: $spacing-unit 0;
-  }
-
-  .breadcrumb-wrapper,
-  .footer {
-    display: none;
-  }
+  width: 100%;
+  max-width: 30rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
