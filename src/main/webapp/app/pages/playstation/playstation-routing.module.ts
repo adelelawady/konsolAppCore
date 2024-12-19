@@ -15,7 +15,6 @@ import { PlaystationResourceService } from 'app/core/konsolApi/api/playstationRe
 import { of } from 'rxjs';
 import { SessionInvoiceViewComponent } from './components/session/session-invoice-view.component';
 
-
 const routes: Routes = [
   {
     path: '',
@@ -89,7 +88,7 @@ const routes: Routes = [
       {
         path: 'products',
         component: ProductsControlComponent,
-        data: { breadcrumb: 'Products' }
+        data: { breadcrumb: 'Products' },
       },
       {
         path: 'sessions',
@@ -104,25 +103,20 @@ const routes: Routes = [
             component: SessionInvoiceViewComponent,
             data: { breadcrumb: 'Session Details' },
             resolve: {
-              session: (route: ActivatedRouteSnapshot) => {
+              session(route: ActivatedRouteSnapshot) {
                 const id = route.paramMap.get('id');
                 return id ? inject(PlaystationResourceService).getSession(id) : of(null);
               },
             },
-          }
-        ]
+          },
+        ],
       },
     ],
   },
 ];
 
-
-
-
-
-
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class PlaystationRoutingModule { }
+export class PlaystationRoutingModule {}

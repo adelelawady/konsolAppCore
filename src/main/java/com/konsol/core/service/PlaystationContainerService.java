@@ -1,6 +1,7 @@
 package com.konsol.core.service;
 
 import com.konsol.core.service.api.dto.PlaystationContainer;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,6 +41,8 @@ public interface PlaystationContainerService {
      * @return the list of entities.
      */
     Page<PlaystationContainer> findAll(Pageable pageable);
+
+    List<PlaystationContainer> findAll();
 
     /**
      * Get the "id" playstationContainer.

@@ -8,7 +8,7 @@
         <div class="card-body">
           <h5 class="card-title text-primary">{{ 'playstation.navigation.dashboard.title' | translate }}</h5>
           <p class="card-text">{{ 'playstation.navigation.dashboard.description' | translate }}</p>
-          <a [routerLink]="['/playstation/dashboard']" class="btn btn-primary">
+          <a routerLink="dashboard" class="btn btn-primary">
             <i class="fas fa-tachometer-alt me-2"></i>{{ 'playstation.navigation.buttons.goToDashboard' | translate }}
           </a>
         </div>
@@ -24,7 +24,7 @@
         <div class="card-body">
           <h5 class="card-title text-primary">{{ 'playstation.navigation.controls.devices.title' | translate }}</h5>
           <p class="card-text">{{ 'playstation.navigation.controls.devices.description' | translate }}</p>
-          <a [routerLink]="['/playstation/controls']" class="btn btn-primary">
+          <a routerLink="controls" class="btn btn-primary">
             <i class="fas fa-gamepad me-2"></i>{{ 'playstation.navigation.buttons.manageControls' | translate }}
           </a>
         </div>
@@ -35,7 +35,7 @@
         <div class="card-body">
           <h5 class="card-title text-primary">{{ 'playstation.navigation.controls.deviceTypes.title' | translate }}</h5>
           <p class="card-text">{{ 'playstation.navigation.controls.deviceTypes.description' | translate }}</p>
-          <a [routerLink]="['/playstation/device-types']" class="btn btn-primary">
+          <a routerLink="device-types" class="btn btn-primary">
             <i class="fas fa-list me-2"></i>{{ 'playstation.navigation.buttons.manageTypes' | translate }}
           </a>
         </div>

@@ -21,50 +21,47 @@
         <div class="card-body">
           <h5 class="card-title">{{ container.name }}</h5>
           <h6 class="card-subtitle mb-2 text-muted">{{ container.category }}</h6>
-          
+
           <div class="card-text">
             <div class="mb-2">
               <small class="text-muted">Features:</small>
               <div class="d-flex flex-wrap gap-2 mt-1">
-                <span class="badge" [ngClass]="container.hasTimeManagement ? 'bg-success' : 'bg-secondary'">
-                  Time Management
-                </span>
-                <span class="badge" [ngClass]="container.showType ? 'bg-success' : 'bg-secondary'">
-                  Show Type
-                </span>
-                <span class="badge" [ngClass]="container.showTime ? 'bg-success' : 'bg-secondary'">
-                  Show Time
-                </span>
-                <span class="badge" [ngClass]="container.canMoveDevice ? 'bg-success' : 'bg-secondary'">
-                  Move Device
-                </span>
+                <span class="badge" [ngClass]="container.hasTimeManagement ? 'bg-success' : 'bg-secondary'"> Time Management </span>
+                <span class="badge" [ngClass]="container.showType ? 'bg-success' : 'bg-secondary'"> Show Type </span>
+                <span class="badge" [ngClass]="container.showTime ? 'bg-success' : 'bg-secondary'"> Show Time </span>
+                <span class="badge" [ngClass]="container.canMoveDevice ? 'bg-success' : 'bg-secondary'"> Move Device </span>
                 <span class="badge" [ngClass]="container.canHaveMultiTimeManagement ? 'bg-success' : 'bg-secondary'">
                   Multi Time Management
                 </span>
               </div>
             </div>
-            
+
             <div class="mb-2">
               <small class="text-muted">Order Categories:</small>
               <p class="mb-1">{{ container.acceptedOrderCategories }}</p>
             </div>
-            
+
             <div>
               <small class="text-muted">Price Category:</small>
               <p class="mb-0">{{ container.orderSelectedPriceCategory }}</p>
             </div>
           </div>
         </div>
-        
+
         <div class="card-footer bg-transparent border-top-0">
           <div class="d-flex justify-content-end gap-2">
             <button class="btn btn-sm btn-primary" (click)="openEditModal(formModal, container)">
-              <fa-icon icon="edit"></fa-icon>
+              <i class="fa fa-edit"></i>
               <span class="ms-1">Edit</span>
             </button>
             <button class="btn btn-sm btn-danger" (click)="delete(container)">
-              <fa-icon icon="trash"></fa-icon>
+              <i class="fa fa-trash"></i>
               <span class="ms-1">Delete</span>
+            </button>
+
+            <button type="button" class="btn btn-secondary" [routerLink]="['/', 'container', container?.id, 'navigation']">
+              <fa-icon icon="eye"></fa-icon>
+              <span class="ms-1">view</span>
             </button>
           </div>
         </div>
@@ -79,77 +76,77 @@
     <h4 class="modal-title">{{ isEditMode ? 'Edit' : 'Create' }} PlayStation Container</h4>
     <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
   </div>
-  
+
   <div class="modal-body">
     <form [formGroup]="editForm">
       <div class="mb-3">
         <label class="form-label">Name</label>
-        <input type="text" class="form-control" formControlName="name">
+        <input type="text" class="form-control" formControlName="name" />
       </div>
-      
+
       <div class="mb-3">
         <label class="form-label">Category</label>
-        <input type="text" class="form-control" formControlName="category">
+        <input type="text" class="form-control" formControlName="category" />
       </div>
-      
+
       <div class="mb-3">
         <label class="form-label">Default Icon</label>
-        <input type="text" class="form-control" formControlName="defaultIcon">
+        <input type="text" class="form-control" formControlName="defaultIcon" />
       </div>
-      
+
       <div class="row mb-3">
         <div class="col-6">
           <div class="form-check">
-            <input type="checkbox" class="form-check-input" formControlName="hasTimeManagement" id="hasTimeManagement">
+            <input type="checkbox" class="form-check-input" formControlName="hasTimeManagement" id="hasTimeManagement" />
             <label class="form-check-label" for="hasTimeManagement">Has Time Management</label>
           </div>
         </div>
-        
+
         <div class="col-6">
           <div class="form-check">
-            <input type="checkbox" class="form-check-input" formControlName="showType" id="showType">
+            <input type="checkbox" class="form-check-input" formControlName="showType" id="showType" />
             <label class="form-check-label" for="showType">Show Type</label>
           </div>
         </div>
-        
+
         <div class="col-6">
           <div class="form-check">
-            <input type="checkbox" class="form-check-input" formControlName="showTime" id="showTime">
+            <input type="checkbox" class="form-check-input" formControlName="showTime" id="showTime" />
             <label class="form-check-label" for="showTime">Show Time</label>
           </div>
         </div>
-        
+
         <div class="col-6">
           <div class="form-check">
-            <input type="checkbox" class="form-check-input" formControlName="canMoveDevice" id="canMoveDevice">
+            <input type="checkbox" class="form-check-input" formControlName="canMoveDevice" id="canMoveDevice" />
             <label class="form-check-label" for="canMoveDevice">Can Move Device</label>
           </div>
         </div>
-        
+
         <div class="col-6">
           <div class="form-check">
-            <input type="checkbox" class="form-check-input" formControlName="canHaveMultiTimeManagement" id="canHaveMultiTimeManagement">
+            <input type="checkbox" class="form-check-input" formControlName="canHaveMultiTimeManagement" id="canHaveMultiTimeManagement" />
             <label class="form-check-label" for="canHaveMultiTimeManagement">Multi Time Management</label>
           </div>
         </div>
       </div>
-      
+
       <div class="mb-3">
         <label class="form-label">Accepted Order Categories</label>
-        <input type="text" class="form-control" formControlName="acceptedOrderCategories">
+        <input type="text" class="form-control" formControlName="acceptedOrderCategories" />
       </div>
-      
+
       <div class="mb-3">
         <label class="form-label">Order Selected Price Category</label>
-        <input type="text" class="form-control" formControlName="orderSelectedPriceCategory">
+        <input type="text" class="form-control" formControlName="orderSelectedPriceCategory" />
       </div>
     </form>
   </div>
-  
+
   <div class="modal-footer">
     <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cancel</button>
     <button type="button" class="btn btn-primary" (click)="save()" [disabled]="!editForm.valid">
       {{ isEditMode ? 'Update' : 'Create' }}
     </button>
   </div>
-</ng-template> 
+</ng-template>

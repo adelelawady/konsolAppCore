@@ -29,7 +29,7 @@ export interface PlaystationContainer {
   /**
    * The default icon for the Playstation container.
    */
-  defaultIcon?: string | null;
+  defaultIcon?: string;
   /**
    * Indicates if time management is enabled.
    */

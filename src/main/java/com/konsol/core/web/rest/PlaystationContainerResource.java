@@ -144,10 +144,8 @@ public class PlaystationContainerResource implements PlaystationContainersApiDel
     @Override
     public ResponseEntity<List<PlaystationContainer>> getPlaystationContainers(Integer page, Integer size) {
         LOG.debug("REST request to get a page of PlaystationContainers");
-        Pageable pageable = PageRequest.of(page, size);
-        Page<PlaystationContainer> pagex = playstationContainerService.findAll(pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), pagex);
-        return ResponseEntity.ok().headers(headers).body(pagex.getContent());
+        List<PlaystationContainer> pagex = playstationContainerService.findAll();
+        return ResponseEntity.ok().body(pagex);
     }
 
     /**

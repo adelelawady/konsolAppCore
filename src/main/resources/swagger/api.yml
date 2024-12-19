@@ -5022,6 +5022,7 @@ components:
           format: date-time
     PlaystationContainer:
       type: object
+      description: A model representing a Playstation container.
       properties:
         id:
           type: string
@@ -5035,7 +5036,6 @@ components:
         defaultIcon:
           type: string
           description: The default icon for the Playstation container.
-          nullable: true
         hasTimeManagement:
           type: boolean
           description: Indicates if time management is enabled.
@@ -5058,7 +5058,6 @@ components:
           type: string
           description: Selected price category for orders.
       required:
-        - id
         - name
         - category
         - hasTimeManagement
@@ -5068,4 +5067,3 @@ components:
         - canHaveMultiTimeManagement
         - acceptedOrderCategories
         - orderSelectedPriceCategory
-      description: A model representing a Playstation container.

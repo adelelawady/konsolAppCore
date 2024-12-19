@@ -4,7 +4,9 @@ import com.konsol.core.repository.PlaystationContainerRepository;
 import com.konsol.core.service.PlaystationContainerService;
 import com.konsol.core.service.api.dto.PlaystationContainer;
 import com.konsol.core.service.mapper.PlaystationContainerMapper;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -66,6 +68,12 @@ public class PlaystationContainerServiceImpl implements PlaystationContainerServ
     public Page<PlaystationContainer> findAll(Pageable pageable) {
         LOG.debug("Request to get all PlaystationContainers");
         return playstationContainerRepository.findAll(pageable).map(playstationContainerMapper::toDto);
+    }
+
+    @Override
+    public List<PlaystationContainer> findAll() {
+        LOG.debug("Request to get all PlaystationContainers");
+        return playstationContainerRepository.findAll().stream().map(playstationContainerMapper::toDto).collect(Collectors.toList());
     }
 
     @Override

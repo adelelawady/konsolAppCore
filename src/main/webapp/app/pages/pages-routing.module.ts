@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { inject, NgModule } from '@angular/core';
+import { ActivatedRouteSnapshot, RouterModule, Routes } from '@angular/router';
 import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
 
 import { InvoicesComponent } from './invoices/invoices.component';
@@ -9,16 +9,17 @@ import { PurchaseComponent } from './purchase/purchase.component';
 import { SalesComponent } from './sales/sales.component';
 import { MoneyComponent } from './money/money.component';
 import { NavigationComponent } from './navigation/navigation.component';
-import { ProductsComponent } from './products/products.component';
 import { AccountDetailsComponent } from './accounts/account-details/account-details.component';
 import { InvoiceDetailsComponent } from './invoices/invoice-details/invoice-details.component';
+import { PlaystationContainerResourceService } from 'app/core/konsolApi';
+import { of } from 'rxjs';
 
 const routes: Routes = [
   {
     path: '',
     component: NavigationComponent,
     canActivate: [UserRouteAccessService],
-    data: { breadcrumb: 'Dashboard' }
+    data: { breadcrumb: 'Dashboard' },
   },
   {
     path: 'invoices',
@@ -33,9 +34,9 @@ const routes: Routes = [
         path: ':invoiceId',
         component: InvoiceDetailsComponent,
         canActivate: [UserRouteAccessService],
-        data: { breadcrumb: 'Invoice Details' }
-      }
-    ]
+        data: { breadcrumb: 'Invoice Details' },
+      },
+    ],
   },
   {
     path: 'products',
@@ -60,15 +61,15 @@ const routes: Routes = [
         path: ':id',
         component: AccountDetailsComponent,
         canActivate: [UserRouteAccessService],
-        data: { breadcrumb: 'Account Details' }
-      }
-    ]
+        data: { breadcrumb: 'Account Details' },
+      },
+    ],
   },
   {
     path: 'inventory',
     component: InventoryComponent,
     canActivate: [UserRouteAccessService],
-    data: { breadcrumb: 'Inventory' }
+    data: { breadcrumb: 'Inventory' },
   },
   {
     path: 'purchase',
@@ -83,9 +84,9 @@ const routes: Routes = [
         path: ':invoiceId',
         component: PurchaseComponent,
         canActivate: [UserRouteAccessService],
-        data: { breadcrumb: 'Purchase Details' }
-      }
-    ]
+        data: { breadcrumb: 'Purchase Details' },
+      },
+    ],
   },
   {
     path: 'sales',
@@ -100,19 +101,25 @@ const routes: Routes = [
         path: ':invoiceId',
         component: SalesComponent,
         canActivate: [UserRouteAccessService],
-        data: { breadcrumb: 'Sale Details' }
-      }
-    ]
+        data: { breadcrumb: 'Sale Details' },
+      },
+    ],
   },
   {
     path: 'money',
     component: MoneyComponent,
     canActivate: [UserRouteAccessService],
-    data: { breadcrumb: 'Money Transactions' }
+    data: { breadcrumb: 'Money Transactions' },
   },
   {
-    path: 'playstation',
-   
+    path: 'container/:containerId/navigation',
+    resolve: {
+      session(route: ActivatedRouteSnapshot) {
+        const containerId = route.paramMap.get('containerId');
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+        return containerId ? inject(PlaystationContainerResourceService).getPlaystationContainer(containerId) : of(null);
+      },
+    },
     loadChildren: () => import('./playstation/playstation.module').then(m => m.PlaystationModule),
   },
 ];
