@@ -2,10 +2,9 @@ package com.konsol.core.web.rest;
 
 import com.konsol.core.repository.PlaystationContainerRepository;
 import com.konsol.core.service.PlaystationContainerService;
-import com.konsol.core.service.dto.PlaystationContainerDTO;
+import com.konsol.core.service.api.dto.PlaystationContainer;
+import com.konsol.core.web.api.PlaystationContainersApiDelegate;
 import com.konsol.core.web.rest.errors.BadRequestAlertException;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -13,9 +12,9 @@ import java.util.Objects;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +29,7 @@ import tech.jhipster.web.util.ResponseUtil;
  */
 @RestController
 @RequestMapping("/api/playstation-containers")
-public class PlaystationContainerResource {
+public class PlaystationContainerResource implements PlaystationContainersApiDelegate {
 
     private static final Logger LOG = LoggerFactory.getLogger(PlaystationContainerResource.class);
 
@@ -54,45 +53,43 @@ public class PlaystationContainerResource {
     /**
      * {@code POST  /playstation-containers} : Create a new playstationContainer.
      *
-     * @param playstationContainerDTO the playstationContainerDTO to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new playstationContainerDTO, or with status {@code 400 (Bad Request)} if the playstationContainer has already an ID.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     * @param playstationContainer the PlaystationContainer to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new PlaystationContainer, or with status {@code 400 (Bad Request)} if the playstationContainer has already an ID.
      */
-    @PostMapping("")
-    public ResponseEntity<PlaystationContainerDTO> createPlaystationContainer(
-        @Valid @RequestBody PlaystationContainerDTO playstationContainerDTO
-    ) throws URISyntaxException {
-        LOG.debug("REST request to save PlaystationContainer : {}", playstationContainerDTO);
-        if (playstationContainerDTO.getId() != null) {
+
+    @Override
+    public ResponseEntity<PlaystationContainer> createPlaystationContainer(PlaystationContainer playstationContainer) {
+        LOG.debug("REST request to save PlaystationContainer : {}", playstationContainer);
+        if (playstationContainer.getId() != null) {
             throw new BadRequestAlertException("A new playstationContainer cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        playstationContainerDTO = playstationContainerService.save(playstationContainerDTO);
-        return ResponseEntity
-            .created(new URI("/api/playstation-containers/" + playstationContainerDTO.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, playstationContainerDTO.getId()))
-            .body(playstationContainerDTO);
+        playstationContainer = playstationContainerService.save(playstationContainer);
+        try {
+            return ResponseEntity
+                .created(new URI("/api/playstation-containers/" + playstationContainer.getId()))
+                .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, playstationContainer.getId()))
+                .body(playstationContainer);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
      * {@code PUT  /playstation-containers/:id} : Updates an existing playstationContainer.
      *
-     * @param id the id of the playstationContainerDTO to save.
-     * @param playstationContainerDTO the playstationContainerDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated playstationContainerDTO,
-     * or with status {@code 400 (Bad Request)} if the playstationContainerDTO is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the playstationContainerDTO couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     * @param id the id of the PlaystationContainer to save.
+     * @param playstationContainer the PlaystationContainer to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated PlaystationContainer,
+     * or with status {@code 400 (Bad Request)} if the PlaystationContainer is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the PlaystationContainer couldn't be updated.
      */
-    @PutMapping("/{id}")
-    public ResponseEntity<PlaystationContainerDTO> updatePlaystationContainer(
-        @PathVariable(value = "id", required = false) final String id,
-        @Valid @RequestBody PlaystationContainerDTO playstationContainerDTO
-    ) throws URISyntaxException {
-        LOG.debug("REST request to update PlaystationContainer : {}, {}", id, playstationContainerDTO);
-        if (playstationContainerDTO.getId() == null) {
+    @Override
+    public ResponseEntity<PlaystationContainer> updatePlaystationContainer(String id, PlaystationContainer playstationContainer) {
+        LOG.debug("REST request to update PlaystationContainer : {}, {}", id, playstationContainer);
+        if (playstationContainer.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, playstationContainerDTO.getId())) {
+        if (!Objects.equals(id, playstationContainer.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -100,34 +97,30 @@ public class PlaystationContainerResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        playstationContainerDTO = playstationContainerService.update(playstationContainerDTO);
+        playstationContainer = playstationContainerService.update(playstationContainer);
         return ResponseEntity
             .ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, playstationContainerDTO.getId()))
-            .body(playstationContainerDTO);
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, playstationContainer.getId()))
+            .body(playstationContainer);
     }
 
     /**
      * {@code PATCH  /playstation-containers/:id} : Partial updates given fields of an existing playstationContainer, field will ignore if it is null
      *
-     * @param id the id of the playstationContainerDTO to save.
-     * @param playstationContainerDTO the playstationContainerDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated playstationContainerDTO,
-     * or with status {@code 400 (Bad Request)} if the playstationContainerDTO is not valid,
-     * or with status {@code 404 (Not Found)} if the playstationContainerDTO is not found,
-     * or with status {@code 500 (Internal Server Error)} if the playstationContainerDTO couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     * @param id the id of the PlaystationContainer to save.
+     * @param playstationContainer the PlaystationContainer to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated PlaystationContainer,
+     * or with status {@code 400 (Bad Request)} if the PlaystationContainer is not valid,
+     * or with status {@code 404 (Not Found)} if the PlaystationContainer is not found,
+     * or with status {@code 500 (Internal Server Error)} if the PlaystationContainer couldn't be updated.
      */
-    @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
-    public ResponseEntity<PlaystationContainerDTO> partialUpdatePlaystationContainer(
-        @PathVariable(value = "id", required = false) final String id,
-        @NotNull @RequestBody PlaystationContainerDTO playstationContainerDTO
-    ) throws URISyntaxException {
-        LOG.debug("REST request to partial update PlaystationContainer partially : {}, {}", id, playstationContainerDTO);
-        if (playstationContainerDTO.getId() == null) {
+    @Override
+    public ResponseEntity<PlaystationContainer> partialUpdatePlaystationContainer(String id, PlaystationContainer playstationContainer) {
+        LOG.debug("REST request to partial update PlaystationContainer partially : {}, {}", id, playstationContainer);
+        if (playstationContainer.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, playstationContainerDTO.getId())) {
+        if (!Objects.equals(id, playstationContainer.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -135,49 +128,51 @@ public class PlaystationContainerResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<PlaystationContainerDTO> result = playstationContainerService.partialUpdate(playstationContainerDTO);
+        Optional<PlaystationContainer> result = playstationContainerService.partialUpdate(playstationContainer);
 
         return ResponseUtil.wrapOrNotFound(
             result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, playstationContainerDTO.getId())
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, playstationContainer.getId())
         );
     }
 
     /**
      * {@code GET  /playstation-containers} : get all the playstationContainers.
      *
-     * @param pageable the pagination information.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of playstationContainers in body.
      */
-    @GetMapping("")
-    public ResponseEntity<List<PlaystationContainerDTO>> getAllPlaystationContainers(@ParameterObject Pageable pageable) {
+    @Override
+    public ResponseEntity<List<PlaystationContainer>> getPlaystationContainers(Integer page, Integer size) {
         LOG.debug("REST request to get a page of PlaystationContainers");
-        Page<PlaystationContainerDTO> page = playstationContainerService.findAll(pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
+        Pageable pageable = PageRequest.of(page, size);
+        Page<PlaystationContainer> pagex = playstationContainerService.findAll(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), pagex);
+        return ResponseEntity.ok().headers(headers).body(pagex.getContent());
     }
 
     /**
      * {@code GET  /playstation-containers/:id} : get the "id" playstationContainer.
      *
-     * @param id the id of the playstationContainerDTO to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the playstationContainerDTO, or with status {@code 404 (Not Found)}.
+     * @param id the id of the PlaystationContainer to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the PlaystationContainer, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/{id}")
-    public ResponseEntity<PlaystationContainerDTO> getPlaystationContainer(@PathVariable("id") String id) {
+
+    @Override
+    public ResponseEntity<PlaystationContainer> getPlaystationContainer(String id) {
         LOG.debug("REST request to get PlaystationContainer : {}", id);
-        Optional<PlaystationContainerDTO> playstationContainerDTO = playstationContainerService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(playstationContainerDTO);
+        Optional<PlaystationContainer> PlaystationContainer = playstationContainerService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(PlaystationContainer);
     }
 
     /**
      * {@code DELETE  /playstation-containers/:id} : delete the "id" playstationContainer.
      *
-     * @param id the id of the playstationContainerDTO to delete.
+     * @param id the id of the PlaystationContainer to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePlaystationContainer(@PathVariable("id") String id) {
+
+    @Override
+    public ResponseEntity<Void> deletePlaystationContainer(String id) {
         LOG.debug("REST request to delete PlaystationContainer : {}", id);
         playstationContainerService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id)).build();

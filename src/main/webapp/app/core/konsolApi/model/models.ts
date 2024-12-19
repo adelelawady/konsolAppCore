@@ -64,6 +64,7 @@ export * from './passwordChangeDTO';
 export * from './performanceIndicatorsDTO';
 export * from './performanceMetricsDTO';
 export * from './pkDTO';
+export * from './playstationContainer';
 export * from './psDeviceDTO';
 export * from './psDeviceType';
 export * from './psSessionDTO';

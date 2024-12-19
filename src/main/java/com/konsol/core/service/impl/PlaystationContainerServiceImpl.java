@@ -1,9 +1,8 @@
 package com.konsol.core.service.impl;
 
-import com.konsol.core.domain.PlaystationContainer;
 import com.konsol.core.repository.PlaystationContainerRepository;
 import com.konsol.core.service.PlaystationContainerService;
-import com.konsol.core.service.dto.PlaystationContainerDTO;
+import com.konsol.core.service.api.dto.PlaystationContainer;
 import com.konsol.core.service.mapper.PlaystationContainerMapper;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -33,29 +32,29 @@ public class PlaystationContainerServiceImpl implements PlaystationContainerServ
     }
 
     @Override
-    public PlaystationContainerDTO save(PlaystationContainerDTO playstationContainerDTO) {
-        LOG.debug("Request to save PlaystationContainer : {}", playstationContainerDTO);
-        PlaystationContainer playstationContainer = playstationContainerMapper.toEntity(playstationContainerDTO);
+    public PlaystationContainer save(PlaystationContainer PlaystationContainer) {
+        LOG.debug("Request to save PlaystationContainer : {}", PlaystationContainer);
+        com.konsol.core.domain.PlaystationContainer playstationContainer = playstationContainerMapper.toEntity(PlaystationContainer);
         playstationContainer = playstationContainerRepository.save(playstationContainer);
         return playstationContainerMapper.toDto(playstationContainer);
     }
 
     @Override
-    public PlaystationContainerDTO update(PlaystationContainerDTO playstationContainerDTO) {
-        LOG.debug("Request to update PlaystationContainer : {}", playstationContainerDTO);
-        PlaystationContainer playstationContainer = playstationContainerMapper.toEntity(playstationContainerDTO);
+    public PlaystationContainer update(PlaystationContainer PlaystationContainer) {
+        LOG.debug("Request to update PlaystationContainer : {}", PlaystationContainer);
+        com.konsol.core.domain.PlaystationContainer playstationContainer = playstationContainerMapper.toEntity(PlaystationContainer);
         playstationContainer = playstationContainerRepository.save(playstationContainer);
         return playstationContainerMapper.toDto(playstationContainer);
     }
 
     @Override
-    public Optional<PlaystationContainerDTO> partialUpdate(PlaystationContainerDTO playstationContainerDTO) {
-        LOG.debug("Request to partially update PlaystationContainer : {}", playstationContainerDTO);
+    public Optional<PlaystationContainer> partialUpdate(PlaystationContainer PlaystationContainer) {
+        LOG.debug("Request to partially update PlaystationContainer : {}", PlaystationContainer);
 
         return playstationContainerRepository
-            .findById(playstationContainerDTO.getId())
+            .findById(PlaystationContainer.getId())
             .map(existingPlaystationContainer -> {
-                playstationContainerMapper.partialUpdate(existingPlaystationContainer, playstationContainerDTO);
+                playstationContainerMapper.partialUpdate(existingPlaystationContainer, PlaystationContainer);
 
                 return existingPlaystationContainer;
             })
@@ -64,13 +63,13 @@ public class PlaystationContainerServiceImpl implements PlaystationContainerServ
     }
 
     @Override
-    public Page<PlaystationContainerDTO> findAll(Pageable pageable) {
+    public Page<PlaystationContainer> findAll(Pageable pageable) {
         LOG.debug("Request to get all PlaystationContainers");
         return playstationContainerRepository.findAll(pageable).map(playstationContainerMapper::toDto);
     }
 
     @Override
-    public Optional<PlaystationContainerDTO> findOne(String id) {
+    public Optional<PlaystationContainer> findOne(String id) {
         LOG.debug("Request to get PlaystationContainer : {}", id);
         return playstationContainerRepository.findById(id).map(playstationContainerMapper::toDto);
     }

@@ -2299,6 +2299,160 @@ paths:
                 $ref: '#/components/schemas/PsDeviceType'
       tags:
         - playstation-resource
+  /playstation-containers:
+    post:
+      summary: Create a new PlaystationContainer
+      description: Creates a new PlaystationContainer if it does not already have an ID.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlaystationContainer'
+      responses:
+        '201':
+          description: Successfully created PlaystationContainer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaystationContainer'
+        '400':
+          description: Invalid input or ID already exists
+      tags:
+        - playstation-container-resource
+      operationId: createPlaystationContainer
+    get:
+      summary: Get all PlaystationContainers
+      description: Retrieves a paginated list of all PlaystationContainers.
+      parameters:
+        - name: page
+          in: query
+          description: The page number.
+          required: false
+          schema:
+            type: integer
+        - name: size
+          in: query
+          description: The size of each page.
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully retrieved list of PlaystationContainers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PlaystationContainer'
+      tags:
+        - playstation-container-resource
+      operationId: getPlaystationContainers
+    parameters: []
+  '/playstation-containers/{id}':
+    get:
+      summary: Get a PlaystationContainer by ID
+      description: Retrieves a single PlaystationContainer by its ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully retrieved PlaystationContainer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaystationContainer'
+        '404':
+          description: PlaystationContainer not found
+      tags:
+        - playstation-container-resource
+      operationId: getPlaystationContainer
+    put:
+      summary: Update a PlaystationContainer
+      description: Updates an existing PlaystationContainer by ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlaystationContainer'
+      responses:
+        '200':
+          description: Successfully updated PlaystationContainer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaystationContainer'
+        '400':
+          description: Invalid ID or data
+        '404':
+          description: PlaystationContainer not found
+      tags:
+        - playstation-container-resource
+      operationId: updatePlaystationContainer
+    patch:
+      summary: Partially update a PlaystationContainer
+      description: Updates specific fields of a PlaystationContainer.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlaystationContainer'
+      responses:
+        '200':
+          description: Successfully updated PlaystationContainer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaystationContainer'
+        '400':
+          description: Invalid ID or data
+        '404':
+          description: PlaystationContainer not found
+      tags:
+        - playstation-container-resource
+      operationId: partialUpdatePlaystationContainer
+    delete:
+      summary: Delete a PlaystationContainer
+      description: Deletes an existing PlaystationContainer by ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Successfully deleted PlaystationContainer
+        '404':
+          description: PlaystationContainer not found
+      tags:
+        - playstation-container-resource
+      operationId: deletePlaystationContainer
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
 components:
   schemas:
     ChartDataDTO:
@@ -4866,3 +5020,52 @@ components:
           x-stoplight:
             id: 7o0mztgx5nh0e
           format: date-time
+    PlaystationContainer:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the Playstation container.
+        name:
+          type: string
+          description: The name of the Playstation container.
+        category:
+          type: string
+          description: The category of the Playstation container.
+        defaultIcon:
+          type: string
+          description: The default icon for the Playstation container.
+          nullable: true
+        hasTimeManagement:
+          type: boolean
+          description: Indicates if time management is enabled.
+        showType:
+          type: boolean
+          description: Indicates if the type is shown.
+        showTime:
+          type: boolean
+          description: Indicates if time is shown.
+        canMoveDevice:
+          type: boolean
+          description: Indicates if devices can be moved.
+        canHaveMultiTimeManagement:
+          type: boolean
+          description: Indicates if multiple time management options are supported.
+        acceptedOrderCategories:
+          type: string
+          description: Accepted order categories.
+        orderSelectedPriceCategory:
+          type: string
+          description: Selected price category for orders.
+      required:
+        - id
+        - name
+        - category
+        - hasTimeManagement
+        - showType
+        - showTime
+        - canMoveDevice
+        - canHaveMultiTimeManagement
+        - acceptedOrderCategories
+        - orderSelectedPriceCategory
+      description: A model representing a Playstation container.

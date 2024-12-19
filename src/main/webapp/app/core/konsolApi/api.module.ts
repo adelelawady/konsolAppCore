@@ -10,6 +10,7 @@ import { GLOBALService } from './api/gLOBAL.service';
 import { InvoiceResourceService } from './api/invoiceResource.service';
 import { ItemResourceService } from './api/itemResource.service';
 import { MoneyResourceService } from './api/moneyResource.service';
+import { PlaystationContainerResourceService } from './api/playstationContainerResource.service';
 import { PlaystationResourceService } from './api/playstationResource.service';
 import { PublicUserResourceService } from './api/publicUserResource.service';
 import { ServerSettingsService } from './api/serverSettings.service';
