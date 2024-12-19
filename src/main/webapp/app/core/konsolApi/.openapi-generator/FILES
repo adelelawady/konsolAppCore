@@ -10,6 +10,7 @@ api/gLOBAL.service.ts
 api/invoiceResource.service.ts
 api/itemResource.service.ts
 api/moneyResource.service.ts
+api/playstationContainerResource.service.ts
 api/playstationResource.service.ts
 api/publicUserResource.service.ts
 api/serverSettings.service.ts
@@ -87,6 +88,7 @@ model/passwordChangeDTO.ts
 model/performanceIndicatorsDTO.ts
 model/performanceMetricsDTO.ts
 model/pkDTO.ts
+model/playstationContainer.ts
 model/psDeviceDTO.ts
 model/psDeviceType.ts
 model/psSessionDTO.ts

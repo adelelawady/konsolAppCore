@@ -14,6 +14,8 @@ export * from './itemResource.service';
 import { ItemResourceService } from './itemResource.service';
 export * from './moneyResource.service';
 import { MoneyResourceService } from './moneyResource.service';
+export * from './playstationContainerResource.service';
+import { PlaystationContainerResourceService } from './playstationContainerResource.service';
 export * from './playstationResource.service';
 import { PlaystationResourceService } from './playstationResource.service';
 export * from './publicUserResource.service';
@@ -35,6 +37,7 @@ export const APIS = [
   InvoiceResourceService,
   ItemResourceService,
   MoneyResourceService,
+  PlaystationContainerResourceService,
   PlaystationResourceService,
   PublicUserResourceService,
   ServerSettingsService,
