@@ -13,6 +13,7 @@ import { AccountDetailsComponent } from './accounts/account-details/account-deta
 import { InvoiceDetailsComponent } from './invoices/invoice-details/invoice-details.component';
 import { PlaystationContainerResourceService } from 'app/core/konsolApi';
 import { of } from 'rxjs';
+import { PlaystationContainerResolver } from './playstation/resolvers/playstation-container.resolver';
 
 const routes: Routes = [
   {
@@ -112,14 +113,8 @@ const routes: Routes = [
     data: { breadcrumb: 'Money Transactions' },
   },
   {
-    path: 'container/:containerId/navigation',
-    resolve: {
-      session(route: ActivatedRouteSnapshot) {
-        const containerId = route.paramMap.get('containerId');
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-        return containerId ? inject(PlaystationContainerResourceService).getPlaystationContainer(containerId) : of(null);
-      },
-    },
+    path: 'playstation',
+ 
     loadChildren: () => import('./playstation/playstation.module').then(m => m.PlaystationModule),
   },
 ];

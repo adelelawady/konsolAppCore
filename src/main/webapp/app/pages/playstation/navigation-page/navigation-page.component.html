@@ -1,4 +1,41 @@
 <div class="container">
+
+  <ng-container *ngIf="container$ | async as container">
+    <div class="row mb-4">
+      <div class="col">
+        <h1 class="text-primary">{{ container.name }}</h1>
+        <p class="text-muted">{{ container.category }}</p>
+      </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="row mb-4">
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Features</h5>
+            <div class="d-flex flex-wrap gap-2">
+              <span class="badge" [ngClass]="container.hasTimeManagement ? 'bg-success' : 'bg-secondary'">
+                Time Management
+              </span>
+              <span class="badge" [ngClass]="container.showType ? 'bg-success' : 'bg-secondary'">
+                Show Type
+              </span>
+              <span class="badge" [ngClass]="container.showTime ? 'bg-success' : 'bg-secondary'">
+                Show Time
+              </span>
+              <span class="badge" [ngClass]="container.canMoveDevice ? 'bg-success' : 'bg-secondary'">
+                Move Device
+              </span>
+              <span class="badge" [ngClass]="container.canHaveMultiTimeManagement ? 'bg-success' : 'bg-secondary'">
+                Multi Time Management
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
   <h1 class="text-primary mb-4">{{ 'playstation.navigation.title' | translate }}</h1>
 
   <!-- Dashboard Section -->

@@ -24,6 +24,7 @@ import { CheckoutComponent } from './components/checkout/checkout.component';
 import { SessionListComponent } from './components/session/session-list.component';
 import { SessionInvoiceViewComponent } from './components/session/session-invoice-view.component';
 import { ConfirmationModalComponent } from 'app/shared/components/confirmation-modal/confirmation-modal.component';
+import { PlaystationContainerStateService } from './services/playstation-container.service';
 
 @NgModule({
   declarations: [
@@ -60,7 +61,8 @@ import { ConfirmationModalComponent } from 'app/shared/components/confirmation-m
     SessionListComponent,
   ],
   providers: [
-    PlaystationService
+    PlaystationService,
+    PlaystationContainerStateService
   ]
 })
 export class PlaystationModule { }

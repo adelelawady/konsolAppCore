@@ -1,5 +1,6 @@
 import { inject, NgModule } from '@angular/core';
 import { ActivatedRouteSnapshot, RouterModule, Routes } from '@angular/router';
+import { PlaystationContainerResolver } from './resolvers/playstation-container.resolver';
 import { NavigationPageComponent } from './navigation-page/navigation-page.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { DevicesControlComponent } from './devices-control/devices-control.component';
@@ -19,11 +20,13 @@ const routes: Routes = [
   {
     path: '',
     component: PlaystationLayoutComponent,
-    data: { breadcrumb: 'PlayStation' },
     children: [
       {
-        path: '',
+        path: 'container/:containerId/navigation',
         component: NavigationPageComponent,
+        resolve: {
+          container: PlaystationContainerResolver
+        },
         data: { breadcrumb: 'Overview' },
         canActivate: [UserRouteAccessService],
       },
@@ -111,12 +114,12 @@ const routes: Routes = [
           },
         ],
       },
-    ],
-  },
+    ]
+  }
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
-export class PlaystationRoutingModule {}
+export class PlaystationRoutingModule { }
