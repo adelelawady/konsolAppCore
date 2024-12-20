@@ -1,6 +1,7 @@
 package com.konsol.core.repository;
 
 import com.konsol.core.domain.playstation.PlaystationDevice;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
@@ -10,5 +11,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface PlaystationDeviceRepository extends MongoRepository<PlaystationDevice, String> {
-    Optional<PlaystationDevice> findAllByCategory(String category);
+    List<PlaystationDevice> findAllByCategory(String category);
 }
