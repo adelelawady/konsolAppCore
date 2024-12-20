@@ -9,6 +9,7 @@ import { PsDeviceDTO } from 'app/core/konsolApi/model/psDeviceDTO';
 import { PlaystationResourceService } from 'app/core/konsolApi/api/playstationResource.service';
 import { PlaystationDeviceFormGroup, PlaystationDeviceFormService } from './playstation-device-form.service';
 import { PsDeviceType } from 'app/core/konsolApi/model/psDeviceType';
+import { PlaystationContainerStateService } from 'app/pages/playstation/services/playstation-container.service';
 
 @Component({
   standalone: true,
@@ -20,6 +21,7 @@ export class PlaystationDeviceUpdateComponent implements OnInit {
   isSaving = false;
   device: PsDeviceDTO | null = null;
   deviceTypes: PsDeviceType[] = [];
+  private containerStateService: PlaystationContainerStateService = inject(PlaystationContainerStateService);
 
   playstationResourceService = inject(PlaystationResourceService);
   playstationDeviceFormService = inject(PlaystationDeviceFormService);

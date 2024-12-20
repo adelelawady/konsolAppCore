@@ -1,11 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PlaystationResourceService } from 'app/core/konsolApi/api/playstationResource.service';
 import { PsDeviceDTO } from 'app/core/konsolApi/model/psDeviceDTO';
-import { interval, Subscription, Subject } from 'rxjs';
+import { interval, Subscription, Subject, of } from 'rxjs';
 import { startWith, switchMap, takeUntil } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { PlaystationService } from '../../services/playstation.service';
+import { ActivatedRoute } from '@angular/router';
+import { PlaystationContainerStateService } from '../../services/playstation-container.service';
 
 @Component({
   selector: 'jhi-device-list',
@@ -20,9 +22,11 @@ export class DeviceListComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   constructor(private playstationResourceService: PlaystationResourceService,
-    private playstationService: PlaystationService) {}
+    private containerStateService: PlaystationContainerStateService,
+    private playstationService: PlaystationService, private route: ActivatedRoute,) {}
 
   ngOnInit(): void {
+  
     this.playstationService.reloadDevices$.subscribe(() => {
       this.loadDevices(true).subscribe();
     });
@@ -48,7 +52,14 @@ export class DeviceListComponent implements OnInit, OnDestroy {
     if (showLoading) {
       this.isLoading = true;
     }
-    return this.playstationResourceService.getDevices().pipe(
+
+
+    const container = this.containerStateService.getCurrentContainer();
+    if (!container) {
+      return of([]);
+    }
+
+    return this.playstationResourceService.getDevicesByCategory({ name: container.category }).pipe(
       tap(devices => {
         this.devices = devices;
         if (!this.firstLoad){

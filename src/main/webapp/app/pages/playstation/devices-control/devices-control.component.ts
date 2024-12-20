@@ -4,6 +4,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PlaystationResourceService } from 'app/core/konsolApi/api/playstationResource.service';
 import { PsDeviceDTO } from 'app/core/konsolApi/model/psDeviceDTO';
 import { ITEMS_PER_PAGE } from 'app/config/pagination.constants';
+import { PlaystationContainerStateService } from '../services/playstation-container.service';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'jhi-devices-control',
@@ -19,7 +21,7 @@ export class DevicesControlComponent implements OnInit {
 
   protected readonly playstationResourceService = inject(PlaystationResourceService);
   protected modalService = inject(NgbModal);
-
+  private containerStateService: PlaystationContainerStateService = inject(PlaystationContainerStateService);
   ngOnInit(): void {
     this.loadDevices();
   }
@@ -27,7 +29,11 @@ export class DevicesControlComponent implements OnInit {
   loadDevices(): void {
     this.isLoading = true;
     
-    this.playstationResourceService.getDevices('response', true).subscribe({
+    const container = this.containerStateService.getCurrentContainer();
+    if (!container) {
+     return;
+    }
+    this.playstationResourceService.getDevicesByCategory({ name: container.category }, 'response', true).subscribe({
       next: (res: HttpResponse<PsDeviceDTO[]>) => {
         this.isLoading = false;
         this.onSuccess(res.body, res.headers);

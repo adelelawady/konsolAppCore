@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { PsDeviceDTO } from 'app/core/konsolApi/model/psDeviceDTO';
 import { PsDeviceType } from 'app/core/konsolApi/model/psDeviceType';
+import { PlaystationContainerStateService } from 'app/pages/playstation/services/playstation-container.service';
 
 export type PlaystationDeviceFormGroup = FormGroup<{
   id: FormControl<string | null>;
@@ -14,7 +15,9 @@ export type PlaystationDeviceFormGroup = FormGroup<{
 
 @Injectable({ providedIn: 'root' })
 export class PlaystationDeviceFormService {
+  private containerStateService = inject(PlaystationContainerStateService);
   createPlaystationDeviceFormGroup(device: PsDeviceDTO = {}): PlaystationDeviceFormGroup {
+  
     return new FormGroup<{
       id: FormControl<string | null>;
       name: FormControl<string | null>;
@@ -31,9 +34,7 @@ export class PlaystationDeviceFormService {
       type: new FormControl<PsDeviceType | null>(null, {
         validators: [Validators.required],
       }),
-      category: new FormControl<string | null>(device.category ?? null, {
-        validators: [Validators.required],
-      }),
+      category: new FormControl<string | null>(device.category ?? null),
       timeManagement: new FormControl<boolean | null>(device.timeManagement ?? false),
     });
   }
@@ -44,7 +45,7 @@ export class PlaystationDeviceFormService {
       name: form.get(['name'])?.value || undefined,
       active: form.get(['active'])?.value || false,
       type: form.get(['type'])?.value || undefined,
-      category: form.get(['category'])?.value || undefined,
+      category: this.containerStateService.getCurrentContainer()?.category || undefined,
       timeManagement: form.get(['timeManagement'])?.value || false,
     };
   }
@@ -63,7 +64,7 @@ export class PlaystationDeviceFormService {
       name: undefined,
       active: false,
       type: undefined,
-      category: undefined,
+      category:  this.containerStateService.getCurrentContainer()?.category || undefined,
       timeManagement: false,
     };
   }

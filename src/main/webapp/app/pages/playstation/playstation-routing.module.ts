@@ -18,15 +18,16 @@ import { SessionInvoiceViewComponent } from './components/session/session-invoic
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'container/:containerId/navigation',
     component: PlaystationLayoutComponent,
+    resolve: {
+      container: PlaystationContainerResolver
+    },
     children: [
       {
-        path: 'container/:containerId/navigation',
+        path: '',
         component: NavigationPageComponent,
-        resolve: {
-          container: PlaystationContainerResolver
-        },
+       
         data: { breadcrumb: 'Overview' },
         canActivate: [UserRouteAccessService],
       },

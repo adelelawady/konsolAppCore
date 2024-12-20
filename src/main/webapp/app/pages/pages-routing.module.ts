@@ -113,8 +113,7 @@ const routes: Routes = [
     data: { breadcrumb: 'Money Transactions' },
   },
   {
-    path: 'playstation',
- 
+    path: '',
     loadChildren: () => import('./playstation/playstation.module').then(m => m.PlaystationModule),
   },
 ];
