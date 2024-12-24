@@ -21,7 +21,6 @@ export class PlaystationDeviceUpdateComponent implements OnInit {
   isSaving = false;
   device: PsDeviceDTO | null = null;
   deviceTypes: PsDeviceType[] = [];
-  private containerStateService: PlaystationContainerStateService = inject(PlaystationContainerStateService);
 
   playstationResourceService = inject(PlaystationResourceService);
   playstationDeviceFormService = inject(PlaystationDeviceFormService);

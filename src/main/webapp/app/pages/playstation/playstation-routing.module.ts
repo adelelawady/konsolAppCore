@@ -21,13 +21,13 @@ const routes: Routes = [
     path: 'container/:containerId/navigation',
     component: PlaystationLayoutComponent,
     resolve: {
-      container: PlaystationContainerResolver
+      container: PlaystationContainerResolver,
     },
     children: [
       {
         path: '',
         component: NavigationPageComponent,
-       
+
         data: { breadcrumb: 'Overview' },
         canActivate: [UserRouteAccessService],
       },
@@ -36,10 +36,16 @@ const routes: Routes = [
         component: DashboardComponent,
         data: { breadcrumb: 'Dashboard' },
         canActivate: [UserRouteAccessService],
+        resolve: {
+          container: PlaystationContainerResolver,
+        },
       },
       {
         path: 'controls',
         data: { breadcrumb: 'Devices' },
+        resolve: {
+          container: PlaystationContainerResolver,
+        },
         children: [
           {
             path: '',
@@ -81,7 +87,7 @@ const routes: Routes = [
             component: DeviceTypeFormComponent,
             data: { breadcrumb: 'Edit Type' },
             resolve: {
-              deviceType: (route: ActivatedRouteSnapshot) => {
+              deviceType(route: ActivatedRouteSnapshot) {
                 const id = route.paramMap.get('id');
                 return id ? inject(PlaystationResourceService).getDeviceType(id) : of(null);
               },
@@ -115,12 +121,12 @@ const routes: Routes = [
           },
         ],
       },
-    ]
-  }
+    ],
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class PlaystationRoutingModule { }
+export class PlaystationRoutingModule {}

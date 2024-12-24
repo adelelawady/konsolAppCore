@@ -1,6 +1,5 @@
 <div class="container">
-
-  <ng-container *ngIf="container$ | async as container">
+  <ng-container *ngIf="container">
     <div class="row mb-4">
       <div class="col">
         <h1 class="text-primary">{{ container.name }}</h1>
@@ -8,7 +7,7 @@
       </div>
     </div>
 
-    <!-- Features Section 
+    <!-- Features Section
     <div class="row mb-4">
       <div class="col">
         <div class="card">

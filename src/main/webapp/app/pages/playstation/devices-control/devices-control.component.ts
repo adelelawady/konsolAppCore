@@ -6,13 +6,16 @@ import { PsDeviceDTO } from 'app/core/konsolApi/model/psDeviceDTO';
 import { ITEMS_PER_PAGE } from 'app/config/pagination.constants';
 import { PlaystationContainerStateService } from '../services/playstation-container.service';
 import { of } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { PlaystationContainer } from 'app/core/konsolApi';
 
 @Component({
   selector: 'jhi-devices-control',
   templateUrl: './devices-control.component.html',
-  styleUrls: ['./devices-control.component.scss']
+  styleUrls: ['./devices-control.component.scss'],
 })
 export class DevicesControlComponent implements OnInit {
+  container: PlaystationContainer | null | undefined;
   devices?: PsDeviceDTO[];
   isLoading = false;
   totalItems = 0;
@@ -22,18 +25,32 @@ export class DevicesControlComponent implements OnInit {
   protected readonly playstationResourceService = inject(PlaystationResourceService);
   protected modalService = inject(NgbModal);
   private containerStateService: PlaystationContainerStateService = inject(PlaystationContainerStateService);
+
+  private route: ActivatedRoute = inject(ActivatedRoute);
+
   ngOnInit(): void {
+    // First try to get container from resolver data
+    this.route.data.subscribe(data => {
+      if (data['container']) {
+        // eslint-disable-next-line no-console
+        this.container = data['container'];
+        // eslint-disable-next-line no-console
+        console.log(this.container);
+        return;
+      }
+    });
     this.loadDevices();
   }
 
   loadDevices(): void {
     this.isLoading = true;
-    
-    const container = this.containerStateService.getCurrentContainer();
-    if (!container) {
-     return;
+
+    if (!this.container) {
+      this.isLoading = false;
+      return;
     }
-    this.playstationResourceService.getDevicesByCategory({ name: container.category }, 'response', true).subscribe({
+
+    this.playstationResourceService.getDevicesByCategory({ name: this.container.category }, 'response', true).subscribe({
       next: (res: HttpResponse<PsDeviceDTO[]>) => {
         this.isLoading = false;
         this.onSuccess(res.body, res.headers);
@@ -41,7 +58,7 @@ export class DevicesControlComponent implements OnInit {
       error: () => {
         this.isLoading = false;
         this.onError();
-      }
+      },
     });
   }
 
@@ -65,4 +82,4 @@ export class DevicesControlComponent implements OnInit {
   trackId(index: number, device: PsDeviceDTO): string {
     return device.id || '';
   }
-} 
+}

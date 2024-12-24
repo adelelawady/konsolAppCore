@@ -17,7 +17,6 @@ export type PlaystationDeviceFormGroup = FormGroup<{
 export class PlaystationDeviceFormService {
   private containerStateService = inject(PlaystationContainerStateService);
   createPlaystationDeviceFormGroup(device: PsDeviceDTO = {}): PlaystationDeviceFormGroup {
-  
     return new FormGroup<{
       id: FormControl<string | null>;
       name: FormControl<string | null>;
@@ -64,7 +63,7 @@ export class PlaystationDeviceFormService {
       name: undefined,
       active: false,
       type: undefined,
-      category:  this.containerStateService.getCurrentContainer()?.category || undefined,
+      category: this.containerStateService.getCurrentContainer()?.category || undefined,
       timeManagement: false,
     };
   }

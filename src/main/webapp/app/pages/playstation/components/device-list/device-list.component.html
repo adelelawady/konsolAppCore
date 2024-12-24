@@ -1,45 +1,43 @@
 <div class="device-list">
-
   <div class="device-list__content">
     <div class="devices-grid">
       <!-- Real devices -->
-      <div class="device-item" *ngFor="let device of devices" [hidden]="isLoading">
+      <div class="device-item" *ngFor="let device of devices">
         <jhi-device-card [device]="device"></jhi-device-card>
       </div>
 
       <div *ngIf="!firstLoad">
-      <!-- Skeleton loaders -->
-      <div class="device-item" *ngFor="let item of [1,2,3,4,5,6]" [hidden]="!isLoading">
-        <div class="device-card skeleton">
-          <div class="device-card__header">
-            <div class="status-badge loading"></div>
-          </div>
-          
-          <div class="device-card__image loading"></div>
-          
-          <div class="device-card__content">
-            <div class="device-card__title loading"></div>
-            
-            <div class="device-card__details">
-              <div class="detail-item loading"></div>
-              <div class="detail-item loading"></div>
+        <!-- Skeleton loaders -->
+        <div class="device-item" *ngFor="let item of [1, 2, 3, 4, 5, 6]" [hidden]="!isLoading">
+          <div class="device-card skeleton">
+            <div class="device-card__header">
+              <div class="status-badge loading"></div>
             </div>
-            
-            <div class="device-card__price loading"></div>
-            
-            <div class="device-card__actions">
-              <div class="action-button loading"></div>
-              <div class="action-button loading"></div>
+
+            <div class="device-card__image loading"></div>
+
+            <div class="device-card__content">
+              <div class="device-card__title loading"></div>
+
+              <div class="device-card__details">
+                <div class="detail-item loading"></div>
+                <div class="detail-item loading"></div>
+              </div>
+
+              <div class="device-card__price loading"></div>
+
+              <div class="device-card__actions">
+                <div class="action-button loading"></div>
+                <div class="action-button loading"></div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
     </div>
   </div>
 
   <div *ngIf="!isLoading && devices.length === 0" class="alert alert-info">
     {{ 'playstation.devices.list.noDevices' | translate }}
   </div>
-
 </div>

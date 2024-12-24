@@ -7,30 +7,22 @@ import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'jhi-navigation-page',
   templateUrl: './navigation-page.component.html',
-  styleUrls: ['./navigation-page.component.scss']
+  styleUrls: ['./navigation-page.component.scss'],
 })
 export class NavigationPageComponent implements OnInit, OnDestroy {
-  container$: Observable<PlaystationContainer | null>;
-  loading$: Observable<boolean>;
-  error$: Observable<string | null>;
+  container: PlaystationContainer | null | undefined;
   private subscription: Subscription | null = null;
 
-  constructor(
-    private containerStateService: PlaystationContainerStateService,
-    private route: ActivatedRoute,
-    private router: Router
-  ) {
-    this.container$ = this.containerStateService.container$;
-    this.loading$ = this.containerStateService.loading$;
-    this.error$ = this.containerStateService.error$;
-  }
+  constructor(private containerStateService: PlaystationContainerStateService, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
     // First try to get container from resolver data
     this.route.data.subscribe(data => {
       if (data['container']) {
-        console.log('container from resolver',this.containerStateService.getCurrentContainer());
-        console.log(data['container']);
+        // eslint-disable-next-line no-console
+        //  console.log('container from resolver',this.containerStateService.getCurrentContainer());
+        // eslint-disable-next-line no-console
+        this.container = data['container'];
         return;
       }
     });

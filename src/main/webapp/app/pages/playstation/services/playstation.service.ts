@@ -3,22 +3,22 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { PsDeviceDTO } from 'app/core/konsolApi/model/psDeviceDTO';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PlaystationService {
-  private selectedDeviceSubject = new BehaviorSubject<PsDeviceDTO | null>(null);
+  selectedDeviceSubject = new BehaviorSubject<PsDeviceDTO | null>(null);
   selectedDevice$ = this.selectedDeviceSubject.asObservable();
 
-  private showOrdersSubject = new BehaviorSubject<boolean>(false);
+  showOrdersSubject = new BehaviorSubject<boolean>(false);
   showOrders$ = this.showOrdersSubject.asObservable();
 
-  private checkoutSubject = new BehaviorSubject<boolean>(false);
+  checkoutSubject = new BehaviorSubject<boolean>(false);
   checkout$ = this.checkoutSubject.asObservable();
 
-  private reloadDevicesSubject = new Subject<void>();
+  reloadDevicesSubject = new Subject<void>();
   reloadDevices$ = this.reloadDevicesSubject.asObservable();
 
-  private orderChangeSubject = new Subject<void>();
+  orderChangeSubject = new Subject<void>();
   orderChange$ = this.orderChangeSubject.asObservable();
 
   constructor() {}
