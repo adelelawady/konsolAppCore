@@ -885,6 +885,28 @@ paths:
               schema:
                 $ref: '#/components/schemas/ItemDTO'
     parameters: []
+  '/items/{containerId}/view':
+    get:
+      tags:
+        - item-resource
+      operationId: getAllItemsByContainerId
+      parameters: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ItemDTO'
+      description: ''
+    parameters:
+      - schema:
+          type: string
+        name: containerId
+        in: path
+        required: true
   '/items/{id}/units':
     get:
       tags:
