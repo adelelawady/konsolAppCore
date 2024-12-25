@@ -4,6 +4,7 @@ import { PlaystationContainer } from 'app/core/konsolApi/model/playstationContai
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpResponse } from '@angular/common/http';
+import { ItemResourceService, CategoryItem } from 'app/core/konsolApi';
 
 @Component({
   selector: 'jhi-admin-playstation-container',
@@ -16,8 +17,10 @@ export class AdminPlaystationContainerComponent implements OnInit {
   editForm: FormGroup;
   selectedContainer: any | null = null;
   isEditMode = false;
+  availableCategories: CategoryItem[] = [];
 
   private playstationContainerService = inject(PlaystationContainerResourceService);
+  private itemResourceService = inject(ItemResourceService);
   private modalService = inject(NgbModal);
   private fb = inject(FormBuilder);
 
@@ -31,13 +34,25 @@ export class AdminPlaystationContainerComponent implements OnInit {
       showTime: [false, [Validators.required]],
       canMoveDevice: [false, [Validators.required]],
       canHaveMultiTimeManagement: [false, [Validators.required]],
-      acceptedOrderCategories: ['', [Validators.required]],
+      acceptedOrderCategories: [[], [Validators.required]],
       orderSelectedPriceCategory: ['', [Validators.required]],
     });
   }
 
   ngOnInit(): void {
     this.loadContainers();
+    this.loadCategories();
+  }
+
+  loadCategories(): void {
+    this.itemResourceService.getAllItemsCategories().subscribe({
+      next: (categories) => {
+        this.availableCategories = categories;
+      },
+      error: (error) => {
+        console.error('Error loading categories:', error);
+      }
+    });
   }
 
   loadContainers(): void {
@@ -63,22 +78,37 @@ export class AdminPlaystationContainerComponent implements OnInit {
   openEditModal(content: any, container: PlaystationContainer): void {
     this.isEditMode = true;
     this.selectedContainer = container;
-    this.editForm.patchValue(container);
+    
+    const acceptedCategories = container.acceptedOrderCategories || [];
+    
+    // Find matching CategoryItems from availableCategories
+    const selectedCategories = acceptedCategories
+      .filter(category => this.availableCategories.some(catItem => catItem.name === category));
+
+    this.editForm.patchValue({
+      ...container,
+      acceptedOrderCategories: selectedCategories
+    });
     this.modalService.open(content, { size: 'lg' });
   }
 
   save(): void {
     if (this.editForm.valid) {
       const formData = this.editForm.value;
+      
+      const processedFormData = {
+        ...formData,
+        acceptedOrderCategories: formData.acceptedOrderCategories
+      };
 
       if (this.isEditMode && this.selectedContainer) {
-        const updatedContainer = { ...this.selectedContainer, ...formData };
+        const updatedContainer = { ...this.selectedContainer, ...processedFormData };
         this.playstationContainerService.updatePlaystationContainer(this.selectedContainer.id, updatedContainer).subscribe(() => {
           this.modalService.dismissAll();
           this.loadContainers();
         });
       } else {
-        this.playstationContainerService.createPlaystationContainer(formData).subscribe(() => {
+        this.playstationContainerService.createPlaystationContainer(processedFormData).subscribe(() => {
           this.modalService.dismissAll();
           this.loadContainers();
         });
@@ -92,5 +122,11 @@ export class AdminPlaystationContainerComponent implements OnInit {
         this.loadContainers();
       });
     }
+  }
+
+  onTagsChanged(event: any): void {
+    this.editForm.patchValue({
+      acceptedOrderCategories: event
+    });
   }
 }
