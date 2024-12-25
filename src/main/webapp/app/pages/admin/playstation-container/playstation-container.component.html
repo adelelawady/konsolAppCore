@@ -133,7 +133,21 @@
 
       <div class="mb-3">
         <label class="form-label">Accepted Order Categories</label>
-        <input type="text" class="form-control" formControlName="acceptedOrderCategories" />
+        <ng-select
+          [items]="availableCategories"
+          [multiple]="true"
+          [closeOnSelect]="false"
+          bindLabel="name"
+          bindValue="name"
+          formControlName="acceptedOrderCategories"
+        >
+        </ng-select>
+        <div 
+          *ngIf="editForm.get('acceptedOrderCategories')?.errors?.required && editForm.get('acceptedOrderCategories')?.touched" 
+          class="invalid-feedback d-block"
+        >
+          This field is required
+        </div>
       </div>
 
       <div class="mb-3">
