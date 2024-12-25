@@ -33,7 +33,7 @@
         <!-- Home -->
         <li class="nav-item">
           <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-            <fa-icon [icon]="faGamepad" class="me-1"></fa-icon>
+            <i class="fa fa-home"></i>
             <span jhiTranslate="global.menu.home">Home</span>
           </a>
         </li>
@@ -46,6 +46,19 @@
             </span>
           </a>
           <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="playstation-menu">
+            <!-- Containers Controll -->
+            <li>
+              <a
+                class="dropdown-item"
+                routerLink="playstation-container"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: true }"
+                (click)="collapseNavbar()"
+              >
+                <fa-icon [icon]="faCompass" [fixedWidth]="true" class="me-2"></fa-icon>
+                <span>Container Control</span>
+              </a>
+            </li>
             <!-- Navigation -->
             <li>
               <a

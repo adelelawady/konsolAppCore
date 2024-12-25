@@ -2,6 +2,7 @@ package com.konsol.core.domain;
 
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
+import java.util.Set;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -52,7 +53,7 @@ public class PlaystationContainer implements Serializable {
 
     @NotNull
     @Field("accepted_order_categories")
-    private String acceptedOrderCategories;
+    private Set<String> acceptedOrderCategories;
 
     @NotNull
     @Field("order_selected_price_category")
@@ -177,19 +178,6 @@ public class PlaystationContainer implements Serializable {
         this.canHaveMultiTimeManagement = canHaveMultiTimeManagement;
     }
 
-    public String getAcceptedOrderCategories() {
-        return this.acceptedOrderCategories;
-    }
-
-    public PlaystationContainer acceptedOrderCategories(String acceptedOrderCategories) {
-        this.setAcceptedOrderCategories(acceptedOrderCategories);
-        return this;
-    }
-
-    public void setAcceptedOrderCategories(String acceptedOrderCategories) {
-        this.acceptedOrderCategories = acceptedOrderCategories;
-    }
-
     public String getOrderSelectedPriceCategory() {
         return this.orderSelectedPriceCategory;
     }
@@ -238,5 +226,13 @@ public class PlaystationContainer implements Serializable {
             ", acceptedOrderCategories='" + getAcceptedOrderCategories() + "'" +
             ", orderSelectedPriceCategory='" + getOrderSelectedPriceCategory() + "'" +
             "}";
+    }
+
+    public @NotNull Set<String> getAcceptedOrderCategories() {
+        return acceptedOrderCategories;
+    }
+
+    public void setAcceptedOrderCategories(@NotNull Set<String> acceptedOrderCategories) {
+        this.acceptedOrderCategories = acceptedOrderCategories;
     }
 }

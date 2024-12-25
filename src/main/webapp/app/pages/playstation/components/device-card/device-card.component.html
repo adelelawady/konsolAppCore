@@ -14,7 +14,7 @@
 
   <div class="device-card__content">
     <div class="device-type">
-      {{ device.type?.name }}
+      <span *ngIf="this.container?.showType"> {{ device.type?.name }}</span>
       <span class="previous-sessions-badge" *ngIf="hasPreviousSessions() && device.timeManagement">
         <i class="fas fa-history"></i>
         {{ getPreviousSessionsCount() }}
@@ -54,7 +54,7 @@
     <ng-container *ngIf="device.active">
       <div class="session-info" *ngIf="device.session">
         <span class="duration" *ngIf="device.timeManagement">
-          <span class="session-duration">{{ sessionDuration }}</span>
+          <span class="session-duration" *ngIf="this.container?.showTime">{{ sessionDuration }}</span>
         </span>
         <div class="cost-details">
           <span class="cost">{{ 'playstation.devices.card.session.currency' | translate }} {{ calculateSessionCost() }}</span>

@@ -5052,8 +5052,12 @@ components:
           type: boolean
           description: Indicates if multiple time management options are supported.
         acceptedOrderCategories:
-          type: string
+          type: array
           description: Accepted order categories.
+          items:
+            x-stoplight:
+              id: w50ajtf84ow7s
+            type: string
         orderSelectedPriceCategory:
           type: string
           description: Selected price category for orders.

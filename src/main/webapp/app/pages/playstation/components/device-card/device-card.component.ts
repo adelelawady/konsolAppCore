@@ -1,12 +1,13 @@
 import { Component, Input, ChangeDetectorRef, OnInit, OnDestroy, ElementRef, Output, EventEmitter } from '@angular/core';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { PlaystationService } from '../../services/playstation.service';
-import { PsDeviceDTO } from 'app/core/konsolApi';
+import { PlaystationContainer, PsDeviceDTO } from 'app/core/konsolApi';
 import { interval, Subscription } from 'rxjs';
 import { startWith, distinctUntilChanged } from 'rxjs/operators';
 import { PlaystationResourceService } from 'app/core/konsolApi/api/playstationResource.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmationModalComponent } from 'app/shared/components/confirmation-modal/confirmation-modal.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'jhi-device-card',
@@ -18,6 +19,7 @@ export class DeviceCardComponent implements OnInit, OnDestroy {
   @Input() device!: PsDeviceDTO;
   @Input() isSelected = false;
   sessionDuration = '0h 0m';
+  container: PlaystationContainer | null | undefined;
   private durationSubscription?: Subscription;
   // eslint-disable-next-line @typescript-eslint/member-ordering
   orderChangeAnimation = false;
@@ -33,10 +35,21 @@ export class DeviceCardComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private elementRef: ElementRef,
     private playstationResourceService: PlaystationResourceService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
+    this.route.data.subscribe(data => {
+      if (data['container']) {
+        // eslint-disable-next-line no-console
+        this.container = data['container'];
+        // eslint-disable-next-line no-console
+        console.log(this.container);
+        return;
+      }
+    });
+
     if (this.device.session) {
       this.durationSubscription = interval(500)
         .pipe(startWith(0))
@@ -63,7 +76,7 @@ export class DeviceCardComponent implements OnInit, OnDestroy {
     // Add order change subscription
     this.subscription.add(
       this.playstationService.orderChange$.subscribe(() => {
-        if (this.device?.id === this.playstationService.getSelectedDevice()?.id) {
+        if (this.device.id === this.playstationService.getSelectedDevice()?.id) {
           this.triggerOrderChangeAnimation();
           this.cdr.markForCheck(); // Use markForCheck instead of detectChanges
         }
@@ -191,7 +204,7 @@ export class DeviceCardComponent implements OnInit, OnDestroy {
   }
 
   loadAvailableDevices(): void {
-    this.playstationResourceService.getDevices().subscribe(devices => {
+    this.playstationResourceService.getDevicesByCategory({ name: this.container?.category }).subscribe(devices => {
       // Filter out the current device and active devices
       this.availableDevices = devices.filter(d => d.id !== this.device.id && !d.active);
     });
@@ -202,7 +215,7 @@ export class DeviceCardComponent implements OnInit, OnDestroy {
     confirmModal.componentInstance.message = `Are you sure you want to move this device?`;
 
     confirmModal.result.then(result => {
-      if (result === 'confirm' && this.device?.id) {
+      if (result === 'confirm' && this.device.id) {
         this.playstationResourceService.moveDevice(this.device.id, targetDeviceId).subscribe({
           next: () => {
             this.playstationService.reloadDevices();

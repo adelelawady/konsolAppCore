@@ -17,7 +17,7 @@ export interface PlaystationContainer {
   /**
    * The unique identifier for the Playstation container.
    */
-  id: string;
+  id?: string;
   /**
    * The name of the Playstation container.
    */
@@ -53,7 +53,7 @@ export interface PlaystationContainer {
   /**
    * Accepted order categories.
    */
-  acceptedOrderCategories: string;
+  acceptedOrderCategories: Array<string>;
   /**
    * Selected price category for orders.
    */

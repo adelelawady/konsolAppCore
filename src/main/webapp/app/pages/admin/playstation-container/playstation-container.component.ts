@@ -8,13 +8,13 @@ import { HttpResponse } from '@angular/common/http';
 @Component({
   selector: 'jhi-admin-playstation-container',
   templateUrl: './playstation-container.component.html',
-  styleUrls: ['./playstation-container.component.scss']
+  styleUrls: ['./playstation-container.component.scss'],
 })
 export class AdminPlaystationContainerComponent implements OnInit {
   containers: PlaystationContainer[] = [];
   isLoading = false;
   editForm: FormGroup;
-  selectedContainer: PlaystationContainer | null = null;
+  selectedContainer: any | null = null;
   isEditMode = false;
 
   private playstationContainerService = inject(PlaystationContainerResourceService);
@@ -32,7 +32,7 @@ export class AdminPlaystationContainerComponent implements OnInit {
       canMoveDevice: [false, [Validators.required]],
       canHaveMultiTimeManagement: [false, [Validators.required]],
       acceptedOrderCategories: ['', [Validators.required]],
-      orderSelectedPriceCategory: ['', [Validators.required]]
+      orderSelectedPriceCategory: ['', [Validators.required]],
     });
   }
 
@@ -42,16 +42,15 @@ export class AdminPlaystationContainerComponent implements OnInit {
 
   loadContainers(): void {
     this.isLoading = true;
-    this.playstationContainerService.getPlaystationContainers()
-      .subscribe({
-        next: (response: PlaystationContainer[]) => {
-          this.containers = response;
-          this.isLoading = false;
-        },
-        error: () => {
-          this.isLoading = false;
-        }
-      });
+    this.playstationContainerService.getPlaystationContainers().subscribe({
+      next: (response: PlaystationContainer[]) => {
+        this.containers = response;
+        this.isLoading = false;
+      },
+      error: () => {
+        this.isLoading = false;
+      },
+    });
   }
 
   openCreateModal(content: any): void {
@@ -71,32 +70,27 @@ export class AdminPlaystationContainerComponent implements OnInit {
   save(): void {
     if (this.editForm.valid) {
       const formData = this.editForm.value;
-      
+
       if (this.isEditMode && this.selectedContainer) {
         const updatedContainer = { ...this.selectedContainer, ...formData };
-        this.playstationContainerService.updatePlaystationContainer(
-          this.selectedContainer.id,
-          updatedContainer
-        ).subscribe(() => {
+        this.playstationContainerService.updatePlaystationContainer(this.selectedContainer.id, updatedContainer).subscribe(() => {
           this.modalService.dismissAll();
           this.loadContainers();
         });
       } else {
-        this.playstationContainerService.createPlaystationContainer(formData)
-          .subscribe(() => {
-            this.modalService.dismissAll();
-            this.loadContainers();
-          });
+        this.playstationContainerService.createPlaystationContainer(formData).subscribe(() => {
+          this.modalService.dismissAll();
+          this.loadContainers();
+        });
       }
     }
   }
 
-  delete(container: PlaystationContainer): void {
+  delete(container: any): void {
     if (confirm('Are you sure you want to delete this container?')) {
-      this.playstationContainerService.deletePlaystationContainer(container.id)
-        .subscribe(() => {
-          this.loadContainers();
-        });
+      this.playstationContainerService.deletePlaystationContainer(container.id).subscribe(() => {
+        this.loadContainers();
+      });
     }
   }
-} 
+}
