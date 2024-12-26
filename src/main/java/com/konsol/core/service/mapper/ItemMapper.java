@@ -11,12 +11,11 @@ import org.mapstruct.*;
  */
 @Mapper(
     componentModel = "spring",
-    uses = { UtilitsMapper.class },
+    uses = { UtilitsMapper.class, ItemPriceOptionMapper.class },
     unmappedTargetPolicy = ReportingPolicy.WARN,
     unmappedSourcePolicy = ReportingPolicy.WARN
 )
 public interface ItemMapper extends EntityMapper<ItemDTO, Item> {
-    //@Mapping(target = "itemUnits", source = "itemUnits", qualifiedByName = "itemUnitIdSet")
     ItemDTO toDto(Item s);
     ItemViewDTO toViewDto(Item s);
     ItemSimpleDTO toSimpleDTO(Item s);

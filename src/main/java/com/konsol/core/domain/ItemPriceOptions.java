@@ -17,7 +17,7 @@ public class ItemPriceOptions implements Serializable {
 
     private BigDecimal value;
 
-    private Set<String> refId = new LinkedHashSet<>();
+    private String refId;
 
     public BigDecimal getValue() {
         return value;
@@ -35,11 +35,11 @@ public class ItemPriceOptions implements Serializable {
         this.name = name;
     }
 
-    public Set<String> getRefId() {
+    public String getRefId() {
         return refId;
     }
 
-    public void setRefId(Set<String> refId) {
+    public void setRefId(String refId) {
         this.refId = refId;
     }
 }

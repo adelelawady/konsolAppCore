@@ -885,28 +885,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/ItemDTO'
     parameters: []
-  '/items/{containerId}/view':
-    get:
-      tags:
-        - item-resource
-      operationId: getAllItemsByContainerId
-      parameters: []
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ItemDTO'
-      description: ''
-    parameters:
-      - schema:
-          type: string
-        name: containerId
-        in: path
-        required: true
   '/items/{id}/units':
     get:
       tags:
@@ -2683,6 +2661,12 @@ components:
           x-stoplight:
             id: tpadizn2r7ikw
           default: false
+        PriceOptions:
+          type: array
+          x-stoplight:
+            id: 0tjx7m0g6od4z
+          items:
+            $ref: '#/components/schemas/itemPriceOptionDTO'
       required:
         - name
     ItemSimpleDTO:
@@ -5093,3 +5077,21 @@ components:
         - canHaveMultiTimeManagement
         - acceptedOrderCategories
         - orderSelectedPriceCategory
+    itemPriceOptionDTO:
+      title: itemPriceOptionDTO
+      x-stoplight:
+        id: 4y4ygl7z4t3gf
+      type: object
+      properties:
+        name:
+          type: string
+          x-stoplight:
+            id: ys2o8awjvb7sd
+        value:
+          type: number
+          x-stoplight:
+            id: e7f6scuszutij
+        refId:
+          type: string
+          x-stoplight:
+            id: md5lp5amzmmuv

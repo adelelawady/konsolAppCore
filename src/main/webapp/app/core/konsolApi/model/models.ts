@@ -41,6 +41,7 @@ export * from './invoicesSearchModel';
 export * from './itemAnalysisDTO';
 export * from './itemAnalysisSearchDTO';
 export * from './itemDTO';
+export * from './itemPriceOptionDTO';
 export * from './itemProfitabilityDTO';
 export * from './itemSalesDTO';
 export * from './itemSimpleDTO';

@@ -64,6 +64,7 @@ model/invoicesSearchModel.ts
 model/itemAnalysisDTO.ts
 model/itemAnalysisSearchDTO.ts
 model/itemDTO.ts
+model/itemPriceOptionDTO.ts
 model/itemProfitabilityDTO.ts
 model/itemSalesDTO.ts
 model/itemSimpleDTO.ts

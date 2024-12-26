@@ -7,38 +7,50 @@ import { ItemSimpleDTO } from 'app/core/konsolApi/model/itemSimpleDTO';
 import { PlaystationResourceService } from 'app/core/konsolApi/api/playstationResource.service';
 import { CreateInvoiceItemDTO } from 'app/core/konsolApi/model/createInvoiceItemDTO';
 import { PsDeviceDTO } from 'app/core/konsolApi/model/psDeviceDTO';
+import { PlaystationContainer } from 'app/core/konsolApi';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'jhi-orders-slider',
   templateUrl: './orders-slider.component.html',
-  styleUrls: ['./orders-slider.component.scss']
+  styleUrls: ['./orders-slider.component.scss'],
 })
 export class OrdersSliderComponent implements OnInit, OnDestroy {
   isVisible = false;
-  private subscription?: Subscription;
+  subscription?: Subscription;
   categories: CategoryItem[] = [];
   selectedCategory?: CategoryItem;
   itemsByCategory: { [key: string]: ItemSimpleDTO[] } = {};
   loading = false;
-  private selectedDevice: PsDeviceDTO | null = null;
+  selectedDevice: PsDeviceDTO | null = null;
   orderChangeAnimation = false;
-
+  container: PlaystationContainer | null | undefined;
   constructor(
-    private playstationService: PlaystationService, 
+    private playstationService: PlaystationService,
     private elementRef: ElementRef,
     private itemResourceService: ItemResourceService,
-    private playstationResourceService: PlaystationResourceService
+    private playstationResourceService: PlaystationResourceService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    this.subscription = this.playstationService.showOrders$.subscribe(
-      (show: boolean) => {
-        this.isVisible = show;
-        if (show) {
-          this.loadCategories();
-        }
+    // First try to get container from resolver data
+    this.route.data.subscribe(data => {
+      if (data['container']) {
+        // eslint-disable-next-line no-console
+        this.container = data['container'];
+        this.categories = this.container?.acceptedOrderCategories.map(cat => ({ name: cat })) ?? [];
+
+        return;
       }
-    );
+    });
+
+    this.subscription = this.playstationService.showOrders$.subscribe((show: boolean) => {
+      this.isVisible = show;
+      if (show) {
+        // this.loadCategories();
+      }
+    });
 
     this.subscription.add(
       this.playstationService.selectedDevice$.subscribe(device => {
@@ -53,7 +65,7 @@ export class OrdersSliderComponent implements OnInit, OnDestroy {
     );
   }
 
-  private loadCategories(): void {
+  loadCategories(): void {
     this.itemResourceService.getAllItemsCategories().subscribe({
       next: (categories: CategoryItem[]) => {
         this.categories = categories;
@@ -62,33 +74,34 @@ export class OrdersSliderComponent implements OnInit, OnDestroy {
         }
         this.loading = false;
       },
-      error: (error) => {
+      error: error => {
         console.error('Error loading categories:', error);
         this.loading = false;
-      }
+      },
     });
   }
 
-  private loadItemsForCategory(categoryName: string): void {
+  loadItemsForCategory(categoryName: string): void {
     this.loading = true;
     const categoryItem: CategoryItem = {
-      name: categoryName
+      name: categoryName,
     };
-    
+
     this.itemResourceService.getItemsByCategory(categoryItem).subscribe({
       next: (items: ItemSimpleDTO[]) => {
         this.itemsByCategory[categoryName] = items;
         this.loading = false;
       },
-      error: (error) => {
+      error: error => {
         console.error(`Error loading items for category ${categoryName}:`, error);
         this.loading = false;
-      }
+      },
     });
   }
 
   selectCategory(category: CategoryItem): void {
     this.selectedCategory = category;
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (category.name && !this.itemsByCategory[category.name]) {
       this.loadItemsForCategory(category.name);
     }
@@ -106,19 +119,17 @@ export class OrdersSliderComponent implements OnInit, OnDestroy {
       qty: 1,
     };
 
-    this.playstationResourceService
-      .addOrderToDevice(this.selectedDevice.id, orderItem)
-      .subscribe({
-        next: (updatedDevice) => {
-          this.playstationService.selectDevice(updatedDevice);
-          this.playstationService.reloadDevices();
-          this.playstationService.notifyOrderChange();
-          console.log('Order added successfully');
-        },
-        error: (error) => {
-          console.error('Error adding order:', error);
-        }
-      });
+    this.playstationResourceService.addOrderToDevice(this.selectedDevice.id, orderItem).subscribe({
+      next: updatedDevice => {
+        this.playstationService.selectDevice(updatedDevice);
+        this.playstationService.reloadDevices();
+        this.playstationService.notifyOrderChange();
+        console.log('Order added successfully');
+      },
+      error(error) {
+        console.error('Error adding order:', error);
+      },
+    });
   }
 
   ngOnDestroy(): void {
@@ -147,7 +158,10 @@ export class OrdersSliderComponent implements OnInit, OnDestroy {
   }
 
   getCategoryItems(categoryName: string | undefined): ItemSimpleDTO[] {
-    if (!categoryName) return [];
+    if (!categoryName) {
+      return [];
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     return this.itemsByCategory[categoryName] || [];
   }
 

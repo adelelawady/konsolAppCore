@@ -46,12 +46,12 @@ export class AdminPlaystationContainerComponent implements OnInit {
 
   loadCategories(): void {
     this.itemResourceService.getAllItemsCategories().subscribe({
-      next: (categories) => {
+      next: categories => {
         this.availableCategories = categories;
       },
-      error: (error) => {
+      error(error) {
         console.error('Error loading categories:', error);
-      }
+      },
     });
   }
 
@@ -78,16 +78,16 @@ export class AdminPlaystationContainerComponent implements OnInit {
   openEditModal(content: any, container: PlaystationContainer): void {
     this.isEditMode = true;
     this.selectedContainer = container;
-    
+
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     const acceptedCategories = container.acceptedOrderCategories || [];
-    
+
     // Find matching CategoryItems from availableCategories
-    const selectedCategories = acceptedCategories
-      .filter(category => this.availableCategories.some(catItem => catItem.name === category));
+    const selectedCategories = acceptedCategories.filter(category => this.availableCategories.some(catItem => catItem.name === category));
 
     this.editForm.patchValue({
       ...container,
-      acceptedOrderCategories: selectedCategories
+      acceptedOrderCategories: selectedCategories,
     });
     this.modalService.open(content, { size: 'lg' });
   }
@@ -95,10 +95,10 @@ export class AdminPlaystationContainerComponent implements OnInit {
   save(): void {
     if (this.editForm.valid) {
       const formData = this.editForm.value;
-      
+
       const processedFormData = {
         ...formData,
-        acceptedOrderCategories: formData.acceptedOrderCategories
+        acceptedOrderCategories: formData.acceptedOrderCategories,
       };
 
       if (this.isEditMode && this.selectedContainer) {
@@ -126,7 +126,7 @@ export class AdminPlaystationContainerComponent implements OnInit {
 
   onTagsChanged(event: any): void {
     this.editForm.patchValue({
-      acceptedOrderCategories: event
+      acceptedOrderCategories: event,
     });
   }
 }
