@@ -1,10 +1,13 @@
 package com.konsol.core.service.impl;
 
+import com.konsol.core.domain.PlaystationContainer;
 import com.konsol.core.domain.playstation.PlayStationSession;
 import com.konsol.core.repository.PlayStationSessionRepository;
+import com.konsol.core.repository.PlaystationContainerRepository;
 import com.konsol.core.service.PlayStationSessionService;
 import com.konsol.core.service.api.dto.PsSessionDTO;
 import com.konsol.core.service.mapper.PlayStationSessionMapper;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,12 +29,16 @@ public class PlayStationSessionServiceImpl implements PlayStationSessionService 
 
     private final PlayStationSessionMapper playStationSessionMapper;
 
+    private final PlaystationContainerRepository playstationContainerRepository;
+
     public PlayStationSessionServiceImpl(
         PlayStationSessionRepository playStationSessionRepository,
-        PlayStationSessionMapper playStationSessionMapper
+        PlayStationSessionMapper playStationSessionMapper,
+        PlaystationContainerRepository playstationContainerRepository
     ) {
         this.playStationSessionRepository = playStationSessionRepository;
         this.playStationSessionMapper = playStationSessionMapper;
+        this.playstationContainerRepository = playstationContainerRepository;
     }
 
     @Override
@@ -75,6 +82,20 @@ public class PlayStationSessionServiceImpl implements PlayStationSessionService 
     public List<PsSessionDTO> findAll() {
         LOG.debug("Request to get all PlayStationSessions");
         return playStationSessionRepository.findAll().stream().map(playStationSessionMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PsSessionDTO> findAllByContainerId(String containerId) {
+        Optional<PlaystationContainer> playstationContainerOptional = playstationContainerRepository.findById(containerId);
+        return playstationContainerOptional
+            .map(playstationContainer ->
+                playStationSessionRepository
+                    .findAllByDeviceCategoryIn(new ArrayList<>(playstationContainer.getAcceptedOrderCategories()))
+                    .stream()
+                    .map(playStationSessionMapper::toDto)
+                    .collect(Collectors.toList())
+            )
+            .orElseGet(ArrayList::new);
     }
 
     @Override

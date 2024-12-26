@@ -51,6 +51,12 @@ public interface PlayStationSessionService {
     List<PsSessionDTO> findAll();
 
     /**
+     * Get all the playStationSessions.
+     *
+     * @return the list of entities.
+     */
+    List<PsSessionDTO> findAllByContainerId(String containerId);
+    /**
      * Get the "id" playStationSession.
      *
      * @param id the id of the entity.

@@ -509,4 +509,11 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
     }
+
+    @Override
+    public ResponseEntity<List<PsSessionDTO>> getSessionsByContainerId(String containerId) {
+        LOG.debug("REST request to get a page of PlayStationSessions");
+        List<PsSessionDTO> page = playStationSessionService.findAllByContainerId(containerId);
+        return ResponseEntity.ok().body(page);
+    }
 }

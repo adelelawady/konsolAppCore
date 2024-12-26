@@ -1,7 +1,11 @@
 package com.konsol.core.repository;
 
 import com.konsol.core.domain.playstation.PlayStationSession;
+import jakarta.validation.constraints.NotNull;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
@@ -17,4 +21,6 @@ public interface PlayStationSessionRepository extends MongoRepository<PlayStatio
      * @return the active session if exists
      */
     Optional<PlayStationSession> findByDeviceIdAndActiveTrue(String deviceId);
+
+    List<PlayStationSession> findAllByDeviceCategoryIn(List<String> device_category);
 }

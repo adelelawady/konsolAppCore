@@ -2065,6 +2065,28 @@ paths:
       tags:
         - playstation-resource
     parameters: []
+  '/playstation/session/{containerId}/view':
+    get:
+      summary: get all playstation devices types
+      tags:
+        - playstation-resource
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PsSessionDTO'
+      operationId: getSessionsByContainerId
+      description: get all playstation devices sessions by the container
+    parameters:
+      - schema:
+          type: string
+        name: containerId
+        in: path
+        required: true
   '/playstation/device/{id}':
     get:
       summary: get all playstation devices

@@ -103,6 +103,9 @@ const routes: Routes = [
       {
         path: 'sessions',
         data: { breadcrumb: 'Sessions' },
+        resolve: {
+          container: PlaystationContainerResolver,
+        },
         children: [
           {
             path: '',
