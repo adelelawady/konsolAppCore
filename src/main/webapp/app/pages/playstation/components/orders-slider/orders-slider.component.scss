@@ -143,44 +143,59 @@
             }
           }
 
-          .edit-button {
+          .item-actions {
             position: absolute;
             top: 0.75rem;
             right: 0.75rem;
+            display: flex;
+            gap: 0.5rem;
             opacity: 0;
             transition: all 0.2s ease-in-out;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: rgba(255, 255, 255, 0.9);
-            border: 1px solid rgba(32, 107, 196, 0.2);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
             z-index: 2;
 
-            i {
-              font-size: 14px;
-              color: #206bc4;
+            .edit-button,
+            .price-button {
+              width: 32px;
+              height: 32px;
+              border-radius: 50%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              background-color: rgba(255, 255, 255, 0.9);
+              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+              
+              i {
+                font-size: 14px;
+              }
             }
 
-            &:hover {
-              background-color: #206bc4;
-              border-color: #206bc4;
-              transform: translateY(-1px);
-              box-shadow: 0 4px 6px rgba(32, 107, 196, 0.15);
+            .edit-button {
+              border: 1px solid rgba(32, 107, 196, 0.2);
+              
+              i { color: #206bc4; }
+              
+              &:hover {
+                background-color: #206bc4;
+                border-color: #206bc4;
+                i { color: white; }
+              }
+            }
 
-              i {
-                color: white;
+            .price-button {
+              border: 1px solid rgba(241, 196, 15, 0.2);
+              
+              i { color: #f1c40f; }
+              
+              &:hover {
+                background-color: #f1c40f;
+                border-color: #f1c40f;
+                i { color: white; }
               }
             }
           }
 
-          &:hover {
-            .edit-button {
-              opacity: 1;
-            }
+          &:hover .item-actions {
+            opacity: 1;
           }
         }
       }

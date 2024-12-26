@@ -32,6 +32,9 @@ export class OrdersSliderComponent implements OnInit, OnDestroy {
   showEditModal = false;
   selectedItem?: ItemViewDTO;
   isAdmin = false;
+  showPriceModal = false;
+  selectedPriceItem?: ItemDTO;
+  priceValue: number = 0;
 
   constructor(
     private playstationService: PlaystationService,
@@ -241,5 +244,77 @@ export class OrdersSliderComponent implements OnInit, OnDestroy {
     if (this.selectedCategory?.name) {
       this.loadItemsForCategory(this.selectedCategory.name);
     }
+  }
+
+  managePriceOption(item: ItemSimpleDTO): void {
+    event?.stopPropagation();
+    
+    if (!item.id || !this.container?.id) {
+      console.error('No item ID or container ID available');
+      return;
+    }
+
+    // Load full item details
+    this.itemResourceService.getItem(item.id).subscribe({
+      next: (fullItem: ItemDTO) => {
+        this.selectedPriceItem = fullItem;
+        
+        // Check if price option exists for this container
+        const existingPriceOption = fullItem.PriceOptions?.find(
+          po => po.refId === this.container?.id
+        );
+
+        if (existingPriceOption) {
+          this.priceValue = existingPriceOption.value || 0;
+        } else {
+          this.priceValue = Number(fullItem.price1) || 0;
+        }
+        
+        this.showPriceModal = true;
+      },
+      error: (error) => {
+        console.error('Error loading item details:', error);
+      }
+    });
+  }
+
+  savePriceOption(): void {
+    if (!this.selectedPriceItem?.id || !this.container?.id) return;
+
+    const updatedItem: ItemDTO = {
+      ...this.selectedPriceItem,
+      PriceOptions: [...(this.selectedPriceItem.PriceOptions || [])]
+    };
+    // Find existing price option or create new one
+    const existingPriceOptionIndex = updatedItem.PriceOptions?.findIndex(
+      po => po.refId === this.container?.id
+    ) ?? -1;
+
+    const priceOption = {
+      refId: this.container.id,
+      name: this.container.name || 'Custom Price',
+      value: this.priceValue
+    };
+
+    if (existingPriceOptionIndex >= 0 && updatedItem.PriceOptions) {
+      // Update existing price option
+      updatedItem.PriceOptions[existingPriceOptionIndex] = priceOption;
+    } else if (updatedItem.PriceOptions) {
+      // Add new price option
+      updatedItem.PriceOptions.push(priceOption);
+    }
+
+    // Save updated item
+    this.itemResourceService.updateItem(this.selectedPriceItem.id, updatedItem).subscribe({
+      next: () => {
+        this.showPriceModal = false;
+        if (this.selectedCategory?.name) {
+          this.loadItemsForCategory(this.selectedCategory.name);
+        }
+      },
+      error: (error) => {
+        console.error('Error updating item price:', error);
+      }
+    });
   }
 }
