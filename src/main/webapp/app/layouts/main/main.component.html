@@ -11,7 +11,7 @@
     <div class="page-header d-print-none">
       <div class="container-fixed">
         <div class="row g-2 align-items-center">
-          <div class="col">
+          <div class="col-md-6">
             <!-- Breadcrumb navigation -->
             <nav aria-label="breadcrumb">
               <ol class="breadcrumb">
@@ -31,6 +31,22 @@
                 </li>
               </ol>
             </nav>
+          </div>
+          <div class="col-md-6">
+            <div class="container-buttons d-flex gap-2 justify-content-end">
+              <button
+                *ngFor="let container of containers"
+                class="btn btn-outline-primary"
+                (click)="onContainerClick(container, $event)"
+                [disabled]="loadingContainerId === container.id"
+              >
+                <span *ngIf="loadingContainerId !== container.id">{{ container.name }}</span>
+                <span *ngIf="loadingContainerId === container.id">
+                  <i class="fas fa-spinner fa-spin me-1"></i>
+                  Loading...
+                </span>
+              </button>
+            </div>
           </div>
         </div>
       </div>

@@ -41,3 +41,21 @@
   padding-left: 1.5rem;
   padding-right: 1.5rem;
 }
+
+.container-buttons {
+  .btn {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+    
+    &:disabled {
+      opacity: 0.7;
+      cursor: wait;
+    }
+    
+    .fa-spinner {
+      font-size: 0.875em;
+    }
+  }
+}

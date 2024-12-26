@@ -6,9 +6,14 @@ import dayjs from 'dayjs/esm';
 import { filter } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { map, distinctUntilChanged } from 'rxjs/operators';
+import { PlaystationContainerFormService } from 'app/entities/playstation-container/update/playstation-container-form.service';
+import { firstValueFrom } from 'rxjs';
 
 import { AccountService } from 'app/core/auth/account.service';
 import { FindLanguageFromKeyPipe } from 'app/shared/language/find-language-from-key.pipe';
+import { IPlaystationContainer } from 'app/entities/playstation-container/playstation-container.model';
+import { PlaystationContainerStateService } from 'app/pages/playstation/services/playstation-container.service';
+import { PlaystationContainer, PlaystationContainerResourceService } from 'app/core/konsolApi';
 
 interface Breadcrumb {
   label: string;
@@ -18,10 +23,13 @@ interface Breadcrumb {
 @Component({
   selector: 'jhi-main',
   templateUrl: './main.component.html',
+  styleUrls: ['./main.component.scss']
 })
 export class MainComponent implements OnInit {
   private renderer: Renderer2;
   breadcrumbs$: Observable<Breadcrumb[]> = of([]);
+  containers: PlaystationContainer[] = [];
+  loadingContainerId: string | null = null;
 
   constructor(
     private accountService: AccountService,
@@ -30,7 +38,9 @@ export class MainComponent implements OnInit {
     private findLanguageFromKeyPipe: FindLanguageFromKeyPipe,
     private translateService: TranslateService,
     rootRenderer: RendererFactory2,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private playstationContainerStateService: PlaystationContainerStateService,
+    private playstationContainerResourceService: PlaystationContainerResourceService
   ) {
     this.renderer = rootRenderer.createRenderer(document.querySelector('html'), null);
   }
@@ -74,6 +84,8 @@ export class MainComponent implements OnInit {
         return breadcrumbs;
       })
     );
+
+    this.loadContainers();
   }
 
   private getPageTitle(routeSnapshot: ActivatedRouteSnapshot): string {
@@ -98,5 +110,32 @@ export class MainComponent implements OnInit {
       'dir',
       this.findLanguageFromKeyPipe.isRTL(this.translateService.currentLang) ? 'rtl' : 'ltr'
     );
+  }
+
+  private loadContainers(): void {
+    this.playstationContainerResourceService.getPlaystationContainers().subscribe(response => {
+      this.containers = response ?? [];
+    });
+  }
+
+  async onContainerClick(container: PlaystationContainer, event: Event): Promise<void> {
+    event.preventDefault();
+    
+    try {
+      this.loadingContainerId = String(container.id);
+      
+      // Load container from resource first
+    
+      
+      // Then authenticate it using the state service
+      await firstValueFrom(this.playstationContainerStateService.loadContainer( String(container.id)));
+      
+      // Navigate to the container dashboard
+      await this.router.navigate(['/container',  String(container.id), 'navigation', 'dashboard']);
+    } catch (error) {
+      console.error('Error loading container:', error);
+    } finally {
+      this.loadingContainerId = null;
+    }
   }
 }
