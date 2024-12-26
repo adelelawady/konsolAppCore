@@ -8,13 +8,17 @@ import com.konsol.core.service.PlayStationSessionService;
 import com.konsol.core.service.api.dto.PsSessionDTO;
 import com.konsol.core.service.mapper.PlayStationSessionMapper;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.stereotype.Service;
 
 /**
@@ -31,14 +35,18 @@ public class PlayStationSessionServiceImpl implements PlayStationSessionService 
 
     private final PlaystationContainerRepository playstationContainerRepository;
 
+    private final MongoTemplate mongoTemplate;
+
     public PlayStationSessionServiceImpl(
         PlayStationSessionRepository playStationSessionRepository,
         PlayStationSessionMapper playStationSessionMapper,
-        PlaystationContainerRepository playstationContainerRepository
+        PlaystationContainerRepository playstationContainerRepository,
+        MongoTemplate mongoTemplate
     ) {
         this.playStationSessionRepository = playStationSessionRepository;
         this.playStationSessionMapper = playStationSessionMapper;
         this.playstationContainerRepository = playstationContainerRepository;
+        this.mongoTemplate = mongoTemplate;
     }
 
     @Override
@@ -87,15 +95,33 @@ public class PlayStationSessionServiceImpl implements PlayStationSessionService 
     @Override
     public List<PsSessionDTO> findAllByContainerId(String containerId) {
         Optional<PlaystationContainer> playstationContainerOptional = playstationContainerRepository.findById(containerId);
-        return playstationContainerOptional
-            .map(playstationContainer ->
-                playStationSessionRepository
-                    .findAllByDeviceCategoryIn(new ArrayList<>(playstationContainer.getAcceptedOrderCategories()))
-                    .stream()
-                    .map(playStationSessionMapper::toDto)
-                    .collect(Collectors.toList())
+        if (playstationContainerOptional.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        PlaystationContainer container = playstationContainerOptional.get();
+        
+        // Create the aggregation pipeline using Document
+        List<Document> pipeline = Arrays.asList(
+            new Document("$match", 
+                new Document("device", new Document("$exists", true))
+                    .append("device.category", 
+                        new Document("$in", new ArrayList<>(container.getAcceptedOrderCategories())))
             )
-            .orElseGet(ArrayList::new);
+        );
+
+        // Execute the aggregation
+        List<PlayStationSession> sessions = mongoTemplate.aggregate(
+            Aggregation.newAggregation(
+                ctx -> Document.parse(pipeline.get(0).toJson())
+            ),
+            PlayStationSession.class,
+            PlayStationSession.class
+        ).getMappedResults();
+
+        return sessions.stream()
+            .map(playStationSessionMapper::toDto)
+            .collect(Collectors.toList());
     }
 
     @Override
