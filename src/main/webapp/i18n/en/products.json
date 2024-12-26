@@ -40,13 +40,15 @@
         "basic": "Basic Information",
         "pricing": "Pricing Information",
         "inventory": "Store Quantities",
-        "units": "Item Units"
+        "units": "Item Units",
+        "prices": "Prices"
       },
       "actions": {
         "save": "Save",
         "update": "Update",
         "cancel": "Cancel",
-        "addUnit": "Add Unit"
+        "addUnit": "Add Unit",
+        "addPrice": "Add Price"
       }
     },
     "fields": {
@@ -67,7 +69,10 @@
       "totalProfit": "Total Profit",
       "totalDiscounts": "Total Discounts",
       "quantityInOut": "Quantity In/Out",
-      "totalCost": "Total Cost"
+      "totalCost": "Total Cost",
+      "priceName": "Price Name",
+      "priceValue": "Value",
+      "priceReference": "Reference ID"
     },
     "validation": {
       "nameRequired": "Name is required",
@@ -97,6 +102,11 @@
       "noStores": "No stores available",
       "loadUnitsError": "Error loading units",
       "saveUnitsError": "Error saving units"
+    },
+    "placeholders": {
+      "priceName": "Enter price name",
+      "priceValue": "Enter price value",
+      "priceReference": "Enter reference ID"
     }
   }
 }

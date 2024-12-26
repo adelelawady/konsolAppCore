@@ -40,13 +40,15 @@
         "basic": "المعلومات الأساسية",
         "pricing": "معلومات التسعير",
         "inventory": "كميات المخزن",
-        "units": "وحدات المنتج"
+        "units": "وحدات المنتج",
+        "prices": "الأسعار"
       },
       "actions": {
         "save": "حفظ",
         "update": "تحديث",
         "cancel": "إلغاء",
-        "addUnit": "إضافة وحدة"
+        "addUnit": "إضافة وحدة",
+        "addPrice": "إضافة سعر"
       }
     },
     "fields": {
@@ -67,7 +69,10 @@
       "totalProfit": "إجمالي الربح",
       "totalDiscounts": "إجمالي الخصومات",
       "quantityInOut": "الكمية الداخلة/الخارجة",
-      "totalCost": "إجمالي التكلفة"
+      "totalCost": "إجمالي التكلفة",
+      "priceName": "اسم السعر",
+      "priceValue": "القيمة",
+      "priceReference": "الرقم المرجعي"
     },
     "validation": {
       "nameRequired": "الاسم مطلوب",
@@ -97,6 +102,11 @@
       "noStores": "لا توجد مخازن متاحة",
       "loadUnitsError": "خطأ في تحميل الوحدات",
       "saveUnitsError": "خطأ في حفظ الوحدات"
+    },
+    "placeholders": {
+      "priceName": "ادخل اسم السعر",
+      "priceValue": "ادخل القيمة",
+      "priceReference": "ادخل الرقم المرجعي"
     }
   }
 }
