@@ -9,25 +9,25 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-
+import { ItemPriceOptionDTO } from './itemPriceOptionDTO';
 
 /**
  * It is used to display the item in the inventory view
  */
-export interface ItemViewDTO { 
-    id?: string;
-    pk?: number;
-    name: string;
-    barcode?: string;
-    price1?: string;
-    price2?: string;
-    category?: string;
-    qty?: number;
-    cost?: number;
-    createdBy?: string;
-    createdDate?: string;
-    lastModifiedBy?: string;
-    lastModifiedDate?: string;
-    checkQty?: boolean;
+export interface ItemViewDTO {
+  id?: string;
+  pk?: number;
+  name: string;
+  barcode?: string;
+  price1?: string;
+  price2?: string;
+  category?: string;
+  qty?: number;
+  cost?: number;
+  createdBy?: string;
+  createdDate?: string;
+  lastModifiedBy?: string;
+  lastModifiedDate?: string;
+  checkQty?: boolean;
+  PriceOptions?: Array<ItemPriceOptionDTO>;
 }
-
