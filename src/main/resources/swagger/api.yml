@@ -5097,7 +5097,12 @@ components:
           type: number
           x-stoplight:
             id: e7f6scuszutij
+          minimum: 0
+          default: 0
         refId:
           type: string
           x-stoplight:
             id: md5lp5amzmmuv
+      required:
+        - name
+        - value
