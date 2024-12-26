@@ -30,6 +30,7 @@ export class MainComponent implements OnInit {
   breadcrumbs$: Observable<Breadcrumb[]> = of([]);
   containers: PlaystationContainer[] = [];
   loadingContainerId: string | null = null;
+  selectedContainerId: string | null = null;
 
   constructor(
     private accountService: AccountService,
@@ -86,6 +87,19 @@ export class MainComponent implements OnInit {
     );
 
     this.loadContainers();
+
+    // Track route changes to highlight selected container
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      const urlParts = this.router.url.split('/');
+      const containerIndex = urlParts.indexOf('container');
+      if (containerIndex !== -1 && urlParts[containerIndex + 1]) {
+        this.selectedContainerId = urlParts[containerIndex + 1];
+      } else {
+        this.selectedContainerId = null;
+      }
+    });
   }
 
   private getPageTitle(routeSnapshot: ActivatedRouteSnapshot): string {
@@ -137,5 +151,9 @@ export class MainComponent implements OnInit {
     } finally {
       this.loadingContainerId = null;
     }
+  }
+
+  protected toString(value: any): string {
+    return String(value);
   }
 }

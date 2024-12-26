@@ -36,12 +36,14 @@
             <div class="container-buttons d-flex gap-2 justify-content-end">
               <button
                 *ngFor="let container of containers"
-                class="btn btn-outline-primary"
+                class="btn"
+                [class.btn-primary]="selectedContainerId === toString(container.id)"
+                [class.btn-outline-primary]="selectedContainerId !== toString(container.id)"
                 (click)="onContainerClick(container, $event)"
-                [disabled]="loadingContainerId === container.id"
+                [disabled]="loadingContainerId === toString(container.id)"
               >
-                <span *ngIf="loadingContainerId !== container.id">{{ container.name }}</span>
-                <span *ngIf="loadingContainerId === container.id">
+                <span *ngIf="loadingContainerId !== toString(container.id)">{{ container.name }}</span>
+                <span *ngIf="loadingContainerId === toString(container.id)">
                   <i class="fas fa-spinner fa-spin me-1"></i>
                   Loading...
                 </span>
