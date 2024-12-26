@@ -87,7 +87,11 @@ export class OrdersSliderComponent implements OnInit, OnDestroy {
       name: categoryName,
     };
 
-    this.itemResourceService.getItemsByCategory(categoryItem).subscribe({
+    if (!this.container || !this.container.id) {
+      return;
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    this.itemResourceService.getAllItemsByCategoryAndContainerIdPrice(this.container.id ?? 'null', categoryItem).subscribe({
       next: (items: ItemSimpleDTO[]) => {
         this.itemsByCategory[categoryName] = items;
         this.loading = false;

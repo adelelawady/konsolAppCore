@@ -162,4 +162,6 @@ public interface ItemService {
     ChartDataContainer getSalesChartData(String itemId, Instant startDate, Instant endDate);
 
     List<ItemSimpleDTO> findAllItemSimpleByCategory(String category);
+
+    List<ItemSimpleDTO> allItemsByCategoryAndContainerIdPrice(String containerId, CategoryItem categoryItem);
 }

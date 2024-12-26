@@ -11,7 +11,7 @@
  */
 
 export interface ItemPriceOptionDTO {
-  name?: string;
-  value?: number;
+  name: string;
+  value: number;
   refId?: string;
 }

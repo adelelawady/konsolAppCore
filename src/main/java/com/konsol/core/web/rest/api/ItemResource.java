@@ -406,4 +406,9 @@ public class ItemResource implements ItemsApiDelegate {
     public ResponseEntity<List<ItemSimpleDTO>> getItemsByCategory(CategoryItem category) {
         return ResponseEntity.ok(itemService.findAllItemSimpleByCategory(category.getName()));
     }
+
+    @Override
+    public ResponseEntity<List<ItemSimpleDTO>> getAllItemsByCategoryAndContainerIdPrice(String containerId, CategoryItem categoryItem) {
+        return ItemsApiDelegate.super.getAllItemsByCategoryAndContainerIdPrice(containerId, categoryItem);
+    }
 }

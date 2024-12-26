@@ -1,6 +1,7 @@
 package com.konsol.core.service.impl;
 
 import com.konsol.core.domain.Item;
+import com.konsol.core.domain.ItemPriceOptions;
 import com.konsol.core.domain.ItemUnit;
 import com.konsol.core.domain.Pk;
 import com.konsol.core.domain.enumeration.PkKind;
@@ -729,6 +730,42 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<ItemSimpleDTO> findAllItemSimpleByCategory(String category) {
         return itemRepository.findAllByCategory(category).stream().map(itemMapper::toSimpleDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ItemSimpleDTO> allItemsByCategoryAndContainerIdPrice(String containerId, CategoryItem categoryItem) {
+        if (containerId == null || containerId.isBlank() || containerId.isEmpty()) {
+            if (categoryItem == null || categoryItem.getName() == null || categoryItem.getName().isEmpty()) {
+                return new ArrayList<>();
+            }
+            return findAllItemSimpleByCategory(categoryItem.getName());
+        }
+
+        return itemRepository
+            .findAllByCategory(categoryItem.getName())
+            .stream()
+            .map(item -> {
+                if (item.getPriceOptions().isEmpty()) {
+                    return item;
+                }
+                Optional<ItemPriceOptions> containerPriceOption = item
+                    .getPriceOptions()
+                    .stream()
+                    .filter(itemPriceOptions ->
+                        itemPriceOptions.getRefId() != null &&
+                        !itemPriceOptions.getRefId().isEmpty() &&
+                        !itemPriceOptions.getRefId().isBlank()
+                    )
+                    .filter(itemPriceOptions -> itemPriceOptions.getRefId().equals(containerId))
+                    .findFirst();
+
+                if (containerPriceOption.isPresent()) {
+                    return item.price1(containerPriceOption.get().getValue().toString());
+                }
+                return item;
+            })
+            .map(itemMapper::toSimpleDTO)
+            .collect(Collectors.toList());
     }
 
     private double safeGetDouble(Document doc, String key) {
