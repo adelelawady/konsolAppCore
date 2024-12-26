@@ -2663,6 +2663,8 @@ components:
           default: false
         PriceOptions:
           type: array
+          x-stoplight:
+            id: 0tjx7m0g6od4z
           items:
             $ref: '#/components/schemas/itemPriceOptionDTO'
       required:
@@ -2741,10 +2743,12 @@ components:
           x-stoplight:
             id: aps5qtjk2ycmq
           default: false
-+       PriceOptions:
-+         type: array
-+         items:
-+           $ref: '#/components/schemas/itemPriceOptionDTO'
+        PriceOptions:
+          type: array
+          x-stoplight:
+            id: ya6ugtlp8hjc3
+          items:
+            $ref: '#/components/schemas/itemPriceOptionDTO'
       required:
         - name
     ItemUnitDTO:
