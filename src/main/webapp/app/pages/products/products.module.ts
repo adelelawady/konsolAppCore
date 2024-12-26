@@ -10,6 +10,6 @@ import { Chart } from 'chart.js/auto';
 @NgModule({
   imports: [SharedModule, ProductsRoutingModule],
   declarations: [ProductsComponent, AddProductComponent, ProductDetailsComponent],
-  exports: [ProductsComponent],
+  exports: [ProductsComponent, AddProductComponent],
 })
 export class ProductsModule {}

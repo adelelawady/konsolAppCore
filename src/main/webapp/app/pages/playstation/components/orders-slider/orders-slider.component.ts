@@ -9,6 +9,10 @@ import { CreateInvoiceItemDTO } from 'app/core/konsolApi/model/createInvoiceItem
 import { PsDeviceDTO } from 'app/core/konsolApi/model/psDeviceDTO';
 import { PlaystationContainer } from 'app/core/konsolApi';
 import { ActivatedRoute } from '@angular/router';
+import { ItemViewDTO } from 'app/core/konsolApi/model/itemViewDTO';
+import { ItemDTO } from 'app/core/konsolApi/model/itemDTO';
+import { AccountService } from 'app/core/auth/account.service';
+import { AuthoritiesConstants } from 'app/config/authorities.constants';
 
 @Component({
   selector: 'jhi-orders-slider',
@@ -25,15 +29,36 @@ export class OrdersSliderComponent implements OnInit, OnDestroy {
   selectedDevice: PsDeviceDTO | null = null;
   orderChangeAnimation = false;
   container: PlaystationContainer | null | undefined;
+  showEditModal = false;
+  selectedItem?: ItemViewDTO;
+  isAdmin = false;
+
   constructor(
     private playstationService: PlaystationService,
     private elementRef: ElementRef,
     private itemResourceService: ItemResourceService,
     private playstationResourceService: PlaystationResourceService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private accountService: AccountService
   ) {}
 
   ngOnInit(): void {
+    // Check admin status directly
+    this.isAdmin = this.accountService.hasAnyAuthority([
+      AuthoritiesConstants.ADMIN, 
+      AuthoritiesConstants.SUPER_ADMIN
+    ]);
+
+    // Subscribe to account changes to update admin status
+    this.subscription = this.accountService.getAuthenticationState().subscribe(account => {
+      if (account) {
+        this.isAdmin = this.accountService.hasAnyAuthority([
+          AuthoritiesConstants.ADMIN,
+          AuthoritiesConstants.SUPER_ADMIN
+        ]);
+      }
+    });
+
     // First try to get container from resolver data
     this.route.data.subscribe(data => {
       if (data['container']) {
@@ -176,5 +201,45 @@ export class OrdersSliderComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.orderChangeAnimation = false;
     }, 1000); // Animation duration
+  }
+
+  editItem(item: ItemSimpleDTO): void {
+    event?.stopPropagation();
+    
+    if (!item.id) {
+      console.error('No item ID available');
+      return;
+    }
+
+    // Load full item details using ItemResource
+    this.itemResourceService.getItem(item.id).subscribe({
+      next: (fullItem: ItemDTO) => {
+        // Convert ItemDTO to ItemViewDTO format for the add-product component
+        this.selectedItem = {
+          id: fullItem.id,
+          name: fullItem.name,
+          barcode: fullItem.barcode || '',
+          category: fullItem.category || '',
+          price1: fullItem.price1?.toString() || '0',
+          cost: fullItem.cost || 0,
+          qty: fullItem.qty || 0,
+          checkQty: fullItem.checkQty || false,
+          PriceOptions: fullItem.PriceOptions || [],
+        };
+        
+        this.showEditModal = true;
+      },
+      error: (error) => {
+        console.error('Error loading item details:', error);
+        // You may want to show a toastr notification here
+      }
+    });
+  }
+
+  onProductSaved(updatedItem: ItemViewDTO): void {
+    this.showEditModal = false;
+    if (this.selectedCategory?.name) {
+      this.loadItemsForCategory(this.selectedCategory.name);
+    }
   }
 }

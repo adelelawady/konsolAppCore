@@ -44,6 +44,13 @@
                 <div class="stock" *ngIf="item.qty !== undefined">
                   {{ 'playstation.orders.slider.item.stock' | translate }}: {{ item.qty }}
                 </div>
+                <!-- Add edit button -->
+                <button class="btn btn-icon btn-sm btn-ghost-primary edit-button" 
+                        *ngIf="isAdmin"
+                        (click)="editItem(item); $event.stopPropagation()"
+                        title="{{ 'products.actions.edit' | translate }}">
+                  <i class="fas fa-edit"></i>
+                </button>
               </div>
             </div>
           </ng-container>
@@ -52,3 +59,10 @@
     </div>
   </div>
 </div>
+
+<app-add-product 
+  *ngIf="selectedItem" 
+  [(show)]="showEditModal" 
+  [item]="selectedItem" 
+  (saved)="onProductSaved($event)">
+</app-add-product>
