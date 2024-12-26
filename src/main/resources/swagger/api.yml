@@ -960,6 +960,33 @@ paths:
                   $ref: '#/components/schemas/CategoryItem'
       description: 'get categories from all items available '
     parameters: []
+  '/items/categories/{containerId}/view':
+    parameters:
+      - schema:
+          type: string
+        name: containerId
+        in: path
+        required: true
+    post:
+      summary: ''
+      operationId: getAllItemsByCategoryAndContainerIdPrice
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ItemSimpleDTO'
+      tags:
+        - item-resource
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryItem'
   /items/category/listItems:
     parameters: []
     post:
