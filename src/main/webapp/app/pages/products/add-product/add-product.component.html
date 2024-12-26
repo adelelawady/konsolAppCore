@@ -102,6 +102,17 @@
                         {{ 'products.modal.sections.units' | translate }}
                       </a>
                     </li>
+                    <li class="nav-item">
+                      <a
+                        class="nav-link d-flex align-items-center gap-2"
+                        [class.active]="activeTab === 'prices'"
+                        (click)="activeTab = 'prices'"
+                        href="javascript:void(0)"
+                      >
+                        <i class="fas fa-tags"></i>
+                        {{ 'products.modal.sections.prices' | translate }}
+                      </a>
+                    </li>
                   </ul>
                 </div>
                 <div class="card-body">
@@ -204,6 +215,68 @@
 
                             <td>
                               <button type="button" class="btn btn-icon btn-sm btn-ghost-danger" (click)="removeItemUnit(i)">
+                                <i class="fas fa-times"></i>
+                              </button>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  <!-- Price Options Tab -->
+                  <div [class.d-none]="activeTab !== 'prices'">
+                    <div class="d-flex justify-content-end mb-3">
+                      <button type="button" class="btn btn-primary btn-sm d-flex align-items-center gap-2" (click)="addPriceOption()">
+                        <i class="fas fa-plus-circle"></i>
+                        {{ 'products.modal.actions.addPrice' | translate }}
+                      </button>
+                    </div>
+                    <div class="table-responsive">
+                      <table class="table table-vcenter">
+                        <thead>
+                          <tr>
+                            <th>{{ 'products.fields.priceName' | translate }}</th>
+                            <th>{{ 'products.fields.priceValue' | translate }}</th>
+                            <th>{{ 'products.fields.priceReference' | translate }}</th>
+                            <th class="w-1"></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let option of priceOptions; let i = index">
+                            <td>
+                              <input
+                                type="text"
+                                class="form-control"
+                                [(ngModel)]="option.name"
+                                [ngModelOptions]="{ standalone: true }"
+                                [placeholder]="'products.placeholders.priceName' | translate"
+                              />
+                            </td>
+                            <td>
+                              <div class="input-group">
+                                <input
+                                  type="number"
+                                  class="form-control"
+                                  [(ngModel)]="option.value"
+                                  [ngModelOptions]="{ standalone: true }"
+                                  min="0"
+                                  [placeholder]="'products.placeholders.priceValue' | translate"
+                                />
+                                <span class="input-group-text">EGP</span>
+                              </div>
+                            </td>
+                            <td>
+                              <input
+                                type="text"
+                                class="form-control"
+                                [(ngModel)]="option.refId"
+                                [ngModelOptions]="{ standalone: true }"
+                                [placeholder]="'products.placeholders.priceReference' | translate"
+                              />
+                            </td>
+                            <td>
+                              <button type="button" class="btn btn-icon btn-sm btn-ghost-danger" (click)="removePriceOption(i)">
                                 <i class="fas fa-times"></i>
                               </button>
                             </td>

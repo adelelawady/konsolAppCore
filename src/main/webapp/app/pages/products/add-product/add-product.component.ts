@@ -10,6 +10,8 @@ import { ToastrService } from 'ngx-toastr';
 import { TranslateService } from '@ngx-translate/core';
 import { finalize } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { ItemPriceOptionDTO } from 'app/core/konsolApi/model/itemPriceOptionDTO';
+import { ItemDTO } from 'app/core/konsolApi';
 
 @Component({
   selector: 'app-add-product',
@@ -23,6 +25,7 @@ export class AddProductComponent implements OnInit {
         checkQty: !!value.checkQty,
       };
       this.isEditMode = !!value.id;
+      this.priceOptions = value.PriceOptions || [];
       if (this.isEditMode) {
         this.loadStoreItems();
         this.loadItemUnits();
@@ -51,6 +54,7 @@ export class AddProductComponent implements OnInit {
   storeItems: { [key: string]: number } = {};
   itemUnits: ItemUnitDTO[] = [];
   activeTab = 'quantities';
+  priceOptions: ItemPriceOptionDTO[] = [];
 
   private _item: ItemViewDTO = this.getDefaultItem();
 
@@ -82,6 +86,7 @@ export class AddProductComponent implements OnInit {
       cost: 0,
       qty: 0,
       checkQty: false,
+      PriceOptions: [],
     };
   }
 
@@ -201,6 +206,19 @@ export class AddProductComponent implements OnInit {
     });
   }
 
+  addPriceOption(): void {
+    const newOption: ItemPriceOptionDTO = {
+      name: '',
+      value: 0,
+      refId: ''
+    };
+    this.priceOptions.push(newOption);
+  }
+
+  removePriceOption(index: number): void {
+    this.priceOptions.splice(index, 1);
+  }
+
   onSubmit(): void {
     if (this.form.invalid) {
       return;
@@ -210,7 +228,8 @@ export class AddProductComponent implements OnInit {
       id: this.isEditMode && this.item.id ? this.item.id : null,
       ...this._item,
       ...this.form.value,
-      itemUnits: this.itemUnits, // Include units directly in the item data
+      itemUnits: this.itemUnits,
+      PriceOptions: this.priceOptions,
     };
 
     this.loading = true;
