@@ -40,7 +40,9 @@ export class OrdersSliderComponent implements OnInit, OnDestroy {
         // eslint-disable-next-line no-console
         this.container = data['container'];
         this.categories = this.container?.acceptedOrderCategories.map(cat => ({ name: cat })) ?? [];
-
+        if (this.categories.length > 0 && !this.selectedCategory) {
+          this.selectCategory(this.categories[0]);
+        }
         return;
       }
     });

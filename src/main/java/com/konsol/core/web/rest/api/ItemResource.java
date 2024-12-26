@@ -409,6 +409,6 @@ public class ItemResource implements ItemsApiDelegate {
 
     @Override
     public ResponseEntity<List<ItemSimpleDTO>> getAllItemsByCategoryAndContainerIdPrice(String containerId, CategoryItem categoryItem) {
-        return ItemsApiDelegate.super.getAllItemsByCategoryAndContainerIdPrice(containerId, categoryItem);
+        return ResponseEntity.ok(itemService.allItemsByCategoryAndContainerIdPrice(containerId, categoryItem));
     }
 }
