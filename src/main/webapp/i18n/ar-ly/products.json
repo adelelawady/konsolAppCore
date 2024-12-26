@@ -83,7 +83,9 @@
       "edit": "تعديل",
       "delete": "حذف",
       "print": "طباعة",
-      "view": "عرض"
+      "view": "عرض",
+      "setPrice": "تحديد السعر",
+      "edit": "تعديل"
     },
     "search": {
       "placeholder": "البحث عن المنتجات..."
@@ -107,6 +109,18 @@
       "priceName": "ادخل اسم السعر",
       "priceValue": "ادخل القيمة",
       "priceReference": "ادخل الرقم المرجعي"
+    },
+    "price": {
+      "title": "تحديد سعر المنتج",
+      "itemName": "اسم المنتج",
+      "currentPrice": "السعر الحالي",
+      "newPrice": "السعر الجديد",
+      "success": "تم تحديث السعر بنجاح",
+      "error": "خطأ في تحديث السعر"
     }
+  },
+  "common": {
+    "save": "حفظ",
+    "cancel": "إلغاء"
   }
 }

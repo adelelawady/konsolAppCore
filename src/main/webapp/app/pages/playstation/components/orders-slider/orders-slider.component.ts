@@ -13,6 +13,8 @@ import { ItemViewDTO } from 'app/core/konsolApi/model/itemViewDTO';
 import { ItemDTO } from 'app/core/konsolApi/model/itemDTO';
 import { AccountService } from 'app/core/auth/account.service';
 import { AuthoritiesConstants } from 'app/config/authorities.constants';
+import { ToastrService } from 'ngx-toastr';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'jhi-orders-slider',
@@ -42,7 +44,9 @@ export class OrdersSliderComponent implements OnInit, OnDestroy {
     private itemResourceService: ItemResourceService,
     private playstationResourceService: PlaystationResourceService,
     private route: ActivatedRoute,
-    private accountService: AccountService
+    private accountService: AccountService,
+    private toastr: ToastrService,
+    private translateService: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -65,6 +69,8 @@ export class OrdersSliderComponent implements OnInit, OnDestroy {
     // First try to get container from resolver data
     this.route.data.subscribe(data => {
       if (data['container']) {
+        this.itemsByCategory={};
+        this.selectedCategory=undefined;
         // eslint-disable-next-line no-console
         this.container = data['container'];
         this.categories = this.container?.acceptedOrderCategories.map(cat => ({ name: cat })) ?? [];
@@ -311,9 +317,11 @@ export class OrdersSliderComponent implements OnInit, OnDestroy {
         if (this.selectedCategory?.name) {
           this.loadItemsForCategory(this.selectedCategory.name);
         }
+        this.toastr.success(this.translateService.instant('products.price.success'));
       },
       error: (error) => {
         console.error('Error updating item price:', error);
+        this.toastr.error(this.translateService.instant('products.price.error'));
       }
     });
   }

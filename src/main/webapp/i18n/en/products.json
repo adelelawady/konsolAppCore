@@ -83,7 +83,8 @@
       "edit": "Edit",
       "delete": "Delete",
       "print": "Print",
-      "view": "View"
+      "view": "View",
+      "setPrice": "Set Price"
     },
     "search": {
       "placeholder": "Search products..."
@@ -107,6 +108,18 @@
       "priceName": "Enter price name",
       "priceValue": "Enter price value",
       "priceReference": "Enter reference ID"
+    },
+    "price": {
+      "title": "Set Item Price",
+      "itemName": "Item Name",
+      "currentPrice": "Current Price",
+      "newPrice": "New Price",
+      "success": "Price updated successfully",
+      "error": "Error updating price"
     }
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel"
   }
 }
