@@ -67,13 +67,15 @@
         <tbody>
           <tr *ngFor="let session of sessions; trackBy: trackById">
             <td>
-              <span class="badge bg-info">{{ session.type?.name }}</span>
+              <span class="badge bg-info text-white">{{ session.type?.name }}</span>
             </td>
             <td>{{ session.startTime | date:'medium' }}</td>
             <td>{{ session.endTime | date:'medium' }}</td>
-            <td><span class="badge bg-secondary">{{ getDuration(session) }}</span></td>
             <td>
-              <span class="badge bg-primary">#{{ session.invoice?.pk }}</span>
+              <span class="badge bg-secondary text-white">{{ getDuration(session) }}</span>
+            </td>
+            <td>
+              <span class="badge bg-primary text-white">#{{ session.invoice?.pk }}</span>
             </td>
             <td class="text-end fw-bold">{{ session.invoice?.netPrice | currencyK }}</td>
             <td class="text-end">{{ session.invoice?.userNetPrice | currencyK }}</td>

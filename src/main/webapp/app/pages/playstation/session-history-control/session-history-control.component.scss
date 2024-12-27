@@ -66,17 +66,22 @@
       .badge {
         padding: 0.5rem 0.75rem;
         font-weight: 500;
+        font-size: 0.85rem;
+        letter-spacing: 0.3px;
         
         &.bg-info {
           background-color: #3498db !important;
+          color: white !important;
         }
         
         &.bg-secondary {
           background-color: #7f8c8d !important;
+          color: white !important;
         }
         
         &.bg-primary {
           background-color: #2980b9 !important;
+          color: white !important;
         }
       }
 
