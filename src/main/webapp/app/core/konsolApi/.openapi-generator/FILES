@@ -96,6 +96,7 @@ model/psSessionDTO.ts
 model/salesMetricsDTO.ts
 model/seriesData.ts
 model/serverSettings.ts
+model/startDeviceSessionDTO.ts
 model/storeAccountAnalysisDTO.ts
 model/storeDTO.ts
 model/storeItemDTO.ts

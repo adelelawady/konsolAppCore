@@ -341,22 +341,26 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
     }
 
     @Override
-    public ResponseEntity<PsDeviceDTO> startDeviceSession(String id) {
-        return ResponseEntity.ok(playstationDeviceService.startSession(id));
+    public synchronized ResponseEntity<PsDeviceDTO> startDeviceSession(String id, StartDeviceSessionDTO startDeviceSessionDTO) {
+        return ResponseEntity.ok(playstationDeviceService.startSession(id, startDeviceSessionDTO));
     }
 
     @Override
-    public ResponseEntity<PsDeviceDTO> stopDeviceSession(String id) {
+    public synchronized ResponseEntity<PsDeviceDTO> stopDeviceSession(String id) {
         return ResponseEntity.ok(playstationDeviceService.stopSession(id));
     }
 
     @Override
-    public ResponseEntity<PsDeviceDTO> addOrderToDevice(String id, CreateInvoiceItemDTO createInvoiceItemDTO) {
+    public synchronized ResponseEntity<PsDeviceDTO> addOrderToDevice(String id, CreateInvoiceItemDTO createInvoiceItemDTO) {
         return ResponseEntity.ok(playstationDeviceService.addOrderToDevice(id, createInvoiceItemDTO));
     }
 
     @Override
-    public ResponseEntity<PsDeviceDTO> updateDeviceOrder(String id, String orderId, InvoiceItemUpdateDTO invoiceItemUpdateDTO) {
+    public synchronized ResponseEntity<PsDeviceDTO> updateDeviceOrder(
+        String id,
+        String orderId,
+        InvoiceItemUpdateDTO invoiceItemUpdateDTO
+    ) {
         return ResponseEntity.ok(playstationDeviceService.updateDeviceOrder(id, orderId, invoiceItemUpdateDTO));
     }
 

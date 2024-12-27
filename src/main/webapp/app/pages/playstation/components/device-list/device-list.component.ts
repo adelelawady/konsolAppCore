@@ -36,7 +36,6 @@ export class DeviceListComponent implements OnInit, OnDestroy {
         // eslint-disable-next-line no-console
         this.container = data['container'];
         // eslint-disable-next-line no-console
-        console.log('container from resolver',this.container);
         this.loadDevices(true).subscribe();
       }
     });

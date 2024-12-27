@@ -1,9 +1,9 @@
 package com.konsol.core.repository;
 
 import com.konsol.core.domain.playstation.PlayStationSession;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.Arrays;
 import org.bson.Document;
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -22,15 +22,9 @@ public interface PlayStationSessionRepository extends MongoRepository<PlayStatio
      */
     Optional<PlayStationSession> findByDeviceIdAndActiveTrue(String deviceId);
 
+    List<PlayStationSession> findAllByDeviceIdAndActiveTrue(String deviceId);
     /**
      * Find all sessions where device category matches any of the provided categories.
-     * Uses Document-based aggregation for better type safety and query construction.
      */
-    @Aggregation(pipeline = {
-        "#{new Document('$match', " +
-            "new Document('device', new Document('$exists', true))" +
-            ".append('device.category', new Document('$in', ?0))" +
-        ")}"
-    })
-    List<PlayStationSession> findSessionsByCategories(List<String> categories);
+    List<PlayStationSession> findAllByContainerId(String containerId);
 }

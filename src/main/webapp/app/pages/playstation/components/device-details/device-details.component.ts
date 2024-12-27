@@ -7,7 +7,8 @@ import { InvoiceItemDTO } from 'app/core/konsolApi/model/invoiceItemDTO';
 import { InvoiceDTO } from 'app/core/konsolApi/model/invoiceDTO';
 import { PsSessionDTO } from 'app/core/konsolApi/model/psSessionDTO';
 import { CreateInvoiceItemDTO } from 'app/core/konsolApi/model/createInvoiceItemDTO';
-import { InvoiceItemUpdateDTO } from 'app/core/konsolApi';
+import { InvoiceItemUpdateDTO, PlaystationContainer, StartDeviceSessionDTO } from 'app/core/konsolApi';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'jhi-device-details',
@@ -18,13 +19,26 @@ export class DeviceDetailsComponent implements OnInit, OnDestroy {
   selectedDevice: PsDeviceDTO | null = null;
   isStartingSession = false;
   isStoppingSession = false;
-  private subscription?: Subscription;
+  subscription?: Subscription;
   // eslint-disable-next-line @typescript-eslint/member-ordering
   orderItems: InvoiceItemDTO[] = [];
 
-  constructor(private playstationService: PlaystationService, private playstationResourceService: PlaystationResourceService) {}
+  container: PlaystationContainer | null | undefined;
+
+  constructor(
+    private route: ActivatedRoute,
+    private playstationService: PlaystationService,
+    private playstationResourceService: PlaystationResourceService
+  ) {}
 
   ngOnInit(): void {
+    this.route.data.subscribe(data => {
+      if (data['container']) {
+        this.selectedDevice = null;
+        // eslint-disable-next-line no-console
+        this.container = data['container'];
+      }
+    });
     this.subscription = this.playstationService.selectedDevice$.subscribe(device => {
       this.selectedDevice = device;
       this.updateOrderItems(device?.session);
@@ -46,9 +60,16 @@ export class DeviceDetailsComponent implements OnInit, OnDestroy {
   }
 
   startSession(): void {
+    if (!this.container || !this.container.id) {
+      return;
+    }
+
     if (this.selectedDevice?.id && !this.isStartingSession) {
       this.isStartingSession = true;
-      this.playstationResourceService.startDeviceSession(this.selectedDevice.id).subscribe({
+      const startDeviceSessionDTO: StartDeviceSessionDTO = {
+        containerId: this.container.id,
+      };
+      this.playstationResourceService.startDeviceSession(this.selectedDevice.id, startDeviceSessionDTO).subscribe({
         next: updatedDevice => {
           this.playstationService.selectDevice(updatedDevice);
           this.playstationService.reloadDevices();

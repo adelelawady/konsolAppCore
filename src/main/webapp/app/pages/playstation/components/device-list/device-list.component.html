@@ -8,7 +8,7 @@
 
       <div *ngIf="!firstLoad">
         <!-- Skeleton loaders -->
-        <div class="device-item" *ngFor="let item of [1, 2, 3, 4, 5, 6]" [hidden]="!isLoading">
+        <div class="device-item" *ngFor="let item of [1]" [hidden]="!isLoading">
           <div class="device-card skeleton">
             <div class="device-card__header">
               <div class="status-badge loading"></div>

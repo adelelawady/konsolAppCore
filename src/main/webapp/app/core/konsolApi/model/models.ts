@@ -72,6 +72,7 @@ export * from './psSessionDTO';
 export * from './salesMetricsDTO';
 export * from './seriesData';
 export * from './serverSettings';
+export * from './startDeviceSessionDTO';
 export * from './storeAccountAnalysisDTO';
 export * from './storeDTO';
 export * from './storeItemDTO';

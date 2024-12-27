@@ -50,6 +50,9 @@ public class PlayStationSession implements Serializable {
     @Field("device_sessions_net_price")
     private BigDecimal deviceSessionsNetPrice = new BigDecimal(0);
 
+    @Field("containerId")
+    private String containerId;
+
     @DBRef
     @Field("invoice")
     private Invoice invoice;
@@ -197,5 +200,18 @@ public class PlayStationSession implements Serializable {
 
     public void setDeviceSessionsNetPrice(BigDecimal deviceSessionsNetPrice) {
         this.deviceSessionsNetPrice = deviceSessionsNetPrice;
+    }
+
+    public String getContainerId() {
+        return containerId;
+    }
+
+    public void setContainerId(String containerId) {
+        this.containerId = containerId;
+    }
+
+    public PlayStationSession containerId(@javax.validation.constraints.NotNull String containerId) {
+        this.setContainerId(containerId);
+        return this;
     }
 }

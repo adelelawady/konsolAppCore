@@ -32,11 +32,7 @@ export class DevicesControlComponent implements OnInit {
     // First try to get container from resolver data
     this.route.data.subscribe(data => {
       if (data['container']) {
-        // eslint-disable-next-line no-console
         this.container = data['container'];
-        // eslint-disable-next-line no-console
-        console.log(this.container);
-        return;
       }
     });
     this.loadDevices();

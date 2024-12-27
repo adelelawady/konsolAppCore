@@ -206,7 +206,11 @@ export class DeviceCardComponent implements OnInit, OnDestroy {
   loadAvailableDevices(): void {
     this.playstationResourceService.getDevicesByCategory({ name: this.container?.category }).subscribe(devices => {
       // Filter out the current device and active devices
-      this.availableDevices = devices.filter(d => d.id !== this.device.id && !d.active);
+      if (this.device.timeManagement) {
+        this.availableDevices = devices.filter(d => d.id !== this.device.id && !d.active && d.timeManagement);
+      } else {
+        this.availableDevices = devices.filter(d => d.id !== this.device.id && !d.active && !d.timeManagement);
+      }
     });
   }
 

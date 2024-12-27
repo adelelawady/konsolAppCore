@@ -73,7 +73,7 @@ public interface PlaystationDeviceService {
      * @param deviceId the id of the device to start session for
      * @return the created session DTO
      */
-    PsDeviceDTO startSession(String deviceId);
+    PsDeviceDTO startSession(String deviceId, StartDeviceSessionDTO startDeviceSessionDTO);
 
     /**
      * Get active session for a device.

@@ -98,28 +98,8 @@ public class PlayStationSessionServiceImpl implements PlayStationSessionService 
         if (playstationContainerOptional.isEmpty()) {
             return new ArrayList<>();
         }
-
-        PlaystationContainer container = playstationContainerOptional.get();
-        
-        // Create the aggregation pipeline using Document
-        List<Document> pipeline = Arrays.asList(
-            new Document("$match", 
-                new Document("device", new Document("$exists", true))
-                    .append("device.category", 
-                        new Document("$in", new ArrayList<>(container.getAcceptedOrderCategories())))
-            )
-        );
-
-        // Execute the aggregation
-        List<PlayStationSession> sessions = mongoTemplate.aggregate(
-            Aggregation.newAggregation(
-                ctx -> Document.parse(pipeline.get(0).toJson())
-            ),
-            PlayStationSession.class,
-            PlayStationSession.class
-        ).getMappedResults();
-
-        return sessions.stream()
+        return this.playStationSessionRepository.findAllByContainerId(containerId)
+            .stream()
             .map(playStationSessionMapper::toDto)
             .collect(Collectors.toList());
     }

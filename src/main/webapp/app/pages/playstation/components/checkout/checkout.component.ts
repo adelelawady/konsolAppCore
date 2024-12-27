@@ -132,7 +132,7 @@ export class CheckoutComponent implements OnInit {
     };
 
     this.invoiceResourceService
-      .updateInvoice(this.selectedDevice?.session?.invoice?.id, invoiceUpdate)
+      .updateInvoice(this.selectedDevice.session.invoice.id, invoiceUpdate)
       .pipe(
         finalize(() => {
           this.isUpdating = false;
@@ -170,11 +170,12 @@ export class CheckoutComponent implements OnInit {
     }
 
     this.isProcessing = true;
+
     this.playstationResourceService.stopDeviceSession(this.selectedDevice.id).subscribe({
       next: () => {
         this.playstationService.reloadDevices();
         this.playstationService.selectDevice(null);
-        this.cancelCheckout.emit();
+        this.cancel();
       },
       error(error: HttpErrorResponse) {
         console.error('Error ending session:', error);

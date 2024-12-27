@@ -85,7 +85,14 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
     @Override
     public PsDeviceDTO update(PsDeviceDTO PsDeviceDTO) {
         LOG.debug("Request to update PlaystationDevice : {}", PsDeviceDTO);
+
+        Optional<PlaystationDevice> playstationDeviceOptional = playstationDeviceRepository.findById(PsDeviceDTO.getId());
+        if (playstationDeviceOptional.isEmpty()) {
+            return null;
+        }
         PlaystationDevice playstationDevice = playstationDeviceMapper.toEntity(PsDeviceDTO);
+        playstationDevice = playstationDeviceRepository.save(playstationDevice);
+        playstationDevice.setActive(playstationDeviceOptional.get().getActive());
         playstationDevice = playstationDeviceRepository.save(playstationDevice);
         return playstationDeviceMapper.toDto(playstationDevice);
     }
@@ -98,7 +105,7 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
             .findById(PsDeviceDTO.getId())
             .map(existingPlaystationDevice -> {
                 playstationDeviceMapper.partialUpdate(existingPlaystationDevice, PsDeviceDTO);
-
+                PsDeviceDTO.setActive(existingPlaystationDevice.getActive());
                 return existingPlaystationDevice;
             })
             .map(playstationDeviceRepository::save)
@@ -154,7 +161,7 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
     }
 
     @Override
-    public PsDeviceDTO startSession(String deviceId) {
+    public PsDeviceDTO startSession(String deviceId, StartDeviceSessionDTO startDeviceSessionDTO) {
         LOG.debug("Request to start session for PlaystationDevice : {}", deviceId);
 
         // Find device
@@ -180,7 +187,8 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
             .active(true)
             .startTime(Instant.now())
             .device(device)
-            .invoice(invoice);
+            .invoice(invoice)
+            .containerId(startDeviceSessionDTO.getContainerId());
 
         // Save session
         session = playStationSessionRepository.save(session);
@@ -233,53 +241,75 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
             throw new RuntimeException("No active session found for device: " + deviceId);
         }
 
-        // Step 3: Handle product association for the session
-        assert device.getSession() != null;
-        Item itemProduct = device.getSession().getType().getItem();
+        if (device.getTimeManagement()) {
+            // Step 3: Handle product association for the session
+            assert device.getSession() != null;
+            Item itemProduct = device.getSession().getType().getItem();
 
-        if (itemProduct == null) {
-            // Create a new Item/Product if it doesn't exist
-            Item item = new Item();
-            item.setName(device.getSession().getType().getName() + " - [PlayStation]");
-            item.setPrice1(String.valueOf(device.getSession().getType().getPrice()));
-            item.setCategory("PlayStation"); // Assign an appropriate category
-            item.setCheckQty(false);
-            item.setDeletable(false);
-            item.setCost(new BigDecimal(0));
+            if (itemProduct == null) {
+                // Create a new Item/Product if it doesn't exist
+                Item item = new Item();
+                item.setName(device.getSession().getType().getName() + " - [PlayStation]");
+                item.setPrice1(String.valueOf(device.getSession().getType().getPrice()));
+                item.setCategory("PlayStation"); // Assign an appropriate category
+                item.setCheckQty(false);
+                item.setDeletable(false);
+                item.setCost(new BigDecimal(0));
 
-            // Save the new item
-            ItemDTO itemDTO = itemService.save(item);
-            itemProduct = itemService.findOneById(itemDTO.getId()).get();
+                // Save the new item
+                ItemDTO itemDTO = itemService.save(item);
+                itemProduct = itemService.findOneById(itemDTO.getId()).get();
 
-            // Update the session type with the created item
-            device.getSession().getType().setItem(item);
-            playstationDeviceTypeRepository.save(device.getSession().getType());
+                // Update the session type with the created item
+                device.getSession().getType().setItem(item);
+                playstationDeviceTypeRepository.save(device.getSession().getType());
+            }
+
+            // Step 4: Add the current session to the invoice
+            CreateInvoiceItemDTO createInvoiceItemDTO = new CreateInvoiceItemDTO();
+            createInvoiceItemDTO.setQty(BigDecimal.ONE);
+            createInvoiceItemDTO.setItemId(itemProduct.getId());
+            createInvoiceItemDTO.setPrice(calculateSessionTimePrice(device.getSession()));
+
+            invoiceService.addInvoiceItem(device.getSession().getInvoice().getId(), createInvoiceItemDTO);
         }
-
-        // Step 4: Add the current session to the invoice
-        CreateInvoiceItemDTO createInvoiceItemDTO = new CreateInvoiceItemDTO();
-        createInvoiceItemDTO.setQty(BigDecimal.ONE);
-        createInvoiceItemDTO.setItemId(itemProduct.getId());
-        createInvoiceItemDTO.setPrice(calculateSessionTimePrice(device.getSession()));
-
-        invoiceService.addInvoiceItem(device.getSession().getInvoice().getId(), createInvoiceItemDTO);
-
         // Step 5: Add older session items to the invoice
-        for (PlayStationSession session : device.getSession().getDeviceSessions()) {
-            CreateInvoiceItemDTO sessionInvoiceItem = new CreateInvoiceItemDTO();
-            sessionInvoiceItem.setQty(BigDecimal.ONE);
-            sessionInvoiceItem.setItemId(session.getType().getItem().getId());
-            sessionInvoiceItem.setPrice(calculateSessionTimePrice(session));
-            invoiceService.addInvoiceItem(device.getSession().getInvoice().getId(), sessionInvoiceItem);
-        }
 
+        if (
+            device.getSession() != null &&
+            device.getSession().getDeviceSessions() != null &&
+            !device.getSession().getDeviceSessions().isEmpty()
+        ) {
+            for (PlayStationSession session : device.getSession().getDeviceSessions()) {
+                CreateInvoiceItemDTO sessionInvoiceItem = new CreateInvoiceItemDTO();
+                sessionInvoiceItem.setQty(BigDecimal.ONE);
+                sessionInvoiceItem.setItemId(session.getType().getItem().getId());
+                sessionInvoiceItem.setPrice(calculateSessionTimePrice(session));
+                invoiceService.addInvoiceItem(device.getSession().getInvoice().getId(), sessionInvoiceItem);
+            }
+        }
         // Step 6: Finalize and save the invoice
         invoiceService.saveInvoice(device.getSession().getInvoice().getId());
-
+        PlayStationSession session;
         // Step 7: Update the active session
-        PlayStationSession session = playStationSessionRepository
-            .findByDeviceIdAndActiveTrue(deviceId)
-            .orElseThrow(() -> new RuntimeException("No active session found for device: " + deviceId));
+        try {
+            session =
+                playStationSessionRepository
+                    .findByDeviceIdAndActiveTrue(deviceId)
+                    .orElseThrow(() -> new RuntimeException("No active session found for device: " + deviceId));
+        } catch (Exception e) {
+            session = playStationSessionRepository.findAllByDeviceIdAndActiveTrue(deviceId).stream().findFirst().get();
+            PlayStationSession finalSession = session;
+            playStationSessionRepository
+                .findAllByDeviceIdAndActiveTrue(deviceId)
+                .forEach(playStationSession -> {
+                    if (!playStationSession.getId().equals(finalSession.getId())) {
+                        playStationSession.setActive(false);
+                        playStationSession.setEndTime(Instant.now());
+                        playStationSessionRepository.save(playStationSession);
+                    }
+                });
+        }
 
         session.setActive(false);
         session.setEndTime(Instant.now());
@@ -366,24 +396,37 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
             throw new RuntimeException("Device Must Have Type");
         }
 
+        if (fromDevice.getTimeManagement() && !toDevice.getTimeManagement()) {
+            throw new RuntimeException("Both devices must have a Time Management as two must be same type");
+        }
+
+        if (!fromDevice.getTimeManagement() && toDevice.getTimeManagement()) {
+            throw new RuntimeException("Both devices must Not have a Time Management as two must be same type");
+        }
         // Find active session
         PlayStationSession session = playStationSessionRepository
             .findByDeviceIdAndActiveTrue(id)
             .orElseThrow(() -> new RuntimeException("No active session found for device: " + deviceId));
+        if (fromDevice.getTimeManagement()) {
+            PlayStationSession lastSession = new PlayStationSession();
+            lastSession.setDevice(session.getDevice());
+            lastSession.setType(session.getType());
+            lastSession.setStartTime(session.getStartTime());
+            lastSession.setEndTime(Instant.now());
+            lastSession.setInvoice(null);
+            lastSession.setDeviceSessions(null);
 
-        PlayStationSession lastSession = new PlayStationSession();
-        lastSession.setDevice(session.getDevice());
-        lastSession.setType(session.getType());
-        lastSession.setStartTime(session.getStartTime());
-        lastSession.setEndTime(Instant.now());
-        lastSession.setInvoice(null);
-        lastSession.setDeviceSessions(null);
+            session.setDeviceSessionsNetPrice(
+                session.getDeviceSessionsNetPrice().add(this.calculateSessionTimePrice(fromDevice.getSession()))
+            );
 
-        session.setDeviceSessionsNetPrice(session.getDeviceSessionsNetPrice().add(this.calculateSessionTimePrice(fromDevice.getSession())));
+            session.getDeviceSessions().add(lastSession);
 
-        session.getDeviceSessions().add(lastSession);
-        //TODO CHECK TYPE
-        session.setStartTime(Instant.now());
+            session.setStartTime(Instant.now());
+        } else {
+            session.setDeviceSessionsNetPrice(new BigDecimal(0));
+        }
+
         session.setType(toDevice.getType());
         session.setDevice(toDevice);
         session.setEndTime(null);
@@ -419,7 +462,6 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
         BigDecimal hourlyRate = session.getType().getPrice();
 
         // Calculate total cost and round to whole number
-
         return hourlyRate.multiply(BigDecimal.valueOf(durationInHours)).setScale(0, RoundingMode.HALF_UP);
     }
 }

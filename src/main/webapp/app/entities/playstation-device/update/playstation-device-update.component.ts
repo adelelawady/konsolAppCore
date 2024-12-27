@@ -10,6 +10,7 @@ import { PlaystationResourceService } from 'app/core/konsolApi/api/playstationRe
 import { PlaystationDeviceFormGroup, PlaystationDeviceFormService } from './playstation-device-form.service';
 import { PsDeviceType } from 'app/core/konsolApi/model/psDeviceType';
 import { PlaystationContainerStateService } from 'app/pages/playstation/services/playstation-container.service';
+import { PlaystationContainer } from 'app/core/konsolApi';
 
 @Component({
   standalone: true,
@@ -21,6 +22,7 @@ export class PlaystationDeviceUpdateComponent implements OnInit {
   isSaving = false;
   device: PsDeviceDTO | null = null;
   deviceTypes: PsDeviceType[] = [];
+  container: PlaystationContainer | null | undefined;
 
   playstationResourceService = inject(PlaystationResourceService);
   playstationDeviceFormService = inject(PlaystationDeviceFormService);
@@ -29,6 +31,13 @@ export class PlaystationDeviceUpdateComponent implements OnInit {
   editForm: PlaystationDeviceFormGroup = this.playstationDeviceFormService.createPlaystationDeviceFormGroup();
 
   ngOnInit(): void {
+    // First try to get container from resolver data
+    this.activatedRoute.data.subscribe(data => {
+      if (data['container']) {
+        this.container = data['container'];
+      }
+    });
+
     this.activatedRoute.data.subscribe(({ playstationDevice }) => {
       this.device = playstationDevice;
       // First load device types, then update form

@@ -2241,6 +2241,11 @@ paths:
       tags:
         - playstation-resource
       description: Start Device Session
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartDeviceSessionDTO'
   '/playstation/device/{id}/session/stop':
     parameters:
       - schema:
@@ -5155,3 +5160,15 @@ components:
       required:
         - name
         - value
+    StartDeviceSessionDTO:
+      title: StartDeviceSessionDTO
+      x-stoplight:
+        id: 9ayg5e6equ6oi
+      type: object
+      properties:
+        containerId:
+          type: string
+          x-stoplight:
+            id: qo5b0jfzx3j5r
+      required:
+        - containerId

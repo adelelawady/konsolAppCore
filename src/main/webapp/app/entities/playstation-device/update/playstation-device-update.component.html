@@ -23,7 +23,7 @@
           </div>
         </div>
 
-        <!--  
+        <!--
         <div class="mb-3">
           <label class="form-label" for="field_category">category</label>
           <input type="text" class="form-control" name="category" id="field_category" data-cy="category" formControlName="category" />
@@ -47,7 +47,7 @@
           </div>
         </div>
 
-        <div class="mb-3">
+        <div class="mb-3" [hidden]="true">
           <label class="form-label" for="field_active">{{ 'playstation.devices.update.form.active.label' | translate }}</label>
           <div class="form-check">
             <input
@@ -63,10 +63,11 @@
           </div>
         </div>
 
-        <div class="mb-3">
+        <div class="mb-3" [hidden]="!container?.hasTimeManagement">
           <label class="form-label" for="field_timeManagement">Has Time Management</label>
           <div class="form-check">
             <input
+              [disabled]="!container?.canHaveMultiTimeManagement"
               type="checkbox"
               class="form-check-input"
               name="timeManagement"
