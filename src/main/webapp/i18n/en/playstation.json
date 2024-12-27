@@ -359,6 +359,15 @@
       "error": {
         "loading": "Error loading sessions",
         "delete": "Error deleting session"
+      },
+      "pagination": {
+        "pageSize": "Items per page",
+        "showing": "Showing",
+        "of": "of",
+        "first": "First",
+        "previous": "Previous",
+        "next": "Next",
+        "last": "Last"
       }
     }
   }

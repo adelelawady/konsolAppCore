@@ -140,3 +140,32 @@
     }
   }
 } 
+
+.pagination-info {
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+ngb-pagination {
+  .page-item {
+    &.active .page-link {
+      background-color: #3498db;
+      border-color: #3498db;
+    }
+    
+    .page-link {
+      color: #3498db;
+      
+      &:hover {
+        background-color: #edf2f7;
+      }
+    }
+  }
+}
+
+.form-select {
+  &.form-select-sm {
+    padding-right: 2rem;
+    min-width: 80px;
+  }
+} 
