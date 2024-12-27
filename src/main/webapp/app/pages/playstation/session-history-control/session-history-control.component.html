@@ -1,9 +1,12 @@
 <div class="session-history">
   <div class="session-history__header">
-    <h2>{{ 'playstation.sessionHistory.title' | translate }}</h2>
+    <h2>
+      <fa-icon [icon]="faClock" class="me-2"></fa-icon>
+      {{ 'playstation.sessionHistory.title' | translate }}
+    </h2>
     <button class="btn btn-primary" (click)="loadSessions()" [disabled]="isLoading">
       <fa-icon [icon]="faSync" [spin]="isLoading"></fa-icon>
-      <span>{{ 'playstation.sessionHistory.refresh' | translate }}</span>
+      <span class="ms-1">{{ 'playstation.sessionHistory.refresh' | translate }}</span>
     </button>
   </div>
 
@@ -14,42 +17,82 @@
     </div>
 
     <div *ngIf="!isLoading && sessions.length === 0" class="no-sessions">
+      <fa-icon [icon]="faClock" class="me-2"></fa-icon>
       <span>{{ 'playstation.sessionHistory.noSessions' | translate }}</span>
     </div>
 
     <div *ngIf="!isLoading && sessions.length > 0" class="table-responsive">
-      <table class="table table-striped">
+      <table class="table table-hover">
         <thead>
           <tr>
-            <th>{{ 'playstation.sessionHistory.table.type' | translate }}</th>
-            <th>{{ 'playstation.sessionHistory.table.startTime' | translate }}</th>
-            <th>{{ 'playstation.sessionHistory.table.endTime' | translate }}</th>
-            <th>{{ 'playstation.sessionHistory.table.duration' | translate }}</th>
-            <th>{{ 'playstation.sessionHistory.table.invoiceNumber' | translate }}</th>
-            <th>{{ 'playstation.sessionHistory.table.netPrice' | translate }}</th>
-            <th>{{ 'playstation.sessionHistory.table.userNetPrice' | translate }}</th>
-            <th>{{ 'playstation.sessionHistory.table.discount' | translate }}</th>
-            <th>{{ 'playstation.sessionHistory.table.additions' | translate }}</th>
+            <th>
+              <fa-icon [icon]="faGamepad" class="me-2"></fa-icon>
+              {{ 'playstation.sessionHistory.table.type' | translate }}
+            </th>
+            <th>
+              <fa-icon [icon]="faCalendarAlt" class="me-2"></fa-icon>
+              {{ 'playstation.sessionHistory.table.startTime' | translate }}
+            </th>
+            <th>
+              <fa-icon [icon]="faCalendarAlt" class="me-2"></fa-icon>
+              {{ 'playstation.sessionHistory.table.endTime' | translate }}
+            </th>
+            <th>
+              <fa-icon [icon]="faClock" class="me-2"></fa-icon>
+              {{ 'playstation.sessionHistory.table.duration' | translate }}
+            </th>
+            <th>
+              <fa-icon [icon]="faFileInvoiceDollar" class="me-2"></fa-icon>
+              {{ 'playstation.sessionHistory.table.invoiceNumber' | translate }}
+            </th>
+            <th class="text-end">
+              <fa-icon [icon]="faMoneyBillWave" class="me-2"></fa-icon>
+              {{ 'playstation.sessionHistory.table.netPrice' | translate }}
+            </th>
+            <th class="text-end">
+              <fa-icon [icon]="faMoneyBillWave" class="me-2"></fa-icon>
+              {{ 'playstation.sessionHistory.table.userNetPrice' | translate }}
+            </th>
+            <th class="text-end">
+              <fa-icon [icon]="faPercent" class="me-2"></fa-icon>
+              {{ 'playstation.sessionHistory.table.discount' | translate }}
+            </th>
+            <th class="text-end">
+              <fa-icon [icon]="faPlus" class="me-2"></fa-icon>
+              {{ 'playstation.sessionHistory.table.additions' | translate }}
+            </th>
             <th>{{ 'playstation.sessionHistory.table.actions' | translate }}</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let session of sessions; trackBy: trackById">
-            <td>{{ session.type?.name }}</td>
+            <td>
+              <span class="badge bg-info">{{ session.type?.name }}</span>
+            </td>
             <td>{{ session.startTime | date:'medium' }}</td>
             <td>{{ session.endTime | date:'medium' }}</td>
-            <td>{{ getDuration(session) }}</td>
-            <td>{{ session.invoice?.pk }}</td>
-            <td>{{ session.invoice?.netPrice | currencyK }}</td>
-            <td>{{ session.invoice?.userNetPrice | currencyK }}</td>
-            <td class="text-danger">{{ session.invoice?.discount | currencyK }}</td>
-            <td>{{ session.invoice?.additions | currencyK }}</td>
+            <td><span class="badge bg-secondary">{{ getDuration(session) }}</span></td>
+            <td>
+              <span class="badge bg-primary">#{{ session.invoice?.pk }}</span>
+            </td>
+            <td class="text-end fw-bold">{{ session.invoice?.netPrice | currencyK }}</td>
+            <td class="text-end">{{ session.invoice?.userNetPrice | currencyK }}</td>
+            <td class="text-end text-danger fw-bold">
+              <span *ngIf="session.invoice?.discount">-{{ session.invoice?.discount | currencyK }}</span>
+              <span *ngIf="!session.invoice?.discount">-</span>
+            </td>
+            <td class="text-end text-success fw-bold">
+              <span *ngIf="session.invoice?.additions">+{{ session.invoice?.additions | currencyK }}</span>
+              <span *ngIf="!session.invoice?.additions">-</span>
+            </td>
             <td>
               <div class="btn-group">
-                <button class="btn btn-sm btn-info" (click)="viewSession(session)" title="{{ 'playstation.sessionHistory.actions.view' | translate }}">
+                <button class="btn btn-sm btn-info" (click)="viewSession(session)" 
+                        title="{{ 'playstation.sessionHistory.actions.view' | translate }}">
                   <fa-icon [icon]="faEye"></fa-icon>
                 </button>
-                <button class="btn btn-sm btn-danger" (click)="deleteSession(session)" title="{{ 'playstation.sessionHistory.actions.delete' | translate }}">
+                <button class="btn btn-sm btn-danger" (click)="deleteSession(session)" 
+                        title="{{ 'playstation.sessionHistory.actions.delete' | translate }}">
                   <fa-icon [icon]="faTrash"></fa-icon>
                 </button>
               </div>

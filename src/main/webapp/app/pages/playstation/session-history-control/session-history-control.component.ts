@@ -1,7 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { PlaystationResourceService } from 'app/core/konsolApi/api/playstationResource.service';
 import { PsSessionDTO } from 'app/core/konsolApi/model/psSessionDTO';
-import { faSync, faEye, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { 
+  faSync, 
+  faEye, 
+  faTrash, 
+  faClock, 
+  faGamepad, 
+  faCalendarAlt, 
+  faMoneyBillWave,
+  faPercent,
+  faPlus,
+  faFileInvoiceDollar 
+} from '@fortawesome/free-solid-svg-icons';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmationModalComponent } from 'app/shared/components/confirmation-modal/confirmation-modal.component';
 import { ToastrService } from 'ngx-toastr';
@@ -21,6 +32,13 @@ export class SessionHistoryControlComponent implements OnInit {
   faSync = faSync;
   faEye = faEye;
   faTrash = faTrash;
+  faClock = faClock;
+  faGamepad = faGamepad;
+  faCalendarAlt = faCalendarAlt;
+  faMoneyBillWave = faMoneyBillWave;
+  faPercent = faPercent;
+  faPlus = faPlus;
+  faFileInvoiceDollar = faFileInvoiceDollar;
 
   constructor(
     private playstationResourceService: PlaystationResourceService,

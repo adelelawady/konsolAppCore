@@ -12,6 +12,10 @@
       font-size: 1.75rem;
       font-weight: 600;
       color: #2c3e50;
+      
+      fa-icon {
+        color: #3498db;
+      }
     }
   }
 
@@ -34,6 +38,10 @@
       padding: 2rem;
       color: #6c757d;
       font-style: italic;
+      
+      fa-icon {
+        color: #95a5a6;
+      }
     }
 
     .table {
@@ -43,11 +51,33 @@
         background: #f8f9fa;
         font-weight: 600;
         padding: 1rem;
+        white-space: nowrap;
+        
+        fa-icon {
+          color: #7f8c8d;
+        }
       }
 
       td {
         vertical-align: middle;
         padding: 1rem;
+      }
+
+      .badge {
+        padding: 0.5rem 0.75rem;
+        font-weight: 500;
+        
+        &.bg-info {
+          background-color: #3498db !important;
+        }
+        
+        &.bg-secondary {
+          background-color: #7f8c8d !important;
+        }
+        
+        &.bg-primary {
+          background-color: #2980b9 !important;
+        }
       }
 
       .btn-group {
@@ -57,7 +87,50 @@
           &:not(:last-child) {
             margin-right: 0.25rem;
           }
+          
+          &.btn-info {
+            background-color: #3498db;
+            border-color: #3498db;
+            color: white;
+            
+            &:hover {
+              background-color: #2980b9;
+              border-color: #2980b9;
+            }
+          }
+          
+          &.btn-danger {
+            background-color: #e74c3c;
+            border-color: #e74c3c;
+            
+            &:hover {
+              background-color: #c0392b;
+              border-color: #c0392b;
+            }
+          }
         }
+      }
+    }
+  }
+}
+
+// Hover effect for table rows
+.table-hover tbody tr:hover {
+  background-color: rgba(52, 152, 219, 0.05);
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .session-history {
+    padding: 1rem;
+    
+    &__header {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: stretch;
+      
+      h2 {
+        text-align: center;
       }
     }
   }
