@@ -2030,10 +2030,9 @@ paths:
         - playstation-resource
     parameters: []
   /playstation/session:
-    get:
-      summary: get all playstation devices types
-      tags:
-        - playstation-resource
+    post:
+      summary: ''
+      operationId: getSessions
       responses:
         '200':
           description: OK
@@ -2043,29 +2042,12 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/PsSessionDTO'
-      operationId: getSessions
       description: get all playstation devices sessions
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/PaginationSearchModel'
-    post:
-      summary: ''
-      operationId: createPlayStationSession
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PsSessionDTO'
-      description: ''
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PsSessionDTO'
         description: ''
       tags:
         - playstation-resource
