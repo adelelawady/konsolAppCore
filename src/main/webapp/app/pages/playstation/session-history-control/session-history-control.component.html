@@ -21,21 +21,29 @@
       <table class="table table-striped">
         <thead>
           <tr>
+            <th>{{ 'playstation.sessionHistory.table.type' | translate }}</th>
             <th>{{ 'playstation.sessionHistory.table.startTime' | translate }}</th>
             <th>{{ 'playstation.sessionHistory.table.endTime' | translate }}</th>
-            <th>{{ 'playstation.sessionHistory.table.type' | translate }}</th>
+            <th>{{ 'playstation.sessionHistory.table.duration' | translate }}</th>
             <th>{{ 'playstation.sessionHistory.table.invoiceNumber' | translate }}</th>
-            <th>{{ 'playstation.sessionHistory.table.totalCost' | translate }}</th>
+            <th>{{ 'playstation.sessionHistory.table.netPrice' | translate }}</th>
+            <th>{{ 'playstation.sessionHistory.table.userNetPrice' | translate }}</th>
+            <th>{{ 'playstation.sessionHistory.table.discount' | translate }}</th>
+            <th>{{ 'playstation.sessionHistory.table.additions' | translate }}</th>
             <th>{{ 'playstation.sessionHistory.table.actions' | translate }}</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let session of sessions; trackBy: trackById">
+            <td>{{ session.type?.name }}</td>
             <td>{{ session.startTime | date:'medium' }}</td>
             <td>{{ session.endTime | date:'medium' }}</td>
-            <td>{{ session.type?.name }}</td>
+            <td>{{ getDuration(session) }}</td>
             <td>{{ session.invoice?.pk }}</td>
-            <td>{{ calculateTotalCost(session) | currencyK }}</td>
+            <td>{{ session.invoice?.netPrice | currencyK }}</td>
+            <td>{{ session.invoice?.userNetPrice | currencyK }}</td>
+            <td class="text-danger">{{ session.invoice?.discount | currencyK }}</td>
+            <td>{{ session.invoice?.additions | currencyK }}</td>
             <td>
               <div class="btn-group">
                 <button class="btn btn-sm btn-info" (click)="viewSession(session)" title="{{ 'playstation.sessionHistory.actions.view' | translate }}">

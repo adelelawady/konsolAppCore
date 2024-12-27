@@ -335,11 +335,15 @@
       "loading": "جاري تحميل الجلسات...",
       "noSessions": "لا توجد جلسات",
       "table": {
+        "type": "النوع",
         "startTime": "وقت البدء",
         "endTime": "وقت الانتهاء",
-        "type": "النوع",
+        "duration": "المدة",
         "invoiceNumber": "رقم الفاتورة",
-        "totalCost": "التكلفة الإجمالية",
+        "netPrice": "السعر الصافي",
+        "userNetPrice": "السعر المخصص",
+        "discount": "الخصم",
+        "additions": "الإضافات",
         "actions": "الإجراءات"
       },
       "actions": {

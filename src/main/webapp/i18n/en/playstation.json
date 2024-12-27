@@ -335,11 +335,15 @@
       "loading": "Loading sessions...",
       "noSessions": "No sessions found",
       "table": {
+        "type": "Type",
         "startTime": "Start Time",
         "endTime": "End Time",
-        "type": "Type",
+        "duration": "Duration",
         "invoiceNumber": "Invoice #",
-        "totalCost": "Total Cost",
+        "netPrice": "Net Price",
+        "userNetPrice": "Custom Price",
+        "discount": "Discount",
+        "additions": "Additions",
         "actions": "Actions"
       },
       "actions": {

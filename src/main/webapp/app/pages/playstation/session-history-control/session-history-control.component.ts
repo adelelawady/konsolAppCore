@@ -6,6 +6,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmationModalComponent } from 'app/shared/components/confirmation-modal/confirmation-modal.component';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateService } from '@ngx-translate/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'jhi-session-history-control',
@@ -25,7 +26,8 @@ export class SessionHistoryControlComponent implements OnInit {
     private playstationResourceService: PlaystationResourceService,
     private modalService: NgbModal,
     private toastr: ToastrService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -47,8 +49,23 @@ export class SessionHistoryControlComponent implements OnInit {
     });
   }
 
+  getDuration(session: PsSessionDTO): string {
+    if (!session.startTime || !session.endTime) {
+      return '0h 0m';
+    }
+
+    const start = new Date(session.startTime);
+    const end = new Date(session.endTime);
+    const durationMs = end.getTime() - start.getTime();
+    const hours = Math.floor(durationMs / (1000 * 60 * 60));
+    const minutes = Math.floor((durationMs % (1000 * 60 * 60)) / (1000 * 60));
+    return `${hours}h ${minutes}m`;
+  }
+
   viewSession(session: PsSessionDTO): void {
-    // Implement view logic
+    if (session.id) {
+      this.router.navigate(['/playstation/sessions', session.id, 'view']);
+    }
   }
 
   deleteSession(session: PsSessionDTO): void {
