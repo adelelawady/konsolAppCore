@@ -377,30 +377,6 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
     }
 
     /**
-     * {@code POST  /play-station-sessions} : Create a new playStationSession.
-     *
-     * @param psSessionDTO the PsSessionDTO to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new PsSessionDTO, or with status {@code 400 (Bad Request)} if the playStationSession has already an ID.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
-     */
-    @Override
-    public ResponseEntity<PsSessionDTO> createPlayStationSession(PsSessionDTO psSessionDTO) {
-        LOG.debug("REST request to save PlayStationSession : {}", psSessionDTO);
-        if (psSessionDTO.getId() != null) {
-            throw new BadRequestAlertException("A new playStationSession cannot already have an ID", ENTITY_NAME, "idexists");
-        }
-        psSessionDTO = playStationSessionService.save(psSessionDTO);
-        try {
-            return ResponseEntity
-                .created(new URI("/api/play-station-sessions/" + psSessionDTO.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, psSessionDTO.getId().toString()))
-                .body(psSessionDTO);
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
      * {@code PUT  /play-station-sessions/:id} : Updates an existing playStationSession.
      *
      * @param id the id of the PsSessionDTO to save.
