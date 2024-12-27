@@ -93,15 +93,12 @@ public class PlayStationSessionServiceImpl implements PlayStationSessionService 
     }
 
     @Override
-    public List<PsSessionDTO> findAllByContainerId(String containerId) {
+    public Page<PsSessionDTO> findAllByContainerId(Pageable pageable, String containerId) {
         Optional<PlaystationContainer> playstationContainerOptional = playstationContainerRepository.findById(containerId);
         if (playstationContainerOptional.isEmpty()) {
-            return new ArrayList<>();
+            return null;
         }
-        return this.playStationSessionRepository.findAllByContainerId(containerId)
-            .stream()
-            .map(playStationSessionMapper::toDto)
-            .collect(Collectors.toList());
+        return this.playStationSessionRepository.findAllByContainerId(pageable, containerId).map(playStationSessionMapper::toDto);
     }
 
     @Override

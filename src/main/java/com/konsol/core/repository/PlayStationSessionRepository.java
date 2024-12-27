@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import org.bson.Document;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
@@ -26,5 +28,6 @@ public interface PlayStationSessionRepository extends MongoRepository<PlayStatio
     /**
      * Find all sessions where device category matches any of the provided categories.
      */
-    List<PlayStationSession> findAllByContainerId(String containerId);
+
+    Page<PlayStationSession> findAllByContainerId(Pageable page, String containerId);
 }

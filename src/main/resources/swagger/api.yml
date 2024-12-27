@@ -2045,6 +2045,11 @@ paths:
                   $ref: '#/components/schemas/PsSessionDTO'
       operationId: getSessions
       description: get all playstation devices sessions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaginationSearchModel'
     post:
       summary: ''
       operationId: createPlayStationSession
@@ -2066,10 +2071,15 @@ paths:
         - playstation-resource
     parameters: []
   '/playstation/session/{containerId}/view':
-    get:
-      summary: get all playstation devices types
-      tags:
-        - playstation-resource
+    parameters:
+      - schema:
+          type: string
+        name: containerId
+        in: path
+        required: true
+    post:
+      summary: ''
+      operationId: getSessionsByContainerId
       responses:
         '200':
           description: OK
@@ -2079,14 +2089,14 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/PsSessionDTO'
-      operationId: getSessionsByContainerId
       description: get all playstation devices sessions by the container
-    parameters:
-      - schema:
-          type: string
-        name: containerId
-        in: path
-        required: true
+      tags:
+        - playstation-resource
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaginationSearchModel'
   '/playstation/device/{id}':
     get:
       summary: get all playstation devices

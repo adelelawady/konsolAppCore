@@ -55,7 +55,7 @@ public interface PlayStationSessionService {
      *
      * @return the list of entities.
      */
-    List<PsSessionDTO> findAllByContainerId(String containerId);
+    Page<PsSessionDTO> findAllByContainerId(Pageable pageable, String containerId);
     /**
      * Get the "id" playStationSession.
      *

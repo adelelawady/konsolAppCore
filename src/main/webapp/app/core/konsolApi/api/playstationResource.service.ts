@@ -23,6 +23,8 @@ import { CreateInvoiceItemDTO } from '../model/createInvoiceItemDTO';
 // @ts-ignore
 import { InvoiceItemUpdateDTO } from '../model/invoiceItemUpdateDTO';
 // @ts-ignore
+import { PaginationSearchModel } from '../model/paginationSearchModel';
+// @ts-ignore
 import { PsDeviceDTO } from '../model/psDeviceDTO';
 // @ts-ignore
 import { PsDeviceType } from '../model/psDeviceType';
@@ -1201,25 +1203,30 @@ export class PlaystationResourceService {
   /**
    * get all playstation devices types
    * get all playstation devices sessions
+   * @param paginationSearchModel
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public getSessions(
+    paginationSearchModel?: PaginationSearchModel,
     observe?: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
   ): Observable<Array<PsSessionDTO>>;
   public getSessions(
+    paginationSearchModel?: PaginationSearchModel,
     observe?: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
   ): Observable<HttpResponse<Array<PsSessionDTO>>>;
   public getSessions(
+    paginationSearchModel?: PaginationSearchModel,
     observe?: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
   ): Observable<HttpEvent<Array<PsSessionDTO>>>;
   public getSessions(
+    paginationSearchModel?: PaginationSearchModel,
     observe: any = 'body',
     reportProgress: boolean = false,
     options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
@@ -1239,6 +1246,13 @@ export class PlaystationResourceService {
     let localVarHttpContext: HttpContext | undefined = options && options.context;
     if (localVarHttpContext === undefined) {
       localVarHttpContext = new HttpContext();
+    }
+
+    // to determine the Content-Type header
+    const consumes: string[] = ['application/json'];
+    const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+    if (httpContentTypeSelected !== undefined) {
+      localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
     }
 
     let responseType_: 'text' | 'json' | 'blob' = 'json';
@@ -1263,32 +1277,37 @@ export class PlaystationResourceService {
   }
 
   /**
-   * get all playstation devices types
+   *
    * get all playstation devices sessions by the container
    * @param containerId
+   * @param paginationSearchModel
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public getSessionsByContainerId(
     containerId: string,
+    paginationSearchModel?: PaginationSearchModel,
     observe?: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
   ): Observable<Array<PsSessionDTO>>;
   public getSessionsByContainerId(
     containerId: string,
+    paginationSearchModel?: PaginationSearchModel,
     observe?: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
   ): Observable<HttpResponse<Array<PsSessionDTO>>>;
   public getSessionsByContainerId(
     containerId: string,
+    paginationSearchModel?: PaginationSearchModel,
     observe?: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
   ): Observable<HttpEvent<Array<PsSessionDTO>>>;
   public getSessionsByContainerId(
     containerId: string,
+    paginationSearchModel?: PaginationSearchModel,
     observe: any = 'body',
     reportProgress: boolean = false,
     options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
@@ -1314,6 +1333,13 @@ export class PlaystationResourceService {
       localVarHttpContext = new HttpContext();
     }
 
+    // to determine the Content-Type header
+    const consumes: string[] = ['application/json'];
+    const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+    if (httpContentTypeSelected !== undefined) {
+      localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+    }
+
     let responseType_: 'text' | 'json' | 'blob' = 'json';
     if (localVarHttpHeaderAcceptSelected) {
       if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
@@ -1325,8 +1351,9 @@ export class PlaystationResourceService {
       }
     }
 
-    return this.httpClient.get<Array<PsSessionDTO>>(
+    return this.httpClient.post<Array<PsSessionDTO>>(
       `${this.configuration.basePath}/playstation/session/${encodeURIComponent(String(containerId))}/view`,
+      paginationSearchModel,
       {
         context: localVarHttpContext,
         responseType: <any>responseType_,

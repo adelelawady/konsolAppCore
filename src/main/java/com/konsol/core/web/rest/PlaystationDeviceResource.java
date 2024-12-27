@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -465,24 +466,16 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
     }
 
     /**
-     * {@code GET  /play-station-sessions} : get all the playStationSessions.
      *
-     * @param pageable the pagination information.
+     * @param paginationSearchModel the pagination information.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of playStationSessions in body.
      */
-    @GetMapping("")
-    public ResponseEntity<List<PsSessionDTO>> getAllPlayStationSessions(@ParameterObject Pageable pageable) {
-        LOG.debug("REST request to get a page of PlayStationSessions");
+    @Override
+    public ResponseEntity<List<PsSessionDTO>> getSessions(PaginationSearchModel paginationSearchModel) {
+        Pageable pageable = PageRequest.of(paginationSearchModel.getPage(), paginationSearchModel.getSize());
         Page<PsSessionDTO> page = playStationSessionService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
-    }
-
-    @Override
-    public ResponseEntity<List<PsSessionDTO>> getSessions() {
-        LOG.debug("REST request to get a page of PlayStationSessions");
-        List<PsSessionDTO> page = playStationSessionService.findAll();
-        return ResponseEntity.ok().body(page);
     }
 
     /**
@@ -515,9 +508,11 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
     }
 
     @Override
-    public ResponseEntity<List<PsSessionDTO>> getSessionsByContainerId(String containerId) {
+    public ResponseEntity<List<PsSessionDTO>> getSessionsByContainerId(String containerId, PaginationSearchModel paginationSearchModel) {
         LOG.debug("REST request to get a page of PlayStationSessions");
-        List<PsSessionDTO> page = playStationSessionService.findAllByContainerId(containerId);
-        return ResponseEntity.ok().body(page);
+        Pageable pageable = PageRequest.of(paginationSearchModel.getPage(), paginationSearchModel.getSize());
+        Page<PsSessionDTO> page = playStationSessionService.findAllByContainerId(pageable, containerId);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 }
