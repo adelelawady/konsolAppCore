@@ -328,6 +328,34 @@
           "userNetPrice": "السعر المخصص"
         }
       }
+    },
+    "sessionHistory": {
+      "title": "سجل الجلسات",
+      "refresh": "تحديث",
+      "loading": "جاري تحميل الجلسات...",
+      "noSessions": "لا توجد جلسات",
+      "table": {
+        "startTime": "وقت البدء",
+        "endTime": "وقت الانتهاء",
+        "type": "النوع",
+        "invoiceNumber": "رقم الفاتورة",
+        "totalCost": "التكلفة الإجمالية",
+        "actions": "الإجراءات"
+      },
+      "actions": {
+        "view": "عرض التفاصيل",
+        "delete": "حذف الجلسة"
+      },
+      "confirm": {
+        "delete": "هل أنت متأكد من حذف هذه الجلسة؟"
+      },
+      "success": {
+        "delete": "تم حذف الجلسة بنجاح"
+      },
+      "error": {
+        "loading": "خطأ في تحميل الجلسات",
+        "delete": "خطأ في حذف الجلسة"
+      }
     }
   }
 } 

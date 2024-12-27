@@ -1,0 +1,64 @@
+.session-history {
+  padding: 1.5rem;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+
+    h2 {
+      margin: 0;
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+  }
+
+  &__content {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+
+    .loading-spinner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      padding: 2rem;
+    }
+
+    .no-sessions {
+      text-align: center;
+      padding: 2rem;
+      color: #6c757d;
+      font-style: italic;
+    }
+
+    .table {
+      margin-bottom: 0;
+
+      th {
+        background: #f8f9fa;
+        font-weight: 600;
+        padding: 1rem;
+      }
+
+      td {
+        vertical-align: middle;
+        padding: 1rem;
+      }
+
+      .btn-group {
+        .btn {
+          padding: 0.375rem 0.75rem;
+          
+          &:not(:last-child) {
+            margin-right: 0.25rem;
+          }
+        }
+      }
+    }
+  }
+} 

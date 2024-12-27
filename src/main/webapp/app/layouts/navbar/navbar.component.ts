@@ -24,6 +24,7 @@ import {
   faSignInAlt,
   faUserPlus,
   faAsterisk,
+  faHistory,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { VERSION } from 'app/app.constants';
@@ -69,6 +70,7 @@ export class NavbarComponent implements OnInit {
   faSignInAlt = faSignInAlt;
   faUserPlus = faUserPlus;
   faAsterisk = faAsterisk;
+  faHistory = faHistory;
 
   constructor(
     private loginService: LoginService,

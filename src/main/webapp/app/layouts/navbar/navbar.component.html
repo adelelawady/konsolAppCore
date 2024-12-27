@@ -59,6 +59,19 @@
                 <span>Container Control</span>
               </a>
             </li>
+            <!-- Session History -->
+            <li>
+              <a
+                class="dropdown-item"
+                routerLink="playstation/session-history"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: true }"
+                (click)="collapseNavbar()"
+              >
+                <fa-icon [icon]="faHistory" [fixedWidth]="true" class="me-2"></fa-icon>
+                <span jhiTranslate="global.menu.playstation.sessionHistory">Session History</span>
+              </a>
+            </li>
           </ul>
         </li>
 

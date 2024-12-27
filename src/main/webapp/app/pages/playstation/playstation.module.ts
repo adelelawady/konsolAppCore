@@ -25,6 +25,7 @@ import { SessionListComponent } from './components/session/session-list.componen
 import { SessionInvoiceViewComponent } from './components/session/session-invoice-view.component';
 import { ConfirmationModalComponent } from 'app/shared/components/confirmation-modal/confirmation-modal.component';
 import { PlaystationContainerStateService } from './services/playstation-container.service';
+import { SessionHistoryControlComponent } from './session-history-control/session-history-control.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { PlaystationContainerStateService } from './services/playstation-contain
     CheckoutComponent,
     SessionListComponent,
     SessionInvoiceViewComponent,
-    ConfirmationModalComponent
+    ConfirmationModalComponent,
+    SessionHistoryControlComponent
   ],
   imports: [
     CommonModule,
@@ -53,7 +55,9 @@ import { PlaystationContainerStateService } from './services/playstation-contain
     LayoutsModule,
     NgbPaginationModule,
     ReactiveFormsModule,
-    ProductsModule,
+    ProductsModule
+  
+    
   ],
   exports: [
     DeviceListComponent,

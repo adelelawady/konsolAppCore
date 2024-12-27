@@ -14,6 +14,7 @@ import { InvoiceDetailsComponent } from './invoices/invoice-details/invoice-deta
 import { PlaystationContainerResourceService } from 'app/core/konsolApi';
 import { of } from 'rxjs';
 import { PlaystationContainerResolver } from './playstation/resolvers/playstation-container.resolver';
+import { SessionHistoryControlComponent } from './playstation/session-history-control/session-history-control.component';
 
 const routes: Routes = [
   {
@@ -111,6 +112,11 @@ const routes: Routes = [
     component: MoneyComponent,
     canActivate: [UserRouteAccessService],
     data: { breadcrumb: 'Money Transactions' },
+  },
+  {
+    path: 'playstation/session-history',
+    component: SessionHistoryControlComponent,
+    data: { pageTitle: 'playstation.sessionHistory.title' }
   },
   {
     path: '',

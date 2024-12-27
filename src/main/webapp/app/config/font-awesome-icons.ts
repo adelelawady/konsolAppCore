@@ -50,6 +50,7 @@ import {
   faWallet,
   faWrench,
   faClock,
+  faHistory,
   // jhipster-needle-add-icon-import
 } from '@fortawesome/free-solid-svg-icons';
 
@@ -105,5 +106,6 @@ export const fontAwesomeIcons = [
   faWallet,
   faWrench,
   faClock,
+  faHistory,
   // jhipster-needle-add-icon-import
 ];

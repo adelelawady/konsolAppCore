@@ -67,7 +67,8 @@
         "devices": "Devices",
         "deviceTypes": "Device Types",
         "products": "Products",
-        "sessions": "Sessions"
+        "sessions": "Sessions",
+        "sessionHistory": "Session History"
       }
     },
     "form": {
