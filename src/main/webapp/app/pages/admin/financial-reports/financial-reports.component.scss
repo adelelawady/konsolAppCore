@@ -182,9 +182,10 @@
       content: '';
       position: absolute;
       top: 0;
-      left: 0;
+      left: 0 !important;
       width: 4px;
       height: 100%;
+
       background-color: #3b82f6;
       opacity: 0;
       transition: opacity 0.2s;
@@ -196,6 +197,7 @@
 
       &::before {
         opacity: 1;
+        left: 0;
       }
     }
 
@@ -322,7 +324,7 @@
 
   .metric-card {
     &::before {
-      left: auto;
+      left: 0;
       right: 0;
     }
 

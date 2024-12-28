@@ -1,6 +1,7 @@
 package com.konsol.core.web.rest.api;
 
 import com.konsol.core.service.FinancialDashboardService;
+import com.konsol.core.service.PlaystationFinancialDashboardService;
 import com.konsol.core.service.api.dto.FinancialDashboardDTO;
 import com.konsol.core.service.api.dto.FinancialSearchDTO;
 import com.konsol.core.service.mapper.sup.BankBalanceMapper;
@@ -26,8 +27,15 @@ public class FinanicalReportResource implements FinancialApiDelegate {
 
     private final FinancialDashboardService financialDashboardService;
 
-    public FinanicalReportResource(BankBalanceMapper bankBalanceMapper, FinancialDashboardService financialDashboardService) {
+    private final PlaystationFinancialDashboardService playstationFinancialDashboardService;
+
+    public FinanicalReportResource(
+        BankBalanceMapper bankBalanceMapper,
+        FinancialDashboardService financialDashboardService,
+        PlaystationFinancialDashboardService playstationFinancialDashboardService
+    ) {
         this.financialDashboardService = financialDashboardService;
+        this.playstationFinancialDashboardService = playstationFinancialDashboardService;
     }
 
     @Override
@@ -46,7 +54,7 @@ public class FinanicalReportResource implements FinancialApiDelegate {
     @Override
     public ResponseEntity<FinancialDashboardDTO> getPlaystationFinancialDashboard(FinancialSearchDTO financialSearchDTO) {
         return ResponseEntity.ok(
-            financialDashboardService.getDashboardData(
+            playstationFinancialDashboardService.getDashboardData(
                 financialSearchDTO.getStartDate(),
                 financialSearchDTO.getEndDate(),
                 financialSearchDTO.getStoreId(),

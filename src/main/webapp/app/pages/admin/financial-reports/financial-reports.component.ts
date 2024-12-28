@@ -938,7 +938,7 @@ export class PlayStationFinancialReportsComponent implements OnInit, AfterViewIn
       searchDTO.storeId = this.selectedStore.id;
     }
 
-    this.financialReportsService.getFinancialDashboard(searchDTO).subscribe({
+    this.financialReportsService.getPlaystationFinancialDashboard(searchDTO).subscribe({
       next: (data: FinancialDashboardDTO | undefined) => {
         if (data) {
           this.dashboardData = data;
