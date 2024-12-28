@@ -1,147 +1,158 @@
-<div class="session-history">
-  <div class="session-history__header">
-    <h2>
-      <fa-icon [icon]="faClock" class="me-2"></fa-icon>
-      {{ 'playstation.sessionHistory.title' | translate }}
-    </h2>
-    <button class="btn btn-primary" (click)="loadSessions()" [disabled]="isLoading">
-      <fa-icon [icon]="faSync" [spin]="isLoading"></fa-icon>
-      <span class="ms-1">{{ 'playstation.sessionHistory.refresh' | translate }}</span>
-    </button>
-  </div>
-
-  <div class="session-history__content">
-    <div *ngIf="isLoading" class="loading-spinner">
-      <div class="spinner-border text-primary"></div>
-      <span>{{ 'playstation.sessionHistory.loading' | translate }}</span>
-    </div>
-
-    <div *ngIf="!isLoading && sessions.length === 0" class="no-sessions">
-      <fa-icon [icon]="faClock" class="me-2"></fa-icon>
-      <span>{{ 'playstation.sessionHistory.noSessions' | translate }}</span>
-    </div>
-
-    <div *ngIf="!isLoading && sessions.length > 0" class="table-responsive">
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th (click)="onSort('type.name')" style="cursor: pointer">
-              <fa-icon [icon]="faGamepad" class="me-2"></fa-icon>
-              {{ 'playstation.sessionHistory.table.type' | translate }}
-              <fa-icon 
-                *ngIf="sortField === 'type.name'"
-                [icon]="sortOrder === 'asc' ? faSortUp : faSortDown"
-                class="ms-1">
-              </fa-icon>
-            </th>
-            <th (click)="onSort('startTime')" style="cursor: pointer">
-              <fa-icon [icon]="faCalendarAlt" class="me-2"></fa-icon>
-              {{ 'playstation.sessionHistory.table.startTime' | translate }}
-              <fa-icon 
-                *ngIf="sortField === 'startTime'"
-                [icon]="sortOrder === 'asc' ? faSortUp : faSortDown"
-                class="ms-1">
-              </fa-icon>
-            </th>
-            <th>
-              <fa-icon [icon]="faCalendarAlt" class="me-2"></fa-icon>
-              {{ 'playstation.sessionHistory.table.endTime' | translate }}
-            </th>
-            <th>
-              <fa-icon [icon]="faClock" class="me-2"></fa-icon>
-              {{ 'playstation.sessionHistory.table.duration' | translate }}
-            </th>
-            <th>
-              <fa-icon [icon]="faFileInvoiceDollar" class="me-2"></fa-icon>
-              {{ 'playstation.sessionHistory.table.invoiceNumber' | translate }}
-            </th>
-            <th class="text-end">
-              <fa-icon [icon]="faMoneyBillWave" class="me-2"></fa-icon>
-              {{ 'playstation.sessionHistory.table.netPrice' | translate }}
-            </th>
-            <th class="text-end">
-              <fa-icon [icon]="faMoneyBillWave" class="me-2"></fa-icon>
-              {{ 'playstation.sessionHistory.table.userNetPrice' | translate }}
-            </th>
-            <th class="text-end">
-              <fa-icon [icon]="faPercent" class="me-2"></fa-icon>
-              {{ 'playstation.sessionHistory.table.discount' | translate }}
-            </th>
-            <th class="text-end">
-              <fa-icon [icon]="faPlus" class="me-2"></fa-icon>
-              {{ 'playstation.sessionHistory.table.additions' | translate }}
-            </th>
-            <th>{{ 'playstation.sessionHistory.table.actions' | translate }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let session of sessions; trackBy: trackById">
-            <td>
-              <span class="badge bg-info text-white">{{ session.type?.name }}</span>
-            </td>
-            <td>{{ session.startTime | date:'medium' }}</td>
-            <td>{{ session.endTime | date:'medium' }}</td>
-            <td>
-              <span class="badge bg-secondary text-white">{{ getDuration(session) }}</span>
-            </td>
-            <td>
-              <span class="badge bg-primary text-white">#{{ session.invoice?.pk }}</span>
-            </td>
-            <td class="text-end fw-bold">{{ session.invoice?.netPrice | currencyK }}</td>
-            <td class="text-end">{{ session.invoice?.userNetPrice | currencyK }}</td>
-            <td class="text-end text-danger fw-bold">
-              <span *ngIf="session.invoice?.discount">-{{ session.invoice?.discount | currencyK }}</span>
-              <span *ngIf="!session.invoice?.discount">-</span>
-            </td>
-            <td class="text-end text-success fw-bold">
-              <span *ngIf="session.invoice?.additions">+{{ session.invoice?.additions | currencyK }}</span>
-              <span *ngIf="!session.invoice?.additions">-</span>
-            </td>
-            <td>
-              <div class="btn-group">
-                <button class="btn btn-sm btn-info" (click)="viewSession(session)" 
-                        title="{{ 'playstation.sessionHistory.actions.view' | translate }}">
-                  <fa-icon [icon]="faEye"></fa-icon>
-                </button>
-                <button class="btn btn-sm btn-danger" (click)="deleteSession(session)" 
-                        title="{{ 'playstation.sessionHistory.actions.delete' | translate }}">
-                  <fa-icon [icon]="faTrash"></fa-icon>
-                </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div class="d-flex justify-content-between align-items-center mt-3">
-        <div class="d-flex align-items-center">
-          <label class="me-2">{{ 'playstation.sessionHistory.pagination.pageSize' | translate }}:</label>
-          <select class="form-select form-select-sm" style="width: auto" 
-                  [(ngModel)]="pageSize" 
-                  (ngModelChange)="onPageSizeChange($event)">
-            <option [ngValue]="10">10</option>
-            <option [ngValue]="20">20</option>
-            <option [ngValue]="50">50</option>
-          </select>
-        </div>
-
-        <div class="pagination-info">
-          {{ 'playstation.sessionHistory.pagination.showing' | translate }}
-          {{ ((page - 1) * pageSize) + 1 }} - {{ Math.min(page * pageSize, totalItems) }}
-          {{ 'playstation.sessionHistory.pagination.of' | translate }} {{ totalItems }}
-        </div>
-
-        <ngb-pagination
-          [collectionSize]="totalItems"
-          [(page)]="page"
-          [pageSize]="pageSize"
-          [maxSize]="5"
-          [rotate]="true"
-          [boundaryLinks]="true"
-          (pageChange)="onPageChange($event)"
-          class="mb-0">
-        </ngb-pagination>
+<div class="container-xl">
+  <div class="page-header d-print-none mb-4">
+    <div class="row align-items-center">
+      <div class="col">
+        <h2 class="page-title">
+          <fa-icon [icon]="faClock" class="me-2 text-muted"></fa-icon>
+          {{ 'playstation.sessionHistory.title' | translate }}
+        </h2>
+      </div>
+      <div class="col-auto ms-auto">
+        <button class="btn btn-primary d-none d-sm-inline-block" (click)="loadSessions()" [disabled]="isLoading">
+          <fa-icon [icon]="faSync" [spin]="isLoading" class="me-2"></fa-icon>
+          {{ 'playstation.sessionHistory.refresh' | translate }}
+        </button>
       </div>
     </div>
   </div>
-</div> 
+
+  <div class="card">
+    <div class="card-body">
+      <div *ngIf="isLoading" class="text-center py-4">
+        <div class="spinner-border text-primary"></div>
+        <div class="mt-2 text-muted">{{ 'playstation.sessionHistory.loading' | translate }}</div>
+      </div>
+
+      <div *ngIf="!isLoading && sessions.length === 0" class="empty">
+        <div class="empty-icon">
+          <fa-icon [icon]="faClock" class="text-muted" [styles]="{ 'font-size': '3rem' }"></fa-icon>
+        </div>
+        <p class="empty-title">{{ 'playstation.sessionHistory.noSessions' | translate }}</p>
+      </div>
+
+      <div *ngIf="!isLoading && sessions.length > 0">
+        <div class="table-responsive">
+          <table class="table table-vcenter card-table">
+            <thead>
+              <tr>
+                <th (click)="onSort('type.name')" class="sortable">
+                  <div class="d-flex align-items-center">
+                    <fa-icon [icon]="faGamepad" class="me-2 text-muted"></fa-icon>
+                    {{ 'playstation.sessionHistory.table.type' | translate }}
+                    <fa-icon *ngIf="sortField === 'type.name'" [icon]="sortOrder === 'asc' ? faSortUp : faSortDown" class="ms-1"> </fa-icon>
+                  </div>
+                </th>
+                <th (click)="onSort('startTime')" class="sortable">
+                  <div class="d-flex align-items-center">
+                    <fa-icon [icon]="faCalendarAlt" class="me-2 text-muted"></fa-icon>
+                    {{ 'playstation.sessionHistory.table.startTime' | translate }}
+                    <fa-icon *ngIf="sortField === 'startTime'" [icon]="sortOrder === 'asc' ? faSortUp : faSortDown" class="ms-1"> </fa-icon>
+                  </div>
+                </th>
+                <th>
+                  <fa-icon [icon]="faCalendarAlt" class="me-2"></fa-icon>
+                  {{ 'playstation.sessionHistory.table.endTime' | translate }}
+                </th>
+                <th>
+                  <fa-icon [icon]="faClock" class="me-2"></fa-icon>
+                  {{ 'playstation.sessionHistory.table.duration' | translate }}
+                </th>
+                <th>
+                  <fa-icon [icon]="faFileInvoiceDollar" class="me-2"></fa-icon>
+                  {{ 'playstation.sessionHistory.table.invoiceNumber' | translate }}
+                </th>
+                <th class="text-end">
+                  <fa-icon [icon]="faMoneyBillWave" class="me-2"></fa-icon>
+                  {{ 'playstation.sessionHistory.table.netPrice' | translate }}
+                </th>
+                <th class="text-end">
+                  <fa-icon [icon]="faMoneyBillWave" class="me-2"></fa-icon>
+                  {{ 'playstation.sessionHistory.table.userNetPrice' | translate }}
+                </th>
+                <th class="text-end">
+                  <fa-icon [icon]="faPercent" class="me-2"></fa-icon>
+                  {{ 'playstation.sessionHistory.table.discount' | translate }}
+                </th>
+                <th class="text-end">
+                  <fa-icon [icon]="faPlus" class="me-2"></fa-icon>
+                  {{ 'playstation.sessionHistory.table.additions' | translate }}
+                </th>
+                <th>{{ 'playstation.sessionHistory.table.actions' | translate }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let session of sessions; trackBy: trackById">
+                <td>
+                  <span class="status status-blue">{{ session.type?.name }}</span>
+                </td>
+                <td>{{ session.startTime | date: 'medium' }}</td>
+                <td>{{ session.endTime | date: 'medium' }}</td>
+                <td>
+                  <span class="status status-gray">{{ getDuration(session) }}</span>
+                </td>
+                <td>
+                  <span class="status status-primary">#{{ session.invoice?.pk }}</span>
+                </td>
+                <td class="text-end font-weight-bold">{{ session.invoice?.netPrice | currencyK }}</td>
+                <td class="text-end">{{ session.invoice?.userNetPrice | currencyK }}</td>
+                <td class="text-end text-danger font-weight-bold">
+                  <span *ngIf="session.invoice?.discount">-{{ session.invoice?.discount | currencyK }}</span>
+                  <span *ngIf="!session.invoice?.discount">-</span>
+                </td>
+                <td class="text-end text-success font-weight-bold">
+                  <span *ngIf="session.invoice?.additions">+{{ session.invoice?.additions | currencyK }}</span>
+                  <span *ngIf="!session.invoice?.additions">-</span>
+                </td>
+                <td>
+                  <div class="btn-list">
+                    <button
+                      class="btn btn-icon btn-ghost-info"
+                      (click)="viewSession(session)"
+                      title="{{ 'playstation.sessionHistory.actions.view' | translate }}"
+                    >
+                      <fa-icon [icon]="faEye"></fa-icon>
+                    </button>
+                    <button
+                      class="btn btn-icon btn-ghost-danger"
+                      (click)="deleteSession(session)"
+                      title="{{ 'playstation.sessionHistory.actions.delete' | translate }}"
+                    >
+                      <fa-icon [icon]="faTrash"></fa-icon>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card-footer d-flex align-items-center">
+          <div class="d-flex align-items-center me-auto">
+            <select class="form-select form-select-sm me-2" [(ngModel)]="pageSize" (ngModelChange)="onPageSizeChange($event)">
+              <option [ngValue]="10">10</option>
+              <option [ngValue]="20">20</option>
+              <option [ngValue]="50">50</option>
+            </select>
+            <span class="text-muted">
+              {{ 'playstation.sessionHistory.pagination.showing' | translate }}
+              {{ (page - 1) * pageSize + 1 }} - {{ Math.min(page * pageSize, totalItems) }}
+              {{ 'playstation.sessionHistory.pagination.of' | translate }} {{ totalItems }}
+            </span>
+          </div>
+
+          <ngb-pagination
+            [collectionSize]="totalItems"
+            [(page)]="page"
+            [pageSize]="pageSize"
+            [maxSize]="5"
+            [rotate]="true"
+            [boundaryLinks]="true"
+            (pageChange)="onPageChange($event)"
+            class="pagination mb-0"
+          >
+          </ngb-pagination>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
