@@ -32,7 +32,7 @@ export class CheckoutComponent implements OnInit {
       discount: [0, [Validators.min(0)]],
       additions: [0, [Validators.min(0)]],
       notes: [''],
-      userNetPrice: [this.selectedDevice?.session?.invoice?.netPrice ?? 0, [Validators.min(0)]],
+      userNetPrice: [0, [Validators.min(0)]],
     });
   }
 
@@ -40,7 +40,13 @@ export class CheckoutComponent implements OnInit {
     this.playstationService.selectedDevice$.subscribe(device => {
       this.selectedDevice = device;
       if (device?.session?.invoice) {
-        const userNetPrice = device.session.invoice.userNetPrice ?? this.getFinalTotal();
+        let userNetPrice = 0;
+        if (device.session.invoice.userNetPrice === 0) {
+          userNetPrice = this.getFinalTotal();
+        } else {
+          userNetPrice = device.session.invoice.userNetPrice ?? 0;
+        }
+
         this.lastUserNetPrice = userNetPrice;
 
         this.checkoutForm.patchValue({
@@ -81,6 +87,12 @@ export class CheckoutComponent implements OnInit {
       });
   }
 
+  updateUserNetPriceValue(): void {
+    const userNetPriceControl = this.checkoutForm.get('userNetPrice');
+    if (userNetPriceControl) {
+      userNetPriceControl.setValue(this.getFinalTotal());
+    }
+  }
   getSessionTimeCost(): number {
     if (!this.selectedDevice?.session?.type?.price || !this.selectedDevice.session?.startTime) {
       return 0;
@@ -95,13 +107,27 @@ export class CheckoutComponent implements OnInit {
   }
 
   getOrdersTotal(): number {
-    return this.selectedDevice?.session?.invoice?.netPrice || 0;
+    return this.selectedDevice?.session?.invoice?.totalPrice ?? 0;
+  }
+  getNetPriceTotal(): number {
+    return this.selectedDevice?.session?.invoice?.netPrice ?? 0;
   }
 
   getTotalBeforeDiscount(): number {
     const sessionCost = this.getSessionTimeCost();
     const ordersTotal = this.getOrdersTotal();
-    const previousSessionsTotal = this.selectedDevice?.session?.deviceSessionsNetPrice || 0;
+    const previousSessionsTotal = this.selectedDevice?.session?.deviceSessionsNetPrice ?? 0;
+
+    if (!this.selectedDevice?.timeManagement) {
+      return ordersTotal;
+    }
+    return sessionCost + ordersTotal + previousSessionsTotal;
+  }
+
+  getTotalAfterAdditionsAndDiscount(): number {
+    const sessionCost = this.getSessionTimeCost();
+    const ordersTotal = this.getNetPriceTotal();
+    const previousSessionsTotal = this.selectedDevice?.session?.deviceSessionsNetPrice ?? 0;
 
     if (!this.selectedDevice?.timeManagement) {
       return ordersTotal;
@@ -110,7 +136,7 @@ export class CheckoutComponent implements OnInit {
   }
 
   getFinalTotal(): number {
-    const total = this.getTotalBeforeDiscount();
+    const total = this.getTotalAfterAdditionsAndDiscount();
     // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
     return total;
   }
@@ -162,6 +188,20 @@ export class CheckoutComponent implements OnInit {
         console.error('Error reloading device:', error);
       },
     });
+  }
+  endSessionWithFinalPrice(): void {
+    this.updateUserNetPriceValue();
+    this.updateInvoice();
+
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    const checkAndEndSession = () => {
+      if (!this.isUpdating && !this.isProcessing) {
+        this.endSession();
+      } else {
+        setTimeout(checkAndEndSession, 100); // Check again after 100ms
+      }
+    };
+    checkAndEndSession();
   }
 
   endSession(): void {

@@ -313,6 +313,8 @@
         "updating": "جاري التحديث..."
       },
       "actions": {
+        "endSessionFinalPriceConfirm": "انهاء بالسعر النهائي",
+        "confirm": "تأكيد",
         "endSession": "إنهاء الجلسة",
         "cancel": "إلغاء"
       }

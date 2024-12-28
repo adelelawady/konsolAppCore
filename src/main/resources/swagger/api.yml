@@ -4506,6 +4506,10 @@ components:
         monthlyRevenue:
           type: number
           format: decimal
+        netUserSales:
+          type: number
+          x-stoplight:
+            id: fzj7a8mesd2iv
     FinancialChartDTO:
       type: object
       description: 'Data Transfer Object for financial dashboard charts and visualizations. Supports various chart types including line, bar, pie, radar, and area charts.'

@@ -74,7 +74,7 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
 
         // Get all metrics and charts
         dashboard.setSalesMetrics(getSalesMetrics(startDate.toLocalDateTime(), endDate.toLocalDateTime())); //*
-        // dashboard.setSalesCharts(getSalesCharts(startDate.toLocalDateTime(), endDate.toLocalDateTime(), storeId)); //*
+        dashboard.setSalesCharts(getSalesCharts(startDate.toLocalDateTime(), endDate.toLocalDateTime())); //*
 
         // Get invoice items analysis
         //  dashboard.setInvoiceItemAnalysis(getInvoiceItemAnalysis(startDate.toLocalDateTime(), endDate.toLocalDateTime(), storeId));
@@ -111,6 +111,7 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
         metrics.setTotalCost(calculateTotal(playStationSessionsInvoices, Invoice::getTotalCost));
         metrics.setNetCost(calculateTotal(playStationSessionsInvoices, Invoice::getNetCost));
         metrics.setNetProfit(calculateTotal(playStationSessionsInvoices, Invoice::getNetResult));
+        metrics.setNetUserSales(calculateTotal(playStationSessionsInvoices, Invoice::getUserNetPrice));
 
         // Calculate daily and monthly revenue totals
         Map<String, BigDecimal> dailyRevenue = calculateDailyRevenue(playStationSessionsInvoices);
@@ -124,10 +125,12 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
     }
 
     @Override
-    public List<FinancialChartDTO> getSalesCharts(LocalDateTime startDate, LocalDateTime endDate, String storeId) {
+    public List<FinancialChartDTO> getSalesCharts(LocalDateTime startDate, LocalDateTime endDate) {
         List<FinancialChartDTO> charts = new ArrayList<>();
+
         charts.add(getDailySalesTrend(startDate, endDate));
         charts.add(getMonthlySalesTrend(startDate, endDate));
+
         charts.add(getSalesVsCostsComparison(startDate, endDate));
         charts.add(getProfitMarginDistribution(startDate, endDate));
         return charts;
@@ -137,32 +140,43 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
     public FinancialChartDTO getDailySalesTrend(LocalDateTime startDate, LocalDateTime endDate) {
         FinancialChartDTO chart = new FinancialChartDTO();
         chart.setChartType("line");
+
         chart.setTitle("Daily Sales Trend");
 
-        List<Invoice> invoices = invoiceRepository.findByCreatedDateBetween(startDate, endDate);
+        List<Invoice> invoices = playStationSessionRepository
+            .findByStartTimeBetweenAndActiveIsFalse(startDate.toInstant(ZoneOffset.UTC), endDate.toInstant(ZoneOffset.UTC))
+            .stream()
+            .map(PlayStationSession::getInvoice)
+            .collect(Collectors.toList());
         Map<String, BigDecimal> dailyRevenue = new TreeMap<>();
-
+        Map<String, BigDecimal> dailyUserRevenue = new TreeMap<>();
         // Group sales by day
         invoices.forEach(invoice -> {
             String dayKey = LocalDateTime
                 .ofInstant(invoice.getCreatedDate(), ZoneId.systemDefault())
                 .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            dailyRevenue.merge(dayKey, invoice.getTotalPrice(), BigDecimal::add);
+            dailyRevenue.merge(dayKey, invoice.getNetPrice(), BigDecimal::add);
+            dailyUserRevenue.merge(dayKey, invoice.getUserNetPrice(), BigDecimal::add);
         });
 
         SeriesData revenueSeries = new SeriesData();
         revenueSeries.setName("Daily Revenue");
-        revenueSeries.setType("line");
         revenueSeries.setyAxisIndex(0);
         revenueSeries.setData(new ArrayList<>(dailyRevenue.values()));
         revenueSeries.setType("line");
+
+        SeriesData revenueUserSeries = new SeriesData();
+        revenueUserSeries.setName("Daily User Revenue");
+        revenueUserSeries.setyAxisIndex(1);
+        revenueUserSeries.setData(new ArrayList<>(dailyUserRevenue.values()));
+        revenueUserSeries.setType("line");
 
         if (chart.getSeries() == null) {
             chart.setSeries(new ArrayList<>());
         }
         chart.getSeries().clear();
         chart.getSeries().add(revenueSeries);
-
+        chart.getSeries().add(revenueUserSeries);
         chart.setLabels(new ArrayList<>(dailyRevenue.keySet()));
         return chart;
     }
@@ -173,15 +187,22 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
         chart.setChartType("line");
         chart.setTitle("Monthly Sales Trend");
 
-        List<Invoice> invoices = invoiceRepository.findByCreatedDateBetween(startDate, endDate);
+        List<Invoice> invoices = playStationSessionRepository
+            .findByStartTimeBetweenAndActiveIsFalse(startDate.toInstant(ZoneOffset.UTC), endDate.toInstant(ZoneOffset.UTC))
+            .stream()
+            .map(PlayStationSession::getInvoice)
+            .collect(Collectors.toList());
+
         Map<String, BigDecimal> monthlyRevenue = new TreeMap<>();
+        Map<String, BigDecimal> monthlyUserRevenue = new TreeMap<>();
 
         // Group sales by month
         invoices.forEach(invoice -> {
             String monthKey = LocalDateTime
                 .ofInstant(invoice.getCreatedDate(), ZoneId.systemDefault())
                 .format(DateTimeFormatter.ofPattern("yyyy-MM"));
-            monthlyRevenue.merge(monthKey, invoice.getTotalPrice(), BigDecimal::add);
+            monthlyRevenue.merge(monthKey, invoice.getNetPrice(), BigDecimal::add);
+            monthlyUserRevenue.merge(monthKey, invoice.getUserNetPrice(), BigDecimal::add);
         });
 
         SeriesData revenueSeries = new SeriesData();
@@ -189,13 +210,19 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
         revenueSeries.setType("line");
         revenueSeries.setyAxisIndex(0);
         revenueSeries.setData(new ArrayList<>(monthlyRevenue.values()));
-        revenueSeries.setType("line");
+
+        SeriesData revenueUserSeries = new SeriesData();
+        revenueUserSeries.setName("Monthly User Revenue");
+        revenueUserSeries.setType("line");
+        revenueUserSeries.setyAxisIndex(1);
+        revenueUserSeries.setData(new ArrayList<>(monthlyUserRevenue.values()));
 
         if (chart.getSeries() == null) {
             chart.setSeries(new ArrayList<>());
         }
         chart.getSeries().clear();
         chart.getSeries().add(revenueSeries);
+        chart.getSeries().add(revenueUserSeries);
 
         chart.setLabels(new ArrayList<>(monthlyRevenue.keySet()));
         return chart;
@@ -207,7 +234,11 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
         chart.setChartType("bar");
         chart.setTitle("Sales vs Costs Comparison");
 
-        List<Invoice> invoices = invoiceRepository.findByCreatedDateBetween(startDate, endDate);
+        List<Invoice> invoices = playStationSessionRepository
+            .findByStartTimeBetweenAndActiveIsFalse(startDate.toInstant(ZoneOffset.UTC), endDate.toInstant(ZoneOffset.UTC))
+            .stream()
+            .map(PlayStationSession::getInvoice)
+            .collect(Collectors.toList());
         Map<String, SalesVsCosts> monthlyData = new TreeMap<>();
 
         // Group sales and costs by month
@@ -255,7 +286,11 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
 
         // Get all invoices from the last month
 
-        List<Invoice> invoices = invoiceRepository.findByCreatedDateBetween(startDate, endDate);
+        List<Invoice> invoices = playStationSessionRepository
+            .findByStartTimeBetweenAndActiveIsFalse(startDate.toInstant(ZoneOffset.UTC), endDate.toInstant(ZoneOffset.UTC))
+            .stream()
+            .map(PlayStationSession::getInvoice)
+            .collect(Collectors.toList());
 
         // Calculate profit margins and group them into ranges
         Map<String, Integer> marginRanges = new TreeMap<>();

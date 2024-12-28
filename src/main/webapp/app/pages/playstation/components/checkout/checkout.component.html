@@ -101,7 +101,8 @@
               [class.disabled]="isUpdating"
             />
           </div>
-
+        </div>
+        <div class="col-md-6">
           <div class="form-group">
             <label>{{ 'playstation.checkout.form.notes.label' | translate }}</label>
             <textarea
@@ -114,16 +115,24 @@
           </div>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-12">
           <div class="form-group">
             <label>{{ 'playstation.checkout.form.userNetPrice.label' | translate }}</label>
-            <input
-              type="number"
-              class="form-control"
-              formControlName="userNetPrice"
-              [placeholder]="'playstation.checkout.form.userNetPrice.placeholder' | translate"
-              [class.disabled]="isUpdating"
-            />
+            <div style="display: flex; align-items: center">
+              <input
+                style="font-size: x-large"
+                type="number"
+                class="form-control"
+                formControlName="userNetPrice"
+                [placeholder]="'playstation.checkout.form.userNetPrice.placeholder' | translate"
+                [class.disabled]="isUpdating"
+              />
+              <button class="btn btn-outline-secondary mx-1" (click)="updateUserNetPriceValue()">
+                <fa-icon icon="check"></fa-icon>
+                <span>{{ 'playstation.checkout.actions.confirm' | translate }}</span>
+              </button>
+            </div>
+
             <small class="text-muted" *ngIf="checkoutForm.get('userNetPrice')?.value !== getFinalTotal()">
               {{ 'playstation.checkout.form.userNetPrice.customized' | translate }}
             </small>
@@ -142,6 +151,11 @@
         <fa-icon icon="power-off"></fa-icon>
         <span class="spinner-border spinner-border-sm ms-1" *ngIf="isUpdating"></span>
         <span>{{ 'playstation.checkout.actions.endSession' | translate }}</span>
+      </button>
+      <button class="btn btn-danger btn-lg" (click)="endSessionWithFinalPrice()" [disabled]="isProcessing || isUpdating">
+        <fa-icon icon="power-off"></fa-icon>
+        <span class="spinner-border spinner-border-sm ms-1" *ngIf="isUpdating"></span>
+        <span>{{ 'playstation.checkout.actions.endSessionFinalPriceConfirm' | translate }}</span>
       </button>
     </div>
   </div>

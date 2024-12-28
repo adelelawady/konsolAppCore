@@ -24,6 +24,7 @@
         "netProfit": "صافي الربح",
         "totalCost": "التكلفة الإجمالية",
         "netCost": "صافي التكلفة",
+        "netUserSales": "صافي مبيعات المستخدم",
         "trend": {
           "up": "ارتفاع",
           "down": "انخفاض"
@@ -89,7 +90,10 @@
         "costs": "التكاليف",
         "grossProfit": "الربح الإجمالي",
         "netProfit": "صافي الربح"
-      }
+      },
+      "monthlySales": "اتجاه المبيعات الشهرية",
+      "monthlyUserSales": "مبيعات المستخدم الشهرية",
+      "dailyUserSales": "مبيعات المستخدم اليومية"
     },
     "cashFlow": {
       "title": "ملخص التدفق النقدي",

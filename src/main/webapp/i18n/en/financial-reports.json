@@ -24,6 +24,7 @@
         "netProfit": "Net Profit",
         "totalCost": "Total Cost",
         "netCost": "Net Cost",
+        "netUserSales": "Net User Sales",
         "trend": {
           "up": "Up",
           "down": "Down"
@@ -92,7 +93,10 @@
         "costs": "Costs",
         "grossProfit": "Gross Profit",
         "netProfit": "Net Profit"
-      }
+      },
+      "monthlySales": "Monthly Sales Trend",
+      "monthlyUserSales": "Monthly User Sales",
+      "dailyUserSales": "Daily User Sales"
     },
     "cashFlow": {
       "title": "Cash Flow Summary",

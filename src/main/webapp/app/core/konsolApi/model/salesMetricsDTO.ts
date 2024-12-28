@@ -18,4 +18,5 @@ export interface SalesMetricsDTO {
   netProfit?: number;
   dailyRevenue?: number;
   monthlyRevenue?: number;
+  netUserSales?: number;
 }

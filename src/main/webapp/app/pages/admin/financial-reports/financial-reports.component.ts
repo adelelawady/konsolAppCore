@@ -16,6 +16,7 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class PlayStationFinancialReportsComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('dailySalesChart', { static: true }) dailySalesChart!: ElementRef;
+  @ViewChild('monthelySalesChart', { static: true }) monthelySalesChart!: ElementRef;
   @ViewChild('salesVsCostsChart', { static: true }) salesVsCostsChart!: ElementRef;
   @ViewChild('profitMarginChart', { static: true }) profitMarginChart!: ElementRef;
   @ViewChild('topItemsChart', { static: true }) topItemsChart!: ElementRef;
@@ -38,6 +39,7 @@ export class PlayStationFinancialReportsComponent implements OnInit, AfterViewIn
   topSellingItems: any[] = [];
   cashFlowMetrics: any;
   dailySalesTrendOption: EChartsOption = {};
+  MonthelySalesTrendOption: EChartsOption = {};
   salesVsCostsOption: EChartsOption = {};
   profitMarginDistributionOption: EChartsOption = {};
   topItemsByRevenueOption: EChartsOption = {};
@@ -62,6 +64,7 @@ export class PlayStationFinancialReportsComponent implements OnInit, AfterViewIn
 
   private charts: { [key: string]: echarts.ECharts | undefined } = {
     dailySales: undefined,
+    monthlySales: undefined,
     salesVsCosts: undefined,
     profitMargin: undefined,
     topItems: undefined,
@@ -164,6 +167,9 @@ export class PlayStationFinancialReportsComponent implements OnInit, AfterViewIn
     if (this.dailySalesChart) {
       this.charts.dailySales = echarts.init(this.dailySalesChart.nativeElement);
     }
+    if (this.monthelySalesChart) {
+      this.charts.monthlySales = echarts.init(this.monthelySalesChart.nativeElement);
+    }
     if (this.salesVsCostsChart) {
       this.charts.salesVsCosts = echarts.init(this.salesVsCostsChart.nativeElement);
     }
@@ -184,6 +190,8 @@ export class PlayStationFinancialReportsComponent implements OnInit, AfterViewIn
   private initializeChartOptions(): void {
     // Set default options for all charts
     this.dailySalesTrendOption = this.getDefaultChartOptions('financialReports.charts.dailySales');
+    this.MonthelySalesTrendOption = this.getDefaultChartOptions('financialReports.charts.dailySales');
+
     this.salesVsCostsOption = this.getDefaultChartOptions('financialReports.charts.salesVsCosts');
     this.profitMarginDistributionOption = this.getDefaultChartOptions('financialReports.charts.profitMargin');
     this.topItemsByRevenueOption = this.getDefaultChartOptions('financialReports.charts.topItemsByRevenue');
@@ -220,6 +228,7 @@ export class PlayStationFinancialReportsComponent implements OnInit, AfterViewIn
 
       // Update charts
       this.updateDailySalesTrend();
+      this.updateMonthelySalesTrend();
       this.updateSalesVsCosts();
       this.updateProfitMarginDistribution();
       this.updateTopItemsByRevenue();
@@ -230,6 +239,9 @@ export class PlayStationFinancialReportsComponent implements OnInit, AfterViewIn
       // Update chart instances with new options
       if (this.charts.dailySales) {
         this.charts.dailySales.setOption(this.dailySalesTrendOption, true);
+      }
+      if (this.charts.monthlySales) {
+        this.charts.monthlySales.setOption(this.MonthelySalesTrendOption, true);
       }
       if (this.charts.salesVsCosts) {
         this.charts.salesVsCosts.setOption(this.salesVsCostsOption, true);
@@ -277,6 +289,7 @@ export class PlayStationFinancialReportsComponent implements OnInit, AfterViewIn
         netProfit: this.dashboardData.salesMetrics?.netProfit || 0,
         dailyRevenue: this.dashboardData.salesMetrics?.dailyRevenue || 0,
         monthlyRevenue: this.dashboardData.salesMetrics?.monthlyRevenue || 0,
+        netUserSales: this.dashboardData.salesMetrics?.netUserSales || 0,
       };
 
       // Update performance indicators
@@ -331,17 +344,30 @@ export class PlayStationFinancialReportsComponent implements OnInit, AfterViewIn
     }
   }
 
-  private updateDailySalesTrend(): void {
-    const salesData: any = this.dashboardData?.salesCharts?.find((chart: { chartType: string }) => chart.chartType === 'line');
+  private updateMonthelySalesTrend(): void {
+    const salesData: any = this.dashboardData?.salesCharts?.find((chart: any) => chart.title.includes('Monthly Sales Trend'));
     if (salesData) {
-      this.dailySalesTrendOption = {
-        ...this.getDefaultChartOptions('financialReports.charts.dailySales'),
+      this.MonthelySalesTrendOption = {
+        ...this.getDefaultChartOptions('financialReports.charts.monthlySales'),
         tooltip: {
           trigger: 'axis',
-          formatter: (params: any) => {
-            const data = Array.isArray(params) ? params[0] : params;
-            return `${data.name}<br/>${data.seriesName}: $${data.value}`;
+          formatter: (params: any | any[]) => {
+            if (Array.isArray(params)) {
+              let result = `${params[0].name}<br/>`;
+              params.forEach(param => {
+                result += `${param.seriesName}: ${param.value.toLocaleString('tr-TR', {
+                  style: 'currency',
+                  currency: 'USD',
+                })}<br/>`;
+              });
+              return result;
+            }
+            return '';
           },
+        },
+        legend: {
+          data: salesData.series.map((s: any) => s.name),
+          top: '30px',
         },
         xAxis: {
           type: 'category',
@@ -354,21 +380,113 @@ export class PlayStationFinancialReportsComponent implements OnInit, AfterViewIn
             },
           },
         },
-        yAxis: {
-          type: 'value',
-          name: 'Revenue ($)',
-          axisLabel: {
-            formatter: '${value}',
+        yAxis: [
+          {
+            type: 'value',
+            name: this.translateService.instant('financialReports.charts.monthlySales'),
+            position: 'left',
+            axisLabel: {
+              formatter: (value: number) => value.toLocaleString('tr-TR', { style: 'currency', currency: 'USD' }),
+            },
+          },
+          {
+            type: 'value',
+            name: this.translateService.instant('financialReports.charts.monthlyUserSales'),
+            position: 'right',
+            axisLabel: {
+              formatter: (value: number) => value.toLocaleString('tr-TR', { style: 'currency', currency: 'USD' }),
+            },
+          },
+        ],
+        series: salesData.series.map((series: any, index: number) => ({
+          name: series.name,
+          type: series.type || 'line',
+          data: series.data,
+          yAxisIndex: series.yAxisIndex || 0,
+          smooth: true,
+          areaStyle: {
+            opacity: 0.1,
+          },
+          lineStyle: {
+            width: 2,
+          },
+          itemStyle: {
+            color: index === 0 ? '#2f4554' : '#c23531',
+          },
+        })),
+      };
+    }
+  }
+  private updateDailySalesTrend(): void {
+    const salesData: any = this.dashboardData?.salesCharts?.find((chart: any) => chart.title.includes('Daily Sales Trend'));
+    if (salesData) {
+      this.dailySalesTrendOption = {
+        ...this.getDefaultChartOptions('financialReports.charts.dailySales'),
+        tooltip: {
+          trigger: 'axis',
+          formatter: (params: any | any[]) => {
+            if (Array.isArray(params)) {
+              let result = `${params[0].name}<br/>`;
+              params.forEach(param => {
+                result += `${param.seriesName}: ${param.value.toLocaleString('tr-TR', {
+                  style: 'currency',
+                  currency: 'USD',
+                })}<br/>`;
+              });
+              return result;
+            }
+            return '';
           },
         },
-        series:
-          salesData.series?.map((series: { name: any; type: any; data: any }) => ({
-            name: series.name,
-            type: series.type || 'line',
-            data: series.data,
-            smooth: true,
-            areaStyle: {},
-          })) || [],
+        legend: {
+          data: salesData.series.map((s: any) => s.name),
+          top: '30px',
+        },
+        xAxis: {
+          type: 'category',
+          data: salesData.labels || [],
+          axisLabel: {
+            rotate: 30,
+            formatter: (value: string) => {
+              const date = new Date(value);
+              return `${date.getDate()}/${date.getMonth() + 1}`;
+            },
+          },
+        },
+        yAxis: [
+          {
+            type: 'value',
+            name: this.translateService.instant('financialReports.charts.dailySales'),
+            position: 'left',
+            axisLabel: {
+              formatter: (value: number) => value.toLocaleString('tr-TR', { style: 'currency', currency: 'USD' }),
+            },
+          },
+          {
+            type: 'value',
+            name: this.translateService.instant('financialReports.charts.dailyUserSales'),
+            position: 'right',
+            axisLabel: {
+              formatter: (value: number) => value.toLocaleString('tr-TR', { style: 'currency', currency: 'USD' }),
+            },
+          },
+        ],
+        series: salesData.series.map((series: any, index: number) => ({
+          name: series.name,
+          type: series.type || 'line',
+          data: series.data,
+          yAxisIndex: series.yAxisIndex || 0,
+          smooth: true,
+          areaStyle: {
+            opacity: 0.1,
+          },
+          lineStyle: {
+            width: 2,
+          },
+          itemStyle: {
+            color: index === 0 ? '#2f4554' : '#c23531',
+          },
+        })),
       };
     }
   }

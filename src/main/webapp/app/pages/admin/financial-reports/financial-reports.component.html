@@ -49,16 +49,25 @@
           <div class="metric-card sales-card">
             <div class="metric-content">
               <div class="metric-header">
-                <h4><i class="fas fa-shopping-cart"></i> {{ 'financialReports.metrics.salesRevenue.totalSales' | translate }}</h4>
-                <span class="trend-indicator positive d-none"> <i class="fas fa-arrow-up"></i> 12% </span>
+                <div class="">
+                  <h4><i class="fas fa-shopping-cart"></i> {{ 'financialReports.metrics.salesRevenue.netSales' | translate }}</h4>
+                  <span class="trend-indicator positive d-none"> <i class="fas fa-arrow-up"></i> 12% </span>
+                </div>
+                <span class="metric-value highlight">
+                  {{ salesMetrics?.netSales | currencyK: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
+                </span>
+                <div class="">
+                  <h4><i class="fas fa-shopping-cart"></i> {{ 'financialReports.metrics.salesRevenue.netUserSales' | translate }}</h4>
+                  <span class="trend-indicator positive d-none"> <i class="fas fa-arrow-up"></i> 12% </span>
+                </div>
+                <span class="metric-value highlight">
+                  {{ salesMetrics?.netUserSales | currencyK: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
+                </span>
               </div>
-              <span class="metric-value highlight">
-                {{ salesMetrics?.totalSales | currencyK: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
-              </span>
               <div class="metric-details">
                 <span class="metric-label">
-                  <i class="fas fa-money-bill-alt"></i> {{ 'financialReports.metrics.salesRevenue.netSales' | translate }}:
-                  {{ salesMetrics?.netSales | currencyK: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
+                  <i class="fas fa-money-bill-alt"></i> {{ 'financialReports.metrics.salesRevenue.totalSales' | translate }}:
+                  {{ salesMetrics?.totalSales | currencyK: ('financialReports.currency.symbol' | translate):'symbol-narrow':'1.2-2' }}
                 </span>
                 <span class="metric-label">
                   <i class="fas fa-chart-line"></i> {{ 'financialReports.metrics.salesRevenue.dailyRevenue' | translate }}:
@@ -326,6 +335,9 @@
     <div class="dashboard-charts">
       <div class="chart-container">
         <div #dailySalesChart class="chart" echarts [options]="dailySalesTrendOption" [loading]="loading"></div>
+      </div>
+      <div class="chart-container">
+        <div #monthelySalesChart class="chart" echarts [options]="MonthelySalesTrendOption" [loading]="loading"></div>
       </div>
       <div class="chart-container">
         <div #salesVsCostsChart class="chart" echarts [options]="salesVsCostsOption" [loading]="loading"></div>

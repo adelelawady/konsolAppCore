@@ -305,6 +305,8 @@
         "updating": "Updating..."
       },
       "actions": {
+        "endSessionFinalPriceConfirm": "End Session With Final Price",
+        "confirm": "Confirm",
         "endSession": "End Session",
         "cancel": "Cancel"
       }
