@@ -125,12 +125,19 @@ export class CheckoutComponent implements OnInit {
   }
 
   getTotalAfterAdditionsAndDiscount(): number {
-    const sessionCost = this.getSessionTimeCost();
+    let sessionCost = this.getSessionTimeCost();
     const ordersTotal = this.getNetPriceTotal();
     const previousSessionsTotal = this.selectedDevice?.session?.deviceSessionsNetPrice ?? 0;
 
     if (!this.selectedDevice?.timeManagement) {
       return ordersTotal;
+    }
+    if (
+      ordersTotal === 0 &&
+      this.selectedDevice.session?.invoice?.discount !== undefined &&
+      this.selectedDevice.session.invoice.discount > 0
+    ) {
+      sessionCost = sessionCost - this.selectedDevice.session.invoice.discount;
     }
     return sessionCost + ordersTotal + previousSessionsTotal;
   }
