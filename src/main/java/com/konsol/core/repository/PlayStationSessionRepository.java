@@ -1,6 +1,9 @@
 package com.konsol.core.repository;
 
+import com.konsol.core.domain.Invoice;
 import com.konsol.core.domain.playstation.PlayStationSession;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -30,4 +33,8 @@ public interface PlayStationSessionRepository extends MongoRepository<PlayStatio
      */
 
     Page<PlayStationSession> findAllByContainerId(Pageable page, String containerId);
+
+    List<PlayStationSession> findByEndTimeBetween(Instant startDate, Instant endDate);
+
+    List<PlayStationSession> findByStartTimeBetweenAndActiveIsFalse(Instant startDate, Instant endDate);
 }

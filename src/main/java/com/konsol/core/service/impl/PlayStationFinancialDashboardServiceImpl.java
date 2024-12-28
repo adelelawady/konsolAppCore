@@ -2,6 +2,7 @@ package com.konsol.core.service.impl;
 
 import com.konsol.core.domain.*;
 import com.konsol.core.domain.enumeration.MoneyKind;
+import com.konsol.core.domain.playstation.PlayStationSession;
 import com.konsol.core.repository.*;
 import com.konsol.core.service.BankService;
 import com.konsol.core.service.FinancialDashboardService;
@@ -9,10 +10,7 @@ import com.konsol.core.service.PlaystationFinancialDashboardService;
 import com.konsol.core.service.api.dto.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -32,6 +30,7 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
     private final MoneyRepository moneyRepository;
     private final StoreRepository storeRepository;
     private final BankRepository bankRepository;
+    private final PlayStationSessionRepository playStationSessionRepository;
     private final AccountUserRepository accountUserRepository;
     private final InvoiceItemRepository invoiceItemRepository;
     private final BankService bankService;
@@ -41,6 +40,7 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
         MoneyRepository moneyRepository,
         StoreRepository storeRepository,
         BankRepository bankRepository,
+        PlayStationSessionRepository playStationSessionRepository,
         AccountUserRepository accountUserRepository,
         InvoiceItemRepository invoiceItemRepository,
         BankService bankService
@@ -49,6 +49,7 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
         this.moneyRepository = moneyRepository;
         this.storeRepository = storeRepository;
         this.bankRepository = bankRepository;
+        this.playStationSessionRepository = playStationSessionRepository;
         this.accountUserRepository = accountUserRepository;
         this.invoiceItemRepository = invoiceItemRepository;
         this.bankService = bankService;
@@ -72,46 +73,48 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
         dashboard.setBankId(bankId);
 
         // Get all metrics and charts
-        dashboard.setSalesMetrics(getSalesMetrics(startDate.toLocalDateTime(), endDate.toLocalDateTime(), storeId)); //*
-        dashboard.setSalesCharts(getSalesCharts(startDate.toLocalDateTime(), endDate.toLocalDateTime(), storeId)); //*
+        dashboard.setSalesMetrics(getSalesMetrics(startDate.toLocalDateTime(), endDate.toLocalDateTime())); //*
+        // dashboard.setSalesCharts(getSalesCharts(startDate.toLocalDateTime(), endDate.toLocalDateTime(), storeId)); //*
 
         // Get invoice items analysis
-        dashboard.setInvoiceItemAnalysis(getInvoiceItemAnalysis(startDate.toLocalDateTime(), endDate.toLocalDateTime(), storeId));
-        dashboard.setItemSalesCharts(getItemSalesCharts(startDate.toLocalDateTime(), endDate.toLocalDateTime(), storeId));
+        //  dashboard.setInvoiceItemAnalysis(getInvoiceItemAnalysis(startDate.toLocalDateTime(), endDate.toLocalDateTime(), storeId));
+        // dashboard.setItemSalesCharts(getItemSalesCharts(startDate.toLocalDateTime(), endDate.toLocalDateTime(), storeId));
 
-        dashboard.setCashFlowMetrics(getCashFlowMetrics(startDate.toLocalDateTime(), endDate.toLocalDateTime(), bankId));
-        dashboard.setCashFlowCharts(getCashFlowCharts(startDate.toLocalDateTime(), endDate.toLocalDateTime(), bankId));
+        //dashboard.setCashFlowMetrics(getCashFlowMetrics(startDate.toLocalDateTime(), endDate.toLocalDateTime(), bankId));
+        // dashboard.setCashFlowCharts(getCashFlowCharts(startDate.toLocalDateTime(), endDate.toLocalDateTime(), bankId));
 
-        dashboard.setInvoiceAnalysis(getInvoiceAnalysis(storeId, startDate.toLocalDateTime(), endDate.toLocalDateTime()));
-        dashboard.setInvoiceCharts(getInvoiceCharts(startDate.toLocalDateTime(), endDate.toLocalDateTime()));
+        // dashboard.setInvoiceAnalysis(getInvoiceAnalysis(storeId, startDate.toLocalDateTime(), endDate.toLocalDateTime()));
+        // dashboard.setInvoiceCharts(getInvoiceCharts(startDate.toLocalDateTime(), endDate.toLocalDateTime()));
 
-        dashboard.setPerformanceIndicators(getPerformanceIndicators(startDate.toLocalDateTime(), endDate.toLocalDateTime()));
-        dashboard.setPerformanceCharts(getPerformanceCharts(startDate.toLocalDateTime(), endDate.toLocalDateTime()));
+        // dashboard.setPerformanceIndicators(getPerformanceIndicators(startDate.toLocalDateTime(), endDate.toLocalDateTime()));
+        // dashboard.setPerformanceCharts(getPerformanceCharts(startDate.toLocalDateTime(), endDate.toLocalDateTime()));
 
-        dashboard.setStoreAccountAnalysis(
-            getStoreAccountAnalysis(startDate.toLocalDateTime(), endDate.toLocalDateTime(), storeId, accountId)
-        );
-        dashboard.setAnalysisCharts(getStoreAccountCharts(startDate.toLocalDateTime(), endDate.toLocalDateTime(), storeId, accountId));
+        //   dashboard.setStoreAccountAnalysis(
+        //      getStoreAccountAnalysis(startDate.toLocalDateTime(), endDate.toLocalDateTime(), storeId, accountId)
+        //  );
+        // dashboard.setAnalysisCharts(getStoreAccountCharts(startDate.toLocalDateTime(), endDate.toLocalDateTime(), storeId, accountId));
 
         return dashboard;
     }
 
     @Override
-    public SalesMetricsDTO getSalesMetrics(LocalDateTime startDate, LocalDateTime endDate, String storeId) {
-        SalesMetricsDTO metrics = new SalesMetricsDTO();
-        List<Invoice> invoices = storeId != null
-            ? invoiceRepository.findInvoicesByStoreAndCreatedDateRange(storeId, startDate, endDate)
-            : invoiceRepository.findByCreatedDateBetween(startDate, endDate);
+    public SalesMetricsDTO getSalesMetrics(LocalDateTime startDate, LocalDateTime endDate) {
+        List<Invoice> playStationSessionsInvoices = playStationSessionRepository
+            .findByStartTimeBetweenAndActiveIsFalse(startDate.toInstant(ZoneOffset.UTC), endDate.toInstant(ZoneOffset.UTC))
+            .stream()
+            .map(PlayStationSession::getInvoice)
+            .collect(Collectors.toList());
 
-        metrics.setTotalSales(calculateTotal(invoices, Invoice::getTotalPrice));
-        metrics.setNetSales(calculateTotal(invoices, Invoice::getNetPrice));
-        metrics.setTotalCost(calculateTotal(invoices, Invoice::getTotalCost));
-        metrics.setNetCost(calculateTotal(invoices, Invoice::getNetCost));
-        metrics.setNetProfit(calculateTotal(invoices, Invoice::getNetResult));
+        SalesMetricsDTO metrics = new SalesMetricsDTO();
+        metrics.setTotalSales(calculateTotal(playStationSessionsInvoices, Invoice::getTotalPrice));
+        metrics.setNetSales(calculateTotal(playStationSessionsInvoices, Invoice::getNetPrice));
+        metrics.setTotalCost(calculateTotal(playStationSessionsInvoices, Invoice::getTotalCost));
+        metrics.setNetCost(calculateTotal(playStationSessionsInvoices, Invoice::getNetCost));
+        metrics.setNetProfit(calculateTotal(playStationSessionsInvoices, Invoice::getNetResult));
 
         // Calculate daily and monthly revenue totals
-        Map<String, BigDecimal> dailyRevenue = calculateDailyRevenue(invoices);
-        Map<String, BigDecimal> monthlyRevenue = calculateMonthlyRevenue(invoices);
+        Map<String, BigDecimal> dailyRevenue = calculateDailyRevenue(playStationSessionsInvoices);
+        Map<String, BigDecimal> monthlyRevenue = calculateMonthlyRevenue(playStationSessionsInvoices);
 
         // Set the total daily and monthly revenue
         metrics.setDailyRevenue(dailyRevenue.values().stream().reduce(BigDecimal.ZERO, BigDecimal::add));

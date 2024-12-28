@@ -22,7 +22,7 @@ public interface PlaystationFinancialDashboardService {
     /**
      * Sales and Revenue Methods
      */
-    SalesMetricsDTO getSalesMetrics(LocalDateTime startDate, LocalDateTime endDate, String storeId); // *
+    SalesMetricsDTO getSalesMetrics(LocalDateTime startDate, LocalDateTime endDate); // *
     List<FinancialChartDTO> getSalesCharts(LocalDateTime startDate, LocalDateTime endDate, String storeId); //*
     FinancialChartDTO getDailySalesTrend(LocalDateTime startDate, LocalDateTime endDate);
     FinancialChartDTO getMonthlySalesTrend(LocalDateTime startDate, LocalDateTime endDate);
