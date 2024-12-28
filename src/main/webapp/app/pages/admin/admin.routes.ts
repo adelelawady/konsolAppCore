@@ -9,7 +9,16 @@ export const adminRoutes: Routes = [
     canActivate: [UserRouteAccessService],
     data: {
       authorities: ['ROLE_ADMIN'],
-      pageTitle: 'PlayStation Containers'
-    }
-  }
-]; 
+      pageTitle: 'PlayStation Containers',
+    },
+  },
+  {
+    path: 'playstation-financial-reports',
+    loadChildren: () => import('./financial-reports/financial-reports.module').then(m => m.PlayStationFinancialReportsModule),
+    canActivate: [UserRouteAccessService],
+    data: {
+      authorities: ['ROLE_ADMIN'],
+      pageTitle: 'PlayStation Containers',
+    },
+  },
+];

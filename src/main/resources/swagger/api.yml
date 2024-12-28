@@ -1806,6 +1806,25 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/FinancialSearchDTO'
+  /financial/playstation/dashboard:
+    post:
+      summary: ''
+      operationId: getPlaystationFinancialDashboard
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FinancialDashboardDTO'
+      tags:
+        - financial-reports
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FinancialSearchDTO'
+    parameters: []
   /playstation/device:
     get:
       summary: get all playstation devices

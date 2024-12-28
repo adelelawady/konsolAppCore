@@ -14,7 +14,7 @@ import { TranslateService } from '@ngx-translate/core';
   templateUrl: './financial-reports.component.html',
   styleUrls: ['./financial-reports.component.scss'],
 })
-export class FinancialReportsComponent implements OnInit, AfterViewInit, OnDestroy {
+export class PlayStationFinancialReportsComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('dailySalesChart', { static: true }) dailySalesChart!: ElementRef;
   @ViewChild('salesVsCostsChart', { static: true }) salesVsCostsChart!: ElementRef;
   @ViewChild('profitMarginChart', { static: true }) profitMarginChart!: ElementRef;

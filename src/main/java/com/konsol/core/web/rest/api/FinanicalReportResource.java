@@ -42,4 +42,17 @@ public class FinanicalReportResource implements FinancialApiDelegate {
             )
         );
     }
+
+    @Override
+    public ResponseEntity<FinancialDashboardDTO> getPlaystationFinancialDashboard(FinancialSearchDTO financialSearchDTO) {
+        return ResponseEntity.ok(
+            financialDashboardService.getDashboardData(
+                financialSearchDTO.getStartDate(),
+                financialSearchDTO.getEndDate(),
+                financialSearchDTO.getStoreId(),
+                financialSearchDTO.getAccountId(),
+                financialSearchDTO.getBankId()
+            )
+        );
+    }
 }
