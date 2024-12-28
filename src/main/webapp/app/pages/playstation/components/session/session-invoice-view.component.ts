@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PsSessionDTO } from 'app/core/konsolApi/model/psSessionDTO';
 import { InvoiceItemDTO } from 'app/core/konsolApi/model/invoiceItemDTO';
@@ -7,7 +8,7 @@ import { faSpinner, faArrowLeft, faBox } from '@fortawesome/free-solid-svg-icons
 @Component({
   selector: 'jhi-session-invoice-view',
   templateUrl: './session-invoice-view.component.html',
-  styleUrls: ['./session-invoice-view.component.scss']
+  styleUrls: ['./session-invoice-view.component.scss'],
 })
 export class SessionInvoiceViewComponent implements OnInit {
   session?: PsSessionDTO;
@@ -18,10 +19,7 @@ export class SessionInvoiceViewComponent implements OnInit {
   faArrowLeft = faArrowLeft;
   faBox = faBox;
 
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router
-  ) {}
+  constructor(private route: ActivatedRoute, private router: Router, private location: Location) {}
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
@@ -46,12 +44,10 @@ export class SessionInvoiceViewComponent implements OnInit {
   }
 
   calculateItemsSubtotal(): number {
-    return this.getInvoiceItemsArray().reduce((total, item) => {
-      return total + (item.netPrice || 0);
-    }, 0);
+    return this.getInvoiceItemsArray().reduce((total, item) => total + (item.netPrice ?? 0), 0);
   }
 
   back(): void {
-    this.router.navigate(['/','playstation','sessions']);
+    this.location.back();
   }
-} 
+}
