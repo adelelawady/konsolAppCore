@@ -73,7 +73,7 @@
               name="timeManagement"
               id="field_timeManagement"
               data-cy="timeManagement"
-              [value]="true"
+              [value]="container?.hasTimeManagement"
               (change)="onTimeManagemnetChange($event)"
               [checked]="editForm.get('timeManagement')?.value === true"
             />

@@ -3,19 +3,19 @@ import { PlaystationResourceService } from 'app/core/konsolApi/api/playstationRe
 import { PsSessionDTO } from 'app/core/konsolApi/model/psSessionDTO';
 import { PaginationSearchModel } from 'app/core/konsolApi/model/paginationSearchModel';
 import { HttpResponse, HttpHeaders } from '@angular/common/http';
-import { 
-  faSync, 
-  faEye, 
-  faTrash, 
-  faClock, 
-  faGamepad, 
-  faCalendarAlt, 
+import {
+  faSync,
+  faEye,
+  faTrash,
+  faClock,
+  faGamepad,
+  faCalendarAlt,
   faMoneyBillWave,
   faPercent,
   faPlus,
   faFileInvoiceDollar,
   faSortUp,
-  faSortDown 
+  faSortDown,
 } from '@fortawesome/free-solid-svg-icons';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmationModalComponent } from 'app/shared/components/confirmation-modal/confirmation-modal.component';
@@ -26,19 +26,19 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'jhi-session-history-control',
   templateUrl: './session-history-control.component.html',
-  styleUrls: ['./session-history-control.component.scss']
+  styleUrls: ['./session-history-control.component.scss'],
 })
 export class SessionHistoryControlComponent implements OnInit {
   sessions: PsSessionDTO[] = [];
   isLoading = false;
-  
+
   // Pagination
   page = 1;
   pageSize = 10;
   totalItems = 0;
   sortField = 'startTime';
   sortOrder = 'desc';
-  
+
   // Icons
   faSync = faSync;
   faEye = faEye;
@@ -75,9 +75,8 @@ export class SessionHistoryControlComponent implements OnInit {
       page: this.page - 1, // Backend expects 0-based page index
       size: this.pageSize,
       sortField: this.sortField,
-      sortOrder: this.sortOrder
+      sortOrder: this.sortOrder,
     };
-    
 
     this.playstationResourceService.getSessions(searchModel, 'response').subscribe({
       next: (response: HttpResponse<PsSessionDTO[]>) => {
@@ -85,15 +84,15 @@ export class SessionHistoryControlComponent implements OnInit {
         this.parsePaginationHeaders(response.headers);
         this.isLoading = false;
       },
-      error: (error) => {
+      error: error => {
         console.error('Error loading sessions:', error);
         this.isLoading = false;
         this.toastr.error(this.translateService.instant('playstation.sessionHistory.error.loading'));
-      }
+      },
     });
   }
 
-  private parsePaginationHeaders(headers: HttpHeaders): void {
+  parsePaginationHeaders(headers: HttpHeaders): void {
     const totalCountHeader = headers.get('X-Total-Count');
     this.totalItems = totalCountHeader ? parseInt(totalCountHeader, 10) : 0;
   }
@@ -135,7 +134,7 @@ export class SessionHistoryControlComponent implements OnInit {
 
   viewSession(session: PsSessionDTO): void {
     if (session.id) {
-      this.router.navigate(['/playstation/sessions', session.id, 'view']);
+      this.router.navigate(['playstation/sessions', session.id, 'view']);
     }
   }
 
@@ -143,17 +142,17 @@ export class SessionHistoryControlComponent implements OnInit {
     const modal = this.modalService.open(ConfirmationModalComponent);
     modal.componentInstance.message = this.translateService.instant('playstation.sessionHistory.confirm.delete');
 
-    modal.result.then((result) => {
+    modal.result.then(result => {
       if (result === 'confirm' && session.id) {
         this.playstationResourceService.deleteSession(session.id).subscribe({
           next: () => {
             this.loadSessions();
             this.toastr.success(this.translateService.instant('playstation.sessionHistory.success.delete'));
           },
-          error: (error) => {
+          error: error => {
             console.error('Error deleting session:', error);
             this.toastr.error(this.translateService.instant('playstation.sessionHistory.error.delete'));
-          }
+          },
         });
       }
     });
@@ -170,4 +169,4 @@ export class SessionHistoryControlComponent implements OnInit {
   trackById(index: number, session: PsSessionDTO): string | undefined {
     return session.id;
   }
-} 
+}

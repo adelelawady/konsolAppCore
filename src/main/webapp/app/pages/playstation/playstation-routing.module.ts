@@ -15,6 +15,8 @@ import { DeviceTypeFormComponent } from './device-type-control/device-type-form.
 import { PlaystationResourceService } from 'app/core/konsolApi/api/playstationResource.service';
 import { of } from 'rxjs';
 import { SessionInvoiceViewComponent } from './components/session/session-invoice-view.component';
+import { SessionDetailsComponent } from './session-history-control/session-details/session-details.component';
+import playStationSessionResolve from 'app/entities/play-station-session/route/play-station-session-routing-resolve.service';
 
 const routes: Routes = [
   {

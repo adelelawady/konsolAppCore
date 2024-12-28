@@ -1,0 +1,87 @@
+<div class="session-details">
+  <h2>
+    <fa-icon [icon]="faClock" class="me-2"></fa-icon>
+    {{ 'playstation.sessionDetails.title' | translate }}
+  </h2>
+
+  <div *ngIf="isLoading" class="loading-spinner">
+    <div class="spinner-border text-primary"></div>
+    <span>{{ 'playstation.sessionDetails.loading' | translate }}</span>
+  </div>
+
+  <div *ngIf="!isLoading && session">
+    <div class="card mb-4">
+      <div class="card-body">
+        <h3>{{ session.type?.name }}</h3>
+        <p>
+          <strong>{{ 'playstation.sessionDetails.startTime' | translate }}:</strong> {{ session.startTime | date: 'medium' }}
+        </p>
+        <p>
+          <strong>{{ 'playstation.sessionDetails.endTime' | translate }}:</strong> {{ session.endTime | date: 'medium' }}
+        </p>
+        <p>
+          <strong>{{ 'playstation.sessionDetails.duration' | translate }}:</strong> {{ getDuration(session) }}
+        </p>
+      </div>
+    </div>
+
+    <div class="card mb-4">
+      <div class="card-body">
+        <h4>{{ 'playstation.sessionDetails.invoice' | translate }}</h4>
+        <p>
+          <strong>{{ 'playstation.sessionDetails.invoiceNumber' | translate }}:</strong> #{{ session.invoice?.pk }}
+        </p>
+        <p>
+          <strong>{{ 'playstation.sessionDetails.netPrice' | translate }}:</strong> {{ session.invoice?.netPrice | currencyK }}
+        </p>
+        <p>
+          <strong>{{ 'playstation.sessionDetails.userNetPrice' | translate }}:</strong> {{ session.invoice?.userNetPrice | currencyK }}
+        </p>
+        <p>
+          <strong>{{ 'playstation.sessionDetails.discount' | translate }}:</strong>
+          <span *ngIf="session.invoice?.discount">-{{ session.invoice?.discount | currencyK }}</span
+          ><span *ngIf="!session.invoice?.discount">-</span>
+        </p>
+        <p>
+          <strong>{{ 'playstation.sessionDetails.additions' | translate }}:</strong>
+          <span *ngIf="session.invoice?.additions">+{{ session.invoice?.additions | currencyK }}</span
+          ><span *ngIf="!session.invoice?.additions">-</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <h4>{{ 'playstation.sessionDetails.invoiceItems' | translate }}</h4>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>{{ 'playstation.sessionDetails.item' | translate }}</th>
+              <th>{{ 'playstation.sessionDetails.unitPrice' | translate }}</th>
+              <th>{{ 'playstation.sessionDetails.quantity' | translate }}</th>
+              <th>{{ 'playstation.sessionDetails.totalPrice' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of session.invoice?.invoiceItems">
+              <td>{{ item.item?.name }}</td>
+              <td>{{ item.unitPrice | currencyK }}</td>
+              <td>{{ item.unitQtyOut }}</td>
+              <td>{{ item.totalPrice | currencyK }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <button class="btn btn-secondary mt-4" (click)="goBack()">
+      <fa-icon [icon]="faArrowLeft" class="me-2"></fa-icon>
+      {{ 'playstation.sessionDetails.back' | translate }}
+    </button>
+  </div>
+
+  <div *ngIf="!isLoading && !session" class="no-session">
+    <fa-icon [icon]="faClock" class="me-2"></fa-icon>
+    <span>{{ 'playstation.sessionDetails.noSession' | translate }}</span>
+  </div>
+</div>

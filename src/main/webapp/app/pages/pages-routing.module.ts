@@ -11,10 +11,12 @@ import { MoneyComponent } from './money/money.component';
 import { NavigationComponent } from './navigation/navigation.component';
 import { AccountDetailsComponent } from './accounts/account-details/account-details.component';
 import { InvoiceDetailsComponent } from './invoices/invoice-details/invoice-details.component';
-import { PlaystationContainerResourceService } from 'app/core/konsolApi';
+import { PlaystationContainerResourceService, PlaystationResourceService } from 'app/core/konsolApi';
 import { of } from 'rxjs';
 import { PlaystationContainerResolver } from './playstation/resolvers/playstation-container.resolver';
 import { SessionHistoryControlComponent } from './playstation/session-history-control/session-history-control.component';
+import { SessionDetailsComponent } from './playstation/session-history-control/session-details/session-details.component';
+import playStationSessionResolve from 'app/entities/play-station-session/route/play-station-session-routing-resolve.service';
 
 const routes: Routes = [
   {
@@ -116,7 +118,22 @@ const routes: Routes = [
   {
     path: 'playstation/session-history',
     component: SessionHistoryControlComponent,
-    data: { pageTitle: 'playstation.sessionHistory.title' }
+    data: { pageTitle: 'playstation.sessionHistory.title' },
+  },
+
+  {
+    path: 'playstation/sessions/:id/view',
+    component: SessionDetailsComponent,
+
+    resolve: {
+      session(route: ActivatedRouteSnapshot) {
+        const id = route.paramMap.get('id');
+        return id ? inject(PlaystationResourceService).getSession(id) : of(null);
+      },
+    },
+    data: {
+      breadcrumb: 'Session Details',
+    },
   },
   {
     path: '',

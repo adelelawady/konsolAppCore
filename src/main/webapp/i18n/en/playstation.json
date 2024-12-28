@@ -1,5 +1,25 @@
 {
   "playstation": {
+    "sessionDetails": {
+      "title": "Session Details",
+      "loading": "Loading...",
+      "startTime": "Start Time",
+      "endTime": "End Time",
+      "duration": "Duration",
+      "invoice": "Invoice",
+      "invoiceNumber": "Invoice Number",
+      "netPrice": "Net Price",
+      "userNetPrice": "User Net Price",
+      "discount": "Discount",
+      "additions": "Additions",
+      "invoiceItems": "Invoice Items",
+      "item": "Item",
+      "unitPrice": "Unit Price",
+      "quantity": "Quantity",
+      "totalPrice": "Total Price",
+      "back": "Back",
+      "noSession": "No session details available"
+    },
     "navigation": {
       "title": "PlayStation Navigation",
       "dashboard": {
@@ -371,4 +391,4 @@
       }
     }
   }
-} 
+}

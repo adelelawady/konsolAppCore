@@ -1,5 +1,25 @@
 {
   "playstation": {
+    "sessionDetails": {
+      "title": "تفاصيل الجلسة",
+      "loading": "جار التحميل...",
+      "startTime": "وقت البدء",
+      "endTime": "وقت الانتهاء",
+      "duration": "المدة",
+      "invoice": "الفاتورة",
+      "invoiceNumber": "رقم الفاتورة",
+      "netPrice": "السعر الصافي",
+      "userNetPrice": "السعر الصافي للمستخدم",
+      "discount": "الخصم",
+      "additions": "الإضافات",
+      "invoiceItems": "عناصر الفاتورة",
+      "item": "العنصر",
+      "unitPrice": "سعر الوحدة",
+      "quantity": "الكمية",
+      "totalPrice": "السعر الإجمالي",
+      "back": "العودة",
+      "noSession": "لا توجد تفاصيل للجلسة"
+    },
     "navigation": {
       "title": "قائمة البلايستيشن",
       "dashboard": {
@@ -371,4 +391,4 @@
       }
     }
   }
-} 
+}
