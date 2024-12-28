@@ -1,105 +1,253 @@
-<div class="container">
-  <ng-container *ngIf="container">
-    <div class="row mb-4">
-      <div class="col">
-        <h1 class="text-primary">{{ container.name }}</h1>
-        <p class="text-muted">{{ container.category }}</p>
-      </div>
-    </div>
-
-    <!-- Features Section
-    <div class="row mb-4">
-      <div class="col">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Features</h5>
-            <div class="d-flex flex-wrap gap-2">
-              <span class="badge" [ngClass]="container.hasTimeManagement ? 'bg-success' : 'bg-secondary'">
-                Time Management
-              </span>
-              <span class="badge" [ngClass]="container.showType ? 'bg-success' : 'bg-secondary'">
-                Show Type
-              </span>
-              <span class="badge" [ngClass]="container.showTime ? 'bg-success' : 'bg-secondary'">
-                Show Time
-              </span>
-              <span class="badge" [ngClass]="container.canMoveDevice ? 'bg-success' : 'bg-secondary'">
-                Move Device
-              </span>
-              <span class="badge" [ngClass]="container.canHaveMultiTimeManagement ? 'bg-success' : 'bg-secondary'">
-                Multi Time Management
-              </span>
-            </div>
+<div class="page">
+  <!-- Page header -->
+  <div class="page-wrapper">
+    <div class="page-header d-print-none">
+      <div class="container-xl">
+        <div class="row g-2 align-items-center">
+          <div class="col">
+            <div class="page-pretitle">{{ container?.category }}</div>
+            <h2 class="page-title">{{ container?.name || 'PlayStation Management' }}</h2>
           </div>
         </div>
       </div>
-    </div>-->
-  </ng-container>
-  <h1 class="text-primary mb-4">{{ 'playstation.navigation.title' | translate }}</h1>
+    </div>
 
-  <!-- Dashboard Section -->
-  <div class="row mb-5">
-    <div class="col-md-6">
-      <div class="card shadow-sm h-100">
-        <div class="card-body">
-          <h5 class="card-title text-primary">{{ 'playstation.navigation.dashboard.title' | translate }}</h5>
-          <p class="card-text">{{ 'playstation.navigation.dashboard.description' | translate }}</p>
-          <a routerLink="dashboard" class="btn btn-primary">
-            <i class="fas fa-tachometer-alt me-2"></i>{{ 'playstation.navigation.buttons.goToDashboard' | translate }}
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
+    <!-- Page body -->
+    <div class="page-body">
+      <div class="container-xl">
+        <!-- Features Status -->
+        <div class="row mb-4" *ngIf="container">
+          <div class="col">
+            <div class="card">
+              <div class="card-body">
+                <h3 class="card-title">{{ 'playstation.navigation.features.title' | translate }}</h3>
+                <div class="row g-3">
+                  <!-- Time Management -->
+                  <div class="col-sm-6 col-lg">
+                    <div class="card card-sm">
+                      <div class="card-body">
+                        <div class="row align-items-center">
+                          <div class="col-auto">
+                            <span [class]="container.hasTimeManagement ? 'bg-success' : 'bg-muted'" class="avatar">
+                              <i class="fas fa-clock"></i>
+                            </span>
+                          </div>
+                          <div class="col">
+                            <div class="font-weight-medium">{{ 'playstation.navigation.features.timeManagement' | translate }}</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
 
-  <!-- Controls Section -->
-  <h2 class="text-secondary mb-4">{{ 'playstation.navigation.controls.title' | translate }}</h2>
-  <div class="row mb-5">
-    <div class="col-md-6 mb-4">
-      <div class="card shadow-sm h-100">
-        <div class="card-body">
-          <h5 class="card-title text-primary">{{ 'playstation.navigation.controls.devices.title' | translate }}</h5>
-          <p class="card-text">{{ 'playstation.navigation.controls.devices.description' | translate }}</p>
-          <a routerLink="controls" class="btn btn-primary">
-            <i class="fas fa-gamepad me-2"></i>{{ 'playstation.navigation.buttons.manageControls' | translate }}
-          </a>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-6 mb-4">
-      <div class="card shadow-sm h-100">
-        <div class="card-body">
-          <h5 class="card-title text-primary">{{ 'playstation.navigation.controls.deviceTypes.title' | translate }}</h5>
-          <p class="card-text">{{ 'playstation.navigation.controls.deviceTypes.description' | translate }}</p>
-          <a routerLink="device-types" class="btn btn-primary">
-            <i class="fas fa-list me-2"></i>{{ 'playstation.navigation.buttons.manageTypes' | translate }}
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
+                  <!-- Show Type -->
+                  <div class="col-sm-6 col-lg">
+                    <div class="card card-sm">
+                      <div class="card-body">
+                        <div class="row align-items-center">
+                          <div class="col-auto">
+                            <span [class]="container.showType ? 'bg-success' : 'bg-muted'" class="avatar">
+                              <i class="fas fa-list-alt"></i>
+                            </span>
+                          </div>
+                          <div class="col">
+                            <div class="font-weight-medium">{{ 'playstation.navigation.features.showType' | translate }}</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
 
-  <!-- Management Section -->
-  <div class="row">
-    <div class="col-md-6 mb-4">
-      <div class="card shadow-sm h-100">
-        <div class="card-body">
-          <h5 class="card-title text-primary">{{ 'playstation.navigation.products.control.title' | translate }}</h5>
-          <p class="card-text">{{ 'playstation.navigation.products.control.description' | translate }}</p>
-          <a routerLink="products" class="btn btn-primary">
-            <i class="fas fa-box me-2"></i>{{ 'playstation.navigation.buttons.manageProducts' | translate }}
-          </a>
+                  <!-- Show Time -->
+                  <div class="col-sm-6 col-lg">
+                    <div class="card card-sm">
+                      <div class="card-body">
+                        <div class="row align-items-center">
+                          <div class="col-auto">
+                            <span [class]="container.showTime ? 'bg-success' : 'bg-muted'" class="avatar">
+                              <i class="fas fa-hourglass"></i>
+                            </span>
+                          </div>
+                          <div class="col">
+                            <div class="font-weight-medium">{{ 'playstation.navigation.features.showTime' | translate }}</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Move Device -->
+                  <div class="col-sm-6 col-lg">
+                    <div class="card card-sm">
+                      <div class="card-body">
+                        <div class="row align-items-center">
+                          <div class="col-auto">
+                            <span [class]="container.canMoveDevice ? 'bg-success' : 'bg-muted'" class="avatar">
+                              <i class="fas fa-arrows-alt"></i>
+                            </span>
+                          </div>
+                          <div class="col">
+                            <div class="font-weight-medium">{{ 'playstation.navigation.features.moveDevice' | translate }}</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Multi Time Management -->
+                  <div class="col-sm-6 col-lg">
+                    <div class="card card-sm">
+                      <div class="card-body">
+                        <div class="row align-items-center">
+                          <div class="col-auto">
+                            <span [class]="container.canHaveMultiTimeManagement ? 'bg-success' : 'bg-muted'" class="avatar">
+                              <i class="fas fa-clock"></i>
+                            </span>
+                          </div>
+                          <div class="col">
+                            <div class="font-weight-medium">{{ 'playstation.navigation.features.multiTimeManagement' | translate }}</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-    <div class="col-md-6 mb-4">
-      <div class="card shadow-sm h-100">
-        <div class="card-body">
-          <h5 class="card-title text-primary">{{ 'playstation.navigation.sessions.title' | translate }}</h5>
-          <p class="card-text">{{ 'playstation.navigation.sessions.description' | translate }}</p>
-          <a routerLink="sessions" class="btn btn-primary">
-            <i class="fas fa-clock me-2"></i>{{ 'playstation.navigation.buttons.manageSessions' | translate }}
-          </a>
+
+        <!-- Main Navigation Cards -->
+        <div class="row row-cards">
+          <!-- Dashboard -->
+          <div class="col-md-6 col-lg-4">
+            <div class="card card-link-pop">
+              <div class="card-body">
+                <div class="row align-items-center">
+                  <div class="col-auto">
+                    <span class="bg-primary text-white avatar">
+                      <i class="fas fa-tachometer-alt"></i>
+                    </span>
+                  </div>
+                  <div class="col">
+                    <h3 class="card-title mb-1">
+                      {{ 'playstation.navigation.dashboard.title' | translate }}
+                    </h3>
+                    <p class="text-muted mb-3">
+                      {{ 'playstation.navigation.dashboard.description' | translate }}
+                    </p>
+                    <a routerLink="dashboard" class="btn btn-primary">
+                      {{ 'playstation.navigation.buttons.goToDashboard' | translate }}
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Controls -->
+          <div class="col-md-6 col-lg-4">
+            <div class="card card-link-pop">
+              <div class="card-body">
+                <div class="row align-items-center">
+                  <div class="col-auto">
+                    <span class="bg-green text-white avatar">
+                      <i class="fas fa-gamepad"></i>
+                    </span>
+                  </div>
+                  <div class="col">
+                    <h3 class="card-title mb-1">
+                      {{ 'playstation.navigation.controls.devices.title' | translate }}
+                    </h3>
+                    <p class="text-muted mb-3">
+                      {{ 'playstation.navigation.controls.devices.description' | translate }}
+                    </p>
+                    <a routerLink="controls" class="btn btn-green">
+                      {{ 'playstation.navigation.buttons.manageControls' | translate }}
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Device Types -->
+          <div class="col-md-6 col-lg-4">
+            <div class="card card-link-pop">
+              <div class="card-body">
+                <div class="row align-items-center">
+                  <div class="col-auto">
+                    <span class="bg-azure text-white avatar">
+                      <i class="fas fa-list"></i>
+                    </span>
+                  </div>
+                  <div class="col">
+                    <h3 class="card-title mb-1">
+                      {{ 'playstation.navigation.controls.deviceTypes.title' | translate }}
+                    </h3>
+                    <p class="text-muted mb-3">
+                      {{ 'playstation.navigation.controls.deviceTypes.description' | translate }}
+                    </p>
+                    <a routerLink="device-types" class="btn btn-azure">
+                      {{ 'playstation.navigation.buttons.manageTypes' | translate }}
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Products -->
+          <div class="col-md-6 col-lg-4">
+            <div class="card card-link-pop">
+              <div class="card-body">
+                <div class="row align-items-center">
+                  <div class="col-auto">
+                    <span class="bg-orange text-white avatar">
+                      <i class="fas fa-box"></i>
+                    </span>
+                  </div>
+                  <div class="col">
+                    <h3 class="card-title mb-1">
+                      {{ 'playstation.navigation.products.control.title' | translate }}
+                    </h3>
+                    <p class="text-muted mb-3">
+                      {{ 'playstation.navigation.products.control.description' | translate }}
+                    </p>
+                    <a routerLink="products" class="btn btn-orange">
+                      {{ 'playstation.navigation.buttons.manageProducts' | translate }}
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sessions -->
+          <div class="col-md-6 col-lg-4">
+            <div class="card card-link-pop">
+              <div class="card-body">
+                <div class="row align-items-center">
+                  <div class="col-auto">
+                    <span class="bg-purple text-white avatar">
+                      <i class="fas fa-clock"></i>
+                    </span>
+                  </div>
+                  <div class="col">
+                    <h3 class="card-title mb-1">
+                      {{ 'playstation.navigation.sessions.title' | translate }}
+                    </h3>
+                    <p class="text-muted mb-3">
+                      {{ 'playstation.navigation.sessions.description' | translate }}
+                    </p>
+                    <a routerLink="sessions" class="btn btn-purple">
+                      {{ 'playstation.navigation.buttons.manageSessions' | translate }}
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

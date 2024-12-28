@@ -37,6 +37,14 @@
           "description": "Manage devices by their types"
         }
       },
+      "features": {
+        "title": "Features Status",
+        "timeManagement": "Time Management",
+        "showType": "Show Type",
+        "showTime": "Show Time",
+        "moveDevice": "Move Device",
+        "multiTimeManagement": "Multi Time Management"
+      },
       "buttons": {
         "goToDashboard": "Go to Dashboard",
         "manageControls": "Manage Controls",

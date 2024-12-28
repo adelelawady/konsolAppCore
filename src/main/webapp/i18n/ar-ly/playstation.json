@@ -1,5 +1,13 @@
 {
   "playstation": {
+    "features": {
+      "title": "حالة الميزات",
+      "timeManagement": "إدارة الوقت",
+      "showType": "إظهار النوع",
+      "showTime": "إظهار الوقت",
+      "moveDevice": "نقل الجهاز",
+      "multiTimeManagement": "إدارة الوقت المتعدد"
+    },
     "sessionDetails": {
       "title": "تفاصيل الجلسة",
       "loading": "جار التحميل...",
@@ -21,6 +29,14 @@
       "noSession": "لا توجد تفاصيل للجلسة"
     },
     "navigation": {
+      "features": {
+        "title": "حالة الميزات",
+        "timeManagement": "إدارة الوقت",
+        "showType": "إظهار النوع",
+        "showTime": "إظهار الوقت",
+        "moveDevice": "نقل الجهاز",
+        "multiTimeManagement": "إدارة الوقت المتعدد"
+      },
       "title": "قائمة البلايستيشن",
       "dashboard": {
         "title": "لوحة التحكم",
