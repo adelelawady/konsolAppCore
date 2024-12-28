@@ -32,7 +32,7 @@ export class CheckoutComponent implements OnInit {
       discount: [0, [Validators.min(0)]],
       additions: [0, [Validators.min(0)]],
       notes: [''],
-      userNetPrice: [0, [Validators.min(0)]],
+      userNetPrice: [this.selectedDevice?.session?.invoice?.netPrice ?? 0, [Validators.min(0)]],
     });
   }
 

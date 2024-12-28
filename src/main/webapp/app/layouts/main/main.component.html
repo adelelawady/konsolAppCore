@@ -36,21 +36,29 @@
             </nav>
           </div>
           <div class="col-md-6">
-            <div class="container-buttons d-flex gap-2 justify-content-end">
-              <button
-                *ngFor="let container of containers"
-                class="btn btn-outline-primary rounded-pill transition-all"
-                [class.btn-primary]="selectedContainerId === toString(container.id)"
-                [class.shadow-sm]="selectedContainerId === toString(container.id)"
-                (click)="onContainerClick(container, $event)"
-                [disabled]="loadingContainerId === toString(container.id)"
-              >
-                <span *ngIf="loadingContainerId !== toString(container.id)" class="px-2">{{ container.name }}</span>
-                <span *ngIf="loadingContainerId === toString(container.id)" class="d-inline-flex align-items-center px-2">
-                  <i class="fas fa-spinner fa-spin me-2"></i>
-                  Loading...
-                </span>
-              </button>
+            <div class="container-buttons d-flex justify-content-end">
+              <div class="btn-group btn-group-sm">
+                <button
+                  *ngFor="let container of containers"
+                  class="btn position-relative"
+                  [class.btn-primary]="selectedContainerId === toString(container.id)"
+                  [class.btn-outline-primary]="selectedContainerId !== toString(container.id)"
+                  [class.active]="selectedContainerId === toString(container.id)"
+                  (click)="onContainerClick(container, $event)"
+                  [disabled]="loadingContainerId === toString(container.id)"
+                >
+                  <span *ngIf="loadingContainerId !== toString(container.id)" class="px-2">
+                    <i *ngIf="selectedContainerId !== toString(container.id)" class="fas fa-folder me-2 opacity-50"></i>
+                    <!-- <i *ngIf="selectedContainerId === toString(container.id)" class="fas fa-folder-open me-2 opacity-50"></i>-->
+                    <i *ngIf="selectedContainerId === toString(container.id)" class="fa-brands fa-playstation"></i>
+                    {{ container.name }}
+                  </span>
+                  <span *ngIf="loadingContainerId === toString(container.id)" class="d-inline-flex align-items-center px-2">
+                    <span class="spinner-border spinner-border-sm me-2"></span>
+                    Loading...
+                  </span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -99,10 +107,50 @@
 
   .btn {
     font-weight: 500;
+    transition: all 0.3s ease;
   }
 
   .btn:hover {
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+  }
+
+  .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+
+  .btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #004085;
+  }
+
+  .btn-outline-primary {
+    color: #007bff;
+    border-color: #007bff;
+  }
+
+  .btn-outline-primary:hover {
+    color: #0056b3;
+    border-color: #0056b3;
+  }
+
+  .btn-primary.shadow-sm {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  }
+
+  .btn-primary.shadow-sm:hover {
+    box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.2);
+  }
+
+  .btn-primary.selected {
+    background-color: #0056b3;
+    border-color: #004085;
+    color: #fff !important;
+  }
+
+  .btn-primary.selected:hover {
+    background-color: #004085;
+    border-color: #002752;
   }
 
   .card {
@@ -123,5 +171,63 @@
 
   .footer {
     min-height: 3rem;
+  }
+
+  .container-buttons {
+    gap: 0.5rem;
+  }
+
+  .container-buttons .btn-group {
+    box-shadow: 0 0 0 1px rgba(101, 109, 119, 0.16);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .container-buttons .btn {
+    border: 0;
+    font-size: 0.875rem;
+    padding: 0.5rem 1rem;
+    transition: all 0.2s ease;
+    position: relative;
+    font-weight: 500;
+  }
+
+  .container-buttons .btn:not(:last-child) {
+    border-right: 1px solid rgba(101, 109, 119, 0.16);
+  }
+
+  .container-buttons .btn-primary {
+    background-color: #206bc4;
+    color: #fff;
+  }
+
+  .container-buttons .btn-outline-primary {
+    background-color: transparent;
+    color: #206bc4;
+  }
+
+  .container-buttons .btn:hover {
+    transform: translateY(0);
+    background-color: #185da9;
+    color: #fff;
+    z-index: 2;
+  }
+
+  .container-buttons .btn.active {
+    background-color: #206bc4;
+    color: #fff;
+    z-index: 3;
+  }
+
+  .container-buttons .btn:disabled {
+    background-color: #f1f5f9;
+    color: #929dab;
+    cursor: not-allowed;
+  }
+
+  .spinner-border {
+    width: 1rem;
+    height: 1rem;
+    border-width: 2px;
   }
 </style>
