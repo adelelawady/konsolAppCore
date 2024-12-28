@@ -3,12 +3,12 @@
     <div class="container-xl">
       <div class="row g-2 align-items-center">
         <div class="col">
-          <h2 class="page-title">PlayStation Containers</h2>
+          <h2 class="page-title">{{ 'konsolCoreApp.playstationContainer.home.title' | translate }}</h2>
         </div>
         <div class="col-auto ms-auto">
           <button class="btn btn-primary d-inline-flex align-items-center" (click)="openCreateModal(formModal)">
             <i class="ti ti-plus icon"></i>
-            Create New Container
+            {{ 'konsolCoreApp.playstationContainer.buttons.create' | translate }}
           </button>
         </div>
       </div>
@@ -22,7 +22,7 @@
         <div class="empty-icon">
           <div class="spinner-border" role="status"></div>
         </div>
-        <p class="empty-title">Loading data...</p>
+        <p class="empty-title">{{ 'konsolCoreApp.playstationContainer.loading' | translate }}</p>
       </div>
 
       <!-- Cards Grid -->
@@ -35,45 +35,57 @@
             </div>
             <div class="card-body">
               <div class="mb-3">
-                <h4 class="card-subtitle mb-2">Features</h4>
+                <h4 class="card-subtitle mb-2">{{ 'konsolCoreApp.playstationContainer.features.title' | translate }}</h4>
                 <div class="d-flex flex-wrap gap-2">
                   <span class="badge" [ngClass]="container.hasTimeManagement ? 'bg-green' : 'bg-gray'">
-                    <i class="ti ti-clock me-1"></i> Time Management
+                    <i class="ti ti-clock me-1"></i> {{ 'konsolCoreApp.playstationContainer.timeManagement' | translate }}
                   </span>
                   <span class="badge" [ngClass]="container.showType ? 'bg-green' : 'bg-gray'">
-                    <i class="ti ti-eye me-1"></i> Show Type
+                    <i class="ti ti-eye me-1"></i> {{ 'konsolCoreApp.playstationContainer.showType' | translate }}
                   </span>
                   <span class="badge" [ngClass]="container.showTime ? 'bg-green' : 'bg-gray'">
-                    <i class="ti ti-clock me-1"></i> Show Time
+                    <i class="ti ti-clock me-1"></i> {{ 'konsolCoreApp.playstationContainer.showTime' | translate }}
                   </span>
                   <span class="badge" [ngClass]="container.canMoveDevice ? 'bg-green' : 'bg-gray'">
-                    <i class="ti ti-device-mobile me-1"></i> Move Device
+                    <i class="ti ti-device-mobile me-1"></i> {{ 'konsolCoreApp.playstationContainer.moveDevice' | translate }}
                   </span>
                   <span class="badge" [ngClass]="container.canHaveMultiTimeManagement ? 'bg-green' : 'bg-gray'">
-                    <i class="ti ti-clock me-1"></i> Multi Time Management
+                    <i class="ti ti-clock me-1"></i> {{ 'konsolCoreApp.playstationContainer.multiTimeManagement' | translate }}
                   </span>
                 </div>
               </div>
 
               <div class="mb-3">
-                <h4 class="card-subtitle mb-2">Order Categories</h4>
+                <h4 class="card-subtitle mb-2">{{ 'konsolCoreApp.playstationContainer.orderCategories.title' | translate }}</h4>
                 <div class="text-muted">{{ container.acceptedOrderCategories }}</div>
               </div>
 
               <div>
-                <h4 class="card-subtitle mb-2">Price Category</h4>
+                <h4 class="card-subtitle mb-2">{{ 'konsolCoreApp.playstationContainer.priceCategory.title' | translate }}</h4>
                 <div class="text-muted">{{ container.orderSelectedPriceCategory }}</div>
               </div>
             </div>
             <div class="card-footer">
               <div class="d-flex justify-content-end gap-2">
-                <button class="btn btn-icon btn-primary" (click)="openEditModal(formModal, container)" title="Edit">
+                <button
+                  class="btn btn-icon btn-primary"
+                  (click)="openEditModal(formModal, container)"
+                  title="{{ 'konsolCoreApp.playstationContainer.buttons.edit' | translate }}"
+                >
                   <i class="ti ti-edit"></i>
                 </button>
-                <button class="btn btn-icon btn-danger" (click)="delete(container)" title="Delete">
+                <button
+                  class="btn btn-icon btn-danger"
+                  (click)="delete(container)"
+                  title="{{ 'konsolCoreApp.playstationContainer.buttons.delete' | translate }}"
+                >
                   <i class="ti ti-trash"></i>
                 </button>
-                <button class="btn btn-icon btn-secondary" [routerLink]="['/', 'container', container?.id, 'navigation']" title="View">
+                <button
+                  class="btn btn-icon btn-secondary"
+                  [routerLink]="['/', 'container', container?.id, 'navigation']"
+                  title="{{ 'konsolCoreApp.playstationContainer.buttons.view' | translate }}"
+                >
                   <i class="ti ti-eye"></i>
                 </button>
               </div>
@@ -88,7 +100,12 @@
 <!-- Modal Template -->
 <ng-template #formModal let-modal>
   <div class="modal-header">
-    <h3 class="modal-title">{{ isEditMode ? 'Edit' : 'Create' }} PlayStation Container</h3>
+    <h3 class="modal-title">
+      {{
+        (isEditMode ? 'konsolCoreApp.playstationContainer.home.createOrEditLabel' : 'konsolCoreApp.playstationContainer.home.createLabel')
+          | translate
+      }}
+    </h3>
     <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
   </div>
 
@@ -96,48 +113,63 @@
     <form [formGroup]="editForm" class="card">
       <div class="card-body">
         <div class="mb-3">
-          <label class="form-label required">Name</label>
-          <input type="text" class="form-control" formControlName="name" placeholder="Enter container name" />
+          <label class="form-label required">{{ 'konsolCoreApp.playstationContainer.name' | translate }}</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="name"
+            placeholder="{{ 'konsolCoreApp.playstationContainer.namePlaceholder' | translate }}"
+          />
         </div>
 
         <div class="mb-3">
-          <label class="form-label required">Category</label>
-          <input type="text" class="form-control" formControlName="category" placeholder="Enter container category" />
+          <label class="form-label required">{{ 'konsolCoreApp.playstationContainer.category' | translate }}</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="category"
+            placeholder="{{ 'konsolCoreApp.playstationContainer.categoryPlaceholder' | translate }}"
+          />
         </div>
 
         <div class="mb-3">
-          <label class="form-label">Default Icon</label>
-          <input type="text" class="form-control" formControlName="defaultIcon" placeholder="Enter default icon" />
+          <label class="form-label">{{ 'konsolCoreApp.playstationContainer.defaultIcon' | translate }}</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="defaultIcon"
+            placeholder="{{ 'konsolCoreApp.playstationContainer.defaultIconPlaceholder' | translate }}"
+          />
         </div>
 
         <div class="mb-3">
-          <label class="form-label">Features</label>
+          <label class="form-label">{{ 'konsolCoreApp.playstationContainer.features.title' | translate }}</label>
           <div class="form-selectgroup">
             <label class="form-selectgroup-item">
               <input type="checkbox" class="form-selectgroup-input" formControlName="hasTimeManagement" />
-              <span class="form-selectgroup-label">Time Management</span>
+              <span class="form-selectgroup-label">{{ 'konsolCoreApp.playstationContainer.timeManagement' | translate }}</span>
             </label>
             <label class="form-selectgroup-item">
               <input type="checkbox" class="form-selectgroup-input" formControlName="showType" />
-              <span class="form-selectgroup-label">Show Type</span>
+              <span class="form-selectgroup-label">{{ 'konsolCoreApp.playstationContainer.showType' | translate }}</span>
             </label>
             <label class="form-selectgroup-item">
               <input type="checkbox" class="form-selectgroup-input" formControlName="showTime" />
-              <span class="form-selectgroup-label">Show Time</span>
+              <span class="form-selectgroup-label">{{ 'konsolCoreApp.playstationContainer.showTime' | translate }}</span>
             </label>
             <label class="form-selectgroup-item">
               <input type="checkbox" class="form-selectgroup-input" formControlName="canMoveDevice" />
-              <span class="form-selectgroup-label">Can Move Device</span>
+              <span class="form-selectgroup-label">{{ 'konsolCoreApp.playstationContainer.moveDevice' | translate }}</span>
             </label>
             <label class="form-selectgroup-item">
               <input type="checkbox" class="form-selectgroup-input" formControlName="canHaveMultiTimeManagement" />
-              <span class="form-selectgroup-label">Multi Time Management</span>
+              <span class="form-selectgroup-label">{{ 'konsolCoreApp.playstationContainer.multiTimeManagement' | translate }}</span>
             </label>
           </div>
         </div>
 
         <div class="mb-3">
-          <label class="form-label required">Accepted Order Categories</label>
+          <label class="form-label required">{{ 'konsolCoreApp.playstationContainer.acceptedOrderCategories' | translate }}</label>
           <ng-select
             [items]="availableCategories"
             [multiple]="true"
@@ -148,22 +180,33 @@
             class="form-select"
           >
           </ng-select>
-          <div class="invalid-feedback" *ngIf="editForm.get('acceptedOrderCategories')?.errors?.required">This field is required</div>
+          <div class="invalid-feedback" *ngIf="editForm.get('acceptedOrderCategories')?.errors?.required">
+            {{ 'konsolCoreApp.playstationContainer.acceptedOrderCategoriesRequired' | translate }}
+          </div>
         </div>
 
         <div class="mb-3">
-          <label class="form-label required">Order Selected Price Category</label>
-          <input type="text" class="form-control" formControlName="orderSelectedPriceCategory" placeholder="Enter price category" />
+          <label class="form-label required">{{ 'konsolCoreApp.playstationContainer.orderSelectedPriceCategory' | translate }}</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="orderSelectedPriceCategory"
+            placeholder="{{ 'konsolCoreApp.playstationContainer.orderSelectedPriceCategoryPlaceholder' | translate }}"
+          />
         </div>
       </div>
     </form>
   </div>
 
   <div class="modal-footer">
-    <button type="button" class="btn btn-link link-secondary" (click)="modal.dismiss()">Cancel</button>
+    <button type="button" class="btn btn-link link-secondary" (click)="modal.dismiss()">
+      {{ 'konsolCoreApp.playstationContainer.buttons.cancel' | translate }}
+    </button>
     <button type="button" class="btn btn-primary ms-auto" (click)="save()" [disabled]="!editForm.valid">
       <i class="ti ti-device-floppy me-2"></i>
-      {{ isEditMode ? 'Update' : 'Create' }}
+      {{
+        (isEditMode ? 'konsolCoreApp.playstationContainer.buttons.update' : 'konsolCoreApp.playstationContainer.buttons.save') | translate
+      }}
     </button>
   </div>
 </ng-template>
