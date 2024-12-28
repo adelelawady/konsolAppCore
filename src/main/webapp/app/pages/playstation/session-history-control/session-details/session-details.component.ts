@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import { faClock, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import { PlaystationResourceService } from 'app/core/konsolApi/api/playstationResource.service';
+import { faClock, faArrowLeft, faGamepad, faMoneyBill, faShoppingCart, faCalendar } from '@fortawesome/free-solid-svg-icons';
+
 import { PsSessionDTO } from 'app/core/konsolApi/model/psSessionDTO';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateService } from '@ngx-translate/core';
+import { PlaystationResourceService } from 'app/core/konsolApi';
 
 @Component({
   selector: 'jhi-session-details',
@@ -17,6 +18,10 @@ export class SessionDetailsComponent implements OnInit {
   isLoading = false;
   faClock = faClock;
   faArrowLeft = faArrowLeft;
+  faGamepad = faGamepad;
+  faMoneyBill = faMoneyBill;
+  faShoppingCart = faShoppingCart;
+  faCalendar = faCalendar;
 
   constructor(
     private route: ActivatedRoute,

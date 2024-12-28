@@ -19,20 +19,32 @@
     <div class="col-12">
       <div class="card card-lg mb-4">
         <div class="card-header">
-          <h3 class="card-title">{{ session.type?.name }}</h3>
+          <h3 class="card-title">
+            <fa-icon [icon]="faGamepad" class="me-2"></fa-icon>
+            {{ session.type?.name }}
+          </h3>
         </div>
         <div class="card-body">
           <div class="datagrid">
             <div class="datagrid-item">
-              <div class="datagrid-title">{{ 'playstation.sessionDetails.startTime' | translate }}</div>
+              <div class="datagrid-title">
+                <fa-icon [icon]="faCalendar" class="me-2"></fa-icon>
+                {{ 'playstation.sessionDetails.startTime' | translate }}
+              </div>
               <div class="datagrid-content">{{ session.startTime | date: 'medium' }}</div>
             </div>
             <div class="datagrid-item">
-              <div class="datagrid-title">{{ 'playstation.sessionDetails.endTime' | translate }}</div>
+              <div class="datagrid-title">
+                <fa-icon [icon]="faCalendar" class="me-2"></fa-icon>
+                {{ 'playstation.sessionDetails.endTime' | translate }}
+              </div>
               <div class="datagrid-content">{{ session.endTime | date: 'medium' }}</div>
             </div>
             <div class="datagrid-item">
-              <div class="datagrid-title">{{ 'playstation.sessionDetails.duration' | translate }}</div>
+              <div class="datagrid-title">
+                <fa-icon [icon]="faCalendar" class="me-2"></fa-icon>
+                {{ 'playstation.sessionDetails.duration' | translate }}
+              </div>
               <div class="datagrid-content">{{ getDuration(session) }}</div>
             </div>
           </div>
@@ -41,7 +53,10 @@
 
       <div class="card mb-4">
         <div class="card-header">
-          <h3 class="card-title">{{ 'playstation.sessionDetails.invoice' | translate }}</h3>
+          <h3 class="card-title">
+            <fa-icon [icon]="faMoneyBill" class="me-2"></fa-icon>
+            {{ 'playstation.sessionDetails.invoice' | translate }}
+          </h3>
         </div>
         <div class="card-body">
           <div class="datagrid">
@@ -77,7 +92,10 @@
 
       <div class="card">
         <div class="card-header">
-          <h3 class="card-title">{{ 'playstation.sessionDetails.invoiceItems' | translate }}</h3>
+          <h3 class="card-title">
+            <fa-icon [icon]="faShoppingCart" class="me-2"></fa-icon>
+            {{ 'playstation.sessionDetails.invoiceItems' | translate }}
+          </h3>
         </div>
         <div class="card-body">
           <div class="table-responsive">
