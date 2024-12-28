@@ -1,16 +1,16 @@
-<nav data-cy="navbar" class="navbar navbar-expand-md navbar-light">
-  <div class="container-xl">
+<nav data-cy="navbar" class="navbar navbar-modern">
+  <div class="container-fluid">
     <!-- Brand section -->
     <div class="navbar-brand-wrapper">
       <a class="navbar-brand d-flex align-items-center" routerLink="/" (click)="collapseNavbar()">
         <span class="logo-img me-2"></span>
-        <span jhiTranslate="global.title" class="navbar-title">KonsolCore</span>
+        <span jhiTranslate="global.title" class="navbar-title fw-bold">KonsolCore</span>
       </a>
     </div>
 
     <!-- Mobile menu button -->
     <button
-      class="navbar-toggler ms-auto"
+      class="navbar-toggler border-0 shadow-none"
       type="button"
       data-bs-toggle="collapse"
       data-bs-target="#navbarResponsive"
@@ -23,13 +23,8 @@
     </button>
 
     <!-- Navbar content -->
-    <div
-      class="navbar-collapse collapse justify-content-end"
-      id="navbarResponsive"
-      [ngbCollapse]="isNavbarCollapsed"
-      [ngSwitch]="account !== null"
-    >
-      <ul class="navbar-nav align-items-center">
+    <div class="navbar-collapse collapse" id="navbarResponsive" [ngbCollapse]="isNavbarCollapsed" [ngSwitch]="account !== null">
+      <ul class="navbar-nav align-items-center ms-auto">
         <!-- Home -->
         <li class="nav-item">
           <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
@@ -224,3 +219,100 @@
     </div>
   </div>
 </nav>
+
+<style>
+  .navbar-modern {
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+  }
+
+  .navbar-brand {
+    font-size: 1.25rem;
+    color: #2c3e50;
+    transition: color 0.2s ease;
+  }
+
+  .navbar-brand:hover {
+    color: #3498db;
+  }
+
+  .nav-link {
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    color: #505d69;
+    transition: all 0.2s ease;
+    border-radius: 0.375rem;
+  }
+
+  .nav-link:hover {
+    color: #3498db;
+    background-color: rgba(52, 152, 219, 0.05);
+  }
+
+  .dropdown-menu {
+    border: none;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    min-width: 200px;
+    animation: dropdownFade 0.2s ease;
+  }
+
+  .dropdown-item {
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    transition: all 0.2s ease;
+  }
+
+  .dropdown-item:hover {
+    background-color: rgba(52, 152, 219, 0.05);
+    color: #3498db;
+  }
+
+  .dropdown-item.active {
+    background-color: rgba(52, 152, 219, 0.1);
+    color: #3498db;
+  }
+
+  .navbar-toggler:focus {
+    box-shadow: none;
+  }
+
+  .profile-image {
+    width: 32px;
+    height: 32px;
+    object-fit: cover;
+  }
+
+  @keyframes dropdownFade {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .navbar-collapse {
+      padding: 1rem 0;
+    }
+
+    .nav-link {
+      padding: 0.75rem 1rem;
+    }
+
+    .dropdown-menu {
+      border: none;
+      box-shadow: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .dropdown-item {
+      padding: 0.75rem 1.5rem;
+    }
+  }
+</style>

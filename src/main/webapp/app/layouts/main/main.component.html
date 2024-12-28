@@ -1,32 +1,35 @@
-<div class="page">
+<div class="page bg-light d-flex flex-column min-vh-100">
   <!-- Navbar -->
-  <header class="">
-    <div style="width: -webkit-fill-available" class="">
-      <router-outlet name="navbar"></router-outlet>
+  <header class="navbar navbar-expand-md position-sticky top-0 z-1030 border-bottom">
+    <div class="navbar-wrapper w-100 backdrop-blur-nav" style="padding: 0">
+      <div class="container-fluid px-3 px-lg-4">
+        <router-outlet name="navbar"></router-outlet>
+      </div>
     </div>
   </header>
 
-  <div class="page-wrapper">
+  <div class="page-wrapper flex-grow-1 pb-footer">
+    <!-- Add pb-footer class -->
     <!-- Page header -->
-    <div class="page-header d-print-none">
-      <div class="container-fixed">
-        <div class="row g-2 align-items-center">
+    <div class="page-header d-print-none backdrop-blur border-bottom">
+      <div class="container-fluid px-4 py-3">
+        <div class="row align-items-center g-3">
           <div class="col-md-6">
             <!-- Breadcrumb navigation -->
             <nav aria-label="breadcrumb">
-              <ol class="breadcrumb">
+              <ol class="breadcrumb m-0 fs-sm">
                 <li class="breadcrumb-item">
-                  <a routerLink="/" class="text-muted">
-                    <i class="fa fa-home"></i>
+                  <a routerLink="/" class="text-decoration-none text-secondary">
+                    <i class="fa fa-home opacity-75"></i>
                     <span class="ms-1">Home</span>
                   </a>
                 </li>
                 <li class="breadcrumb-item" *ngFor="let breadcrumb of breadcrumbs$ | async; let last = last" [class.active]="last">
                   <ng-container *ngIf="!last">
-                    <a [routerLink]="breadcrumb.url" class="text-muted">{{ breadcrumb.label }}</a>
+                    <a [routerLink]="breadcrumb.url" class="text-decoration-none text-secondary">{{ breadcrumb.label }}</a>
                   </ng-container>
                   <ng-container *ngIf="last">
-                    <span class="text-primary">{{ breadcrumb.label }}</span>
+                    <span class="text-primary fw-medium">{{ breadcrumb.label }}</span>
                   </ng-container>
                 </li>
               </ol>
@@ -36,15 +39,15 @@
             <div class="container-buttons d-flex gap-2 justify-content-end">
               <button
                 *ngFor="let container of containers"
-                class="btn"
+                class="btn btn-outline-primary rounded-pill transition-all"
                 [class.btn-primary]="selectedContainerId === toString(container.id)"
-                [class.btn-outline-primary]="selectedContainerId !== toString(container.id)"
+                [class.shadow-sm]="selectedContainerId === toString(container.id)"
                 (click)="onContainerClick(container, $event)"
                 [disabled]="loadingContainerId === toString(container.id)"
               >
-                <span *ngIf="loadingContainerId !== toString(container.id)">{{ container.name }}</span>
-                <span *ngIf="loadingContainerId === toString(container.id)">
-                  <i class="fas fa-spinner fa-spin me-1"></i>
+                <span *ngIf="loadingContainerId !== toString(container.id)" class="px-2">{{ container.name }}</span>
+                <span *ngIf="loadingContainerId === toString(container.id)" class="d-inline-flex align-items-center px-2">
+                  <i class="fas fa-spinner fa-spin me-2"></i>
                   Loading...
                 </span>
               </button>
@@ -53,16 +56,72 @@
         </div>
       </div>
     </div>
-    <!-- Page body -->
-    <div class="page-body">
-      <router-outlet></router-outlet>
-    </div>
 
-    <!-- Page footer -->
-    <footer class="footer" style="padding: 0px !important">
-      <div class="container-xl">
-        <jhi-footer></jhi-footer>
+    <!-- Page body -->
+    <div class="page-body container-fluid px-4 py-4">
+      <div class="card border-0 shadow-sm rounded-3">
+        <div class="card-body">
+          <router-outlet></router-outlet>
+        </div>
       </div>
-    </footer>
+    </div>
   </div>
+
+  <!-- Updated footer -->
+  <footer class="footer fixed-bottom border-top bg-white backdrop-blur-nav">
+    <div class="container-fluid px-4 py-2">
+      <jhi-footer></jhi-footer>
+    </div>
+  </footer>
 </div>
+
+<style>
+  .backdrop-blur-nav {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    padding: 0.5rem 0;
+  }
+
+  .z-1030 {
+    z-index: 1030;
+  }
+
+  /* Update existing backdrop-blur class to not affect navbar */
+  .backdrop-blur:not(.backdrop-blur-nav) {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+  }
+
+  .transition-all {
+    transition: all 0.2s ease-in-out;
+  }
+
+  .btn {
+    font-weight: 500;
+  }
+
+  .btn:hover {
+    transform: translateY(-1px);
+  }
+
+  .card {
+    background: rgba(255, 255, 255, 0.95);
+  }
+
+  .fixed-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1020;
+  }
+
+  .pb-footer {
+    padding-bottom: 3.5rem; /* Adjust this value based on your footer height */
+  }
+
+  .footer {
+    min-height: 3rem;
+  }
+</style>
