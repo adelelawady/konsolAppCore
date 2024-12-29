@@ -28,6 +28,9 @@ export class PlayStationFinancialReportsComponent implements OnInit, AfterViewIn
   @ViewChild('bankBalanceChart', { static: true }) bankBalanceChart!: ElementRef;
   @ViewChild('topItemsByQuantityChart', { static: true }) topItemsByQuantityChart!: ElementRef;
   @ViewChild('performanceRatiosChart', { static: true }) performanceRatiosChart!: ElementRef;
+
+  @ViewChild('performanceRatiosChartTwo', { static: true }) performanceRatiosChartTwo!: ElementRef;
+
   @ViewChild('marginTrendsChart', { static: true }) marginTrendsChart!: ElementRef;
   @ViewChild('profitBreakdownChart', { static: true }) profitBreakdownChart!: ElementRef;
 
@@ -52,6 +55,9 @@ export class PlayStationFinancialReportsComponent implements OnInit, AfterViewIn
   itemSalesChartsOption: EChartsOption = {};
 
   performanceRatiosOption: EChartsOption = {};
+
+  performanceRatiosOptionTwo: EChartsOption = {};
+
   marginTrendsOption: EChartsOption = {};
   profitBreakdownOption: EChartsOption = {};
 
@@ -78,6 +84,8 @@ export class PlayStationFinancialReportsComponent implements OnInit, AfterViewIn
     cashFlowTrend: undefined,
     bankBalance: undefined,
     performanceRatios: undefined,
+    performanceRatiosTwo: undefined,
+
     marginTrends: undefined,
     profitBreakdown: undefined,
     topItemsByQuantity: undefined,
@@ -214,6 +222,9 @@ export class PlayStationFinancialReportsComponent implements OnInit, AfterViewIn
     this.cashFlowTrendOption = this.getDefaultChartOptions('financialReports.charts.cashFlowTrend');
     this.bankBalanceOption = this.getDefaultChartOptions('financialReports.charts.bankBalance.title');
     this.performanceRatiosOption = this.getDefaultChartOptions('financialReports.charts.performanceRatios.title');
+
+    this.performanceRatiosOptionTwo = this.getDefaultChartOptions('financialReports.charts.performanceRatios.title');
+
     this.marginTrendsOption = this.getDefaultChartOptions('financialReports.charts.marginTrends.title');
     this.profitBreakdownOption = this.getDefaultChartOptions('financialReports.charts.profitBreakdown.title');
   }
@@ -254,6 +265,7 @@ export class PlayStationFinancialReportsComponent implements OnInit, AfterViewIn
       this.updateBankBalance();
       this.updateTopItemsByQuantity();
       this.updatePerformanceCharts();
+
       // Update chart instances with new options
       if (this.charts.dailySales) {
         this.charts.dailySales.setOption(this.dailySalesTrendOption, true);
@@ -291,6 +303,12 @@ export class PlayStationFinancialReportsComponent implements OnInit, AfterViewIn
       if (this.charts.performanceRatios) {
         this.charts.performanceRatios.setOption(this.performanceRatiosOption, true);
       }
+
+      // Add these chart instance updates
+      if (this.charts.performanceRatiosTwo) {
+        this.charts.performanceRatiosTwo.setOption(this.performanceRatiosOptionTwo, true);
+      }
+
       if (this.charts.marginTrends) {
         this.charts.marginTrends.setOption(this.marginTrendsOption, true);
       }
@@ -818,9 +836,73 @@ export class PlayStationFinancialReportsComponent implements OnInit, AfterViewIn
 
   // Add these new methods
   private updatePerformanceCharts(): void {
+    this.updatePerformanceRatiosTwo();
     this.updatePerformanceRatios();
     this.updateMarginTrends();
     this.updateProfitBreakdown();
+  }
+
+  private updatePerformanceRatiosTwo(): void {
+    const ratiosData = this.dashboardData?.performanceCharts?.find((chart: any) => chart.title === 'Performance Ratios');
+    if (ratiosData) {
+      this.performanceRatiosOptionTwo = {
+        ...this.getDefaultChartOptions('financialReports.charts.performanceRatios.title'),
+        tooltip: {
+          trigger: 'item',
+          formatter: (params: any) => {
+            const value = params.value;
+            return `${params.name}<br/>${params.marker}${params.name}: ${value.toFixed(2)}%`;
+          },
+        },
+        radar: {
+          shape: 'circle',
+          splitNumber: 5,
+          axisName: {
+            show: true,
+            formatter: function (name?: string) {
+              if (!name) return '';
+              return name.length > 15 ? name.substring(0, 15) + '...' : name;
+            },
+          },
+          splitArea: {
+            show: true,
+            areaStyle: {
+              color: ['rgba(255,255,255,0.3)', 'rgba(200,200,200,0.3)'],
+            },
+          },
+          axisLine: {
+            show: true,
+          },
+          splitLine: {
+            show: true,
+          },
+          indicator: ratiosData.labels.map((label: string) => ({
+            name: label,
+            max: Math.max(...ratiosData.series[0].data) * 1.2, // Set max to 120% of highest value
+          })),
+        },
+        series: [
+          {
+            name: ratiosData.series[0].name,
+            type: 'radar',
+            data: [
+              {
+                value: ratiosData.series[0].data,
+                name: ratiosData.series[0].name,
+                areaStyle: {
+                  opacity: 0.3,
+                },
+                lineStyle: {
+                  width: 2,
+                },
+                symbol: 'circle',
+                symbolSize: 6,
+              },
+            ],
+          },
+        ],
+      };
+    }
   }
 
   private updatePerformanceRatios(): void {
