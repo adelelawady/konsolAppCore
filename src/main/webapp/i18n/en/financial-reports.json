@@ -96,7 +96,8 @@
       },
       "monthlySales": "Monthly Sales Trend",
       "monthlyUserSales": "Monthly User Sales",
-      "dailyUserSales": "Daily User Sales"
+      "dailyUserSales": "Daily User Sales",
+      "dailyItemSales": "Daily Item Sales"
     },
     "cashFlow": {
       "title": "Cash Flow Summary",

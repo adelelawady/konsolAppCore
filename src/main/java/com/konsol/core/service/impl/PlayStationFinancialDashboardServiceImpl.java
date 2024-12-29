@@ -569,7 +569,7 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
 
         // Revenue series
         SeriesData revenueSeries = new SeriesData();
-        revenueSeries.setName("Revenue (₺)");
+        revenueSeries.setName("Revenue ($)");
         revenueSeries.setType("line");
         revenueSeries.setyAxisIndex(0);
         revenueSeries.setData(sortedMetrics.stream().map(entry -> entry.getValue().revenue).collect(Collectors.toList()));
@@ -617,9 +617,9 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
 
         // Revenue axis (left)
         Map<String, Object> revenueAxis = new HashMap<>();
-        revenueAxis.put("name", "Revenue (₺)");
+        revenueAxis.put("name", "Revenue ($)");
         revenueAxis.put("position", "left");
-        revenueAxis.put("axisLabel", Map.of("formatter", "₺{value}"));
+        revenueAxis.put("axisLabel", Map.of("formatter", "${value}"));
         yAxes.add(revenueAxis);
 
         // Quantity axis (right)
@@ -631,7 +631,7 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
         options.put("yAxis", yAxes);
 
         // Configure tooltips
-        options.put("tooltip", Map.of("trigger", "axis", "formatter", "{b}<br/>{a0}: ₺{c0}<br/>{a1}: {c1}"));
+        options.put("tooltip", Map.of("trigger", "axis", "formatter", "{b}<br/>{a0}: ${c0}<br/>{a1}: {c1}"));
 
         chart.setOptions(options);
 
@@ -692,7 +692,7 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
         revenueChart.setTitle("Top " + limit + " Items by Revenue");
 
         SeriesData revenueSeries = new SeriesData();
-        revenueSeries.setName("Revenue (₺)");
+        revenueSeries.setName("Revenue ($)");
         revenueSeries.setType("bar");
         revenueSeries.setData(topItems.stream().map(entry -> entry.getValue().revenue).collect(Collectors.toList()));
 
@@ -710,8 +710,8 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
         // Configure revenue chart options
         Map<String, Object> revenueOptions = new HashMap<>();
         revenueOptions.put("showLegend", true);
-        revenueOptions.put("yAxis", List.of(Map.of("name", "Revenue (₺)", "axisLabel", Map.of("formatter", "₺{value}"))));
-        revenueOptions.put("tooltip", Map.of("trigger", "axis", "formatter", "{b}<br/>Revenue: ₺{c}"));
+        revenueOptions.put("yAxis", List.of(Map.of("name", "Revenue ($)", "axisLabel", Map.of("formatter", "${value}"))));
+        revenueOptions.put("tooltip", Map.of("trigger", "axis", "formatter", "{b}<br/>Revenue: ${c}"));
         revenueChart.setOptions(revenueOptions);
 
         // Create quantity chart
@@ -802,7 +802,7 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
                         .multiply(BigDecimal.valueOf(100))
                         .divide(totalRevenue, 2, RoundingMode.HALF_UP);
                     return String.format(
-                        "%s: %s%% (₺%s)",
+                        "%s: %s%% ($%s)",
                         entry.getKey(),
                         percentage.toString(),
                         entry.getValue().setScale(2, RoundingMode.HALF_UP).toString()
@@ -1200,9 +1200,13 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
     @Override
     public List<FinancialChartDTO> getPerformanceCharts(LocalDateTime startDate, LocalDateTime endDate) {
         List<FinancialChartDTO> charts = new ArrayList<>();
-        charts.add(getPerformanceRatios());
-        charts.add(getMarginTrends(startDate, endDate));
-        charts.add(getProfitBreakdown());
+        //  charts.add(getPerformanceRatios());
+        //  charts.add(getMarginTrends(startDate, endDate));
+        //  charts.add(getProfitBreakdown());
+
+        charts.add(createPerformanceRatiosChart(startDate, endDate));
+        charts.add(createMarginTrendsChart(startDate, endDate));
+        charts.add(createProfitBreakdownChart(startDate, endDate));
         return charts;
     }
 
@@ -1282,6 +1286,197 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
 
         chart.setLabels(labels);
         return chart;
+    }
+
+    private FinancialChartDTO createPerformanceRatiosChart(LocalDateTime startDate, LocalDateTime endDate) {
+        FinancialChartDTO chart = new FinancialChartDTO();
+        chart.setChartType("radar");
+        chart.setTitle("Performance Ratios");
+
+        // Define labels and data for the radar chart
+        List<String> labels = Arrays.asList("Gross Margin", "Net Margin", "Operating Margin", "ROI", "Cash Flow Ratio");
+        List<BigDecimal> data = calculatePerformanceRatios(startDate, endDate);
+
+        SeriesData seriesData = new SeriesData();
+        seriesData.setName("Ratios");
+        seriesData.setType("radar");
+        seriesData.setData(data);
+
+        chart.setLabels(labels);
+        chart.setSeries(Collections.singletonList(seriesData));
+
+        return chart;
+    }
+
+    private FinancialChartDTO createMarginTrendsChart(LocalDateTime startDate, LocalDateTime endDate) {
+        FinancialChartDTO chart = new FinancialChartDTO();
+        chart.setChartType("line");
+        chart.setTitle("Margin Trends");
+
+        // Retrieve margin trends over time
+        Map<String, BigDecimal> marginTrends = calculateMarginTrends(startDate, endDate);
+
+        SeriesData seriesData = new SeriesData();
+        seriesData.setName("Margin");
+        seriesData.setType("line");
+        seriesData.setData(new ArrayList<>(marginTrends.values()));
+
+        chart.setLabels(new ArrayList<>(marginTrends.keySet()));
+        chart.setSeries(Collections.singletonList(seriesData));
+
+        return chart;
+    }
+
+    private FinancialChartDTO createProfitBreakdownChart(LocalDateTime startDate, LocalDateTime endDate) {
+        FinancialChartDTO chart = new FinancialChartDTO();
+        chart.setChartType("pie");
+        chart.setTitle("Profit Breakdown");
+
+        // Retrieve profit breakdown data
+        Map<String, BigDecimal> profitComponents = calculateProfitBreakdown(startDate, endDate);
+
+        SeriesData seriesData = new SeriesData();
+        seriesData.setName("Profit Components");
+        seriesData.setType("pie");
+        seriesData.setData(new ArrayList<>(profitComponents.values()));
+
+        chart.setLabels(new ArrayList<>(profitComponents.keySet()));
+        chart.setSeries(Collections.singletonList(seriesData));
+
+        return chart;
+    }
+
+    private List<BigDecimal> calculatePerformanceRatios(LocalDateTime startDate, LocalDateTime endDate) {
+        // Example implementation using PlayStationSessionRepository
+        List<Invoice> invoices = playStationSessionRepository
+            .findByStartTimeBetweenAndActiveIsFalse(startDate.toInstant(ZoneOffset.UTC), endDate.toInstant(ZoneOffset.UTC))
+            .stream()
+            .map(PlayStationSession::getInvoice)
+            .collect(Collectors.toList());
+
+        BigDecimal grossMargin = calculateGrossMarginFromInvoices(invoices);
+        BigDecimal netMargin = calculateNetMarginFromInvoices(invoices);
+        BigDecimal operatingMargin = calculateOperatingMarginFromInvoices(invoices);
+        BigDecimal roi = calculateROIFromInvoices(invoices);
+        BigDecimal cashFlowRatio = calculateCashFlowRatioFromInvoices(invoices);
+
+        return Arrays.asList(grossMargin, netMargin, operatingMargin, roi, cashFlowRatio);
+    }
+
+    private BigDecimal calculateGrossMarginFromInvoices(List<Invoice> invoices) {
+        BigDecimal totalRevenue = invoices.stream().map(Invoice::getNetPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal totalCost = invoices.stream().map(Invoice::getTotalCost).reduce(BigDecimal.ZERO, BigDecimal::add);
+        if (totalRevenue.compareTo(BigDecimal.ZERO) > 0) {
+            return totalRevenue.subtract(totalCost).multiply(BigDecimal.valueOf(100)).divide(totalRevenue, 2, RoundingMode.HALF_UP);
+        }
+        return BigDecimal.ZERO;
+    }
+
+    private BigDecimal calculateNetMarginFromInvoices(List<Invoice> invoices) {
+        BigDecimal totalRevenue = invoices.stream().map(Invoice::getNetPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal totalExpenses = invoices.stream().map(Invoice::getExpenses).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal totalCost = invoices.stream().map(Invoice::getTotalCost).reduce(BigDecimal.ZERO, BigDecimal::add);
+        if (totalRevenue.compareTo(BigDecimal.ZERO) > 0) {
+            BigDecimal netProfit = totalRevenue.subtract(totalCost).subtract(totalExpenses);
+            return netProfit.multiply(BigDecimal.valueOf(100)).divide(totalRevenue, 2, RoundingMode.HALF_UP);
+        }
+        return BigDecimal.ZERO;
+    }
+
+    private BigDecimal calculateOperatingMarginFromInvoices(List<Invoice> invoices) {
+        BigDecimal totalRevenue = invoices.stream().map(Invoice::getNetPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal totalOperatingExpenses = invoices.stream().map(Invoice::getExpenses).reduce(BigDecimal.ZERO, BigDecimal::add);
+        if (totalRevenue.compareTo(BigDecimal.ZERO) > 0) {
+            BigDecimal operatingProfit = totalRevenue.subtract(totalOperatingExpenses);
+            return operatingProfit.multiply(BigDecimal.valueOf(100)).divide(totalRevenue, 2, RoundingMode.HALF_UP);
+        }
+        return BigDecimal.ZERO;
+    }
+
+    private BigDecimal calculateROIFromInvoices(List<Invoice> invoices) {
+        BigDecimal totalInvestment = invoices.stream().map(Invoice::getNetCost).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal totalProfit = invoices.stream().map(Invoice::getNetResult).reduce(BigDecimal.ZERO, BigDecimal::add);
+        if (totalInvestment.compareTo(BigDecimal.ZERO) > 0) {
+            return totalProfit.multiply(BigDecimal.valueOf(100)).divide(totalInvestment, 2, RoundingMode.HALF_UP);
+        }
+        return BigDecimal.ZERO;
+    }
+
+    private BigDecimal calculateCashFlowRatioFromInvoices(List<Invoice> invoices) {
+        BigDecimal totalCashIn = invoices.stream().map(Invoice::getUserNetPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal totalCashOut = invoices.stream().map(Invoice::getNetCost).reduce(BigDecimal.ZERO, BigDecimal::add);
+        if (totalCashOut.compareTo(BigDecimal.ZERO) > 0) {
+            return totalCashIn.divide(totalCashOut, 2, RoundingMode.HALF_UP);
+        }
+        return BigDecimal.ZERO;
+    }
+
+    private Map<String, BigDecimal> calculateMarginTrends(LocalDateTime startDate, LocalDateTime endDate) {
+        Map<String, BigDecimal> trends = new TreeMap<>();
+
+        // Retrieve all invoices within the desired date range
+        List<Invoice> invoices = playStationSessionRepository
+            .findByStartTimeBetweenAndActiveIsFalse(startDate.toInstant(ZoneOffset.UTC), endDate.toInstant(ZoneOffset.UTC))
+            .stream()
+            .map(PlayStationSession::getInvoice)
+            .collect(Collectors.toList());
+
+        // Group invoices by month and calculate average margin
+        Map<String, List<Invoice>> groupedByMonth = invoices
+            .stream()
+            .collect(
+                Collectors.groupingBy(invoice ->
+                    LocalDateTime.ofInstant(invoice.getCreatedDate(), ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy-MM"))
+                )
+            );
+
+        groupedByMonth.forEach((month, monthlyInvoices) -> {
+            BigDecimal totalRevenue = monthlyInvoices.stream().map(Invoice::getNetPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
+            BigDecimal totalCost = monthlyInvoices.stream().map(Invoice::getTotalCost).reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            if (totalRevenue.compareTo(BigDecimal.ZERO) > 0) {
+                BigDecimal margin = totalRevenue
+                    .subtract(totalCost)
+                    .multiply(BigDecimal.valueOf(100))
+                    .divide(totalRevenue, 2, RoundingMode.HALF_UP);
+                trends.put(month, margin);
+            } else {
+                trends.put(month, BigDecimal.ZERO);
+            }
+        });
+
+        return trends;
+    }
+
+    private Map<String, BigDecimal> calculateProfitBreakdown(LocalDateTime startDate, LocalDateTime endDate) {
+        Map<String, BigDecimal> breakdown = new LinkedHashMap<>();
+
+        // Retrieve all invoices within the desired date range
+        List<Invoice> invoices = playStationSessionRepository
+            .findByStartTimeBetweenAndActiveIsFalse(startDate.toInstant(ZoneOffset.UTC), endDate.toInstant(ZoneOffset.UTC))
+            .stream()
+            .map(PlayStationSession::getInvoice)
+            .collect(Collectors.toList());
+
+        // Calculate components of the profit breakdown
+        BigDecimal grossProfit = invoices
+            .stream()
+            .map(invoice -> invoice.getNetPrice().subtract(invoice.getTotalCost()))
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal operatingExpenses = invoices.stream().map(Invoice::getExpenses).reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal netProfit = invoices
+            .stream()
+            .map(invoice -> invoice.getNetPrice().subtract(invoice.getTotalCost()).subtract(invoice.getExpenses()))
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        // Add components to the breakdown map
+        breakdown.put("Gross Profit", grossProfit);
+        breakdown.put("Operating Expenses", operatingExpenses);
+        breakdown.put("Net Profit", netProfit);
+
+        return breakdown;
     }
 
     @Override

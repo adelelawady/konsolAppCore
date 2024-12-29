@@ -5,8 +5,7 @@ import { FinancialReportsService } from 'app/core/konsolApi/api/financialReports
 import { FinancialDashboardDTO } from 'app/core/konsolApi/model/financialDashboardDTO';
 import { FinancialSearchDTO } from 'app/core/konsolApi/model/financialSearchDTO';
 import * as echarts from 'echarts';
-import { EChartsCoreOption, EChartsOption } from 'echarts';
-import { ECBasicOption } from 'echarts/types/dist/shared';
+import { EChartsOption } from 'echarts';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -20,6 +19,11 @@ export class PlayStationFinancialReportsComponent implements OnInit, AfterViewIn
   @ViewChild('salesVsCostsChart', { static: true }) salesVsCostsChart!: ElementRef;
   @ViewChild('profitMarginChart', { static: true }) profitMarginChart!: ElementRef;
   @ViewChild('topItemsChart', { static: true }) topItemsChart!: ElementRef;
+
+  @ViewChild('itemSalesChartView', { static: true }) itemSalesChartView!: ElementRef;
+
+  @ViewChild('test', { static: true }) test!: ElementRef;
+
   @ViewChild('cashFlowTrendChart', { static: true }) cashFlowTrendChart!: ElementRef;
   @ViewChild('bankBalanceChart', { static: true }) bankBalanceChart!: ElementRef;
   @ViewChild('topItemsByQuantityChart', { static: true }) topItemsByQuantityChart!: ElementRef;
@@ -45,6 +49,8 @@ export class PlayStationFinancialReportsComponent implements OnInit, AfterViewIn
   topItemsByRevenueOption: EChartsOption = {};
   topItemsByQuantityOption: EChartsOption = {};
 
+  itemSalesChartsOption: EChartsOption = {};
+
   performanceRatiosOption: EChartsOption = {};
   marginTrendsOption: EChartsOption = {};
   profitBreakdownOption: EChartsOption = {};
@@ -68,6 +74,7 @@ export class PlayStationFinancialReportsComponent implements OnInit, AfterViewIn
     salesVsCosts: undefined,
     profitMargin: undefined,
     topItems: undefined,
+    itemSales: undefined,
     cashFlowTrend: undefined,
     bankBalance: undefined,
     performanceRatios: undefined,
@@ -179,6 +186,11 @@ export class PlayStationFinancialReportsComponent implements OnInit, AfterViewIn
     if (this.topItemsChart) {
       this.charts.topItems = echarts.init(this.topItemsChart.nativeElement);
     }
+
+    if (this.itemSalesChartView) {
+      this.charts.itemSales = echarts.init(this.itemSalesChartView.nativeElement);
+    }
+
     if (this.cashFlowTrendChart) {
       this.charts.cashFlowTrend = echarts.init(this.cashFlowTrendChart.nativeElement);
     }
@@ -195,6 +207,9 @@ export class PlayStationFinancialReportsComponent implements OnInit, AfterViewIn
     this.salesVsCostsOption = this.getDefaultChartOptions('financialReports.charts.salesVsCosts');
     this.profitMarginDistributionOption = this.getDefaultChartOptions('financialReports.charts.profitMargin');
     this.topItemsByRevenueOption = this.getDefaultChartOptions('financialReports.charts.topItemsByRevenue');
+
+    this.itemSalesChartsOption = this.getDefaultChartOptions('financialReports.charts.dailyItemSales');
+
     this.topItemsByQuantityOption = this.getDefaultChartOptions('financialReports.charts.topItemsByQuantity');
     this.cashFlowTrendOption = this.getDefaultChartOptions('financialReports.charts.cashFlowTrend');
     this.bankBalanceOption = this.getDefaultChartOptions('financialReports.charts.bankBalance.title');
@@ -232,6 +247,9 @@ export class PlayStationFinancialReportsComponent implements OnInit, AfterViewIn
       this.updateSalesVsCosts();
       this.updateProfitMarginDistribution();
       this.updateTopItemsByRevenue();
+
+      this.updateItemSalesChartsRevenue();
+
       this.updateCashFlowTrend();
       this.updateBankBalance();
       this.updateTopItemsByQuantity();
@@ -249,6 +267,12 @@ export class PlayStationFinancialReportsComponent implements OnInit, AfterViewIn
       if (this.charts.profitMargin) {
         this.charts.profitMargin.setOption(this.profitMarginDistributionOption, true);
       }
+
+      if (this.charts.itemSales) {
+        this.charts?.itemSales.setOption(this.itemSalesChartsOption, true);
+        console.log(this.itemSalesChartsOption);
+      }
+
       if (this.charts.topItems) {
         this.charts.topItems.setOption(this.topItemsByRevenueOption, true);
       }
@@ -340,6 +364,41 @@ export class PlayStationFinancialReportsComponent implements OnInit, AfterViewIn
       this.storeAccountAnalysis = {
         storeMetrics: this.dashboardData.storeAccountAnalysis?.storeMetrics || [],
         accountMetrics: this.dashboardData.storeAccountAnalysis?.accountMetrics || [],
+      };
+    }
+  }
+
+  updateItemSalesChartsRevenue(): void {
+    const revenueData: any = this.dashboardData?.invoiceItemAnalysis?.itemSalesCharts?.find((chart: any) =>
+      chart.title.includes('Daily Sales Trend')
+    );
+    console.log('updateItemSalesChartsRevenue', revenueData);
+    if (revenueData) {
+      this.itemSalesChartsOption = {
+        ...this.getDefaultChartOptions('financialReports.charts.dailyItemSales'),
+        tooltip: {
+          trigger: 'axis',
+          formatter: revenueData.options?.tooltip?.formatter || '{b}<br/>{a0}: ${c0}<br/>{a1}: {c1}',
+        },
+        xAxis: {
+          type: 'category',
+          data: revenueData.labels || [],
+          axisLabel: {
+            rotate: 30,
+          },
+        },
+        yAxis: revenueData.options?.yAxis || [],
+        series:
+          revenueData.series?.map((series: any) => ({
+            name: series.name,
+            type: series.type || 'line',
+            data: series.data,
+            smooth: series.style?.smooth || false,
+            itemStyle: {
+              color: series.style?.color,
+            },
+            yAxisIndex: series.yAxisIndex,
+          })) || [],
       };
     }
   }

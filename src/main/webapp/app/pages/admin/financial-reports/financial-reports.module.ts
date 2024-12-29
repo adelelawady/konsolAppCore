@@ -7,6 +7,7 @@ import { PlayStationFinancialReportsComponent } from './financial-reports.compon
 
 import { NgxEchartsModule, NGX_ECHARTS_CONFIG } from 'ngx-echarts';
 
+// Echarts
 import * as echarts from 'echarts/core';
 import { BarChart } from 'echarts/charts';
 import { GridComponent } from 'echarts/components';

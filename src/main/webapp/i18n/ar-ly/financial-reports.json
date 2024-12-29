@@ -93,7 +93,8 @@
       },
       "monthlySales": "اتجاه المبيعات الشهرية",
       "monthlyUserSales": "مبيعات المستخدم الشهرية",
-      "dailyUserSales": "مبيعات المستخدم اليومية"
+      "dailyUserSales": "مبيعات المستخدم اليومية",
+      "dailyItemSales": "مبيعات المنتجات اليومية"
     },
     "cashFlow": {
       "title": "ملخص التدفق النقدي",
