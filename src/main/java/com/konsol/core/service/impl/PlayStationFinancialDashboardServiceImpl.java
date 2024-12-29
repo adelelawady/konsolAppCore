@@ -26,13 +26,9 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
 
     private final Logger log = LoggerFactory.getLogger(PlayStationFinancialDashboardServiceImpl.class);
 
-    private final InvoiceRepository invoiceRepository;
     private final MoneyRepository moneyRepository;
-    private final StoreRepository storeRepository;
     private final BankRepository bankRepository;
     private final PlayStationSessionRepository playStationSessionRepository;
-    private final AccountUserRepository accountUserRepository;
-    private final InvoiceItemRepository invoiceItemRepository;
     private final BankService bankService;
 
     public PlayStationFinancialDashboardServiceImpl(
@@ -45,13 +41,9 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
         InvoiceItemRepository invoiceItemRepository,
         BankService bankService
     ) {
-        this.invoiceRepository = invoiceRepository;
         this.moneyRepository = moneyRepository;
-        this.storeRepository = storeRepository;
         this.bankRepository = bankRepository;
         this.playStationSessionRepository = playStationSessionRepository;
-        this.accountUserRepository = accountUserRepository;
-        this.invoiceItemRepository = invoiceItemRepository;
         this.bankService = bankService;
     }
 
@@ -77,22 +69,22 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
         dashboard.setSalesCharts(getSalesCharts(startDate.toLocalDateTime(), endDate.toLocalDateTime())); //*
 
         // Get invoice items analysis
-        //  dashboard.setInvoiceItemAnalysis(getInvoiceItemAnalysis(startDate.toLocalDateTime(), endDate.toLocalDateTime(), storeId));
-        // dashboard.setItemSalesCharts(getItemSalesCharts(startDate.toLocalDateTime(), endDate.toLocalDateTime(), storeId));
+        dashboard.setInvoiceItemAnalysis(getInvoiceItemAnalysis(startDate.toLocalDateTime(), endDate.toLocalDateTime()));
+        //dashboard.setItemSalesCharts(getItemSalesCharts(startDate.toLocalDateTime(), endDate.toLocalDateTime()));
 
-        //dashboard.setCashFlowMetrics(getCashFlowMetrics(startDate.toLocalDateTime(), endDate.toLocalDateTime(), bankId));
-        // dashboard.setCashFlowCharts(getCashFlowCharts(startDate.toLocalDateTime(), endDate.toLocalDateTime(), bankId));
+        dashboard.setCashFlowMetrics(getCashFlowMetrics(startDate.toLocalDateTime(), endDate.toLocalDateTime(), bankId));
+        dashboard.setCashFlowCharts(getCashFlowCharts(startDate.toLocalDateTime(), endDate.toLocalDateTime(), bankId));
 
-        // dashboard.setInvoiceAnalysis(getInvoiceAnalysis(storeId, startDate.toLocalDateTime(), endDate.toLocalDateTime()));
-        // dashboard.setInvoiceCharts(getInvoiceCharts(startDate.toLocalDateTime(), endDate.toLocalDateTime()));
+        dashboard.setInvoiceAnalysis(getInvoiceAnalysis(storeId, startDate.toLocalDateTime(), endDate.toLocalDateTime()));
+        dashboard.setInvoiceCharts(getInvoiceCharts(startDate.toLocalDateTime(), endDate.toLocalDateTime()));
 
-        // dashboard.setPerformanceIndicators(getPerformanceIndicators(startDate.toLocalDateTime(), endDate.toLocalDateTime()));
-        // dashboard.setPerformanceCharts(getPerformanceCharts(startDate.toLocalDateTime(), endDate.toLocalDateTime()));
+        dashboard.setPerformanceIndicators(getPerformanceIndicators(startDate.toLocalDateTime(), endDate.toLocalDateTime()));
+        dashboard.setPerformanceCharts(getPerformanceCharts(startDate.toLocalDateTime(), endDate.toLocalDateTime()));
 
-        //   dashboard.setStoreAccountAnalysis(
-        //      getStoreAccountAnalysis(startDate.toLocalDateTime(), endDate.toLocalDateTime(), storeId, accountId)
-        //  );
-        // dashboard.setAnalysisCharts(getStoreAccountCharts(startDate.toLocalDateTime(), endDate.toLocalDateTime(), storeId, accountId));
+        dashboard.setStoreAccountAnalysis(
+            getStoreAccountAnalysis(startDate.toLocalDateTime(), endDate.toLocalDateTime(), storeId, accountId)
+        );
+        dashboard.setAnalysisCharts(getStoreAccountCharts(startDate.toLocalDateTime(), endDate.toLocalDateTime(), storeId, accountId));
 
         return dashboard;
     }
@@ -247,8 +239,8 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
                 .ofInstant(invoice.getCreatedDate(), ZoneId.systemDefault())
                 .format(DateTimeFormatter.ofPattern("yyyy-MM"));
             SalesVsCosts data = monthlyData.computeIfAbsent(monthKey, k -> new SalesVsCosts());
-            data.addSales(invoice.getTotalPrice());
-            data.addCosts(invoice.getTotalCost());
+            data.addSales(invoice.getUserNetPrice());
+            data.addCosts(invoice.getNetCost());
         });
 
         List<String> labels = new ArrayList<>(monthlyData.keySet());
@@ -301,7 +293,7 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
         marginRanges.put("41%+", 0);
 
         invoices.forEach(invoice -> {
-            BigDecimal revenue = invoice.getTotalPrice();
+            BigDecimal revenue = invoice.getUserNetPrice();
             BigDecimal cost = invoice.getTotalCost();
             if (revenue.compareTo(BigDecimal.ZERO) > 0) {
                 BigDecimal margin = cost.subtract(revenue).multiply(new BigDecimal(100)).divide(revenue, 2, RoundingMode.HALF_UP);
@@ -358,20 +350,15 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
     }
 
     @Override
-    public InvoiceItemAnalysisDTO getInvoiceItemAnalysis(LocalDateTime startDate, LocalDateTime endDate, String storeId) {
+    public InvoiceItemAnalysisDTO getInvoiceItemAnalysis(LocalDateTime startDate, LocalDateTime endDate) {
         InvoiceItemAnalysisDTO analysis = new InvoiceItemAnalysisDTO();
 
-        // Get all invoice items for the period
-        List<InvoiceItem> invoiceItems = invoiceItemRepository.findByCreatedDateBetween(startDate, endDate);
-
-        /*
-        // Filter by store if specified
-        if (storeId != null && !storeId.isEmpty()) {
-            invoiceItems = invoiceItems.stream()
-                .filter(item -> item.getStoreId() != null && item.getStoreId().equals(storeId))
-                .collect(Collectors.toList());
-        }
-        */
+        List<InvoiceItem> invoiceItems = playStationSessionRepository
+            .findByStartTimeBetweenAndActiveIsFalse(startDate.toInstant(ZoneOffset.UTC), endDate.toInstant(ZoneOffset.UTC))
+            .stream()
+            .map(PlayStationSession::getInvoice)
+            .flatMap(invoice -> invoice.getInvoiceItems().stream())
+            .collect(Collectors.toList());
 
         // Calculate metrics for each item
         Map<String, List<InvoiceItem>> itemGroups = invoiceItems
@@ -388,19 +375,19 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
 
                 BigDecimal totalRevenue = items
                     .stream()
-                    .map(InvoiceItem::getTotalPrice)
+                    .map(InvoiceItem::getNetPrice)
                     .filter(Objects::nonNull)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
 
                 BigDecimal totalCost = items
                     .stream()
-                    .map(InvoiceItem::getTotalCost)
+                    .map(InvoiceItem::getNetCost)
                     .filter(Objects::nonNull)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
 
                 BigDecimal totalQuantity = items
                     .stream()
-                    .map(InvoiceItem::getUnitQtyIn)
+                    .map(InvoiceItem::getUnitQtyOut)
                     .filter(Objects::nonNull)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
 
@@ -440,10 +427,10 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
         Optional<InvoiceItem> topItem = invoiceItems
             .stream()
             .filter(item -> item.getItem() != null)
-            .max(Comparator.comparing(InvoiceItem::getTotalPrice));
+            .max(Comparator.comparing(InvoiceItem::getNetPrice));
 
         if (topItem.isPresent()) {
-            analysis.setTopSellingItemRevenue(topItem.get().getTotalPrice());
+            analysis.setTopSellingItemRevenue(topItem.get().getNetPrice());
             analysis.setTopSellingItemName(topItem.get().getItem().getName());
         }
 
@@ -465,21 +452,21 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
 
                             BigDecimal quantity = items
                                 .stream()
-                                .map(InvoiceItem::getUnitQtyIn)
+                                .map(InvoiceItem::getUnitQtyOut)
                                 .filter(Objects::nonNull)
                                 .reduce(BigDecimal.ZERO, BigDecimal::add);
                             dto.setQuantity(quantity);
 
                             BigDecimal revenue = items
                                 .stream()
-                                .map(InvoiceItem::getTotalPrice)
+                                .map(InvoiceItem::getNetPrice)
                                 .filter(Objects::nonNull)
                                 .reduce(BigDecimal.ZERO, BigDecimal::add);
                             dto.setRevenue(revenue);
 
                             BigDecimal cost = items
                                 .stream()
-                                .map(InvoiceItem::getTotalCost)
+                                .map(InvoiceItem::getNetCost)
                                 .filter(Objects::nonNull)
                                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
@@ -505,13 +492,13 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
         analysis.setTopSellingItems(topItems);
 
         // Get sales charts
-        analysis.setItemSalesCharts(getItemSalesCharts(startDate, endDate, storeId));
+        analysis.setItemSalesCharts(getItemSalesCharts(startDate, endDate));
 
         return analysis;
     }
 
     @Override
-    public List<FinancialChartDTO> getItemSalesCharts(LocalDateTime startDate, LocalDateTime endDate, String storeId) {
+    public List<FinancialChartDTO> getItemSalesCharts(LocalDateTime startDate, LocalDateTime endDate) {
         List<FinancialChartDTO> charts = new ArrayList<>();
 
         // Add daily sales trend chart
@@ -526,7 +513,13 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
     @Override
     public FinancialChartDTO getItemSalesTrend(LocalDateTime startDate, LocalDateTime endDate) {
         // Get all invoice items for the period
-        List<InvoiceItem> invoiceItems = invoiceItemRepository.findByCreatedDateBetween(startDate, endDate);
+
+        List<InvoiceItem> invoiceItems = playStationSessionRepository
+            .findByStartTimeBetweenAndActiveIsFalse(startDate.toInstant(ZoneOffset.UTC), endDate.toInstant(ZoneOffset.UTC))
+            .stream()
+            .map(PlayStationSession::getInvoice)
+            .flatMap(invoice -> invoice.getInvoiceItems().stream())
+            .collect(Collectors.toList());
 
         // Group by date and calculate metrics
         Map<LocalDate, ItemSalesMetrics> dailyMetrics = invoiceItems
@@ -540,13 +533,13 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
                         items -> {
                             BigDecimal totalRevenue = items
                                 .stream()
-                                .map(InvoiceItem::getTotalPrice)
+                                .map(InvoiceItem::getNetPrice)
                                 .filter(Objects::nonNull)
                                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
                             BigDecimal totalQuantity = items
                                 .stream()
-                                .map(InvoiceItem::getUnitQtyIn)
+                                .map(InvoiceItem::getUnitQtyOut)
                                 .filter(Objects::nonNull)
                                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
@@ -650,7 +643,12 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
         List<FinancialChartDTO> charts = new ArrayList<>();
 
         // Get invoice items for the date range
-        List<InvoiceItem> invoiceItems = invoiceItemRepository.findByCreatedDateBetween(startDate, endDate);
+        List<InvoiceItem> invoiceItems = playStationSessionRepository
+            .findByStartTimeBetweenAndActiveIsFalse(startDate.toInstant(ZoneOffset.UTC), endDate.toInstant(ZoneOffset.UTC))
+            .stream()
+            .map(PlayStationSession::getInvoice)
+            .flatMap(invoice -> invoice.getInvoiceItems().stream())
+            .collect(Collectors.toList());
 
         // Group and sum by item
         Map<String, ItemSalesMetrics> itemMetrics = invoiceItems
@@ -664,13 +662,13 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
                         items -> {
                             BigDecimal totalRevenue = items
                                 .stream()
-                                .map(InvoiceItem::getTotalPrice)
+                                .map(InvoiceItem::getNetPrice)
                                 .filter(Objects::nonNull)
                                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
                             BigDecimal totalQuantity = items
                                 .stream()
-                                .map(InvoiceItem::getUnitQtyIn)
+                                .map(InvoiceItem::getUnitQtyOut)
                                 .filter(Objects::nonNull)
                                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
@@ -824,7 +822,12 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
         chart.setTitle("Item Profit Margins");
 
         // Get all invoice items in the date range
-        List<InvoiceItem> invoiceItems = invoiceItemRepository.findByCreatedDateBetween(startDate, endDate);
+        List<InvoiceItem> invoiceItems = playStationSessionRepository
+            .findByStartTimeBetweenAndActiveIsFalse(startDate.toInstant(ZoneOffset.UTC), endDate.toInstant(ZoneOffset.UTC))
+            .stream()
+            .map(PlayStationSession::getInvoice)
+            .flatMap(invoice -> invoice.getInvoiceItems().stream())
+            .collect(Collectors.toList());
 
         // Calculate profit margins by item
         Map<String, BigDecimal> profitMargins = invoiceItems
@@ -838,7 +841,7 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
                         items -> {
                             BigDecimal totalRevenue = items
                                 .stream()
-                                .map(InvoiceItem::getTotalPrice)
+                                .map(InvoiceItem::getNetPrice)
                                 .filter(Objects::nonNull)
                                 .reduce(BigDecimal.ZERO, BigDecimal::add);
                             BigDecimal totalCost = items
@@ -895,7 +898,12 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
     @Override
     public List<ItemProfitabilityDTO> getItemProfitabilityAnalysis(LocalDateTime startDate, LocalDateTime endDate) {
         // Get all invoice items in the date range
-        List<InvoiceItem> invoiceItems = invoiceItemRepository.findByCreatedDateBetween(startDate, endDate);
+        List<InvoiceItem> invoiceItems = playStationSessionRepository
+            .findByStartTimeBetweenAndActiveIsFalse(startDate.toInstant(ZoneOffset.UTC), endDate.toInstant(ZoneOffset.UTC))
+            .stream()
+            .map(PlayStationSession::getInvoice)
+            .flatMap(invoice -> invoice.getInvoiceItems().stream())
+            .collect(Collectors.toList());
 
         // Group by item and calculate metrics
         return invoiceItems
@@ -915,7 +923,7 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
                 // Calculate total revenue
                 BigDecimal totalRevenue = items
                     .stream()
-                    .map(InvoiceItem::getTotalPrice)
+                    .map(InvoiceItem::getNetPrice)
                     .filter(Objects::nonNull)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
                 profitability.setTotalRevenue(totalRevenue);
@@ -923,7 +931,7 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
                 // Calculate total cost
                 BigDecimal totalCost = items
                     .stream()
-                    .map(InvoiceItem::getTotalCost)
+                    .map(InvoiceItem::getNetCost)
                     .filter(Objects::nonNull)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
                 profitability.setTotalCost(totalCost);
@@ -943,7 +951,7 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
                 // Calculate sales volume using unitQtyIn
                 BigDecimal salesVolume = items
                     .stream()
-                    .map(InvoiceItem::getUnitQtyIn)
+                    .map(InvoiceItem::getUnitQtyOut)
                     .filter(Objects::nonNull)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
                 profitability.setSalesVolume(salesVolume.longValue());
@@ -966,7 +974,12 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
     @Override
     public List<ItemSalesDTO> getDetailedItemSalesReport(LocalDateTime startDate, LocalDateTime endDate, String storeId) {
         // Get all invoice items for the date range
-        List<InvoiceItem> invoiceItems = invoiceItemRepository.findByCreatedDateBetween(startDate, endDate);
+        List<InvoiceItem> invoiceItems = playStationSessionRepository
+            .findByStartTimeBetweenAndActiveIsFalse(startDate.toInstant(ZoneOffset.UTC), endDate.toInstant(ZoneOffset.UTC))
+            .stream()
+            .map(PlayStationSession::getInvoice)
+            .flatMap(invoice -> invoice.getInvoiceItems().stream())
+            .collect(Collectors.toList());
 
         // Group by item and calculate metrics
         return invoiceItems
@@ -986,7 +999,7 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
                 // Calculate total quantity sold
                 BigDecimal totalQuantity = items
                     .stream()
-                    .map(InvoiceItem::getUnitQtyIn)
+                    .map(InvoiceItem::getUnitQtyOut)
                     .filter(Objects::nonNull)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
                 salesDTO.setQuantity(totalQuantity);
@@ -994,7 +1007,7 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
                 // Calculate total revenue
                 BigDecimal totalRevenue = items
                     .stream()
-                    .map(InvoiceItem::getTotalPrice)
+                    .map(InvoiceItem::getNetPrice)
                     .filter(Objects::nonNull)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
                 salesDTO.setRevenue(totalRevenue);
@@ -1002,7 +1015,7 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
                 // Calculate total cost and profit
                 BigDecimal totalCost = items
                     .stream()
-                    .map(InvoiceItem::getTotalCost)
+                    .map(InvoiceItem::getNetCost)
                     .filter(Objects::nonNull)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
                 BigDecimal profit = totalRevenue.subtract(totalCost);
@@ -1025,14 +1038,19 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
     @Override
     public InvoiceItemAnalysisDTO getItemSalesAnalysis(LocalDateTime startDate, LocalDateTime endDate) {
         // Get all invoice items
-        List<InvoiceItem> invoiceItems = invoiceItemRepository.findByCreatedDateBetween(startDate, endDate);
+        List<InvoiceItem> invoiceItems = playStationSessionRepository
+            .findByStartTimeBetweenAndActiveIsFalse(startDate.toInstant(ZoneOffset.UTC), endDate.toInstant(ZoneOffset.UTC))
+            .stream()
+            .map(PlayStationSession::getInvoice)
+            .flatMap(invoice -> invoice.getInvoiceItems().stream())
+            .collect(Collectors.toList());
 
         InvoiceItemAnalysisDTO analysis = new InvoiceItemAnalysisDTO();
 
         // Calculate total items sold
         BigDecimal totalItemsSold = invoiceItems
             .stream()
-            .map(InvoiceItem::getUnitQtyIn)
+            .map(InvoiceItem::getUnitQtyOut)
             .filter(Objects::nonNull)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
         analysis.setTotalItemsSold(totalItemsSold);
@@ -1040,7 +1058,7 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
         // Calculate total revenue
         BigDecimal totalRevenue = invoiceItems
             .stream()
-            .map(InvoiceItem::getTotalPrice)
+            .map(InvoiceItem::getNetPrice)
             .filter(Objects::nonNull)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
         analysis.setTotalItemRevenue(totalRevenue);
@@ -1055,10 +1073,10 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
         Optional<InvoiceItem> topSellingItem = invoiceItems
             .stream()
             .filter(item -> item.getItem() != null)
-            .max(Comparator.comparing(item -> item.getTotalPrice() != null ? item.getTotalPrice() : BigDecimal.ZERO));
+            .max(Comparator.comparing(item -> item.getNetPrice() != null ? item.getNetPrice() : BigDecimal.ZERO));
 
         if (topSellingItem.isPresent()) {
-            analysis.setTopSellingItemRevenue(topSellingItem.get().getTotalPrice());
+            analysis.setTopSellingItemRevenue(topSellingItem.get().getNetPrice());
             analysis.setTopSellingItemName(topSellingItem.get().getItem().getName());
         }
 
@@ -1070,7 +1088,7 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
                 Collectors.groupingBy(
                     item -> item.getItem().getCategory(),
                     Collectors.mapping(
-                        InvoiceItem::getTotalPrice,
+                        InvoiceItem::getNetPrice,
                         Collectors.reducing(
                             BigDecimal.ZERO,
                             (a, b) -> (a == null ? BigDecimal.ZERO : a).add(b == null ? BigDecimal.ZERO : b)
@@ -1092,12 +1110,12 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
                         items -> {
                             BigDecimal totalRevenueX = items
                                 .stream()
-                                .map(InvoiceItem::getTotalPrice)
+                                .map(InvoiceItem::getNetPrice)
                                 .filter(Objects::nonNull)
                                 .reduce(BigDecimal.ZERO, BigDecimal::add);
                             BigDecimal totalCost = items
                                 .stream()
-                                .map(InvoiceItem::getTotalCost)
+                                .map(InvoiceItem::getNetCost)
                                 .filter(Objects::nonNull)
                                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
@@ -1125,14 +1143,18 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
     public PerformanceIndicatorsDTO getPerformanceIndicators(LocalDateTime startDate, LocalDateTime endDate) {
         PerformanceIndicatorsDTO indicators = new PerformanceIndicatorsDTO();
 
-        List<Invoice> invoices = invoiceRepository.findByCreatedDateBetween(startDate, endDate);
+        List<Invoice> invoices = playStationSessionRepository
+            .findByStartTimeBetweenAndActiveIsFalse(startDate.toInstant(ZoneOffset.UTC), endDate.toInstant(ZoneOffset.UTC))
+            .stream()
+            .map(PlayStationSession::getInvoice)
+            .collect(Collectors.toList());
         if (invoices.isEmpty()) {
             return indicators;
         }
 
         // Calculate Gross Profit Margin
-        BigDecimal totalRevenue = calculateTotal(invoices, Invoice::getTotalPrice);
-        BigDecimal totalCost = calculateTotal(invoices, Invoice::getTotalCost);
+        BigDecimal totalRevenue = calculateTotal(invoices, Invoice::getUserNetPrice);
+        BigDecimal totalCost = calculateTotal(invoices, Invoice::getNetCost);
         if (totalRevenue.compareTo(BigDecimal.ZERO) > 0) {
             BigDecimal grossProfit = totalRevenue.subtract(totalCost);
             BigDecimal grossProfitMargin = grossProfit.multiply(BigDecimal.valueOf(100)).divide(totalRevenue, 2, RoundingMode.HALF_UP);
@@ -1273,13 +1295,18 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
 
         // Get store performance metrics
         if (storeId != null) {
-            List<Invoice> storeInvoices = invoiceRepository.findByStoreIdAndCreatedDateBetween(storeId, startDate, endDate);
+            List<Invoice> storeInvoices = playStationSessionRepository
+                .findByStartTimeBetweenAndActiveIsFalse(startDate.toInstant(ZoneOffset.UTC), endDate.toInstant(ZoneOffset.UTC))
+                .stream()
+                .map(PlayStationSession::getInvoice)
+                .filter(invoice -> storeId.equals(invoice.getStore().getId()))
+                .collect(Collectors.toList());
 
             // Create store metrics
             StoreMetricsDTO storeMetrics = new StoreMetricsDTO();
             storeMetrics.setStoreId(storeId);
-            storeMetrics.setTotalRevenue(calculateTotal(storeInvoices, Invoice::getTotalPrice));
-            storeMetrics.setTotalCost(calculateTotal(storeInvoices, Invoice::getTotalCost));
+            storeMetrics.setTotalRevenue(calculateTotal(storeInvoices, Invoice::getUserNetPrice));
+            storeMetrics.setTotalCost(calculateTotal(storeInvoices, Invoice::getNetCost));
             storeMetrics.setTransactionCount(storeInvoices.size());
 
             // Calculate average transaction value
@@ -1307,12 +1334,16 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
 
         // Get account performance metrics
         if (accountId != null) {
-            List<Invoice> accountInvoices = invoiceRepository.findByAccountIdAndCreatedDateBetween(accountId, startDate, endDate);
-
+            List<Invoice> accountInvoices = playStationSessionRepository
+                .findByStartTimeBetweenAndActiveIsFalse(startDate.toInstant(ZoneOffset.UTC), endDate.toInstant(ZoneOffset.UTC))
+                .stream()
+                .map(PlayStationSession::getInvoice)
+                .filter(invoice -> accountId.equals(invoice.getAccount().getId()))
+                .collect(Collectors.toList());
             // Create account metrics
             AccountMetricsDTO accountMetrics = new AccountMetricsDTO();
             accountMetrics.setAccountId(accountId);
-            accountMetrics.setTotalTransactionVolume(calculateTotal(accountInvoices, Invoice::getTotalPrice));
+            accountMetrics.setTotalTransactionVolume(calculateTotal(accountInvoices, Invoice::getUserNetPrice));
             accountMetrics.setTransactionCount(accountInvoices.size());
 
             // Calculate average transaction value
@@ -1355,7 +1386,13 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
         chart.setChartType("line");
         chart.setTitle("Store Performance");
 
-        List<Invoice> invoices = invoiceRepository.findByStoreIdAndCreatedDateBetween(storeId, startDate, endDate);
+        List<Invoice> invoices = playStationSessionRepository
+            .findByStartTimeBetweenAndActiveIsFalse(startDate.toInstant(ZoneOffset.UTC), endDate.toInstant(ZoneOffset.UTC))
+            .stream()
+            .map(PlayStationSession::getInvoice)
+            .filter(invoice -> storeId.equals(invoice.getStore().getId()))
+            .collect(Collectors.toList());
+
         Map<String, BigDecimal> dailyRevenue = calculateDailyRevenue(invoices);
 
         SeriesData revenueSeries = new SeriesData();
@@ -1403,7 +1440,13 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
         chart.setChartType("line");
         chart.setTitle("Account Performance");
 
-        List<Invoice> invoices = invoiceRepository.findByAccountIdAndCreatedDateBetween(accountId, startDate, endDate);
+        List<Invoice> invoices = playStationSessionRepository
+            .findByStartTimeBetweenAndActiveIsFalse(startDate.toInstant(ZoneOffset.UTC), endDate.toInstant(ZoneOffset.UTC))
+            .stream()
+            .map(PlayStationSession::getInvoice)
+            .filter(invoice -> accountId.equals(invoice.getAccount().getId()))
+            .collect(Collectors.toList());
+
         Map<String, BigDecimal> dailyRevenue = calculateDailyRevenue(invoices);
 
         SeriesData revenueSeries = new SeriesData();
@@ -1654,23 +1697,34 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
     public InvoiceAnalysisDTO getInvoiceAnalysis(String storeId, LocalDateTime startDate, LocalDateTime endDate) {
         InvoiceAnalysisDTO analysis = new InvoiceAnalysisDTO();
 
-        List<Invoice> invoices = storeId != null
-            ? invoiceRepository.findByStoreIdAndCreatedDateBetween(storeId, startDate, endDate)
-            : invoiceRepository.findByCreatedDateBetween(startDate, endDate);
+        List<Invoice> invoices = playStationSessionRepository
+            .findByStartTimeBetweenAndActiveIsFalse(startDate.toInstant(ZoneOffset.UTC), endDate.toInstant(ZoneOffset.UTC))
+            .stream()
+            .map(PlayStationSession::getInvoice)
+            .collect(Collectors.toList());
 
         if (invoices.isEmpty()) {
             return analysis;
         }
 
         // Calculate average discount percentage
-        int totalDiscountPercentage = invoices.stream().filter(i -> i.getDiscountPer() != null).mapToInt(Invoice::getDiscountPer).sum();
-        analysis.setAverageDiscountPercentage(invoices.isEmpty() ? 0 : totalDiscountPercentage / invoices.size());
-
-        // Calculate average discount amount
-        BigDecimal totalDiscount = invoices
+        BigDecimal totalDiscountPercentage = invoices
             .stream()
             .filter(i -> i.getDiscount() != null)
             .map(Invoice::getDiscount)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+        analysis.setAverageDiscountPercentage(
+            (
+                invoices.isEmpty()
+                    ? BigDecimal.ZERO
+                    : totalDiscountPercentage.divide(BigDecimal.valueOf(invoices.size()), 2, RoundingMode.HALF_UP)
+            ).intValue()
+        );
+        // Calculate average discount amount
+        BigDecimal totalDiscount = invoices
+            .stream()
+            .map(Invoice::getDiscount)
+            .filter(Objects::nonNull)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
         analysis.setAverageDiscount(
             invoices.isEmpty() ? BigDecimal.ZERO : totalDiscount.divide(BigDecimal.valueOf(invoices.size()), 2, RoundingMode.HALF_UP)
@@ -1679,17 +1733,18 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
         // Calculate total additions
         BigDecimal totalAdditions = invoices
             .stream()
-            .filter(i -> i.getAdditions() != null)
             .map(Invoice::getAdditions)
+            .filter(Objects::nonNull)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
         analysis.setTotalAdditions(totalAdditions);
 
         // Calculate total expenses
         BigDecimal totalExpenses = invoices
             .stream()
-            .filter(i -> i.getExpenses() != null)
             .map(Invoice::getExpenses)
+            .filter(Objects::nonNull)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
+
         analysis.setTotalExpenses(totalExpenses);
 
         // Count deferred invoices
@@ -1711,23 +1766,27 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
     @Override
     public List<FinancialChartDTO> getInvoiceCharts(LocalDateTime startDate, LocalDateTime endDate) {
         List<FinancialChartDTO> charts = new ArrayList<>();
-        charts.add(getDiscountDistribution());
+        charts.add(getDiscountDistribution(startDate, endDate));
         charts.add(getExpensesByTypeChart(startDate, endDate));
         charts.add(getDeferredInvoicesTrend(startDate, endDate));
         return charts;
     }
 
     @Override
-    public FinancialChartDTO getDiscountDistribution() {
+    public FinancialChartDTO getDiscountDistribution(LocalDateTime startDate, LocalDateTime endDate) {
         FinancialChartDTO chart = new FinancialChartDTO();
         chart.setChartType("pie");
         chart.setTitle("Discount Distribution");
 
-        List<Invoice> invoices = invoiceRepository.findAll();
+        List<Invoice> invoices = playStationSessionRepository
+            .findByStartTimeBetweenAndActiveIsFalse(startDate.toInstant(ZoneOffset.UTC), endDate.toInstant(ZoneOffset.UTC))
+            .stream()
+            .map(PlayStationSession::getInvoice)
+            .collect(Collectors.toList());
         Map<String, BigDecimal> discountRanges = new TreeMap<>();
 
         invoices.forEach(invoice -> {
-            Integer discountPerInt = invoice.getDiscountPer();
+            BigDecimal discountPerInt = invoice.getDiscount();
             BigDecimal discountPercentage = discountPerInt != null ? BigDecimal.valueOf(discountPerInt.longValue()) : BigDecimal.ZERO;
             String range = getDiscountRange(discountPercentage);
             discountRanges.merge(range, BigDecimal.ONE, BigDecimal::add);
@@ -1788,14 +1847,20 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
         chart.setChartType("line");
         chart.setTitle("Deferred Invoices Trend");
 
-        List<Invoice> deferredInvoices = invoiceRepository.findByDeferredAndCreatedDateBetween(true, startDate, endDate);
+        List<Invoice> deferredInvoices = playStationSessionRepository
+            .findByStartTimeBetweenAndActiveIsFalse(startDate.toInstant(ZoneOffset.UTC), endDate.toInstant(ZoneOffset.UTC))
+            .stream()
+            .map(PlayStationSession::getInvoice)
+            .filter(Invoice::isDeferred)
+            .collect(Collectors.toList());
+
         Map<String, BigDecimal> monthlyDeferred = new TreeMap<>();
 
         deferredInvoices.forEach(invoice -> {
             String monthKey = LocalDateTime
                 .ofInstant(invoice.getCreatedDate(), ZoneId.systemDefault())
                 .format(DateTimeFormatter.ofPattern("yyyy-MM"));
-            monthlyDeferred.merge(monthKey, invoice.getTotalPrice(), BigDecimal::add);
+            monthlyDeferred.merge(monthKey, invoice.getUserNetPrice(), BigDecimal::add);
         });
 
         SeriesData deferredSeries = new SeriesData();
@@ -1832,7 +1897,7 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
 
         invoices.forEach(invoice -> {
             String dateKey = LocalDateTime.ofInstant(invoice.getCreatedDate(), ZoneId.systemDefault()).format(DateTimeFormatter.ISO_DATE);
-            dailyRevenue.merge(dateKey, invoice.getTotalPrice(), BigDecimal::add);
+            dailyRevenue.merge(dateKey, invoice.getUserNetPrice(), BigDecimal::add);
         });
 
         return dailyRevenue;
@@ -1845,7 +1910,7 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
             String monthKey = LocalDateTime
                 .ofInstant(invoice.getCreatedDate(), ZoneId.systemDefault())
                 .format(DateTimeFormatter.ofPattern("yyyy-MM"));
-            monthlyRevenue.merge(monthKey, invoice.getTotalPrice(), BigDecimal::add);
+            monthlyRevenue.merge(monthKey, invoice.getUserNetPrice(), BigDecimal::add);
         });
 
         return monthlyRevenue;
@@ -1919,15 +1984,24 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
 
     private BigDecimal calculateRevenueGrowth(LocalDateTime startDate, LocalDateTime endDate) {
         // Calculate revenue for current period
-        List<Invoice> currentPeriodInvoices = invoiceRepository.findByCreatedDateBetween(startDate, endDate);
-        BigDecimal currentRevenue = calculateTotal(currentPeriodInvoices, Invoice::getTotalPrice);
+        List<Invoice> currentPeriodInvoices = playStationSessionRepository
+            .findByStartTimeBetweenAndActiveIsFalse(startDate.toInstant(ZoneOffset.UTC), endDate.toInstant(ZoneOffset.UTC))
+            .stream()
+            .map(PlayStationSession::getInvoice)
+            .collect(Collectors.toList());
+        BigDecimal currentRevenue = calculateTotal(currentPeriodInvoices, Invoice::getUserNetPrice);
 
         // Calculate revenue for previous period
         long periodDays = ChronoUnit.DAYS.between(startDate, endDate);
         LocalDateTime previousStartDate = startDate.minusDays(periodDays);
         LocalDateTime previousEndDate = startDate;
-        List<Invoice> previousPeriodInvoices = invoiceRepository.findByCreatedDateBetween(previousStartDate, previousEndDate);
-        BigDecimal previousRevenue = calculateTotal(previousPeriodInvoices, Invoice::getTotalPrice);
+
+        List<Invoice> previousPeriodInvoices = playStationSessionRepository
+            .findByStartTimeBetweenAndActiveIsFalse(previousStartDate.toInstant(ZoneOffset.UTC), previousEndDate.toInstant(ZoneOffset.UTC))
+            .stream()
+            .map(PlayStationSession::getInvoice)
+            .collect(Collectors.toList());
+        BigDecimal previousRevenue = calculateTotal(previousPeriodInvoices, Invoice::getUserNetPrice);
 
         // Calculate growth percentage
         if (previousRevenue.compareTo(BigDecimal.ZERO) > 0) {
@@ -1959,10 +2033,15 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
         LocalDateTime startDate = endDate.minusMonths(3); // Consider liabilities from last 3 months
 
         // Get unpaid invoices
-        List<Invoice> unpaidInvoices = invoiceRepository.findByCreatedDateBetweenAndDeferred(startDate, endDate, true);
+        List<Invoice> unpaidInvoices = playStationSessionRepository
+            .findByStartTimeBetweenAndActiveIsFalse(startDate.toInstant(ZoneOffset.UTC), endDate.toInstant(ZoneOffset.UTC))
+            .stream()
+            .map(PlayStationSession::getInvoice)
+            .filter(Invoice::isDeferred)
+            .collect(Collectors.toList());
         BigDecimal totalUnpaidInvoices = unpaidInvoices
             .stream()
-            .map(Invoice::getTotalPrice)
+            .map(Invoice::getUserNetPrice)
             .filter(Objects::nonNull)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
 
@@ -1980,7 +2059,12 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
     @Override
     public Map<String, BigDecimal> getItemCategoryRevenue(LocalDateTime startDate, LocalDateTime endDate) {
         // Get all invoice items in the date range
-        List<InvoiceItem> invoiceItems = invoiceItemRepository.findByCreatedDateBetween(startDate, endDate);
+        List<InvoiceItem> invoiceItems = playStationSessionRepository
+            .findByStartTimeBetweenAndActiveIsFalse(startDate.toInstant(ZoneOffset.UTC), endDate.toInstant(ZoneOffset.UTC))
+            .stream()
+            .map(PlayStationSession::getInvoice)
+            .flatMap(invoice -> invoice.getInvoiceItems().stream())
+            .collect(Collectors.toList());
 
         // Group by category and sum up total revenue
         return invoiceItems
@@ -1990,7 +2074,7 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
                 Collectors.groupingBy(
                     item -> item.getItem().getCategory(),
                     Collectors.mapping(
-                        InvoiceItem::getTotalPrice,
+                        InvoiceItem::getNetPrice,
                         Collectors.reducing(
                             BigDecimal.ZERO,
                             (a, b) -> (a == null ? BigDecimal.ZERO : a).add(b == null ? BigDecimal.ZERO : b)

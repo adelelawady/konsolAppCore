@@ -43,7 +43,7 @@ public interface PlaystationFinancialDashboardService {
      */
     InvoiceAnalysisDTO getInvoiceAnalysis(String storeId, LocalDateTime startDate, LocalDateTime endDate); //*
     List<FinancialChartDTO> getInvoiceCharts(LocalDateTime startDate, LocalDateTime endDate); //*
-    FinancialChartDTO getDiscountDistribution();
+    FinancialChartDTO getDiscountDistribution(LocalDateTime startDate, LocalDateTime endDate);
     // FinancialChartDTO getExpensesByType();
     FinancialChartDTO getDeferredInvoicesTrend(LocalDateTime startDate, LocalDateTime endDate);
 
@@ -51,8 +51,8 @@ public interface PlaystationFinancialDashboardService {
      * Invoice Item Analysis Methods
      */
     // FinancialChartDTO getDailyItemSalesTrend(String itemId, LocalDateTime startDate, LocalDateTime endDate);
-    InvoiceItemAnalysisDTO getInvoiceItemAnalysis(LocalDateTime startDate, LocalDateTime endDate, String storeId); //*
-    List<FinancialChartDTO> getItemSalesCharts(LocalDateTime startDate, LocalDateTime endDate, String storeId); //*
+    InvoiceItemAnalysisDTO getInvoiceItemAnalysis(LocalDateTime startDate, LocalDateTime endDate); //*
+    List<FinancialChartDTO> getItemSalesCharts(LocalDateTime startDate, LocalDateTime endDate); //*
     FinancialChartDTO getItemSalesTrend(LocalDateTime startDate, LocalDateTime endDate);
     List<FinancialChartDTO> getTopSellingItems(LocalDateTime startDate, LocalDateTime endDate, int limit);
     FinancialChartDTO getItemCategoryDistribution();
