@@ -106,11 +106,13 @@ export class AdminPlaystationContainerComponent implements OnInit {
         this.playstationContainerService.updatePlaystationContainer(this.selectedContainer.id, updatedContainer).subscribe(() => {
           this.modalService.dismissAll();
           this.loadContainers();
+          window.location.reload();
         });
       } else {
         this.playstationContainerService.createPlaystationContainer(processedFormData).subscribe(() => {
           this.modalService.dismissAll();
           this.loadContainers();
+          window.location.reload();
         });
       }
     }

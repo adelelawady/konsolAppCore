@@ -15,17 +15,17 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ItemRepository extends MongoRepository<Item, String> {
     @Query("{}")
-    Page<Item> findAllWithEagerRelationships(Pageable pageable);
-
-    @Query("{}")
-    List<Item> findAllWithEagerRelationships();
+    Page<Item> findAllWithEagerRelationshipsAndBuildInIsFalse(Pageable pageable);
 
     @Query("{'id': ?0}")
     Optional<Item> findOneWithEagerRelationships(String id);
 
-    List<Item> findAllDistinctByCategoryNotIn(List<String> categories);
-
     Optional<Item> findOneByPk(int pk);
 
     List<Item> findAllByCategory(String category);
+
+    long countByCategoryAndBuildInIsFalse(String category);
+    long countByCategoryAndBuildInIsTrue(String category);
+
+    Page<Item> findAllByBuildInIsFalse(Pageable pageable);
 }

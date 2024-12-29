@@ -97,7 +97,8 @@
       "monthlySales": "Monthly Sales Trend",
       "monthlyUserSales": "Monthly User Sales",
       "dailyUserSales": "Daily User Sales",
-      "dailyItemSales": "Daily Item Sales"
+      "dailyItemSales": "Daily Item Sales",
+      "moneyInOutComparison": "Money In vs Out Comparison"
     },
     "cashFlow": {
       "title": "Cash Flow Summary",
@@ -183,6 +184,9 @@
     },
     "bankBalance": {
       "title": "Bank Balance"
+    },
+    "playstation": {
+      "title": "PlayStation Financial Dashboard"
     }
   }
 }

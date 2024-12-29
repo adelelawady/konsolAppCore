@@ -12,11 +12,9 @@ import com.konsol.core.service.ItemService;
 import com.konsol.core.service.ItemUnitService;
 import com.konsol.core.service.PkService;
 import com.konsol.core.service.api.dto.*;
-import com.konsol.core.service.dto.ChartDataDTO;
 import com.konsol.core.service.dto.ItemAnalysisDTO;
 import com.konsol.core.service.mapper.ItemMapper;
 import com.konsol.core.service.mapper.ItemUnitMapper;
-import com.konsol.core.web.rest.api.errors.AccountDeletionException;
 import com.konsol.core.web.rest.api.errors.ItemDeletionException;
 import com.konsol.core.web.rest.api.errors.ItemNotFoundException;
 import com.konsol.core.web.rest.api.errors.ItemUnitException;
@@ -214,6 +212,8 @@ public class ItemServiceImpl implements ItemService {
         log.debug("Request to update Item : {}", itemDTO);
         Item item = itemMapper.toEntity(itemDTO);
         item.setQty(itemToUpdate.get().getQty());
+        item.setBuildIn(itemToUpdate.get().isBuildIn());
+        item.setDeletable(itemToUpdate.get().isDeletable());
         // item.setItemUnits(itemToUpdate.get().getItemUnits());
         item = itemRepository.save(item);
         SaveItemUnits(itemDTO);
@@ -298,7 +298,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public Page<ItemDTO> findAll(Pageable pageable) {
         log.debug("Request to get all Items");
-        return itemRepository.findAll(pageable).map(itemMapper::toDto);
+        return itemRepository.findAllByBuildInIsFalse(pageable).map(itemMapper::toDto);
     }
 
     /**
@@ -319,7 +319,7 @@ public class ItemServiceImpl implements ItemService {
             Pageable pageable = PageRequest.of(paginationSearchModel.getPage(), paginationSearchModel.getSize());
             query.with(pageable);
         }
-
+        query.addCriteria(Criteria.where("buildIn").is(false));
         /**
          * sort
          */
@@ -343,6 +343,7 @@ public class ItemServiceImpl implements ItemService {
         } else {
             query.with(Sort.by(Sort.Direction.ASC, "pk"));
         }
+
         /**
          * query
          */
@@ -367,8 +368,10 @@ public class ItemServiceImpl implements ItemService {
                 Criteria.where("qty").regex(paginationSearchModel.getSearchText(), "i")
             );
             query.addCriteria(criteria);
+
             countQuery.addCriteria(criteria);
         }
+
         ItemViewDTOContainer itemViewDTOContainer = new ItemViewDTOContainer();
 
         List<Item> itemsFound = mongoTemplate.find(query, Item.class);
@@ -380,7 +383,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     public Page<ItemDTO> findAllWithEagerRelationships(Pageable pageable) {
-        return itemRepository.findAllWithEagerRelationships(pageable).map(itemMapper::toDto);
+        return itemRepository.findAllWithEagerRelationshipsAndBuildInIsFalse(pageable).map(itemMapper::toDto);
     }
 
     @Override
@@ -411,6 +414,16 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public void delete(String id) {
         log.debug("Request to delete Item : {}", id);
+
+        Optional<Item> item = itemRepository.findById(id);
+        if (item.isPresent()) {
+            if (!item.get().isDeletable()) {
+                throw new ItemDeletionException("Cannot delete Item with ID " + id + ": This Item is not deletable");
+            }
+        } else {
+            throw new ItemNotFoundException(null);
+        }
+
         if (!invoiceItemRepository.findAllByItemId(id).isEmpty()) {
             throw new ItemDeletionException("Cannot delete Item with ID " + id + ": There are associated Invoices");
         }
@@ -448,9 +461,16 @@ public class ItemServiceImpl implements ItemService {
     public List<CategoryItem> getAllItemCategories() {
         List<CategoryItem> categoryList = new ArrayList<>();
         DistinctIterable distinctIterable = mongoTemplate.getCollection("items").distinct("category", String.class);
+
         MongoCursor cursor = distinctIterable.iterator();
         while (cursor.hasNext()) {
             String category = (String) cursor.next();
+
+            if (itemRepository.countByCategoryAndBuildInIsTrue(category) > 0) {
+                if (itemRepository.countByCategoryAndBuildInIsFalse(category) == 0) {
+                    continue;
+                }
+            }
             CategoryItem categoryItem = new CategoryItem();
             categoryItem.setName(category);
             categoryList.add(categoryItem);

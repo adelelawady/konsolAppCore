@@ -1,6 +1,9 @@
 {
   "financialReports": {
     "title": "لوحة التحكم المالية",
+    "playstation": {
+      "title": "لوحة التحكم المالية لبلايستيشن"
+    },
     "dateRange": {
       "label": "النطاق الزمني",
       "options": {
@@ -94,7 +97,8 @@
       "monthlySales": "اتجاه المبيعات الشهرية",
       "monthlyUserSales": "مبيعات المستخدم الشهرية",
       "dailyUserSales": "مبيعات المستخدم اليومية",
-      "dailyItemSales": "مبيعات المنتجات اليومية"
+      "dailyItemSales": "مبيعات المنتجات اليومية",
+      "moneyInOutComparison": "مقارنة النقد الوارد والصادر"
     },
     "cashFlow": {
       "title": "ملخص التدفق النقدي",

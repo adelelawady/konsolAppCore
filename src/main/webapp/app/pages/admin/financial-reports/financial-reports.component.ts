@@ -22,7 +22,7 @@ export class PlayStationFinancialReportsComponent implements OnInit, AfterViewIn
 
   @ViewChild('itemSalesChartView', { static: true }) itemSalesChartView!: ElementRef;
 
-  @ViewChild('test', { static: true }) test!: ElementRef;
+  @ViewChild('moneyInOutComparisonChart', { static: true }) moneyInOutComparisonChart!: ElementRef;
 
   @ViewChild('cashFlowTrendChart', { static: true }) cashFlowTrendChart!: ElementRef;
   @ViewChild('bankBalanceChart', { static: true }) bankBalanceChart!: ElementRef;
@@ -62,6 +62,9 @@ export class PlayStationFinancialReportsComponent implements OnInit, AfterViewIn
   profitBreakdownOption: EChartsOption = {};
 
   cashFlowTrendOption: EChartsOption = {};
+
+  moneyInOutComparisonOption: EChartsOption = {};
+
   bankBalanceOption: EChartsOption = {};
   optionsX: EChartsOption = {};
 
@@ -85,7 +88,7 @@ export class PlayStationFinancialReportsComponent implements OnInit, AfterViewIn
     bankBalance: undefined,
     performanceRatios: undefined,
     performanceRatiosTwo: undefined,
-
+    moneyInOutComparison: undefined,
     marginTrends: undefined,
     profitBreakdown: undefined,
     topItemsByQuantity: undefined,
@@ -199,6 +202,10 @@ export class PlayStationFinancialReportsComponent implements OnInit, AfterViewIn
       this.charts.itemSales = echarts.init(this.itemSalesChartView.nativeElement);
     }
 
+    if (this.moneyInOutComparisonChart) {
+      this.charts.moneyInOutComparison = echarts.init(this.moneyInOutComparisonChart.nativeElement);
+    }
+
     if (this.cashFlowTrendChart) {
       this.charts.cashFlowTrend = echarts.init(this.cashFlowTrendChart.nativeElement);
     }
@@ -217,6 +224,8 @@ export class PlayStationFinancialReportsComponent implements OnInit, AfterViewIn
     this.topItemsByRevenueOption = this.getDefaultChartOptions('financialReports.charts.topItemsByRevenue');
 
     this.itemSalesChartsOption = this.getDefaultChartOptions('financialReports.charts.dailyItemSales');
+
+    this.moneyInOutComparisonOption = this.getDefaultChartOptions('financialReports.charts.moneyInOutComparison');
 
     this.topItemsByQuantityOption = this.getDefaultChartOptions('financialReports.charts.topItemsByQuantity');
     this.cashFlowTrendOption = this.getDefaultChartOptions('financialReports.charts.cashFlowTrend');
@@ -261,6 +270,8 @@ export class PlayStationFinancialReportsComponent implements OnInit, AfterViewIn
 
       this.updateItemSalesChartsRevenue();
 
+      this.moneyInOutComparison();
+
       this.updateCashFlowTrend();
       this.updateBankBalance();
       this.updateTopItemsByQuantity();
@@ -282,12 +293,16 @@ export class PlayStationFinancialReportsComponent implements OnInit, AfterViewIn
 
       if (this.charts.itemSales) {
         this.charts?.itemSales.setOption(this.itemSalesChartsOption, true);
-        console.log(this.itemSalesChartsOption);
       }
 
       if (this.charts.topItems) {
         this.charts.topItems.setOption(this.topItemsByRevenueOption, true);
       }
+
+      if (this.charts.moneyInOutComparison) {
+        this.charts.moneyInOutComparison.setOption(this.moneyInOutComparisonOption, true);
+      }
+
       if (this.charts.cashFlowTrend) {
         this.charts.cashFlowTrend.setOption(this.cashFlowTrendOption, true);
       }
@@ -696,6 +711,99 @@ export class PlayStationFinancialReportsComponent implements OnInit, AfterViewIn
             },
           },
         ],
+      };
+    }
+  }
+
+  private moneyInOutComparison(): void {
+    const moneyComparisonData = this.dashboardData?.cashFlowCharts?.find((chart: any) => chart.chartId === 'money-in-out');
+    if (moneyComparisonData) {
+      // Calculate the maximum value for proper scaling
+      const allValues = moneyComparisonData.series.flatMap((s: any) => s.data);
+      const maxValue = Math.max(...allValues);
+      const yAxisMax = Math.ceil(maxValue * 1.2); // Add 20% padding
+
+      this.moneyInOutComparisonOption = {
+        ...this.getDefaultChartOptions('financialReports.charts.moneyInOutComparison'),
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'shadow',
+          },
+          formatter: (params: any) => {
+            let result = `${params[0].axisValue}<br/>`;
+            params.forEach((param: any) => {
+              result += `${param.marker}${param.seriesName}: ${param.value.toLocaleString('tr-TR', {
+                style: 'currency',
+                currency: 'USD',
+              })}<br/>`;
+            });
+            return result;
+          },
+        },
+        legend: {
+          data: moneyComparisonData.series.map((s: any) => s.name),
+          top: '30px',
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true,
+        },
+        xAxis: {
+          type: 'category',
+          data: moneyComparisonData.labels,
+          name: moneyComparisonData.xAxisLabel,
+          axisLabel: {
+            formatter: (value: string) => {
+              const date = new Date(value);
+              return `${date.getMonth() + 1}/${date.getFullYear()}`;
+            },
+          },
+        },
+        yAxis: [
+          {
+            type: 'value',
+            name: 'Money In',
+            position: 'left',
+            max: yAxisMax,
+            splitNumber: 5,
+            axisLabel: {
+              formatter: (value: number) => value.toLocaleString('tr-TR', { style: 'currency', currency: 'USD' }),
+            },
+          },
+          {
+            type: 'value',
+            name: 'Money Out',
+            position: 'right',
+            max: yAxisMax,
+            splitNumber: 5,
+            axisLabel: {
+              formatter: (value: number) => value.toLocaleString('tr-TR', { style: 'currency', currency: 'USD' }),
+            },
+          },
+        ],
+        series: moneyComparisonData.series.map((series: any) => ({
+          name: series.name,
+          type: series.type,
+          data: series.data,
+          yAxisIndex: series.yAxisIndex,
+          itemStyle: {
+            color: series.style?.color,
+          },
+          label: {
+            show: true,
+            position: 'top',
+            formatter: (params: any) =>
+              params.value.toLocaleString('tr-TR', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+              }),
+          },
+        })),
       };
     }
   }

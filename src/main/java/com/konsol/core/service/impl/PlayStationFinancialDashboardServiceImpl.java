@@ -1820,13 +1820,13 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
         });
 
         SeriesData moneyInSeries = new SeriesData();
-        moneyInSeries.setName("Money In");
+        moneyInSeries.setName("Money out");
         moneyInSeries.setType("bar");
         moneyInSeries.setyAxisIndex(0);
         moneyInSeries.setData(moneyIn);
 
         SeriesData moneyOutSeries = new SeriesData();
-        moneyOutSeries.setName("Money Out");
+        moneyOutSeries.setName("Money in");
         moneyOutSeries.setType("bar");
         moneyOutSeries.setyAxisIndex(1);
         moneyOutSeries.setData(moneyOut);
@@ -1839,9 +1839,9 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
         chart.getSeries().add(moneyOutSeries);
 
         Map<String, Object> incomeStyle = new HashMap<>();
-        incomeStyle.put("color", "#4CAF50");
+        incomeStyle.put("color", "#F44336");
         Map<String, Object> expenseStyle = new HashMap<>();
-        expenseStyle.put("color", "#F44336");
+        expenseStyle.put("color", "#4CAF50");
 
         chart.getSeries().get(0).setStyle(incomeStyle);
         chart.getSeries().get(1).setStyle(expenseStyle);

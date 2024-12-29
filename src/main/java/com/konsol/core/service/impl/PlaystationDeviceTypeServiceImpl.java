@@ -56,6 +56,7 @@ public class PlaystationDeviceTypeServiceImpl implements PlaystationDeviceTypeSe
         item.setCategory("PlayStation"); // Or appropriate category
         item.setCheckQty(false);
         item.setDeletable(false);
+        item.setBuildIn(true);
         // Save the item
         itemService.save(item);
 

@@ -105,6 +105,9 @@ public class InvoiceItem extends AbstractAuditingEntity<String> implements Seria
     @Field("invoice_id")
     private String invoiceId;
 
+    @Field("buildIn")
+    private boolean buildIn = false;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
     public Item getItem() {
@@ -415,5 +418,13 @@ public class InvoiceItem extends AbstractAuditingEntity<String> implements Seria
             ", netCost=" + getNetCost() +
             ", netPrice=" + getNetPrice() +
             "}";
+    }
+
+    public boolean isBuildIn() {
+        return buildIn;
+    }
+
+    public void setBuildIn(boolean buildIn) {
+        this.buildIn = buildIn;
     }
 }

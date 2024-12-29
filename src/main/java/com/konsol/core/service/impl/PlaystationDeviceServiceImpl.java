@@ -19,7 +19,6 @@ import com.mongodb.client.DistinctIterable;
 import com.mongodb.client.MongoCursor;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
@@ -254,6 +253,7 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
                 item.setCategory("PlayStation"); // Assign an appropriate category
                 item.setCheckQty(false);
                 item.setDeletable(false);
+                item.setBuildIn(true);
                 item.setCost(new BigDecimal(0));
 
                 // Save the new item

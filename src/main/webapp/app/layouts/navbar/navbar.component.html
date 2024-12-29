@@ -67,6 +67,20 @@
                 <span jhiTranslate="global.menu.playstation.sessionHistory">Session History</span>
               </a>
             </li>
+
+            <!-- financial-reports -->
+            <li>
+              <a
+                class="dropdown-item"
+                routerLink="playstation-financial-reports"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: true }"
+                (click)="collapseNavbar()"
+              >
+                <i class="fa-solid fa-money-check-dollar me-2"></i>
+                <span jhiTranslate="global.navigation.pages.financial-reports.title">financial reports</span>
+              </a>
+            </li>
           </ul>
         </li>
 

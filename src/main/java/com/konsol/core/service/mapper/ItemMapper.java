@@ -24,6 +24,7 @@ public interface ItemMapper extends EntityMapper<ItemDTO, Item> {
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "createdDate", ignore = true)
     @Mapping(target = "qty", ignore = true)
+    @Mapping(target = "buildIn", ignore = true)
     Item toEntity(ItemDTO itemDTO);
 
     @Override
@@ -31,5 +32,6 @@ public interface ItemMapper extends EntityMapper<ItemDTO, Item> {
     @Mapping(target = "qty", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "createdDate", ignore = true)
+    @Mapping(target = "buildIn", ignore = true)
     void partialUpdate(@MappingTarget Item entity, ItemDTO dto);
 }

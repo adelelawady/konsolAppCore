@@ -348,6 +348,7 @@ public class InvoiceServiceImpl implements InvoiceService {
          */
         setInvoiceItemUnit(invoiceItem, unitId, userQty, userPrice);
 
+        invoiceItem.setBuildIn(invoiceItem.getItem().isBuildIn());
         return this.invoiceItemRepository.save(invoiceItem);
     }
 

@@ -32,9 +32,11 @@ public interface PlayStationSessionRepository extends MongoRepository<PlayStatio
      * Find all sessions where device category matches any of the provided categories.
      */
 
-    Page<PlayStationSession> findAllByContainerId(Pageable page, String containerId);
+    Page<PlayStationSession> findAllByContainerIdAndEndTimeIsNotNullOrderByEndTimeDesc(Pageable page, String containerId);
 
     List<PlayStationSession> findByEndTimeBetween(Instant startDate, Instant endDate);
 
     List<PlayStationSession> findByStartTimeBetweenAndActiveIsFalse(Instant startDate, Instant endDate);
+
+    Page<PlayStationSession> findAllByEndTimeIsNotNullOrderByEndTimeDesc(Pageable pageable);
 }

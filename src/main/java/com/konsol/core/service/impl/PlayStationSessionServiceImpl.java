@@ -83,7 +83,7 @@ public class PlayStationSessionServiceImpl implements PlayStationSessionService 
     @Override
     public Page<PsSessionDTO> findAll(Pageable pageable) {
         LOG.debug("Request to get all PlayStationSessions");
-        return playStationSessionRepository.findAll(pageable).map(playStationSessionMapper::toDto);
+        return playStationSessionRepository.findAllByEndTimeIsNotNullOrderByEndTimeDesc(pageable).map(playStationSessionMapper::toDto);
     }
 
     @Override
@@ -98,7 +98,8 @@ public class PlayStationSessionServiceImpl implements PlayStationSessionService 
         if (playstationContainerOptional.isEmpty()) {
             return null;
         }
-        return this.playStationSessionRepository.findAllByContainerId(pageable, containerId).map(playStationSessionMapper::toDto);
+        return this.playStationSessionRepository.findAllByContainerIdAndEndTimeIsNotNullOrderByEndTimeDesc(pageable, containerId)
+            .map(playStationSessionMapper::toDto);
     }
 
     @Override

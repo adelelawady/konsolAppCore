@@ -1,6 +1,5 @@
 package com.konsol.core.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -58,7 +57,10 @@ public class Item extends AbstractAuditingEntity<String> implements Serializable
     private boolean checkQty = true; //QuantityCheckRequired
 
     @Field("deletable")
-    private boolean deletable = true; //QuantityCheckRequired
+    private boolean deletable = true;
+
+    @Field("buildIn")
+    private boolean buildIn = false;
 
     @DBRef
     @Field("itemUnits")
@@ -251,5 +253,13 @@ public class Item extends AbstractAuditingEntity<String> implements Serializable
 
     public void setDeletable(boolean deletable) {
         this.deletable = deletable;
+    }
+
+    public boolean isBuildIn() {
+        return buildIn;
+    }
+
+    public void setBuildIn(boolean buildIn) {
+        this.buildIn = buildIn;
     }
 }
