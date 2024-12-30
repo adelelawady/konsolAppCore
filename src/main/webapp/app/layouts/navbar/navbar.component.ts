@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { SessionStorageService } from 'ngx-webstorage';
-import { 
-  faGamepad, 
-  faCompass, 
+import {
+  faGamepad,
+  faCompass,
   faClock,
   faTachometerAlt,
   faList,
@@ -99,6 +99,7 @@ export class NavbarComponent implements OnInit {
   changeLanguage(languageKey: string): void {
     this.sessionStorageService.store('locale', languageKey);
     this.translateService.use(languageKey);
+    window.location.reload();
   }
 
   collapseNavbar(): void {

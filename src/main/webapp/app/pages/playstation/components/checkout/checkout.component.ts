@@ -149,12 +149,12 @@ export class CheckoutComponent implements OnInit {
   }
 
   updateInvoice(): void {
-    if (!this.selectedDevice?.session?.invoice?.id || this.isUpdating) {
+    if (!this.selectedDevice || !this.selectedDevice.id || !this.selectedDevice.session?.invoice?.id || this.isUpdating) {
       return;
     }
 
     this.isUpdating = true;
-    const totalBeforeDiscount = this.getTotalBeforeDiscount();
+    // const totalBeforeDiscount = this.getTotalBeforeDiscount();
 
     const invoiceUpdate: InvoiceUpdateDTO = {
       id: this.selectedDevice.session.invoice.id,
@@ -164,16 +164,17 @@ export class CheckoutComponent implements OnInit {
       userNetPrice: this.checkoutForm.get('userNetPrice')?.value,
     };
 
-    this.invoiceResourceService
-      .updateInvoice(this.selectedDevice.session.invoice.id, invoiceUpdate)
+    this.playstationResourceService
+      .updateSessionInvoice(this.selectedDevice.id, invoiceUpdate)
       .pipe(
         finalize(() => {
           this.isUpdating = false;
         })
       )
       .subscribe({
-        next: () => {
-          this.reloadDevice();
+        next: (device: PsDeviceDTO) => {
+          this.selectedDevice = device;
+          this.playstationService.selectDevice(device);
         },
         error(error: HttpErrorResponse) {
           console.error('Error updating invoice:', error);

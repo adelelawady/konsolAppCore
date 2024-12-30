@@ -1,14 +1,15 @@
 package com.konsol.core.service.impl;
 
+import static com.konsol.core.repository.PlaystationDeviceRepository.DEVICES_BY_CATEGORY;
+import static com.konsol.core.repository.PlaystationDeviceRepository.DEVICE_BY_DEVICE_ID;
+
 import com.konsol.core.domain.Invoice;
 import com.konsol.core.domain.Item;
+import com.konsol.core.domain.User;
 import com.konsol.core.domain.enumeration.InvoiceKind;
 import com.konsol.core.domain.playstation.PlayStationSession;
 import com.konsol.core.domain.playstation.PlaystationDevice;
-import com.konsol.core.repository.InvoiceRepository;
-import com.konsol.core.repository.PlayStationSessionRepository;
-import com.konsol.core.repository.PlaystationDeviceRepository;
-import com.konsol.core.repository.PlaystationDeviceTypeRepository;
+import com.konsol.core.repository.*;
 import com.konsol.core.service.InvoiceService;
 import com.konsol.core.service.ItemService;
 import com.konsol.core.service.PlaystationDeviceService;
@@ -20,13 +21,12 @@ import com.mongodb.client.MongoCursor;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -47,7 +47,7 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
     private final InvoiceRepository invoiceRepository;
     private final InvoiceService invoiceService;
     private final PlaystationDeviceTypeRepository playstationDeviceTypeRepository;
-
+    private final CacheManager cacheManager;
     private final ItemService itemService;
     private final MongoTemplate mongoTemplate;
 
@@ -59,6 +59,7 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
         InvoiceRepository invoiceRepository,
         InvoiceService invoiceService,
         PlaystationDeviceTypeRepository playstationDeviceTypeRepository,
+        CacheManager cacheManager,
         ItemService itemService,
         MongoTemplate mongoTemplate
     ) {
@@ -69,6 +70,7 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
         this.invoiceRepository = invoiceRepository;
         this.invoiceService = invoiceService;
         this.playstationDeviceTypeRepository = playstationDeviceTypeRepository;
+        this.cacheManager = cacheManager;
         this.itemService = itemService;
         this.mongoTemplate = mongoTemplate;
     }
@@ -93,6 +95,7 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
         playstationDevice = playstationDeviceRepository.save(playstationDevice);
         playstationDevice.setActive(playstationDeviceOptional.get().getActive());
         playstationDevice = playstationDeviceRepository.save(playstationDevice);
+        clearDeviceCaches(playstationDevice);
         return playstationDeviceMapper.toDto(playstationDevice);
     }
 
@@ -105,6 +108,7 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
             .map(existingPlaystationDevice -> {
                 playstationDeviceMapper.partialUpdate(existingPlaystationDevice, PsDeviceDTO);
                 PsDeviceDTO.setActive(existingPlaystationDevice.getActive());
+                clearDeviceCaches(existingPlaystationDevice);
                 return existingPlaystationDevice;
             })
             .map(playstationDeviceRepository::save)
@@ -155,8 +159,14 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
 
     @Override
     public void delete(String id) {
+        // Find device
+        PlaystationDevice device = playstationDeviceRepository
+            .findById(id)
+            .orElseThrow(() -> new RuntimeException("Device not found with id: " + id));
         LOG.debug("Request to delete PlaystationDevice : {}", id);
         playstationDeviceRepository.deleteById(id);
+
+        clearDeviceCaches(device);
     }
 
     @Override
@@ -196,7 +206,7 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
         device.setActive(true);
         device.setSession(session);
         PlaystationDevice updatedDevice = playstationDeviceRepository.save(device);
-
+        clearDeviceCaches(updatedDevice);
         return playstationDeviceMapper.toDto(updatedDevice);
     }
 
@@ -321,6 +331,7 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
 
         // Step 9: Save and return the updated session
         playStationSessionRepository.save(session);
+        clearDeviceCaches(device);
         return playstationDeviceMapper.toDto(device);
     }
 
@@ -336,6 +347,7 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
             throw new RuntimeException("Device is Not Active");
         }
         invoiceService.addInvoiceItem(device.getSession().getInvoice().getId(), createInvoiceItemDTO);
+        clearDeviceCaches(device);
         return playstationDeviceMapper.toDto(
             playstationDeviceRepository.findById(deviceId).orElseThrow(() -> new RuntimeException("Device not found with id: " + deviceId))
         );
@@ -353,6 +365,7 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
             throw new RuntimeException("Device is Not Active");
         }
         invoiceService.updateInvoiceItem(orderId, invoiceItemUpdateDTO);
+        clearDeviceCaches(device);
         return playstationDeviceMapper.toDto(
             playstationDeviceRepository.findById(deviceId).orElseThrow(() -> new RuntimeException("Device not found with id: " + deviceId))
         );
@@ -370,6 +383,7 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
             throw new RuntimeException("Device is Not Active");
         }
         invoiceService.deleteInvoiceItem(orderId);
+        clearDeviceCaches(device);
     }
 
     @Override
@@ -439,7 +453,38 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
         toDevice.setActive(true);
 
         playstationDeviceRepository.save(toDevice);
+        clearDeviceCaches(toDevice);
+        clearDeviceCaches(fromDevice);
         return playstationDeviceMapper.toDto(playstationDeviceRepository.save(fromDevice));
+    }
+
+    @Override
+    //   @CacheEvict(cacheNames = DEVICES_BY_CATEGORY, allEntries = true)
+    public void clearDeviceCaches(PlaystationDevice device) {
+        LOG.debug("Clearing cache for device category: {}", device.getCategory());
+        Objects.requireNonNull(cacheManager.getCache(DEVICES_BY_CATEGORY)).evict(device.getCategory());
+
+        Objects.requireNonNull(cacheManager.getCache(DEVICE_BY_DEVICE_ID)).evict(device.getId());
+    }
+
+    @Override
+    public PsDeviceDTO updateSessionInvoice(String deviceId, InvoiceUpdateDTO invoiceUpdateDTO) {
+        // Find device
+        PlaystationDevice device = playstationDeviceRepository
+            .findById(deviceId)
+            .orElseThrow(() -> new RuntimeException("Device not found with id: " + deviceId));
+        // Check if device is not in use
+        if (device.getSession() == null) {
+            throw new RuntimeException("Device is Not Active");
+        }
+
+        invoiceService.updateInvoice(invoiceUpdateDTO);
+
+        clearDeviceCaches(device);
+
+        return playstationDeviceMapper.toDto(
+            playstationDeviceRepository.findById(deviceId).orElseThrow(() -> new RuntimeException("Device not found with id: " + deviceId))
+        );
     }
 
     private BigDecimal calculateSessionTimePrice(PlayStationSession session) {

@@ -1,8 +1,11 @@
 package com.konsol.core.service;
 
+import com.konsol.core.domain.User;
 import com.konsol.core.domain.playstation.PlaystationDevice;
+import com.konsol.core.repository.UserRepository;
 import com.konsol.core.service.api.dto.*;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -99,4 +102,8 @@ public interface PlaystationDeviceService {
     void deleteDeviceOrder(String id, String orderId);
 
     PsDeviceDTO moveDevice(String id, String deviceId);
+
+    void clearDeviceCaches(PlaystationDevice device);
+
+    PsDeviceDTO updateSessionInvoice(String deviceId, InvoiceUpdateDTO invoiceUpdateDTO);
 }

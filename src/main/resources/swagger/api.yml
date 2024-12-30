@@ -2277,7 +2277,7 @@ paths:
       tags:
         - playstation-resource
       description: Stop Device Session
-  '/playstation/device/{id}/session/pause':
+  '/playstation/device/{id}/session/invoice/update':
     parameters:
       - schema:
           type: string
@@ -2285,8 +2285,8 @@ paths:
         in: path
         required: true
     post:
-      summary: Stop Device Session
-      operationId: pauseDeviceSession
+      summary: Update Device Session Invoice
+      operationId: updateSessionInvoice
       responses:
         '200':
           description: OK
@@ -2296,7 +2296,12 @@ paths:
                 $ref: '#/components/schemas/PsDeviceDTO'
       tags:
         - playstation-resource
-      description: Pause Device Session
+      description: Update Device Session Invoice
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvoiceUpdateDTO'
   '/playstation/device/type/{id}':
     get:
       summary: get all playstation devices

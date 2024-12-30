@@ -1,5 +1,8 @@
 package com.konsol.core.config;
 
+import static com.konsol.core.repository.PlaystationDeviceRepository.DEVICES_BY_CATEGORY;
+
+import com.konsol.core.repository.PlaystationDeviceRepository;
 import java.time.Duration;
 import org.ehcache.config.builders.*;
 import org.ehcache.jsr107.Eh107Configuration;
@@ -38,6 +41,8 @@ public class CacheConfiguration {
         return cm -> {
             createCache(cm, com.konsol.core.repository.UserRepository.USERS_BY_LOGIN_CACHE);
             createCache(cm, com.konsol.core.repository.UserRepository.USERS_BY_EMAIL_CACHE);
+            createCache(cm, com.konsol.core.repository.PlaystationDeviceRepository.DEVICES_BY_CATEGORY);
+            createCache(cm, PlaystationDeviceRepository.DEVICE_BY_DEVICE_ID);
             // jhipster-needle-ehcache-add-entry
         };
     }

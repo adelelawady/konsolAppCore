@@ -491,4 +491,9 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
+
+    @Override
+    public ResponseEntity<PsDeviceDTO> updateSessionInvoice(String deviceId, InvoiceUpdateDTO invoiceUpdateDTO) {
+        return ResponseEntity.ok(playstationDeviceService.updateSessionInvoice(deviceId, invoiceUpdateDTO));
+    }
 }
