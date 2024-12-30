@@ -99,7 +99,7 @@ export class NavbarComponent implements OnInit {
   changeLanguage(languageKey: string): void {
     this.sessionStorageService.store('locale', languageKey);
     this.translateService.use(languageKey);
-    window.location.reload();
+    // window.location.reload();
   }
 
   collapseNavbar(): void {
