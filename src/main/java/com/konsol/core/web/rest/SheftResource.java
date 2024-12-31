@@ -3,6 +3,8 @@ package com.konsol.core.web.rest;
 import com.konsol.core.repository.SheftRepository;
 import com.konsol.core.service.SheftService;
 import com.konsol.core.service.api.dto.SheftDTO;
+import com.konsol.core.service.mapper.SheftMapper;
+import com.konsol.core.service.mapper.SheftMapperImpl;
 import com.konsol.core.web.api.SheftsApiDelegate;
 import com.konsol.core.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
@@ -37,6 +39,7 @@ public class SheftResource implements SheftsApiDelegate {
     private static final Logger LOG = LoggerFactory.getLogger(SheftResource.class);
 
     private static final String ENTITY_NAME = "sheft";
+    private final SheftMapper sheftMapper;
 
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
@@ -45,9 +48,10 @@ public class SheftResource implements SheftsApiDelegate {
 
     private final SheftRepository sheftRepository;
 
-    public SheftResource(SheftService sheftService, SheftRepository sheftRepository) {
+    public SheftResource(SheftService sheftService, SheftRepository sheftRepository, SheftMapperImpl sheftMapper) {
         this.sheftService = sheftService;
         this.sheftRepository = sheftRepository;
+        this.sheftMapper = sheftMapper;
     }
 
     /**
@@ -176,5 +180,15 @@ public class SheftResource implements SheftsApiDelegate {
         LOG.debug("REST request to delete Sheft : {}", id);
         sheftService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id)).build();
+    }
+
+    @Override
+    public ResponseEntity<SheftDTO> getActiveSheft() {
+        return ResponseEntity.ok(sheftService.getCurrentSheft());
+    }
+
+    @Override
+    public ResponseEntity<SheftDTO> stopActiveSheft() {
+        return ResponseEntity.ok(sheftMapper.toDto(sheftService.endSheft()));
     }
 }

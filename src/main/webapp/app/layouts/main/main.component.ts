@@ -13,7 +13,8 @@ import { AccountService } from 'app/core/auth/account.service';
 import { FindLanguageFromKeyPipe } from 'app/shared/language/find-language-from-key.pipe';
 import { IPlaystationContainer } from 'app/entities/playstation-container/playstation-container.model';
 import { PlaystationContainerStateService } from 'app/pages/playstation/services/playstation-container.service';
-import { PlaystationContainer, PlaystationContainerResourceService } from 'app/core/konsolApi';
+import { PlaystationContainer, PlaystationContainerResourceService, SheftDTO } from 'app/core/konsolApi';
+import { ActiveSheftService } from 'app/pages/admin/sheft-component/active-sheft.service';
 
 interface Breadcrumb {
   label: string;
@@ -23,7 +24,7 @@ interface Breadcrumb {
 @Component({
   selector: 'jhi-main',
   templateUrl: './main.component.html',
-  styleUrls: ['./main.component.scss']
+  styleUrls: ['./main.component.scss'],
 })
 export class MainComponent implements OnInit {
   private renderer: Renderer2;
@@ -31,7 +32,7 @@ export class MainComponent implements OnInit {
   containers: PlaystationContainer[] = [];
   loadingContainerId: string | null = null;
   selectedContainerId: string | null = null;
-
+  activeSheft: SheftDTO | null = null;
   constructor(
     private accountService: AccountService,
     private titleService: Title,
@@ -40,6 +41,7 @@ export class MainComponent implements OnInit {
     private translateService: TranslateService,
     rootRenderer: RendererFactory2,
     private activatedRoute: ActivatedRoute,
+    private activeSheftService: ActiveSheftService,
     private playstationContainerStateService: PlaystationContainerStateService,
     private playstationContainerResourceService: PlaystationContainerResourceService
   ) {
@@ -49,7 +51,10 @@ export class MainComponent implements OnInit {
   ngOnInit(): void {
     // try to log in automatically
     this.accountService.identity().subscribe();
-
+    this.activeSheftService.getActiveSheft().subscribe(sheft => {
+      console.log('Active sheft:', sheft);
+      this.activeSheft = sheft;
+    });
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.updateTitle();
@@ -70,14 +75,18 @@ export class MainComponent implements OnInit {
       map(event => {
         let route = this.activatedRoute.root;
         const breadcrumbs: Breadcrumb[] = [];
-        
+
         while (route.children.length) {
           const childRoute = route.children[0];
           if (childRoute.snapshot.data['breadcrumb']) {
-            const url = this.router.url.split('?')[0].split('/').slice(0, breadcrumbs.length + 2).join('/');
+            const url = this.router.url
+              .split('?')[0]
+              .split('/')
+              .slice(0, breadcrumbs.length + 2)
+              .join('/');
             breadcrumbs.push({
               label: childRoute.snapshot.data['breadcrumb'],
-              url: url
+              url: url,
             });
           }
           route = childRoute;
@@ -89,9 +98,7 @@ export class MainComponent implements OnInit {
     this.loadContainers();
 
     // Track route changes to highlight selected container
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe(() => {
+    this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
       const urlParts = this.router.url.split('/');
       const containerIndex = urlParts.indexOf('container');
       if (containerIndex !== -1 && urlParts[containerIndex + 1]) {
@@ -134,18 +141,17 @@ export class MainComponent implements OnInit {
 
   async onContainerClick(container: PlaystationContainer, event: Event): Promise<void> {
     event.preventDefault();
-    
+
     try {
       this.loadingContainerId = String(container.id);
-      
+
       // Load container from resource first
-    
-      
+
       // Then authenticate it using the state service
-      await firstValueFrom(this.playstationContainerStateService.loadContainer( String(container.id)));
-      
+      await firstValueFrom(this.playstationContainerStateService.loadContainer(String(container.id)));
+
       // Navigate to the container dashboard
-      await this.router.navigate(['/container',  String(container.id), 'navigation', 'dashboard']);
+      await this.router.navigate(['/container', String(container.id), 'navigation', 'dashboard']);
     } catch (error) {
       console.error('Error loading container:', error);
     } finally {

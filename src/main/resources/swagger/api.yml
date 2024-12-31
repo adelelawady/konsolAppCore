@@ -2669,6 +2669,32 @@ paths:
         name: id
         in: path
         required: true
+  /shefts/current/active:
+    parameters: []
+    post:
+      summary: ''
+      operationId: stopActiveSheft
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SheftDTO'
+      tags:
+        - sheft-resource
+    get:
+      summary: ''
+      operationId: getActiveSheft
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SheftDTO'
+      tags:
+        - sheft-resource
 components:
   schemas:
     ChartDataDTO:
