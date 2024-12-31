@@ -1,0 +1,44 @@
+{
+  "konsolCoreApp": {
+    "sheft": {
+      "home": {
+        "title": "Shefts",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Sheft",
+        "createOrEditLabel": "Create or edit a Sheft",
+        "notFound": "No Shefts found"
+      },
+      "created": "A new Sheft is created with identifier {{ param }}",
+      "updated": "A Sheft is updated with identifier {{ param }}",
+      "deleted": "A Sheft is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Sheft {{ id }}?"
+      },
+      "detail": {
+        "title": "Sheft"
+      },
+      "id": "Id",
+      "startTime": "Start Time",
+      "endTime": "End Time",
+      "active": "Active",
+      "assignedEmployee": "Assigned Employee",
+      "duration": "Duration",
+      "totalprice": "Totalprice",
+      "totalCost": "Total Cost",
+      "netPrice": "Net Price",
+      "netCost": "Net Cost",
+      "netUserPrice": "Net User Price",
+      "totalItemsOut": "Total Items Out",
+      "discount": "Discount",
+      "invoicesAdditions": "Invoices Additions",
+      "additions": "Additions",
+      "additionsNotes": "Additions Notes",
+      "invoicesExpenses": "Invoices Expenses",
+      "sheftExpenses": "Sheft Expenses",
+      "totalinvoices": "Totalinvoices",
+      "totaldeletedItems": "Totaldeleted Items",
+      "totaldeletedItemsPrice": "Totaldeleted Items Price",
+      "notes": "Notes"
+    }
+  }
+}

@@ -2523,6 +2523,152 @@ paths:
         name: id
         in: path
         required: true
+  /shefts:
+    post:
+      summary: Create a new Sheft
+      operationId: createSheft
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SheftDTO'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SheftDTO'
+        '400':
+          description: Bad Request
+      tags:
+        - sheft-resource
+    get:
+      summary: Get all Shefts
+      operationId: getAllShefts
+      parameters:
+        - name: page
+          in: query
+          description: Page number for pagination
+          required: false
+          schema:
+            type: integer
+        - name: size
+          in: query
+          description: Page size for pagination
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SheftDTO'
+      tags:
+        - sheft-resource
+    parameters: []
+  '/shefts/{id}':
+    get:
+      summary: Get a Sheft by ID
+      operationId: getSheft
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SheftDTO'
+        '404':
+          description: Not Found
+      tags:
+        - sheft-resource
+    put:
+      summary: Update a Sheft
+      operationId: updateSheft
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SheftDTO'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SheftDTO'
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+      tags:
+        - sheft-resource
+    patch:
+      summary: Partially update a Sheft
+      operationId: partialUpdateSheft
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SheftDTO'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SheftDTO'
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+      tags:
+        - sheft-resource
+    delete:
+      summary: Delete a Sheft
+      operationId: deleteSheft
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+      tags:
+        - sheft-resource
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
 components:
   schemas:
     ChartDataDTO:
@@ -5192,3 +5338,103 @@ components:
             id: qo5b0jfzx3j5r
       required:
         - containerId
+    SheftDTO:
+      type: object
+      properties:
+        id:
+          type: string
+        startTime:
+          type: string
+          format: date
+        endTime:
+          type: string
+          format: date
+        active:
+          type: boolean
+          default: false
+        assignedEmployee:
+          type: string
+        duration:
+          type: string
+          format: duration
+        totalprice:
+          type: number
+          format: decimal
+          default: 0
+        totalCost:
+          type: number
+          format: decimal
+          default: 0
+        netPrice:
+          type: number
+          format: decimal
+          default: 0
+        netCost:
+          type: number
+          format: decimal
+          default: 0
+        netUserPrice:
+          type: number
+          format: decimal
+          default: 0
+        totalItemsOut:
+          type: number
+          format: decimal
+          default: 0
+        discount:
+          type: number
+          format: decimal
+          default: 0
+        invoicesAdditions:
+          type: number
+          format: decimal
+          default: 0
+        additions:
+          type: number
+          format: decimal
+          default: 0
+        additionsNotes:
+          type: number
+          format: decimal
+          default: 0
+        invoicesExpenses:
+          type: number
+          format: decimal
+          default: 0
+        sheftExpenses:
+          type: number
+          format: decimal
+          default: 0
+        totalinvoices:
+          type: number
+          format: decimal
+          default: 0
+        totaldeletedItems:
+          type: number
+          format: decimal
+          default: 0
+        totaldeletedItemsPrice:
+          type: number
+          format: decimal
+          default: 0
+        notes:
+          type: string
+    SheftSimpleDTO:
+      type: object
+      properties:
+        id:
+          type: string
+        startTime:
+          type: string
+          format: date
+        endTime:
+          type: string
+          format: date
+        active:
+          type: boolean
+          default: false
+        assignedEmployee:
+          type: string
+        duration:
+          type: string
+          format: duration

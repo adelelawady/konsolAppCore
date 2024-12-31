@@ -1,0 +1,262 @@
+<div>
+  <h2 id="page-heading" data-cy="SheftHeading">
+    <span jhiTranslate="konsolCoreApp.sheft.home.title">Shefts</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <fa-icon icon="sync" [animation]="isLoading ? 'spin' : undefined"></fa-icon>
+        <span jhiTranslate="konsolCoreApp.sheft.home.refreshListLabel">Refresh list</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-sheft"
+        [routerLink]="['/sheft/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span jhiTranslate="konsolCoreApp.sheft.home.createLabel">Create a new Sheft</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  @if (shefts?.length === 0) {
+  <div class="alert alert-warning" id="no-result">
+    <span jhiTranslate="konsolCoreApp.sheft.home.notFound">No Shefts found</span>
+  </div>
+  } @if (shefts && shefts.length > 0) {
+  <div class="table-responsive table-entities" id="entities">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [sortState]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+          <th scope="col" jhiSortBy="id">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.sheft.id">Id</span>
+
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="startTime">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.sheft.startTime">Start Time</span>
+
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="endTime">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.sheft.endTime">End Time</span>
+
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="active">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.sheft.active">Active</span>
+
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="assignedEmployee">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.sheft.assignedEmployee">Assigned Employee</span>
+
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="duration">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.sheft.duration">Duration</span>
+
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="totalprice">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.sheft.totalprice">Totalprice</span>
+
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="totalCost">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.sheft.totalCost">Total Cost</span>
+
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="netPrice">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.sheft.netPrice">Net Price</span>
+
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="netCost">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.sheft.netCost">Net Cost</span>
+
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="netUserPrice">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.sheft.netUserPrice">Net User Price</span>
+
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="totalItemsOut">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.sheft.totalItemsOut">Total Items Out</span>
+
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="discount">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.sheft.discount">Discount</span>
+
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="invoicesAdditions">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.sheft.invoicesAdditions">Invoices Additions</span>
+
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="additions">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.sheft.additions">Additions</span>
+
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="additionsNotes">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.sheft.additionsNotes">Additions Notes</span>
+
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="invoicesExpenses">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.sheft.invoicesExpenses">Invoices Expenses</span>
+
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="sheftExpenses">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.sheft.sheftExpenses">Sheft Expenses</span>
+
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="totalinvoices">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.sheft.totalinvoices">Totalinvoices</span>
+
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="totaldeletedItems">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.sheft.totaldeletedItems">Totaldeleted Items</span>
+
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="totaldeletedItemsPrice">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.sheft.totaldeletedItemsPrice">Totaldeleted Items Price</span>
+
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="notes">
+            <div class="d-flex">
+              <span jhiTranslate="konsolCoreApp.sheft.notes">Notes</span>
+
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (sheft of shefts; track trackId(sheft)) {
+        <tr data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/sheft', sheft.id, 'view']">{{ sheft.id }}</a>
+          </td>
+          <td>{{ sheft.startTime | formatMediumDate }}</td>
+          <td>{{ sheft.endTime | formatMediumDate }}</td>
+          <td>{{ sheft.active }}</td>
+          <td>{{ sheft.assignedEmployee }}</td>
+          <td title="{{ sheft.duration }}">{{ sheft.duration | duration }}</td>
+          <td>{{ sheft.totalprice }}</td>
+          <td>{{ sheft.totalCost }}</td>
+          <td>{{ sheft.netPrice }}</td>
+          <td>{{ sheft.netCost }}</td>
+          <td>{{ sheft.netUserPrice }}</td>
+          <td>{{ sheft.totalItemsOut }}</td>
+          <td>{{ sheft.discount }}</td>
+          <td>{{ sheft.invoicesAdditions }}</td>
+          <td>{{ sheft.additions }}</td>
+          <td>{{ sheft.additionsNotes }}</td>
+          <td>{{ sheft.invoicesExpenses }}</td>
+          <td>{{ sheft.sheftExpenses }}</td>
+          <td>{{ sheft.totalinvoices }}</td>
+          <td>{{ sheft.totaldeletedItems }}</td>
+          <td>{{ sheft.totaldeletedItemsPrice }}</td>
+          <td>{{ sheft.notes }}</td>
+          <td class="text-end">
+            <div class="btn-group">
+              <a [routerLink]="['/sheft', sheft.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+              </a>
+
+              <a [routerLink]="['/sheft', sheft.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+              </a>
+
+              <button type="submit" (click)="delete(sheft)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  } @if (shefts && shefts.length > 0) {
+  <div>
+    <div class="d-flex justify-content-center">
+      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
+    </div>
+
+    <div class="d-flex justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [page]="page"
+        [pageSize]="itemsPerPage"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="navigateToPage($event)"
+      ></ngb-pagination>
+    </div>
+  </div>
+  }
+</div>

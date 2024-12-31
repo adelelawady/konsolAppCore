@@ -1,0 +1,114 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (sheft(); as sheftRef) {
+    <div>
+      <h2 data-cy="sheftDetailsHeading"><span jhiTranslate="konsolCoreApp.sheft.detail.title">Sheft</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="konsolCoreApp.sheft.id">Id</span></dt>
+        <dd>
+          <span>{{ sheftRef.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="konsolCoreApp.sheft.startTime">Start Time</span></dt>
+        <dd>
+          <span>{{ sheftRef.startTime | formatMediumDate }}</span>
+        </dd>
+        <dt><span jhiTranslate="konsolCoreApp.sheft.endTime">End Time</span></dt>
+        <dd>
+          <span>{{ sheftRef.endTime | formatMediumDate }}</span>
+        </dd>
+        <dt><span jhiTranslate="konsolCoreApp.sheft.active">Active</span></dt>
+        <dd>
+          <span>{{ sheftRef.active }}</span>
+        </dd>
+        <dt><span jhiTranslate="konsolCoreApp.sheft.assignedEmployee">Assigned Employee</span></dt>
+        <dd>
+          <span>{{ sheftRef.assignedEmployee }}</span>
+        </dd>
+        <dt><span jhiTranslate="konsolCoreApp.sheft.duration">Duration</span></dt>
+        <dd>
+          <span>{{ sheftRef.duration | duration }} ({{ sheftRef.duration }})</span>
+        </dd>
+        <dt><span jhiTranslate="konsolCoreApp.sheft.totalprice">Totalprice</span></dt>
+        <dd>
+          <span>{{ sheftRef.totalprice }}</span>
+        </dd>
+        <dt><span jhiTranslate="konsolCoreApp.sheft.totalCost">Total Cost</span></dt>
+        <dd>
+          <span>{{ sheftRef.totalCost }}</span>
+        </dd>
+        <dt><span jhiTranslate="konsolCoreApp.sheft.netPrice">Net Price</span></dt>
+        <dd>
+          <span>{{ sheftRef.netPrice }}</span>
+        </dd>
+        <dt><span jhiTranslate="konsolCoreApp.sheft.netCost">Net Cost</span></dt>
+        <dd>
+          <span>{{ sheftRef.netCost }}</span>
+        </dd>
+        <dt><span jhiTranslate="konsolCoreApp.sheft.netUserPrice">Net User Price</span></dt>
+        <dd>
+          <span>{{ sheftRef.netUserPrice }}</span>
+        </dd>
+        <dt><span jhiTranslate="konsolCoreApp.sheft.totalItemsOut">Total Items Out</span></dt>
+        <dd>
+          <span>{{ sheftRef.totalItemsOut }}</span>
+        </dd>
+        <dt><span jhiTranslate="konsolCoreApp.sheft.discount">Discount</span></dt>
+        <dd>
+          <span>{{ sheftRef.discount }}</span>
+        </dd>
+        <dt><span jhiTranslate="konsolCoreApp.sheft.invoicesAdditions">Invoices Additions</span></dt>
+        <dd>
+          <span>{{ sheftRef.invoicesAdditions }}</span>
+        </dd>
+        <dt><span jhiTranslate="konsolCoreApp.sheft.additions">Additions</span></dt>
+        <dd>
+          <span>{{ sheftRef.additions }}</span>
+        </dd>
+        <dt><span jhiTranslate="konsolCoreApp.sheft.additionsNotes">Additions Notes</span></dt>
+        <dd>
+          <span>{{ sheftRef.additionsNotes }}</span>
+        </dd>
+        <dt><span jhiTranslate="konsolCoreApp.sheft.invoicesExpenses">Invoices Expenses</span></dt>
+        <dd>
+          <span>{{ sheftRef.invoicesExpenses }}</span>
+        </dd>
+        <dt><span jhiTranslate="konsolCoreApp.sheft.sheftExpenses">Sheft Expenses</span></dt>
+        <dd>
+          <span>{{ sheftRef.sheftExpenses }}</span>
+        </dd>
+        <dt><span jhiTranslate="konsolCoreApp.sheft.totalinvoices">Totalinvoices</span></dt>
+        <dd>
+          <span>{{ sheftRef.totalinvoices }}</span>
+        </dd>
+        <dt><span jhiTranslate="konsolCoreApp.sheft.totaldeletedItems">Totaldeleted Items</span></dt>
+        <dd>
+          <span>{{ sheftRef.totaldeletedItems }}</span>
+        </dd>
+        <dt><span jhiTranslate="konsolCoreApp.sheft.totaldeletedItemsPrice">Totaldeleted Items Price</span></dt>
+        <dd>
+          <span>{{ sheftRef.totaldeletedItemsPrice }}</span>
+        </dd>
+        <dt><span jhiTranslate="konsolCoreApp.sheft.notes">Notes</span></dt>
+        <dd>
+          <span>{{ sheftRef.notes }}</span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/sheft', sheftRef.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+      </button>
+    </div>
+    }
+  </div>
+</div>

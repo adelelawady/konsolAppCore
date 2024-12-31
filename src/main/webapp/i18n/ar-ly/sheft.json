@@ -1,0 +1,44 @@
+{
+  "konsolCoreApp": {
+    "sheft": {
+      "home": {
+        "title": "Shefts",
+        "refreshListLabel": "تحديث القائمة",
+        "createLabel": "إنشاء Sheft جديد",
+        "createOrEditLabel": "إنشاء أو تعديل Sheft",
+        "notFound": "لم يتم العثور على Shefts"
+      },
+      "created": "Sheft جديد تم إنشاؤه بالمعرف {{ param }}",
+      "updated": "Sheft تم تحديثه بالمعرف {{ param }}",
+      "deleted": "Sheft تم حذفه بالمعرف {{ param }}",
+      "delete": {
+        "question": "هل أنت متأكد أنك تريد حذف Sheft {{ id }}؟"
+      },
+      "detail": {
+        "title": "Sheft"
+      },
+      "id": "Id",
+      "startTime": "Start Time",
+      "endTime": "End Time",
+      "active": "Active",
+      "assignedEmployee": "Assigned Employee",
+      "duration": "Duration",
+      "totalprice": "Totalprice",
+      "totalCost": "Total Cost",
+      "netPrice": "Net Price",
+      "netCost": "Net Cost",
+      "netUserPrice": "Net User Price",
+      "totalItemsOut": "Total Items Out",
+      "discount": "Discount",
+      "invoicesAdditions": "Invoices Additions",
+      "additions": "Additions",
+      "additionsNotes": "Additions Notes",
+      "invoicesExpenses": "Invoices Expenses",
+      "sheftExpenses": "Sheft Expenses",
+      "totalinvoices": "Totalinvoices",
+      "totaldeletedItems": "Totaldeleted Items",
+      "totaldeletedItemsPrice": "Totaldeleted Items Price",
+      "notes": "Notes"
+    }
+  }
+}

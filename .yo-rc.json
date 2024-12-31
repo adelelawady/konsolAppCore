@@ -36,14 +36,15 @@
       "PlaystationDeviceType",
       "PriceOption",
       "PlayStationSession",
-      "PlaystationContainer"
+      "PlaystationContainer",
+      "Sheft"
     ],
     "entitySuffix": "",
     "jhiPrefix": "jhi",
     "jhipsterVersion": "8.7.1",
     "jwtSecretKey": "YzUxODM4MjU3MGEyN2JlMDE4OTdhOTA5ZTIxYjk2ZTM3YjFjMzM4OTljNmVkZDUyYmEzOWEwYmJjNjAyOWFhNTY4Yzk5NjgzMmRiZTczMDJjZDgyNWYwMzIxMDYxMjY3MzU3YjVlMjE4ZTVjNzcyNmZjNDk2YjYwNzI2ZjVjYTA=",
     "languages": ["en", "ar-ly"],
-    "lastLiquibaseTimestamp": 1734558577000,
+    "lastLiquibaseTimestamp": 1735604457000,
     "messageBroker": false,
     "microfrontend": false,
     "microfrontends": [],
