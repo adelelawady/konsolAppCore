@@ -1,11 +1,16 @@
 package com.konsol.core.domain;
 
+import com.konsol.core.domain.playstation.PlayStationSession;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -24,11 +29,11 @@ public class Sheft implements Serializable {
 
     @NotNull
     @Field("start_time")
-    private LocalDate startTime;
+    private Instant startTime;
 
     @NotNull
     @Field("end_time")
-    private LocalDate endTime;
+    private Instant endTime;
 
     @NotNull
     @Field("active")
@@ -37,6 +42,10 @@ public class Sheft implements Serializable {
     @NotNull
     @Field("assigned_employee")
     private String assignedEmployee;
+
+    @NotNull
+    @Field("assigned_employee_user")
+    private User assignedEmployeeUser = null;
 
     @NotNull
     @Field("duration")
@@ -105,6 +114,10 @@ public class Sheft implements Serializable {
     @Field("notes")
     private String notes;
 
+    @DBRef
+    @Field("sessions")
+    private List<PlayStationSession> sessions = new ArrayList<>();
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
     public String getId() {
@@ -120,29 +133,29 @@ public class Sheft implements Serializable {
         this.id = id;
     }
 
-    public LocalDate getStartTime() {
+    public Instant getStartTime() {
         return this.startTime;
     }
 
-    public Sheft startTime(LocalDate startTime) {
+    public Sheft startTime(Instant startTime) {
         this.setStartTime(startTime);
         return this;
     }
 
-    public void setStartTime(LocalDate startTime) {
+    public void setStartTime(Instant startTime) {
         this.startTime = startTime;
     }
 
-    public LocalDate getEndTime() {
+    public Instant getEndTime() {
         return this.endTime;
     }
 
-    public Sheft endTime(LocalDate endTime) {
+    public Sheft endTime(Instant endTime) {
         this.setEndTime(endTime);
         return this;
     }
 
-    public void setEndTime(LocalDate endTime) {
+    public void setEndTime(Instant endTime) {
         this.endTime = endTime;
     }
 
@@ -439,5 +452,21 @@ public class Sheft implements Serializable {
             ", totaldeletedItemsPrice=" + getTotaldeletedItemsPrice() +
             ", notes='" + getNotes() + "'" +
             "}";
+    }
+
+    public @NotNull User getAssignedEmployeeUser() {
+        return assignedEmployeeUser;
+    }
+
+    public void setAssignedEmployeeUser(@NotNull User assignedEmployeeUser) {
+        this.assignedEmployeeUser = assignedEmployeeUser;
+    }
+
+    public List<PlayStationSession> getSessions() {
+        return sessions;
+    }
+
+    public void setSessions(List<PlayStationSession> sessions) {
+        this.sessions = sessions;
     }
 }

@@ -39,4 +39,6 @@ public interface PlayStationSessionRepository extends MongoRepository<PlayStatio
     List<PlayStationSession> findByStartTimeBetweenAndActiveIsFalse(Instant startDate, Instant endDate);
 
     Page<PlayStationSession> findAllByEndTimeIsNotNullOrderByEndTimeDesc(Pageable pageable);
+
+    List<PlayStationSession> findByStartTimeBetween(Instant startTime, Instant endTime);
 }

@@ -5345,10 +5345,10 @@ components:
           type: string
         startTime:
           type: string
-          format: date
+          format: date-time
         endTime:
           type: string
-          format: date
+          format: date-time
         active:
           type: boolean
           default: false
@@ -5426,10 +5426,10 @@ components:
           type: string
         startTime:
           type: string
-          format: date
+          format: date-time
         endTime:
           type: string
-          format: date
+          format: date-time
         active:
           type: boolean
           default: false

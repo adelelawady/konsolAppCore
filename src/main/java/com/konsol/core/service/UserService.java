@@ -470,4 +470,8 @@ public class UserService {
             throw new AccessDeniedException("Access is denied Authority required : " + authority);
         }
     }
+
+    public Optional<User> getCurrentUserLogin() {
+        return SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneByLogin);
+    }
 }

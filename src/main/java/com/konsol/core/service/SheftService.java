@@ -1,5 +1,6 @@
 package com.konsol.core.service;
 
+import com.konsol.core.domain.Sheft;
 import com.konsol.core.service.api.dto.SheftDTO;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -55,4 +56,12 @@ public interface SheftService {
      * @param id the id of the entity.
      */
     void delete(String id);
+
+    Sheft startSheft();
+
+    SheftDTO getCurrentSheft();
+
+    void endSheft();
+
+    void calculateSheft(String id);
 }
