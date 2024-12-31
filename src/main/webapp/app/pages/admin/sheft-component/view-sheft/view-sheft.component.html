@@ -2,12 +2,12 @@
   <div class="page-header d-print-none">
     <div class="row align-items-center">
       <div class="col">
-        <h2 class="page-title">View Sheft Details</h2>
+        <h2 class="page-title" jhiTranslate="konsolCoreApp.sheft.view.title">View Sheft Details</h2>
       </div>
       <div class="col-auto ms-auto d-print-none">
         <button class="btn btn-secondary" (click)="goBack()">
           <i class="ti ti-arrow-left"></i>
-          Back to List
+          <span jhiTranslate="konsolCoreApp.sheft.view.backToList">Back to List</span>
         </button>
       </div>
     </div>
@@ -15,7 +15,7 @@
 
   <div class="card" *ngIf="sheft">
     <div class="card-header">
-      <h3 class="card-title">Sheft Information</h3>
+      <h3 class="card-title" jhiTranslate="konsolCoreApp.sheft.view.information">Sheft Information</h3>
     </div>
     <div class="card-body">
       <div class="row">
@@ -23,30 +23,32 @@
         <div class="col-md-6 mb-3">
           <div class="card">
             <div class="card-header">
-              <h4 class="card-title">Basic Details</h4>
+              <h4 class="card-title" jhiTranslate="konsolCoreApp.sheft.view.sections.basic">Basic Details</h4>
             </div>
             <div class="card-body">
               <dl class="row">
-                <dt class="col-5">ID:</dt>
+                <dt class="col-5" jhiTranslate="konsolCoreApp.sheft.id">ID:</dt>
                 <dd class="col-7">{{ sheft.id }}</dd>
 
-                <dt class="col-5">Start Time:</dt>
+                <dt class="col-5" jhiTranslate="konsolCoreApp.sheft.startTime">Start Time:</dt>
                 <dd class="col-7">{{ sheft.startTime | date: 'medium' }}</dd>
 
-                <dt class="col-5">End Time:</dt>
+                <dt class="col-5" jhiTranslate="konsolCoreApp.sheft.endTime">End Time:</dt>
                 <dd class="col-7">{{ sheft.endTime | date: 'medium' }}</dd>
 
-                <dt class="col-5">Duration:</dt>
+                <dt class="col-5" jhiTranslate="konsolCoreApp.sheft.duration">Duration:</dt>
                 <dd class="col-7">{{ sheft.duration }}</dd>
 
-                <dt class="col-5">Status:</dt>
+                <dt class="col-5" jhiTranslate="konsolCoreApp.sheft.active">Status:</dt>
                 <dd class="col-7">
                   <span class="badge" [class.bg-success]="sheft.active" [class.bg-secondary]="!sheft.active">
-                    {{ sheft.active ? 'Active' : 'Inactive' }}
+                    {{
+                      sheft.active ? ('konsolCoreApp.sheft.status.active' | translate) : ('konsolCoreApp.sheft.status.inactive' | translate)
+                    }}
                   </span>
                 </dd>
 
-                <dt class="col-5">Assigned Employee:</dt>
+                <dt class="col-5" jhiTranslate="konsolCoreApp.sheft.assignedEmployee">Assigned Employee:</dt>
                 <dd class="col-7">{{ sheft.assignedEmployee }}</dd>
               </dl>
             </div>
@@ -57,26 +59,26 @@
         <div class="col-md-6 mb-3">
           <div class="card">
             <div class="card-header">
-              <h4 class="card-title">Financial Details</h4>
+              <h4 class="card-title" jhiTranslate="konsolCoreApp.sheft.view.sections.financial">Financial Details</h4>
             </div>
             <div class="card-body">
               <dl class="row">
-                <dt class="col-5">Total Price:</dt>
+                <dt class="col-5" jhiTranslate="konsolCoreApp.sheft.totalprice">Total Price:</dt>
                 <dd class="col-7">{{ sheft.totalprice | currency }}</dd>
 
-                <dt class="col-5">Total Cost:</dt>
+                <dt class="col-5" jhiTranslate="konsolCoreApp.sheft.totalCost">Total Cost:</dt>
                 <dd class="col-7">{{ sheft.totalCost | currency }}</dd>
 
-                <dt class="col-5">Net Price:</dt>
+                <dt class="col-5" jhiTranslate="konsolCoreApp.sheft.netPrice">Net Price:</dt>
                 <dd class="col-7">{{ sheft.netPrice | currency }}</dd>
 
-                <dt class="col-5">Net Cost:</dt>
+                <dt class="col-5" jhiTranslate="konsolCoreApp.sheft.netCost">Net Cost:</dt>
                 <dd class="col-7">{{ sheft.netCost | currency }}</dd>
 
-                <dt class="col-5">Net User Price:</dt>
+                <dt class="col-5" jhiTranslate="konsolCoreApp.sheft.netUserPrice">Net User Price:</dt>
                 <dd class="col-7">{{ sheft.netUserPrice | currency }}</dd>
 
-                <dt class="col-5">Discount:</dt>
+                <dt class="col-5" jhiTranslate="konsolCoreApp.sheft.discount">Discount:</dt>
                 <dd class="col-7">{{ sheft.discount | currency }}</dd>
               </dl>
             </div>
@@ -87,26 +89,26 @@
         <div class="col-md-6 mb-3">
           <div class="card">
             <div class="card-header">
-              <h4 class="card-title">Additional Details</h4>
+              <h4 class="card-title" jhiTranslate="konsolCoreApp.sheft.view.sections.additional">Additional Details</h4>
             </div>
             <div class="card-body">
               <dl class="row">
-                <dt class="col-5">Total Items Out:</dt>
+                <dt class="col-5" jhiTranslate="konsolCoreApp.sheft.totalItemsOut">Total Items Out:</dt>
                 <dd class="col-7">{{ sheft.totalItemsOut }}</dd>
 
-                <dt class="col-5">Invoices Additions:</dt>
+                <dt class="col-5" jhiTranslate="konsolCoreApp.sheft.invoicesAdditions">Invoices Additions:</dt>
                 <dd class="col-7">{{ sheft.invoicesAdditions | currency }}</dd>
 
-                <dt class="col-5">Additions:</dt>
+                <dt class="col-5" jhiTranslate="konsolCoreApp.sheft.additions">Additions:</dt>
                 <dd class="col-7">{{ sheft.additions | currency }}</dd>
 
-                <dt class="col-5">Additions Notes:</dt>
+                <dt class="col-5" jhiTranslate="konsolCoreApp.sheft.additionsNotes">Additions Notes:</dt>
                 <dd class="col-7">{{ sheft.additionsNotes }}</dd>
 
-                <dt class="col-5">Invoices Expenses:</dt>
+                <dt class="col-5" jhiTranslate="konsolCoreApp.sheft.invoicesExpenses">Invoices Expenses:</dt>
                 <dd class="col-7">{{ sheft.invoicesExpenses | currency }}</dd>
 
-                <dt class="col-5">Sheft Expenses:</dt>
+                <dt class="col-5" jhiTranslate="konsolCoreApp.sheft.sheftExpenses">Sheft Expenses:</dt>
                 <dd class="col-7">{{ sheft.sheftExpenses | currency }}</dd>
               </dl>
             </div>
@@ -117,17 +119,17 @@
         <div class="col-md-6 mb-3">
           <div class="card">
             <div class="card-header">
-              <h4 class="card-title">Statistics</h4>
+              <h4 class="card-title" jhiTranslate="konsolCoreApp.sheft.view.sections.statistics">Statistics</h4>
             </div>
             <div class="card-body">
               <dl class="row">
-                <dt class="col-5">Total Invoices:</dt>
+                <dt class="col-5" jhiTranslate="konsolCoreApp.sheft.totalinvoices">Total Invoices:</dt>
                 <dd class="col-7">{{ sheft.totalinvoices }}</dd>
 
-                <dt class="col-5">Total Deleted Items:</dt>
+                <dt class="col-5" jhiTranslate="konsolCoreApp.sheft.totaldeletedItems">Total Deleted Items:</dt>
                 <dd class="col-7">{{ sheft.totaldeletedItems }}</dd>
 
-                <dt class="col-5">Deleted Items Price:</dt>
+                <dt class="col-5" jhiTranslate="konsolCoreApp.sheft.totaldeletedItemsPrice">Deleted Items Price:</dt>
                 <dd class="col-7">{{ sheft.totaldeletedItemsPrice | currency }}</dd>
               </dl>
             </div>
@@ -138,7 +140,7 @@
         <div class="col-12 mb-3" *ngIf="sheft.notes">
           <div class="card">
             <div class="card-header">
-              <h4 class="card-title">Notes</h4>
+              <h4 class="card-title" jhiTranslate="konsolCoreApp.sheft.view.sections.notes">Notes</h4>
             </div>
             <div class="card-body">
               <p class="mb-0">{{ sheft.notes }}</p>
@@ -162,7 +164,7 @@
   <div class="card" *ngIf="error">
     <div class="card-body text-center text-danger">
       <i class="ti ti-alert-circle mb-2" style="font-size: 2rem"></i>
-      <p class="mb-0">Error loading sheft details. Please try again later.</p>
+      <p class="mb-0" jhiTranslate="konsolCoreApp.sheft.home.notFound">Error loading sheft details. Please try again later.</p>
     </div>
   </div>
 </div>

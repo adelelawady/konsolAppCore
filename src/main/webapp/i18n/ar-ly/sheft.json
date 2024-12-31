@@ -2,43 +2,77 @@
   "konsolCoreApp": {
     "sheft": {
       "home": {
-        "title": "Shefts",
+        "title": "الورديات",
         "refreshListLabel": "تحديث القائمة",
-        "createLabel": "إنشاء Sheft جديد",
-        "createOrEditLabel": "إنشاء أو تعديل Sheft",
-        "notFound": "لم يتم العثور على Shefts"
+        "createLabel": "إنشاء وردية جديدة",
+        "createOrEditLabel": "إنشاء أو تعديل وردية",
+        "notFound": "لم يتم العثور على ورديات"
       },
-      "created": "Sheft جديد تم إنشاؤه بالمعرف {{ param }}",
-      "updated": "Sheft تم تحديثه بالمعرف {{ param }}",
-      "deleted": "Sheft تم حذفه بالمعرف {{ param }}",
+      "list": {
+        "title": "إدارة الورديات",
+        "table": {
+          "title": "قائمة الورديات",
+          "startTime": "وقت البدء",
+          "endTime": "وقت الانتهاء",
+          "employee": "الموظف",
+          "status": "الحالة",
+          "totalPrice": "السعر الإجمالي",
+          "netPrice": "السعر الصافي"
+        },
+        "showing": "عرض",
+        "to": "إلى",
+        "of": "من",
+        "entries": "سجل",
+        "prev": "السابق",
+        "next": "التالي"
+      },
+      "view": {
+        "title": "عرض تفاصيل الوردية",
+        "backToList": "العودة للقائمة",
+        "information": "معلومات الوردية",
+        "sections": {
+          "basic": "التفاصيل الأساسية",
+          "financial": "التفاصيل المالية",
+          "additional": "تفاصيل إضافية",
+          "statistics": "الإحصائيات",
+          "notes": "الملاحظات"
+        }
+      },
+      "status": {
+        "active": "نشط",
+        "inactive": "غير نشط"
+      },
+      "created": "تم إنشاء وردية جديدة برقم {{ param }}",
+      "updated": "تم تحديث الوردية برقم {{ param }}",
+      "deleted": "تم حذف الوردية برقم {{ param }}",
       "delete": {
-        "question": "هل أنت متأكد أنك تريد حذف Sheft {{ id }}؟"
+        "question": "هل أنت متأكد أنك تريد حذف الوردية {{ id }}؟"
       },
       "detail": {
-        "title": "Sheft"
+        "title": "الوردية"
       },
-      "id": "Id",
-      "startTime": "Start Time",
-      "endTime": "End Time",
-      "active": "Active",
-      "assignedEmployee": "Assigned Employee",
-      "duration": "Duration",
-      "totalprice": "Totalprice",
-      "totalCost": "Total Cost",
-      "netPrice": "Net Price",
-      "netCost": "Net Cost",
-      "netUserPrice": "Net User Price",
-      "totalItemsOut": "Total Items Out",
-      "discount": "Discount",
-      "invoicesAdditions": "Invoices Additions",
-      "additions": "Additions",
-      "additionsNotes": "Additions Notes",
-      "invoicesExpenses": "Invoices Expenses",
-      "sheftExpenses": "Sheft Expenses",
-      "totalinvoices": "Totalinvoices",
-      "totaldeletedItems": "Totaldeleted Items",
-      "totaldeletedItemsPrice": "Totaldeleted Items Price",
-      "notes": "Notes"
+      "id": "الرقم التعريفي",
+      "startTime": "وقت البدء",
+      "endTime": "وقت الانتهاء",
+      "active": "نشط",
+      "assignedEmployee": "الموظف المسؤول",
+      "duration": "المدة",
+      "totalprice": "السعر الإجمالي",
+      "totalCost": "التكلفة الإجمالية",
+      "netPrice": "السعر الصافي",
+      "netCost": "التكلفة الصافية",
+      "netUserPrice": "سعر المستخدم الصافي",
+      "totalItemsOut": "إجمالي العناصر المخرجة",
+      "discount": "الخصم",
+      "invoicesAdditions": "إضافات الفواتير",
+      "additions": "الإضافات",
+      "additionsNotes": "ملاحظات الإضافات",
+      "invoicesExpenses": "مصروفات الفواتير",
+      "sheftExpenses": "مصروفات الوردية",
+      "totalinvoices": "إجمالي الفواتير",
+      "totaldeletedItems": "إجمالي العناصر المحذوفة",
+      "totaldeletedItemsPrice": "سعر العناصر المحذوفة",
+      "notes": "الملاحظات"
     }
   }
 }

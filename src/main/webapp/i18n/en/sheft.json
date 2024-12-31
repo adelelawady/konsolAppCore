@@ -8,6 +8,40 @@
         "createOrEditLabel": "Create or edit a Sheft",
         "notFound": "No Shefts found"
       },
+      "list": {
+        "title": "Sheft Management",
+        "table": {
+          "title": "Shefts List",
+          "startTime": "Start Time",
+          "endTime": "End Time",
+          "employee": "Employee",
+          "status": "Status",
+          "totalPrice": "Total Price",
+          "netPrice": "Net Price"
+        },
+        "showing": "Showing",
+        "to": "to",
+        "of": "of",
+        "entries": "entries",
+        "prev": "Previous",
+        "next": "Next"
+      },
+      "view": {
+        "title": "View Sheft Details",
+        "backToList": "Back to List",
+        "information": "Sheft Information",
+        "sections": {
+          "basic": "Basic Details",
+          "financial": "Financial Details",
+          "additional": "Additional Details",
+          "statistics": "Statistics",
+          "notes": "Notes"
+        }
+      },
+      "status": {
+        "active": "Active",
+        "inactive": "Inactive"
+      },
       "created": "A new Sheft is created with identifier {{ param }}",
       "updated": "A Sheft is updated with identifier {{ param }}",
       "deleted": "A Sheft is deleted with identifier {{ param }}",
@@ -17,13 +51,13 @@
       "detail": {
         "title": "Sheft"
       },
-      "id": "Id",
+      "id": "ID",
       "startTime": "Start Time",
       "endTime": "End Time",
       "active": "Active",
       "assignedEmployee": "Assigned Employee",
       "duration": "Duration",
-      "totalprice": "Totalprice",
+      "totalprice": "Total Price",
       "totalCost": "Total Cost",
       "netPrice": "Net Price",
       "netCost": "Net Cost",
@@ -35,9 +69,9 @@
       "additionsNotes": "Additions Notes",
       "invoicesExpenses": "Invoices Expenses",
       "sheftExpenses": "Sheft Expenses",
-      "totalinvoices": "Totalinvoices",
-      "totaldeletedItems": "Totaldeleted Items",
-      "totaldeletedItemsPrice": "Totaldeleted Items Price",
+      "totalinvoices": "Total Invoices",
+      "totaldeletedItems": "Total Deleted Items",
+      "totaldeletedItemsPrice": "Total Deleted Items Price",
       "notes": "Notes"
     }
   }
