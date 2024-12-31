@@ -14,6 +14,7 @@ import { PlaystationContainerResourceService } from './api/playstationContainerR
 import { PlaystationResourceService } from './api/playstationResource.service';
 import { PublicUserResourceService } from './api/publicUserResource.service';
 import { ServerSettingsService } from './api/serverSettings.service';
+import { SheftResourceService } from './api/sheftResource.service';
 import { StoreResourceService } from './api/storeResource.service';
 import { UserJwtControllerService } from './api/userJwtController.service';
 import { UserResourceService } from './api/userResource.service';

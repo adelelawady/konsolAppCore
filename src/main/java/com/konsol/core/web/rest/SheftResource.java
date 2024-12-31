@@ -2,7 +2,8 @@ package com.konsol.core.web.rest;
 
 import com.konsol.core.repository.SheftRepository;
 import com.konsol.core.service.SheftService;
-import com.konsol.core.service.dto.SheftDTO;
+import com.konsol.core.service.api.dto.SheftDTO;
+import com.konsol.core.web.api.SheftsApiDelegate;
 import com.konsol.core.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -16,9 +17,11 @@ import org.slf4j.LoggerFactory;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -28,9 +31,8 @@ import tech.jhipster.web.util.ResponseUtil;
 /**
  * REST controller for managing {@link com.konsol.core.domain.Sheft}.
  */
-@RestController
-@RequestMapping("/api/shefts")
-public class SheftResource {
+@Service
+public class SheftResource implements SheftsApiDelegate {
 
     private static final Logger LOG = LoggerFactory.getLogger(SheftResource.class);
 
@@ -55,17 +57,21 @@ public class SheftResource {
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new sheftDTO, or with status {@code 400 (Bad Request)} if the sheft has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("")
-    public ResponseEntity<SheftDTO> createSheft(@Valid @RequestBody SheftDTO sheftDTO) throws URISyntaxException {
+    @Override
+    public ResponseEntity<SheftDTO> createSheft(SheftDTO sheftDTO) {
         LOG.debug("REST request to save Sheft : {}", sheftDTO);
         if (sheftDTO.getId() != null) {
             throw new BadRequestAlertException("A new sheft cannot already have an ID", ENTITY_NAME, "idexists");
         }
         sheftDTO = sheftService.save(sheftDTO);
-        return ResponseEntity
-            .created(new URI("/api/shefts/" + sheftDTO.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, sheftDTO.getId()))
-            .body(sheftDTO);
+        try {
+            return ResponseEntity
+                .created(new URI("/api/shefts/" + sheftDTO.getId()))
+                .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, sheftDTO.getId()))
+                .body(sheftDTO);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -78,11 +84,8 @@ public class SheftResource {
      * or with status {@code 500 (Internal Server Error)} if the sheftDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/{id}")
-    public ResponseEntity<SheftDTO> updateSheft(
-        @PathVariable(value = "id", required = false) final String id,
-        @Valid @RequestBody SheftDTO sheftDTO
-    ) throws URISyntaxException {
+    @Override
+    public ResponseEntity<SheftDTO> updateSheft(String id, SheftDTO sheftDTO) {
         LOG.debug("REST request to update Sheft : {}, {}", id, sheftDTO);
         if (sheftDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
@@ -113,11 +116,8 @@ public class SheftResource {
      * or with status {@code 500 (Internal Server Error)} if the sheftDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
-    public ResponseEntity<SheftDTO> partialUpdateSheft(
-        @PathVariable(value = "id", required = false) final String id,
-        @NotNull @RequestBody SheftDTO sheftDTO
-    ) throws URISyntaxException {
+    @Override
+    public ResponseEntity<SheftDTO> partialUpdateSheft(String id, SheftDTO sheftDTO) {
         LOG.debug("REST request to partial update Sheft partially : {}, {}", id, sheftDTO);
         if (sheftDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
@@ -141,12 +141,12 @@ public class SheftResource {
     /**
      * {@code GET  /shefts} : get all the shefts.
      *
-     * @param pageable the pagination information.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of shefts in body.
      */
-    @GetMapping("")
-    public ResponseEntity<List<SheftDTO>> getAllShefts(@ParameterObject Pageable pageable) {
+    @Override
+    public ResponseEntity<List<SheftDTO>> getAllShefts(Integer pagex, Integer size) {
         LOG.debug("REST request to get a page of Shefts");
+        Pageable pageable = PageRequest.of(pagex, size);
         Page<SheftDTO> page = sheftService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
@@ -158,8 +158,8 @@ public class SheftResource {
      * @param id the id of the sheftDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the sheftDTO, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/{id}")
-    public ResponseEntity<SheftDTO> getSheft(@PathVariable("id") String id) {
+    @Override
+    public ResponseEntity<SheftDTO> getSheft(String id) {
         LOG.debug("REST request to get Sheft : {}", id);
         Optional<SheftDTO> sheftDTO = sheftService.findOne(id);
         return ResponseUtil.wrapOrNotFound(sheftDTO);
@@ -171,8 +171,8 @@ public class SheftResource {
      * @param id the id of the sheftDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSheft(@PathVariable("id") String id) {
+    @Override
+    public ResponseEntity<Void> deleteSheft(String id) {
         LOG.debug("REST request to delete Sheft : {}", id);
         sheftService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id)).build();

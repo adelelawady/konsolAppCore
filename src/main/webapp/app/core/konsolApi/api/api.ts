@@ -22,6 +22,8 @@ export * from './publicUserResource.service';
 import { PublicUserResourceService } from './publicUserResource.service';
 export * from './serverSettings.service';
 import { ServerSettingsService } from './serverSettings.service';
+export * from './sheftResource.service';
+import { SheftResourceService } from './sheftResource.service';
 export * from './storeResource.service';
 import { StoreResourceService } from './storeResource.service';
 export * from './userJwtController.service';
@@ -41,6 +43,7 @@ export const APIS = [
   PlaystationResourceService,
   PublicUserResourceService,
   ServerSettingsService,
+  SheftResourceService,
   StoreResourceService,
   UserJwtControllerService,
   UserResourceService,

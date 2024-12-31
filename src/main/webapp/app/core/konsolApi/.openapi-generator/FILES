@@ -14,6 +14,7 @@ api/playstationContainerResource.service.ts
 api/playstationResource.service.ts
 api/publicUserResource.service.ts
 api/serverSettings.service.ts
+api/sheftResource.service.ts
 api/storeResource.service.ts
 api/userJwtController.service.ts
 api/userResource.service.ts
@@ -96,6 +97,8 @@ model/psSessionDTO.ts
 model/salesMetricsDTO.ts
 model/seriesData.ts
 model/serverSettings.ts
+model/sheftDTO.ts
+model/sheftSimpleDTO.ts
 model/startDeviceSessionDTO.ts
 model/storeAccountAnalysisDTO.ts
 model/storeDTO.ts

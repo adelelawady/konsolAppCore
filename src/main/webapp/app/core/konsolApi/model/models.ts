@@ -72,6 +72,8 @@ export * from './psSessionDTO';
 export * from './salesMetricsDTO';
 export * from './seriesData';
 export * from './serverSettings';
+export * from './sheftDTO';
+export * from './sheftSimpleDTO';
 export * from './startDeviceSessionDTO';
 export * from './storeAccountAnalysisDTO';
 export * from './storeDTO';

@@ -1,7 +1,7 @@
 package com.konsol.core.service.mapper;
 
 import com.konsol.core.domain.Sheft;
-import com.konsol.core.service.dto.SheftDTO;
+import com.konsol.core.service.api.dto.SheftDTO;
 import org.mapstruct.*;
 
 /**

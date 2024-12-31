@@ -3,7 +3,7 @@ package com.konsol.core.service.impl;
 import com.konsol.core.domain.Sheft;
 import com.konsol.core.repository.SheftRepository;
 import com.konsol.core.service.SheftService;
-import com.konsol.core.service.dto.SheftDTO;
+import com.konsol.core.service.api.dto.SheftDTO;
 import com.konsol.core.service.mapper.SheftMapper;
 import java.util.Optional;
 import org.slf4j.Logger;
