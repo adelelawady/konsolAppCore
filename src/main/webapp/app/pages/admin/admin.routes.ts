@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { AdminPlaystationContainerComponent } from './playstation-container/playstation-container.component';
 import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
+import { SheftComponentComponent } from './sheft-component/sheft-component.component';
+import { ViewSheftComponent } from './sheft-component/view-sheft/view-sheft.component';
 
 export const adminRoutes: Routes = [
   {
@@ -20,5 +22,19 @@ export const adminRoutes: Routes = [
       authorities: ['ROLE_ADMIN'],
       pageTitle: 'PlayStation Containers',
     },
+  },
+  {
+    path: 'sheft',
+    component: SheftComponentComponent,
+    canActivate: [UserRouteAccessService],
+    data: {
+      authorities: ['ROLE_ADMIN'],
+      pageTitle: 'Shefts',
+    },
+  },
+  {
+    path: 'shefts/:id',
+    component: ViewSheftComponent,
+    title: 'View Sheft',
   },
 ];

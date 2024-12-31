@@ -7,9 +7,11 @@ import { AdminPlaystationContainerComponent } from './playstation-container/play
 import { adminRoutes } from './admin.routes';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { PlayStationFinancialReportsModule } from './financial-reports/financial-reports.module';
+import { SheftComponentComponent } from './sheft-component/sheft-component.component';
+import { ViewSheftComponent } from './sheft-component/view-sheft/view-sheft.component';
 
 @NgModule({
-  declarations: [AdminPlaystationContainerComponent],
+  declarations: [AdminPlaystationContainerComponent, SheftComponentComponent, ViewSheftComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(adminRoutes),

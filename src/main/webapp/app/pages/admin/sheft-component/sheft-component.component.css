@@ -1,0 +1,41 @@
+.btn-list {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.form-switch {
+  padding-top: 2rem;
+}
+
+.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.pagination {
+  margin-bottom: 0;
+}
+
+.page-link {
+  padding: 0.5rem 0.75rem;
+  color: var(--tblr-primary);
+  background-color: var(--tblr-bg-surface);
+  border: 1px solid var(--tblr-border-color);
+}
+
+.page-link:hover {
+  background-color: var(--tblr-bg-surface-secondary);
+}
+
+.page-item.active .page-link {
+  background-color: var(--tblr-primary);
+  border-color: var(--tblr-primary);
+  color: #fff;
+}
+
+.page-item.disabled .page-link {
+  color: var(--tblr-secondary);
+  pointer-events: none;
+  background-color: var(--tblr-bg-surface);
+  border-color: var(--tblr-border-color);
+}
