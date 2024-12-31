@@ -7,7 +7,12 @@ import org.mapstruct.*;
 /**
  * Mapper for the entity {@link Sheft} and its DTO {@link SheftDTO}.
  */
-@Mapper(componentModel = "spring", uses = { UtilitsMapper.class })
+@Mapper(
+    componentModel = "spring",
+    uses = { UtilitsMapper.class },
+    unmappedTargetPolicy = ReportingPolicy.IGNORE,
+    nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS
+)
 public interface SheftMapper extends EntityMapper<SheftDTO, Sheft> {
     @Override
     SheftDTO toDto(Sheft entity);

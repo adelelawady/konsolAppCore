@@ -5,6 +5,7 @@ import static org.reflections.Reflections.log;
 import com.konsol.core.service.BankService;
 import com.konsol.core.service.FinancialDashboardService;
 import com.konsol.core.service.ItemService;
+import com.konsol.core.service.SheftService;
 import com.konsol.core.service.api.dto.FinancialDashboardDTO;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -15,16 +16,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class testCMD implements CommandLineRunner {
 
-    private final BankService bankService;
+    private final SheftService sheftService;
 
-    private final ItemService itemService;
-
-    private final FinancialDashboardService financialDashboardService;
-
-    public testCMD(BankService bankService, ItemService itemService, FinancialDashboardService financialDashboardService) {
-        this.bankService = bankService;
-        this.itemService = itemService;
-        this.financialDashboardService = financialDashboardService;
+    public testCMD(SheftService sheftService) {
+        this.sheftService = sheftService;
     }
 
     /**
@@ -33,19 +28,6 @@ public class testCMD implements CommandLineRunner {
      */
     @Override
     public void run(String... args) throws Exception {
-        LocalDateTime startDate = LocalDateTime.now().minusDays(2);
-        LocalDateTime endDate = LocalDateTime.now().plusDays(2);
-        /*
-        FinancialDashboardDTO financialDashboardDTO = financialDashboardService.getDashboardData(
-            startDate,
-            endDate,
-            "674ffcaab0c83957e9623139",
-            "675068e4e31429211961ed67",
-            "674ffcaab0c83957e9623138"
-        );
-
-         */
-
-        // log.debug("financialDashboardDTO : {}", financialDashboardDTO);
+        sheftService.startSheft();
     }
 }

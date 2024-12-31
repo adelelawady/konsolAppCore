@@ -13,14 +13,21 @@ import com.konsol.core.service.SheftService;
 import com.konsol.core.service.UserService;
 import com.konsol.core.service.api.dto.SheftDTO;
 import com.konsol.core.service.mapper.SheftMapper;
+import com.mongodb.client.AggregateIterable;
+import com.mongodb.client.MongoCollection;
 import java.math.BigDecimal;
 import java.time.*;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import org.bson.BsonNull;
+import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -42,17 +49,20 @@ public class SheftServiceImpl implements SheftService {
     private final UserService userService;
 
     private final PlayStationSessionRepository playStationSessionRepository;
+    private final MongoTemplate mongoTemplate;
 
     public SheftServiceImpl(
         SheftRepository sheftRepository,
         SheftMapper sheftMapper,
         UserService userService,
-        PlayStationSessionRepository playStationSessionRepository
+        PlayStationSessionRepository playStationSessionRepository,
+        MongoTemplate mongoTemplate
     ) {
         this.sheftRepository = sheftRepository;
         this.sheftMapper = sheftMapper;
         this.userService = userService;
         this.playStationSessionRepository = playStationSessionRepository;
+        this.mongoTemplate = mongoTemplate;
     }
 
     @Override
@@ -95,6 +105,7 @@ public class SheftServiceImpl implements SheftService {
     @Override
     public Optional<SheftDTO> findOne(String id) {
         LOG.debug("Request to get Sheft : {}", id);
+        this.calculateSheft(id);
         return sheftRepository.findById(id).map(sheftMapper::toDto);
     }
 
@@ -119,12 +130,13 @@ public class SheftServiceImpl implements SheftService {
         Sheft sheft = new Sheft();
 
         // Set start time to current timestamp
-        sheft.setStartTime(LocalDate.now());
+        sheft.setStartTime(Instant.now());
         sheft.setEndTime(null);
         sheft.setDuration(Duration.ZERO);
         // Set active status
         sheft.setActive(true);
 
+        /*
         // Get current authenticated user
         Optional<User> currentUser = Optional.ofNullable(
             userService.getCurrentUserLogin().orElseThrow(() -> new IllegalStateException("Current user not found"))
@@ -132,9 +144,11 @@ public class SheftServiceImpl implements SheftService {
         if (currentUser.isEmpty()) {
             throw new IllegalStateException("Current user not found");
         }
+
+
         sheft.setAssignedEmployee(currentUser.get().getFirstName() + " " + currentUser.get().getLastName());
         sheft.setAssignedEmployeeUser(currentUser.get());
-
+ */
         // Initialize required fields with default values
         sheft.setTotalprice(BigDecimal.ZERO);
         sheft.setTotalCost(BigDecimal.ZERO);
@@ -170,65 +184,114 @@ public class SheftServiceImpl implements SheftService {
 
         Sheft sheft = sheftRepository.findById(id).orElseThrow(() -> new IllegalStateException("Sheft not found with id: " + id));
 
-        // Get all sessions from sheft start time till now
-        List<PlayStationSession> sessions = playStationSessionRepository.findByEndTimeBetween(
-            Instant.from(sheft.getStartTime()),
-            Instant.now()
+        LOG.debug("Calculating stats from {} to {}", sheft.getStartTime(), Instant.now());
+
+        MongoCollection<Document> collection = mongoTemplate.getCollection("ps_session");
+        AggregateIterable<Document> result = collection.aggregate(
+            Arrays.asList(
+                new Document(
+                    "$match",
+                    new Document(
+                        "end_time",
+                        new Document("$gte", new java.util.Date(1735632787772L)).append("$lte", new java.util.Date(1735639987772L))
+                    )
+                ),
+                new Document("$addFields", new Document("invoiceId", "$invoice.$id")),
+                new Document(
+                    "$lookup",
+                    new Document("from", "invoices")
+                        .append("localField", "invoiceId")
+                        .append("foreignField", "_id")
+                        .append("as", "invoiceData")
+                ),
+                new Document("$unwind", new Document("path", "$invoiceData").append("preserveNullAndEmptyArrays", true)),
+                new Document(
+                    "$group",
+                    new Document("_id", new BsonNull())
+                        .append("sessionCount", new Document("$sum", 1L))
+                        .append(
+                            "totalPrice",
+                            new Document(
+                                "$sum",
+                                new Document("$ifNull", Arrays.asList(new Document("$toDecimal", "$invoiceData.total_price"), 0L))
+                            )
+                        )
+                        .append(
+                            "totalCost",
+                            new Document(
+                                "$sum",
+                                new Document("$ifNull", Arrays.asList(new Document("$toDecimal", "$invoiceData.total_cost"), 0L))
+                            )
+                        )
+                        .append(
+                            "netPrice",
+                            new Document(
+                                "$sum",
+                                new Document("$ifNull", Arrays.asList(new Document("$toDecimal", "$invoiceData.net_price"), 0L))
+                            )
+                        )
+                        .append(
+                            "netCost",
+                            new Document(
+                                "$sum",
+                                new Document("$ifNull", Arrays.asList(new Document("$toDecimal", "$invoiceData.net_cost"), 0L))
+                            )
+                        )
+                        .append(
+                            "netUserPrice",
+                            new Document(
+                                "$sum",
+                                new Document("$ifNull", Arrays.asList(new Document("$toDecimal", "$invoiceData.user_net_price"), 0L))
+                            )
+                        )
+                        .append(
+                            "totalDiscount",
+                            new Document(
+                                "$sum",
+                                new Document("$ifNull", Arrays.asList(new Document("$toDecimal", "$invoiceData.discount"), 0L))
+                            )
+                        )
+                        .append(
+                            "totalAdditions",
+                            new Document(
+                                "$sum",
+                                new Document("$ifNull", Arrays.asList(new Document("$toDecimal", "$invoiceData.additions"), 0L))
+                            )
+                        )
+                        .append(
+                            "totalExpenses",
+                            new Document(
+                                "$sum",
+                                new Document("$ifNull", Arrays.asList(new Document("$toDecimal", "$invoiceData.expenses"), 0L))
+                            )
+                        )
+                )
+            )
         );
 
-        // Set sessions to sheft
-        sheft.setSessions(sessions);
+        if (result != null) {
+            Document firstDoc = result.first();
+            if (firstDoc != null) {
+                LOG.debug("Main aggregation result: {}", firstDoc.toJson());
 
-        // Initialize calculation variables
-        BigDecimal totalPrice = BigDecimal.ZERO;
-        BigDecimal totalCost = BigDecimal.ZERO;
-        BigDecimal netPrice = BigDecimal.ZERO;
-        BigDecimal netCost = BigDecimal.ZERO;
-        BigDecimal netUserPrice = BigDecimal.ZERO;
-        BigDecimal totalItemsOut = BigDecimal.ZERO;
-        BigDecimal discount = BigDecimal.ZERO;
-        BigDecimal invoicesAdditions = BigDecimal.ZERO;
-        BigDecimal additions = BigDecimal.ZERO;
-        BigDecimal additionsNotes = BigDecimal.ZERO;
-        BigDecimal invoicesExpenses = BigDecimal.ZERO;
-        BigDecimal sheftExpenses = BigDecimal.ZERO;
-        BigDecimal totalInvoices = BigDecimal.ZERO;
-        BigDecimal totalDeletedItems = BigDecimal.ZERO;
-        BigDecimal totalDeletedItemsPrice = BigDecimal.ZERO;
+                // Set sessions count
+                sheft.setTotalinvoices(BigDecimal.valueOf(firstDoc.getLong("sessionCount")));
 
-        totalInvoices = BigDecimal.valueOf(sessions.size());
-        // Calculate totals from sessions
-        for (PlayStationSession session : sessions) {
-            Invoice invoice = session.getInvoice();
-            if (invoice != null) {
-                // Add invoice totals
-                totalPrice = totalPrice.add(invoice.getTotalPrice());
-                totalCost = totalCost.add(invoice.getTotalCost());
-                netPrice = netPrice.add(invoice.getNetPrice());
-                netCost = netCost.add(invoice.getNetCost());
-                netUserPrice = netUserPrice.add(invoice.getUserNetPrice());
-                discount = discount.add(invoice.getDiscount());
-                invoicesAdditions = invoicesAdditions.add(invoice.getAdditions() != null ? invoice.getAdditions() : BigDecimal.ZERO);
-                invoicesExpenses = invoicesExpenses.add(invoice.getExpenses());
+                // Set financial totals
+                sheft.setTotalprice(getBigDecimalFromDocument(result, "totalPrice"));
+                sheft.setTotalCost(getBigDecimalFromDocument(result, "totalCost"));
+                sheft.setNetPrice(getBigDecimalFromDocument(result, "netPrice"));
+                sheft.setNetCost(getBigDecimalFromDocument(result, "netCost"));
+                sheft.setNetUserPrice(getBigDecimalFromDocument(result, "netUserPrice"));
+                sheft.setDiscount(getBigDecimalFromDocument(result, "totalDiscount"));
+                sheft.setInvoicesAdditions(getBigDecimalFromDocument(result, "totalAdditions"));
+                sheft.setInvoicesExpenses(getBigDecimalFromDocument(result, "totalExpenses"));
+
+                LOG.debug("Updated sheft with calculated values: {}", sheft);
+            } else {
+                LOG.warn("No results found in aggregation for sheft {}", id);
             }
         }
-
-        // Set calculated values to sheft
-        sheft.setTotalprice(totalPrice);
-        sheft.setTotalCost(totalCost);
-        sheft.setNetPrice(netPrice);
-        sheft.setNetCost(netCost);
-        sheft.setNetUserPrice(netUserPrice);
-        sheft.setTotalItemsOut(totalItemsOut);
-        sheft.setDiscount(discount);
-        sheft.setInvoicesAdditions(invoicesAdditions);
-        sheft.setAdditions(additions);
-        sheft.setAdditionsNotes(additionsNotes);
-        sheft.setInvoicesExpenses(invoicesExpenses);
-        sheft.setSheftExpenses(sheftExpenses);
-        sheft.setTotalinvoices(totalInvoices);
-        sheft.setTotaldeletedItems(totalDeletedItems);
-        sheft.setTotaldeletedItemsPrice(totalDeletedItemsPrice);
 
         // Calculate duration if end time exists
         if (sheft.getEndTime() != null) {
@@ -238,5 +301,45 @@ public class SheftServiceImpl implements SheftService {
 
         // Save updated sheft
         sheftRepository.save(sheft);
+    }
+
+    // Helper method to extract ID from various possible formats
+    private String extractId(Object idObj) {
+        if (idObj == null) return null;
+
+        if (idObj instanceof Document) {
+            // Handle MongoDB ObjectId document
+            return ((Document) idObj).getString("$oid");
+        }
+
+        // Handle direct string or other types
+        return String.valueOf(idObj);
+    }
+
+    private BigDecimal getBigDecimalFromDocument(AggregateIterable<Document> result, String field) {
+        Document doc = result.first();
+        if (doc == null) return BigDecimal.ZERO;
+
+        Object value = doc.get(field);
+        if (value == null) return BigDecimal.ZERO;
+
+        if (value instanceof Number) {
+            return BigDecimal.valueOf(((Number) value).doubleValue());
+        } else if (value instanceof Document) {
+            // Handle case where value might be a Decimal128
+            Document decimalDoc = (Document) value;
+            if (decimalDoc.containsKey("$numberDecimal")) {
+                String decimalStr = decimalDoc.getString("$numberDecimal");
+                try {
+                    return new BigDecimal(decimalStr);
+                } catch (NumberFormatException e) {
+                    LOG.warn("Failed to parse decimal value: {}", decimalStr);
+                    return BigDecimal.ZERO;
+                }
+            }
+        }
+
+        LOG.warn("Unexpected value type for field {}: {}", field, value.getClass());
+        return BigDecimal.ZERO;
     }
 }
