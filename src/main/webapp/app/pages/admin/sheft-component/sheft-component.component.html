@@ -36,8 +36,8 @@
                 {{ sheft.active ? ('konsolCoreApp.sheft.status.active' | translate) : ('konsolCoreApp.sheft.status.inactive' | translate) }}
               </span>
             </td>
-            <td>{{ sheft.totalprice | currency }}</td>
-            <td>{{ sheft.netPrice | currency }}</td>
+            <td>{{ sheft.totalprice | currencyK }}</td>
+            <td>{{ sheft.netPrice | currencyK }}</td>
             <td class="text-end">
               <div class="btn-list flex-nowrap">
                 <button class="btn btn-icon btn-info" (click)="viewSheft(sheft.id!)">

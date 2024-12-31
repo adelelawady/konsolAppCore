@@ -61,7 +61,9 @@ public interface SheftService {
 
     SheftDTO getCurrentSheft();
 
-    void endSheft();
+    Sheft endSheft();
 
     void calculateSheft(String id);
+
+    void reCalculateActiveSheftIfAvailable();
 }

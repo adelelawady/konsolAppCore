@@ -105,8 +105,17 @@ public class SheftServiceImpl implements SheftService {
     @Override
     public Optional<SheftDTO> findOne(String id) {
         LOG.debug("Request to get Sheft : {}", id);
-        this.calculateSheft(id);
-        return sheftRepository.findById(id).map(sheftMapper::toDto);
+
+        Optional<Sheft> sheftOptional = sheftRepository.findById(id);
+
+        if (sheftOptional.isEmpty()) {
+            return Optional.empty();
+        }
+        if (sheftOptional.get().getActive()) {
+            calculateSheft(id);
+            return sheftRepository.findById(id).map(sheftMapper::toDto);
+        }
+        return sheftOptional.map(sheftMapper::toDto);
     }
 
     @Override
@@ -176,7 +185,34 @@ public class SheftServiceImpl implements SheftService {
     }
 
     @Override
-    public void endSheft() {}
+    public Sheft endSheft() {
+        LOG.debug("Request to end current Sheft");
+
+        // Check if there's already an active shift
+        Optional<Sheft> activeSheft = sheftRepository.findByActiveTrue();
+        if (activeSheft.isEmpty()) {
+            throw new IllegalStateException("There is no active shift to end.");
+        }
+
+        Sheft sheft = activeSheft.get();
+
+        // Set end time to current timestamp
+        sheft.setEndTime(Instant.now());
+        sheft.setDuration(Duration.between(sheft.getStartTime(), sheft.getEndTime()));
+
+        // Set active status
+        sheft.setActive(false);
+
+        // Save the updated sheft
+        sheftRepository.save(sheft);
+
+        // Calculate the sheft stats
+        calculateSheft(sheft.getId());
+
+        return sheftRepository
+            .findById(sheft.getId())
+            .orElseThrow(() -> new IllegalStateException("Sheft not found with id: " + sheft.getId()));
+    }
 
     @Override
     public void calculateSheft(String id) {
@@ -189,13 +225,7 @@ public class SheftServiceImpl implements SheftService {
         MongoCollection<Document> collection = mongoTemplate.getCollection("ps_session");
         AggregateIterable<Document> result = collection.aggregate(
             Arrays.asList(
-                new Document(
-                    "$match",
-                    new Document(
-                        "end_time",
-                        new Document("$gte", new java.util.Date(1735632787772L)).append("$lte", new java.util.Date(1735639987772L))
-                    )
-                ),
+                new Document("$match", new Document("end_time", new Document("$gte", sheft.getStartTime()).append("$lte", Instant.now()))),
                 new Document("$addFields", new Document("invoiceId", "$invoice.$id")),
                 new Document(
                     "$lookup",
@@ -298,9 +328,34 @@ public class SheftServiceImpl implements SheftService {
             Duration duration = Duration.between(sheft.getStartTime(), Instant.now());
             sheft.setDuration(duration);
         }
+        sheft.getSessions().clear();
+        sheft.getSessions().addAll(playStationSessionRepository.findByEndTimeBetween(sheft.getStartTime(), Instant.now()));
+
+        // Calculate total items out from all sessions
+        BigDecimal totalItemsOut = sheft
+            .getSessions()
+            .stream()
+            .filter(session -> session.getInvoice() != null)
+            .map(session ->
+                session
+                    .getInvoice()
+                    .getInvoiceItems()
+                    .stream()
+                    .filter(item -> !item.isBuildIn())
+                    .map(InvoiceItem::getQtyOut)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add)
+            )
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        sheft.setTotalItemsOut(totalItemsOut);
 
         // Save updated sheft
         sheftRepository.save(sheft);
+    }
+
+    @Override
+    public void reCalculateActiveSheftIfAvailable() {
+        sheftRepository.findByActiveTrue().ifPresent(sheft -> calculateSheft(sheft.getId()));
     }
 
     // Helper method to extract ID from various possible formats
