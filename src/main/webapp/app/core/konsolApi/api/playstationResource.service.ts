@@ -27,6 +27,8 @@ import { InvoiceUpdateDTO } from '../model/invoiceUpdateDTO';
 // @ts-ignore
 import { PaginationSearchModel } from '../model/paginationSearchModel';
 // @ts-ignore
+import { PlaystationEndSessionDTO } from '../model/playstationEndSessionDTO';
+// @ts-ignore
 import { PsDeviceDTO } from '../model/psDeviceDTO';
 // @ts-ignore
 import { PsDeviceType } from '../model/psDeviceType';
@@ -1733,29 +1735,34 @@ export class PlaystationResourceService {
    * Stop Device Session
    * Stop Device Session
    * @param id
+   * @param playstationEndSessionDTO
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public stopDeviceSession(
     id: string,
+    playstationEndSessionDTO?: PlaystationEndSessionDTO,
     observe?: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
   ): Observable<PsDeviceDTO>;
   public stopDeviceSession(
     id: string,
+    playstationEndSessionDTO?: PlaystationEndSessionDTO,
     observe?: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
   ): Observable<HttpResponse<PsDeviceDTO>>;
   public stopDeviceSession(
     id: string,
+    playstationEndSessionDTO?: PlaystationEndSessionDTO,
     observe?: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
   ): Observable<HttpEvent<PsDeviceDTO>>;
   public stopDeviceSession(
     id: string,
+    playstationEndSessionDTO?: PlaystationEndSessionDTO,
     observe: any = 'body',
     reportProgress: boolean = false,
     options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
@@ -1781,6 +1788,13 @@ export class PlaystationResourceService {
       localVarHttpContext = new HttpContext();
     }
 
+    // to determine the Content-Type header
+    const consumes: string[] = ['application/json'];
+    const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+    if (httpContentTypeSelected !== undefined) {
+      localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+    }
+
     let responseType_: 'text' | 'json' | 'blob' = 'json';
     if (localVarHttpHeaderAcceptSelected) {
       if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
@@ -1794,7 +1808,7 @@ export class PlaystationResourceService {
 
     return this.httpClient.post<PsDeviceDTO>(
       `${this.configuration.basePath}/playstation/device/${encodeURIComponent(String(id))}/session/stop`,
-      null,
+      playstationEndSessionDTO,
       {
         context: localVarHttpContext,
         responseType: <any>responseType_,

@@ -91,6 +91,7 @@ model/performanceIndicatorsDTO.ts
 model/performanceMetricsDTO.ts
 model/pkDTO.ts
 model/playstationContainer.ts
+model/playstationEndSessionDTO.ts
 model/psDeviceDTO.ts
 model/psDeviceType.ts
 model/psSessionDTO.ts

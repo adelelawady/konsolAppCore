@@ -53,10 +53,10 @@ public class PlayStationReceiptService implements Printable {
     }
 
     private void addTimeDetails() {
-        receiptLines.add(THIN_SEPARATOR);
-        receiptLines.add(formatLine("Start Time", formatDateTime(currentSession.getStartTime())));
+        // receiptLines.add(THIN_SEPARATOR);
+        //receiptLines.add(formatLine("Start Time", formatDateTime(currentSession.getStartTime())));
         if (currentSession.getEndTime() != null) {
-            receiptLines.add(formatLine("End Time", formatDateTime(currentSession.getEndTime())));
+            //   receiptLines.add(formatLine("End Time", formatDateTime(currentSession.getEndTime())));
             receiptLines.add(formatLine("Duration", calculateDuration(currentSession.getStartTime(), currentSession.getEndTime())));
         }
     }
@@ -124,7 +124,7 @@ public class PlayStationReceiptService implements Printable {
     }
 
     private String formatRightAligned(String label, BigDecimal amount) {
-        String formattedAmount = String.format("%.2f LYD", amount);
+        String formattedAmount = String.format("%.2f", amount);
         int spaces = RECEIPT_WIDTH - label.length() - formattedAmount.length();
         return String.format("%s%s%s", label, " ".repeat(Math.max(0, spaces)), formattedAmount);
     }
@@ -170,7 +170,7 @@ public class PlayStationReceiptService implements Printable {
 
     private String formatPrice(BigDecimal price) {
         if (price == null) return "0.00";
-        return String.format("%.2f LYD", price);
+        return String.format("%.2f", price);
     }
 
     private String centerText(String text) {

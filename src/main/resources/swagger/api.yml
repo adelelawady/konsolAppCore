@@ -2277,6 +2277,11 @@ paths:
       tags:
         - playstation-resource
       description: Stop Device Session
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlaystationEndSessionDTO'
   '/playstation/device/{id}/session/invoice/update':
     parameters:
       - schema:
@@ -5464,3 +5469,19 @@ components:
         duration:
           type: string
           format: duration
+    PlaystationEndSessionDTO:
+      title: PlaystationEndSessionDTO
+      x-stoplight:
+        id: 88a5mhrby9h5q
+      type: object
+      properties:
+        matchFinalUserPrice:
+          type: boolean
+          x-stoplight:
+            id: 8cmf5uab90b10
+          default: false
+        printSessionRecipt:
+          type: boolean
+          x-stoplight:
+            id: r5pp6vhee8g8z
+          default: false

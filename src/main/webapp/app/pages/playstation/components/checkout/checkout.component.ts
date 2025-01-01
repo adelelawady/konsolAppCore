@@ -7,6 +7,7 @@ import { InvoiceUpdateDTO } from 'app/core/konsolApi/model/invoiceUpdateDTO';
 import { HttpErrorResponse } from '@angular/common/http';
 import { finalize, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { InvoiceResourceService } from 'app/core/konsolApi/api/invoiceResource.service';
+import { PlaystationEndSessionDTO } from 'app/core/konsolApi';
 
 @Component({
   selector: 'jhi-checkout',
@@ -198,28 +199,22 @@ export class CheckoutComponent implements OnInit {
     });
   }
   endSessionWithFinalPrice(): void {
-    this.updateUserNetPriceValue();
-    this.updateInvoice();
-
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    const checkAndEndSession = () => {
-      if (!this.isUpdating && !this.isProcessing) {
-        this.endSession();
-      } else {
-        setTimeout(checkAndEndSession, 100); // Check again after 100ms
-      }
-    };
-    checkAndEndSession();
+    // this.updateUserNetPriceValue();
+    this.endSession(true);
   }
 
-  endSession(): void {
+  endSession(matchFinalUserPrice: boolean = false): void {
     if (!this.selectedDevice?.id || this.isProcessing || this.isUpdating) {
       return;
     }
 
     this.isProcessing = true;
 
-    this.playstationResourceService.stopDeviceSession(this.selectedDevice.id).subscribe({
+    const endSessionDTo: PlaystationEndSessionDTO = {
+      matchFinalUserPrice: matchFinalUserPrice,
+    };
+
+    this.playstationResourceService.stopDeviceSession(this.selectedDevice.id, endSessionDTo).subscribe({
       next: () => {
         this.playstationService.reloadDevices();
         this.playstationService.selectDevice(null);

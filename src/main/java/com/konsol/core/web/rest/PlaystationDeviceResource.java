@@ -347,8 +347,8 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
     }
 
     @Override
-    public synchronized ResponseEntity<PsDeviceDTO> stopDeviceSession(String id) {
-        return ResponseEntity.ok(playstationDeviceService.stopSession(id));
+    public synchronized ResponseEntity<PsDeviceDTO> stopDeviceSession(String id, PlaystationEndSessionDTO playstationEndSessionDTO) {
+        return ResponseEntity.ok(playstationDeviceService.stopSession(id, playstationEndSessionDTO));
     }
 
     @Override

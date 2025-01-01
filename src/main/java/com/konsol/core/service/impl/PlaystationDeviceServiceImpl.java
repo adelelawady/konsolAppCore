@@ -246,7 +246,7 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
      * @throws RuntimeException if the device is not found or there is no active session.
      */
     @Override
-    public PsDeviceDTO stopSession(String deviceId) {
+    public PsDeviceDTO stopSession(String deviceId, PlaystationEndSessionDTO playstationEndSessionDTO) {
         // Log the request to stop a session
         LOG.debug("Request to stop session for PlayStationDevice : {}", deviceId);
 
@@ -308,8 +308,20 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
                 invoiceService.addInvoiceItem(device.getSession().getInvoice().getId(), sessionInvoiceItem);
             }
         }
+        clearDeviceCaches(device);
+
+        InvoiceDTO invoiceDTO = invoiceService.findOne(device.getSession().getInvoice().getId()).get();
+
+        InvoiceUpdateDTO invoiceUpdateDTO = new InvoiceUpdateDTO();
+        invoiceUpdateDTO.setId(invoiceDTO.getId());
+        if (playstationEndSessionDTO.getMatchFinalUserPrice()) {
+            invoiceUpdateDTO.setUserNetPrice(invoiceDTO.getNetPrice());
+        }
+        invoiceUpdateDTO.setUserNetCost(invoiceDTO.getNetCost());
+        invoiceService.updateInvoice(invoiceUpdateDTO);
+
         // Step 6: Finalize and save the invoice
-        invoiceService.saveInvoice(device.getSession().getInvoice().getId());
+        invoiceService.saveInvoice(invoiceDTO.getId());
         PlayStationSession session;
         // Step 7: Update the active session
         try {
@@ -342,10 +354,12 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
         // Step 9: Save and return the updated session
         session = playStationSessionRepository.save(session);
 
-        try {
-            printReceipt(session, "Microsoft Print to PDF");
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        if (playstationEndSessionDTO.getPrintSessionRecipt()) {
+            try {
+                printReceipt(session, "Microsoft Print to PDF");
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
 
         clearDeviceCaches(device);

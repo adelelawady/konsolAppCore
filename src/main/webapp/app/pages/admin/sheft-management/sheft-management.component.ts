@@ -38,9 +38,20 @@ export class SheftManagementComponent implements OnInit, OnDestroy {
     }
     this.activeSheftService.getActiveSheft(true).subscribe({
       next: sheft => {
-        this.activeSheft = sheft;
-        this.loading = false;
-        this.error = false;
+        if (sheft?.id) {
+          this.sheftResource.getSheft(sheft.id).subscribe({
+            next: sheft => {
+              this.activeSheft = sheft;
+              this.loading = false;
+              this.error = false;
+            },
+            error: error => {
+              console.error('Error loading active sheft:', error);
+              this.error = true;
+              this.loading = false;
+            },
+          });
+        }
       },
       error: error => {
         console.error('Error loading active sheft:', error);
