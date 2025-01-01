@@ -9,9 +9,10 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { PlayStationFinancialReportsModule } from './financial-reports/financial-reports.module';
 import { SheftComponentComponent } from './sheft-component/sheft-component.component';
 import { ViewSheftComponent } from './sheft-component/view-sheft/view-sheft.component';
+import { SheftManagementComponent } from './sheft-management/sheft-management.component';
 
 @NgModule({
-  declarations: [AdminPlaystationContainerComponent, SheftComponentComponent, ViewSheftComponent],
+  declarations: [AdminPlaystationContainerComponent, SheftComponentComponent, ViewSheftComponent, SheftManagementComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(adminRoutes),

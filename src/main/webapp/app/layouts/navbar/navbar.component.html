@@ -32,6 +32,18 @@
             <span jhiTranslate="global.menu.home">Home</span>
           </a>
         </li>
+
+        <li class="nav-item" *ngIf="containers.length > 0">
+          <a
+            class="nav-link"
+            [routerLink]="['/', 'container', containers[0].id, 'navigation', 'dashboard']"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            <i class="fa-brands fa-playstation me-2"></i>
+            <span jhiTranslate="playstation.navigation.title">PlayStation Dashboard</span>
+          </a>
+        </li>
         <!-- Playstation -->
         <li class="nav-item dropdown pointer" ngbDropdown>
           <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="playstation-menu">
@@ -79,6 +91,20 @@
               >
                 <i class="fa-solid fa-money-check-dollar me-2"></i>
                 <span jhiTranslate="global.navigation.pages.financial-reports.title">financial reports</span>
+              </a>
+            </li>
+
+            <!-- shefts-reports -->
+            <li>
+              <a
+                class="dropdown-item"
+                routerLink="sheft"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: true }"
+                (click)="collapseNavbar()"
+              >
+                <i class="fa-solid fa-calendar-days me-2"></i>
+                <span jhiTranslate="konsolCoreApp.sheft.list.title">shefts reports</span>
               </a>
             </li>
           </ul>

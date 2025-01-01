@@ -1,6 +1,17 @@
 {
   "konsolCoreApp": {
     "sheft": {
+      "management": {
+        "title": "إدارة الوردية",
+        "loading": "جاري تحميل معلومات الوردية...",
+        "error": "خطأ في تحميل معلومات الوردية",
+        "retry": "إعادة المحاولة",
+        "activeShift": "الوردية النشطة",
+        "viewDetails": "عرض التفاصيل",
+        "stopShift": "إيقاف الوردية",
+        "noActiveShift": "لا توجد وردية نشطة",
+        "noActiveShiftDesc": "لا توجد وردية نشطة في النظام حالياً"
+      },
       "home": {
         "title": "الورديات",
         "refreshListLabel": "تحديث القائمة",

@@ -1,0 +1,103 @@
+<div class="container-xl">
+  <div class="page-header d-print-none">
+    <div class="row align-items-center">
+      <div class="col">
+        <h2 class="page-title" jhiTranslate="konsolCoreApp.sheft.management.title">Shift Management</h2>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="card" *ngIf="loading">
+    <div class="card-body text-center p-4">
+      <div class="spinner-border text-primary" role="status"></div>
+      <p class="mt-2" jhiTranslate="konsolCoreApp.sheft.management.loading">Loading shift information...</p>
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div class="card" *ngIf="error">
+    <div class="card-body text-center p-4">
+      <div class="text-danger mb-3">
+        <i class="ti ti-alert-circle" style="font-size: 2rem"></i>
+      </div>
+      <p jhiTranslate="konsolCoreApp.sheft.management.error">Error loading shift information</p>
+      <button class="btn btn-primary" (click)="loadActiveSheft()">
+        <i class="ti ti-refresh me-2"></i>
+        <span jhiTranslate="konsolCoreApp.sheft.management.retry">Retry</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Active Shift Information -->
+  <div class="row" *ngIf="!loading && !error">
+    <div class="col-12">
+      <div class="card" *ngIf="activeSheft; else noActiveShift">
+        <div class="card-header">
+          <h3 class="card-title">
+            <span class="badge bg-success me-2">
+              <i class="ti ti-clock me-1"></i>
+              <span jhiTranslate="konsolCoreApp.sheft.status.active">Active</span>
+            </span>
+            <span jhiTranslate="konsolCoreApp.sheft.management.activeShift">Active Shift</span>
+          </h3>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <dl class="row">
+                <dt class="col-5" jhiTranslate="konsolCoreApp.sheft.id">ID:</dt>
+                <dd class="col-7">{{ activeSheft.id }}</dd>
+
+                <dt class="col-5" jhiTranslate="konsolCoreApp.sheft.startTime">Start Time:</dt>
+                <dd class="col-7">{{ activeSheft.startTime | date: 'medium' }}</dd>
+
+                <dt class="col-5" jhiTranslate="konsolCoreApp.sheft.duration">Duration:</dt>
+                <dd class="col-7">{{ getDuration(activeSheft.startTime) }}</dd>
+
+                <dt class="col-5" jhiTranslate="konsolCoreApp.sheft.assignedEmployee">Employee:</dt>
+                <dd class="col-7">{{ activeSheft.assignedEmployee }}</dd>
+              </dl>
+            </div>
+            <div class="col-md-6">
+              <dl class="row">
+                <dt class="col-5" jhiTranslate="konsolCoreApp.sheft.totalprice">Total Price:</dt>
+                <dd class="col-7">{{ activeSheft.totalprice | currencyK }}</dd>
+
+                <dt class="col-5" jhiTranslate="konsolCoreApp.sheft.netPrice">Net Price:</dt>
+                <dd class="col-7">{{ activeSheft.netPrice | currencyK }}</dd>
+
+                <dt class="col-5" jhiTranslate="konsolCoreApp.sheft.totalinvoices">Total Invoices:</dt>
+                <dd class="col-7">{{ activeSheft.totalinvoices }}</dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer d-flex justify-content-end gap-2">
+          <button class="btn btn-primary" (click)="viewSheftDetails()">
+            <i class="ti ti-eye me-2"></i>
+            <span jhiTranslate="konsolCoreApp.sheft.management.viewDetails">View Details</span>
+          </button>
+          <button class="btn btn-danger" (click)="stopActiveSheft()">
+            <i class="fa-solid fa-stop me-2"></i>
+            <span jhiTranslate="konsolCoreApp.sheft.management.stopShift">Stop Shift</span>
+          </button>
+        </div>
+      </div>
+
+      <ng-template #noActiveShift>
+        <div class="card">
+          <div class="card-body text-center p-4">
+            <div class="text-muted mb-3">
+              <i class="ti ti-clock-off" style="font-size: 2rem"></i>
+            </div>
+            <h3 jhiTranslate="konsolCoreApp.sheft.management.noActiveShift">No Active Shift</h3>
+            <p class="text-muted" jhiTranslate="konsolCoreApp.sheft.management.noActiveShiftDesc">
+              There is currently no active shift in the system.
+            </p>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

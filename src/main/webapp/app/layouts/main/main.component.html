@@ -40,7 +40,7 @@
           <div *ngIf="isPlaystationLayout" class="col-md-6 row">
             <!-- Active sheft -->
             <div *ngIf="activeSheft$ | async as activeSheft" class="active-sheft-wrapper col-md-4">
-              <div class="active-sheft-card">
+              <div style="cursor: pointer" routerLink="/sheft-management" class="active-sheft-card">
                 <div class="active-sheft-status">
                   <span class="pulse-dot"></span>
                   <span class="status-text" jhiTranslate="konsolCoreApp.sheft.status.active">Active</span>

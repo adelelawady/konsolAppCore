@@ -1,6 +1,17 @@
 {
   "konsolCoreApp": {
     "sheft": {
+      "management": {
+        "title": "Shift Management",
+        "loading": "Loading shift information...",
+        "error": "Error loading shift information",
+        "retry": "Retry",
+        "activeShift": "Active Shift",
+        "viewDetails": "View Details",
+        "stopShift": "Stop Shift",
+        "noActiveShift": "No Active Shift",
+        "noActiveShiftDesc": "There is currently no active shift in the system."
+      },
       "home": {
         "title": "Shefts",
         "refreshListLabel": "Refresh list",

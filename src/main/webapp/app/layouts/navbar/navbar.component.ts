@@ -33,6 +33,8 @@ import { Account } from 'app/core/auth/account.model';
 import { AccountService } from 'app/core/auth/account.service';
 import { LoginService } from 'app/login/login.service';
 import { ProfileService } from 'app/layouts/profiles/profile.service';
+import { PlaystationContainerResourceService } from 'app/core/konsolApi/api/playstationContainerResource.service';
+import { PlaystationContainer } from 'app/core/konsolApi/model/playstationContainer';
 
 @Component({
   selector: 'jhi-navbar',
@@ -72,13 +74,16 @@ export class NavbarComponent implements OnInit {
   faAsterisk = faAsterisk;
   faHistory = faHistory;
 
+  containers: PlaystationContainer[] = [];
+
   constructor(
     private loginService: LoginService,
     private translateService: TranslateService,
     private sessionStorageService: SessionStorageService,
     private accountService: AccountService,
     private profileService: ProfileService,
-    private router: Router
+    private router: Router,
+    private playstationContainerResourceService: PlaystationContainerResourceService
   ) {
     if (VERSION) {
       this.version = VERSION.toLowerCase().startsWith('v') ? VERSION : `v${VERSION}`;
@@ -94,8 +99,13 @@ export class NavbarComponent implements OnInit {
     this.accountService.getAuthenticationState().subscribe(account => {
       this.account = account;
     });
+    this.loadContainers();
   }
-
+  private loadContainers(): void {
+    this.playstationContainerResourceService.getPlaystationContainers().subscribe(response => {
+      this.containers = response ?? [];
+    });
+  }
   changeLanguage(languageKey: string): void {
     this.sessionStorageService.store('locale', languageKey);
     this.translateService.use(languageKey);

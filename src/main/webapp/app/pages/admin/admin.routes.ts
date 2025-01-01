@@ -3,6 +3,7 @@ import { AdminPlaystationContainerComponent } from './playstation-container/play
 import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
 import { SheftComponentComponent } from './sheft-component/sheft-component.component';
 import { ViewSheftComponent } from './sheft-component/view-sheft/view-sheft.component';
+import { SheftManagementComponent } from './sheft-management/sheft-management.component';
 
 export const adminRoutes: Routes = [
   {
@@ -41,6 +42,16 @@ export const adminRoutes: Routes = [
     title: 'View Sheft',
     data: {
       hasPlaystationLayout: true,
+    },
+  },
+  {
+    path: 'sheft-management',
+    component: SheftManagementComponent,
+    canActivate: [UserRouteAccessService],
+    data: {
+      hasPlaystationLayout: true,
+      authorities: ['ROLE_ADMIN'],
+      pageTitle: 'Shift Management',
     },
   },
 ];
