@@ -137,6 +137,9 @@ const routes: Routes = [
   },
   {
     path: '',
+    data: {
+      hasPlaystationLayout: true,
+    },
     loadChildren: () => import('./playstation/playstation.module').then(m => m.PlaystationModule),
   },
 ];

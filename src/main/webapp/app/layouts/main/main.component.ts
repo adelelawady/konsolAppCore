@@ -34,6 +34,8 @@ export class MainComponent implements OnInit {
   selectedContainerId: string | null = null;
   activeSheft$: Observable<SheftDTO | null> | undefined;
   durationSubscription: Subscription | undefined;
+  isPlaystationLayout = false;
+
   constructor(
     private accountService: AccountService,
     private titleService: Title,
@@ -47,6 +49,21 @@ export class MainComponent implements OnInit {
     private playstationContainerResourceService: PlaystationContainerResourceService
   ) {
     this.renderer = rootRenderer.createRenderer(document.querySelector('html'), null);
+
+    // Subscribe to router events to detect routes with hasPlaystationLayout
+    this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
+      let route = this.activatedRoute.firstChild;
+      this.isPlaystationLayout = false;
+
+      // Check all child routes for hasPlaystationLayout data
+      while (route) {
+        if (route.snapshot.data['hasPlaystationLayout']) {
+          this.isPlaystationLayout = true;
+          break;
+        }
+        route = route.firstChild;
+      }
+    });
   }
 
   ngOnInit(): void {
