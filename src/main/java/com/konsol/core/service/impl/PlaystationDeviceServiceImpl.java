@@ -13,6 +13,8 @@ import com.konsol.core.repository.*;
 import com.konsol.core.service.InvoiceService;
 import com.konsol.core.service.ItemService;
 import com.konsol.core.service.PlaystationDeviceService;
+import com.konsol.core.service.PrintableService.PlayStationReceiptService;
+import com.konsol.core.service.PrintableService.ReceiptPrinter;
 import com.konsol.core.service.api.dto.*;
 import com.konsol.core.service.mapper.PlayStationSessionMapper;
 import com.konsol.core.service.mapper.PlaystationDeviceMapper;
@@ -23,6 +25,7 @@ import java.math.RoundingMode;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
+import javax.print.PrintException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
@@ -51,6 +54,9 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
     private final ItemService itemService;
     private final MongoTemplate mongoTemplate;
 
+    private final PlayStationReceiptService playStationReceiptService;
+    private final ReceiptPrinter receiptPrinter;
+
     public PlaystationDeviceServiceImpl(
         PlaystationDeviceRepository playstationDeviceRepository,
         PlaystationDeviceMapper playstationDeviceMapper,
@@ -61,7 +67,9 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
         PlaystationDeviceTypeRepository playstationDeviceTypeRepository,
         CacheManager cacheManager,
         ItemService itemService,
-        MongoTemplate mongoTemplate
+        MongoTemplate mongoTemplate,
+        PlayStationReceiptService playStationReceiptService,
+        ReceiptPrinter receiptPrinter
     ) {
         this.playstationDeviceRepository = playstationDeviceRepository;
         this.playstationDeviceMapper = playstationDeviceMapper;
@@ -73,6 +81,8 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
         this.cacheManager = cacheManager;
         this.itemService = itemService;
         this.mongoTemplate = mongoTemplate;
+        this.playStationReceiptService = playStationReceiptService;
+        this.receiptPrinter = receiptPrinter;
     }
 
     @Override
@@ -330,9 +340,31 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
         device = playstationDeviceRepository.save(device);
 
         // Step 9: Save and return the updated session
-        playStationSessionRepository.save(session);
+        session = playStationSessionRepository.save(session);
+
+        try {
+            printReceipt(session, "Microsoft Print to PDF");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
         clearDeviceCaches(device);
         return playstationDeviceMapper.toDto(device);
+    }
+
+    public void printReceipt(PlayStationSession session, String printerName) {
+        try {
+            boolean isPdfPrinter = printerName.toLowerCase().contains("pdf");
+
+            // Prepare the receipt content
+            playStationReceiptService.prepareReceipt(session);
+
+            // Print using receipt printer service
+            receiptPrinter.print(printerName, false);
+        } catch (PrintException e) {
+            LOG.error("Error printing receipt", e);
+            throw new RuntimeException("Failed to print receipt", e);
+        }
     }
 
     @Override
