@@ -31,66 +31,76 @@ public class PlayStationReceiptService implements Printable {
         this.currentSession = session;
         this.receiptLines = new ArrayList<>();
 
-        // Header
+        addHeader();
+        addSessionDetails();
+        addTimeDetails();
+        addOrdersTable();
+        addTotals();
+        addFooter();
+    }
+
+    private void addHeader() {
         receiptLines.add("");
         receiptLines.add(centerText("KONSOL GAMING"));
         receiptLines.add(centerText("PlayStation Receipt"));
         receiptLines.add(SEPARATOR);
+    }
 
-        // Session Details
-        receiptLines.add(formatLine("Session ID", session.getId()));
-        receiptLines.add(formatLine("Device", session.getDevice().getName().toString()));
-        receiptLines.add(formatLine("Type", session.getType().getName().toString()));
+    private void addSessionDetails() {
+        receiptLines.add(formatLine("Session ID", currentSession.getId()));
+        receiptLines.add(formatLine("Device", currentSession.getDevice().getName()));
+        receiptLines.add(formatLine("Type", currentSession.getType().getName()));
+    }
 
-        // Time Details
+    private void addTimeDetails() {
         receiptLines.add(THIN_SEPARATOR);
-        receiptLines.add(formatLine("Start Time", formatDateTime(session.getStartTime())));
-        if (session.getEndTime() != null) {
-            receiptLines.add(formatLine("End Time", formatDateTime(session.getEndTime())));
-            receiptLines.add(formatLine("Duration", calculateDuration(session.getStartTime(), session.getEndTime())));
+        receiptLines.add(formatLine("Start Time", formatDateTime(currentSession.getStartTime())));
+        if (currentSession.getEndTime() != null) {
+            receiptLines.add(formatLine("End Time", formatDateTime(currentSession.getEndTime())));
+            receiptLines.add(formatLine("Duration", calculateDuration(currentSession.getStartTime(), currentSession.getEndTime())));
         }
+    }
 
-        // Add Orders Table if invoice items exist
-        if (session.getInvoice() != null && !session.getInvoice().getInvoiceItems().isEmpty()) {
-            receiptLines.add(SEPARATOR);
-            receiptLines.add(centerText("Orders"));
-            receiptLines.add(THIN_SEPARATOR);
+    private void addOrdersTable() {
+        if (currentSession.getInvoice() == null || currentSession.getInvoice().getInvoiceItems().isEmpty()) return;
 
-            // Table header with adjusted column widths
-            receiptLines.add(String.format("%-24s %5s %10s", "Item", "Qty", "Price"));
-            receiptLines.add(THIN_SEPARATOR);
-
-            // Table rows
-            session
-                .getInvoice()
-                .getInvoiceItems()
-                .forEach(item -> {
-                    String itemName = truncateString(item.getItem().getName(), 24);
-                    String formattedPrice = String.format("%8.2f", item.getNetPrice().doubleValue());
-
-                    receiptLines.add(String.format("%-24s %5d %8s", itemName, item.getQtyOut().intValue(), formattedPrice));
-                });
-
-            // Totals section
-            receiptLines.add(THIN_SEPARATOR);
-            receiptLines.add(formatRightAligned("Subtotal:", session.getInvoice().getTotalPrice()));
-            if (session.getInvoice().getDiscount().compareTo(BigDecimal.ZERO) > 0) {
-                receiptLines.add(formatRightAligned("Discount:", session.getInvoice().getDiscount()));
-            }
-            receiptLines.add(formatRightAligned("Net Total:", session.getInvoice().getNetPrice()));
-        }
-
-        // Session price and grand total
         receiptLines.add(SEPARATOR);
-        receiptLines.add(formatRightAligned("Session Price:", session.getDeviceSessionsNetPrice()));
+        receiptLines.add(centerText("Orders"));
+        receiptLines.add(THIN_SEPARATOR);
+        receiptLines.add(String.format("%-24s %5s %10s", "Item", "Qty", "Price"));
+        receiptLines.add(THIN_SEPARATOR);
 
-        BigDecimal grandTotal = session.getDeviceSessionsNetPrice();
-        if (session.getInvoice() != null) {
-            grandTotal = grandTotal.add(session.getInvoice().getNetPrice());
+        currentSession
+            .getInvoice()
+            .getInvoiceItems()
+            .forEach(item -> {
+                String itemName = truncateString(item.getItem().getName(), 24);
+                boolean isArabic = isArabicText(itemName);
+
+                // Format price and quantity
+                String formattedPrice = formatPrice(item.getNetPrice());
+                String quantity = String.valueOf(item.getQtyOut().intValue());
+
+                if (isArabic) {
+                    receiptLines.add(formatArabicLine(itemName, quantity, formattedPrice));
+                } else {
+                    receiptLines.add(String.format("%-24s %5s %8s", itemName, quantity, formattedPrice));
+                }
+            });
+    }
+
+    private void addTotals() {
+        receiptLines.add(SEPARATOR);
+        receiptLines.add(formatRightAligned("Session Price:", currentSession.getDeviceSessionsNetPrice()));
+
+        BigDecimal grandTotal = currentSession.getDeviceSessionsNetPrice();
+        if (currentSession.getInvoice() != null) {
+            grandTotal = grandTotal.add(currentSession.getInvoice().getNetPrice());
         }
         receiptLines.add(formatBoldLine("Grand Total:", grandTotal));
+    }
 
-        // Footer
+    private void addFooter() {
         receiptLines.add(SEPARATOR);
         receiptLines.add(centerText("Thank you for visiting!"));
         receiptLines.add(centerText("Please come again"));
@@ -104,6 +114,15 @@ public class PlayStationReceiptService implements Printable {
         return text.substring(0, maxLength - 3) + "...";
     }
 
+    private boolean isArabicText(String text) {
+        if (text == null) return false;
+        return text.chars().anyMatch(c -> Character.UnicodeBlock.of(c) == Character.UnicodeBlock.ARABIC);
+    }
+
+    private String formatArabicLine(String item, String quantity, String price) {
+        return String.format("%-10s %5s %-24s", price, quantity, item);
+    }
+
     private String formatRightAligned(String label, BigDecimal amount) {
         String formattedAmount = String.format("%.2f LYD", amount);
         int spaces = RECEIPT_WIDTH - label.length() - formattedAmount.length();
@@ -111,9 +130,7 @@ public class PlayStationReceiptService implements Printable {
     }
 
     private String formatBoldLine(String label, BigDecimal amount) {
-        String formattedAmount = String.format("%.2f LYD", amount);
-        int spaces = RECEIPT_WIDTH - label.length() - formattedAmount.length();
-        return String.format("%s%s%s", label, " ".repeat(Math.max(0, spaces)), formattedAmount);
+        return formatRightAligned(label, amount);
     }
 
     @Override
