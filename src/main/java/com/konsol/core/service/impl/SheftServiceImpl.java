@@ -145,7 +145,6 @@ public class SheftServiceImpl implements SheftService {
         // Set active status
         sheft.setActive(true);
 
-        /*
         // Get current authenticated user
         Optional<User> currentUser = Optional.ofNullable(
             userService.getCurrentUserLogin().orElseThrow(() -> new IllegalStateException("Current user not found"))
@@ -153,11 +152,9 @@ public class SheftServiceImpl implements SheftService {
         if (currentUser.isEmpty()) {
             throw new IllegalStateException("Current user not found");
         }
-
-
         sheft.setAssignedEmployee(currentUser.get().getFirstName() + " " + currentUser.get().getLastName());
         sheft.setAssignedEmployeeUser(currentUser.get());
- */
+
         // Initialize required fields with default values
         sheft.setTotalprice(BigDecimal.ZERO);
         sheft.setTotalCost(BigDecimal.ZERO);

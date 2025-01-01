@@ -358,7 +358,7 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
             try {
                 printReceipt(session, "Microsoft Print to PDF");
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                LOG.debug("Error printing receipt", e);
             }
         }
 

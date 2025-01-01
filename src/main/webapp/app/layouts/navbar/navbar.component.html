@@ -63,7 +63,7 @@
                 (click)="collapseNavbar()"
               >
                 <fa-icon [icon]="faCompass" [fixedWidth]="true" class="me-2"></fa-icon>
-                <span>Container Control</span>
+                <span jhiTranslate="konsolCoreApp.playstationContainer.home.title">Container Control</span>
               </a>
             </li>
             <!-- Session History -->
@@ -237,19 +237,6 @@
               >
                 <fa-icon [icon]="faUserPlus" [fixedWidth]="true" class="me-2"></fa-icon>
                 <span jhiTranslate="global.menu.account.register">Register</span>
-              </a>
-            </li>
-
-            <li>
-              <a
-                class="dropdown-item"
-                routerLink="/sheft"
-                routerLinkActive="active"
-                [routerLinkActiveOptions]="{ exact: true }"
-                (click)="collapseNavbar()"
-              >
-                <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
-                <span jhiTranslate="global.menu.entities.sheft">Sheft</span>
               </a>
             </li>
             <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->

@@ -31,6 +31,17 @@ public class ReceiptPrinter {
             } catch (PrinterException e) {
                 throw new PrintException(e.getMessage());
             }
+        } else {
+            PrintService defaultService = PrintServiceLookup.lookupDefaultPrintService();
+            if (defaultService != null) {
+                try {
+                    job.setPrintService(defaultService);
+                } catch (PrinterException e) {
+                    throw new PrintException(e.getMessage());
+                }
+            } else {
+                throw new PrintException("No default printer found");
+            }
         }
 
         // Set page format
