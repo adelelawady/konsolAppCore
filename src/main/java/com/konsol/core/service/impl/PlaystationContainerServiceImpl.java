@@ -2,6 +2,7 @@ package com.konsol.core.service.impl;
 
 import com.konsol.core.repository.PlaystationContainerRepository;
 import com.konsol.core.service.PlaystationContainerService;
+import com.konsol.core.service.PlaystationDeviceService;
 import com.konsol.core.service.api.dto.PlaystationContainer;
 import com.konsol.core.service.mapper.PlaystationContainerMapper;
 import java.util.List;
@@ -25,12 +26,16 @@ public class PlaystationContainerServiceImpl implements PlaystationContainerServ
 
     private final PlaystationContainerMapper playstationContainerMapper;
 
+    private final PlaystationDeviceService playstationDeviceService;
+
     public PlaystationContainerServiceImpl(
         PlaystationContainerRepository playstationContainerRepository,
-        PlaystationContainerMapper playstationContainerMapper
+        PlaystationContainerMapper playstationContainerMapper,
+        PlaystationDeviceService playstationDeviceService
     ) {
         this.playstationContainerRepository = playstationContainerRepository;
         this.playstationContainerMapper = playstationContainerMapper;
+        this.playstationDeviceService = playstationDeviceService;
     }
 
     @Override
@@ -38,6 +43,7 @@ public class PlaystationContainerServiceImpl implements PlaystationContainerServ
         LOG.debug("Request to save PlaystationContainer : {}", PlaystationContainer);
         com.konsol.core.domain.PlaystationContainer playstationContainer = playstationContainerMapper.toEntity(PlaystationContainer);
         playstationContainer = playstationContainerRepository.save(playstationContainer);
+        playstationDeviceService.clearAllDevicesCaches();
         return playstationContainerMapper.toDto(playstationContainer);
     }
 
@@ -46,6 +52,7 @@ public class PlaystationContainerServiceImpl implements PlaystationContainerServ
         LOG.debug("Request to update PlaystationContainer : {}", PlaystationContainer);
         com.konsol.core.domain.PlaystationContainer playstationContainer = playstationContainerMapper.toEntity(PlaystationContainer);
         playstationContainer = playstationContainerRepository.save(playstationContainer);
+        playstationDeviceService.clearAllDevicesCaches();
         return playstationContainerMapper.toDto(playstationContainer);
     }
 
@@ -57,7 +64,7 @@ public class PlaystationContainerServiceImpl implements PlaystationContainerServ
             .findById(PlaystationContainer.getId())
             .map(existingPlaystationContainer -> {
                 playstationContainerMapper.partialUpdate(existingPlaystationContainer, PlaystationContainer);
-
+                playstationDeviceService.clearAllDevicesCaches();
                 return existingPlaystationContainer;
             })
             .map(playstationContainerRepository::save)
@@ -85,6 +92,7 @@ public class PlaystationContainerServiceImpl implements PlaystationContainerServ
     @Override
     public void delete(String id) {
         LOG.debug("Request to delete PlaystationContainer : {}", id);
+        playstationDeviceService.clearAllDevicesCaches();
         playstationContainerRepository.deleteById(id);
     }
 }

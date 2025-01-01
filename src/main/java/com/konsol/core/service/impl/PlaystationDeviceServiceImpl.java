@@ -468,6 +468,13 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
     }
 
     @Override
+    public void clearAllDevicesCaches() {
+        LOG.debug("Clearing all device caches");
+        Objects.requireNonNull(cacheManager.getCache(DEVICES_BY_CATEGORY)).clear();
+        Objects.requireNonNull(cacheManager.getCache(DEVICE_BY_DEVICE_ID)).clear();
+    }
+
+    @Override
     public PsDeviceDTO updateSessionInvoice(String deviceId, InvoiceUpdateDTO invoiceUpdateDTO) {
         // Find device
         PlaystationDevice device = playstationDeviceRepository

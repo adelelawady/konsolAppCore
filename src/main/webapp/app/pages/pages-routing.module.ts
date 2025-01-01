@@ -118,7 +118,7 @@ const routes: Routes = [
   {
     path: 'playstation/session-history',
     component: SessionHistoryControlComponent,
-    data: { pageTitle: 'playstation.sessionHistory.title' },
+    data: { hasPlaystationLayout: true, pageTitle: 'playstation.sessionHistory.title' },
   },
 
   {
@@ -132,6 +132,7 @@ const routes: Routes = [
       },
     },
     data: {
+      hasPlaystationLayout: true,
       breadcrumb: 'Session Details',
     },
   },

@@ -105,5 +105,7 @@ public interface PlaystationDeviceService {
 
     void clearDeviceCaches(PlaystationDevice device);
 
+    void clearAllDevicesCaches();
+
     PsDeviceDTO updateSessionInvoice(String deviceId, InvoiceUpdateDTO invoiceUpdateDTO);
 }
