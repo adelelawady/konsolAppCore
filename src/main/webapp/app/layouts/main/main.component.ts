@@ -3,8 +3,8 @@ import { Title } from '@angular/platform-browser';
 import { Router, ActivatedRouteSnapshot, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 import dayjs from 'dayjs/esm';
-import { filter } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
+import { filter, shareReplay } from 'rxjs/operators';
+import { interval, Observable, of, Subscription } from 'rxjs';
 import { map, distinctUntilChanged } from 'rxjs/operators';
 import { PlaystationContainerFormService } from 'app/entities/playstation-container/update/playstation-container-form.service';
 import { firstValueFrom } from 'rxjs';
@@ -32,7 +32,8 @@ export class MainComponent implements OnInit {
   containers: PlaystationContainer[] = [];
   loadingContainerId: string | null = null;
   selectedContainerId: string | null = null;
-  activeSheft: SheftDTO | null = null;
+  activeSheft$: Observable<SheftDTO | null> | undefined;
+  durationSubscription: Subscription | undefined;
   constructor(
     private accountService: AccountService,
     private titleService: Title,
@@ -51,16 +52,15 @@ export class MainComponent implements OnInit {
   ngOnInit(): void {
     // try to log in automatically
     this.accountService.identity().subscribe();
-    this.activeSheftService.getActiveSheft().subscribe(sheft => {
-      console.log('Active sheft:', sheft);
-      this.activeSheft = sheft;
-    });
+    this.activeSheft$ = this.activeSheftService.getActiveSheft().pipe(shareReplay(1));
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.updateTitle();
       }
     });
-
+    this.durationSubscription = interval(1000).subscribe(() => {
+      // This will trigger change detection and update the duration display
+    });
     this.translateService.onLangChange.subscribe((langChangeEvent: LangChangeEvent) => {
       this.updateTitle();
       dayjs.locale(langChangeEvent.lang);
@@ -108,7 +108,18 @@ export class MainComponent implements OnInit {
       }
     });
   }
+  getDuration(startTime: any): string {
+    if (!startTime) return '00h:00m';
 
+    const start = new Date(startTime).getTime();
+    const now = new Date().getTime();
+    const diff = Math.floor((now - start) / 1000); // difference in seconds
+
+    const hours = Math.floor(diff / 3600);
+    const minutes = Math.floor((diff % 3600) / 60);
+
+    return `${hours.toString().padStart(2, '0')}h:${minutes.toString().padStart(2, '0')}m`;
+  }
   private getPageTitle(routeSnapshot: ActivatedRouteSnapshot): string {
     const title: string = routeSnapshot.data['pageTitle'] ?? '';
     if (routeSnapshot.firstChild) {

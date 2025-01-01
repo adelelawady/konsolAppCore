@@ -35,13 +35,32 @@
               </ol>
             </nav>
           </div>
-          <div class="col-md-6">
+
+          <!-- Playstation -->
+          <div class="col-md-6 row">
             <!-- Active sheft -->
-            <div *ngIf="activeSheft">
-              <span class="badge bg-success">Active sheft: {{ activeSheft.id }}</span>
+            <div *ngIf="activeSheft$ | async as activeSheft" class="active-sheft-wrapper col-md-4">
+              <div class="active-sheft-card">
+                <div class="active-sheft-status">
+                  <span class="pulse-dot"></span>
+                  <span class="status-text" jhiTranslate="konsolCoreApp.sheft.status.active">Active</span>
+                  <small class="text-muted" jhiTranslate="konsolCoreApp.sheft.home.title">sheft</small>
+                </div>
+                <div class="active-sheft-info">
+                  <div class="info-row">
+                    <span class="label" jhiTranslate="konsolCoreApp.sheft.id">ID:</span>
+                    <span class="value">{{ activeSheft.id | slice: 0:8 }}...</span>
+                  </div>
+
+                  <div *ngIf="activeSheft?.startTime" class="info-row">
+                    <span class="label" jhiTranslate="konsolCoreApp.sheft.duration">Duration:</span>
+                    <span class="value">{{ getDuration(activeSheft?.startTime) }}</span>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <div class="container-buttons d-flex justify-content-end">
+            <div class="container-buttons d-flex justify-content-end col-md-8">
               <div class="btn-group btn-group-sm">
                 <button
                   *ngFor="let container of containers"
@@ -234,5 +253,78 @@
     width: 1rem;
     height: 1rem;
     border-width: 2px;
+  }
+
+  .active-sheft-wrapper {
+    /*margin-bottom: 1rem;*/
+  }
+
+  .active-sheft-card {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(0, 150, 136, 0.2);
+    border-radius: 8px;
+    padding: 3px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+
+  .active-sheft-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .pulse-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #009688;
+    border-radius: 50%;
+    position: relative;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(0, 150, 136, 0.4);
+    }
+    70% {
+      box-shadow: 0 0 0 10px rgba(0, 150, 136, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(0, 150, 136, 0);
+    }
+  }
+
+  .status-text {
+    color: #009688;
+    font-weight: 500;
+    font-size: 0.875rem;
+  }
+
+  .active-sheft-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .info-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+  }
+
+  .label {
+    color: #64748b;
+    font-weight: 500;
+    min-width: 70px;
+  }
+
+  .value {
+    color: #1e293b;
+    font-weight: 500;
   }
 </style>
