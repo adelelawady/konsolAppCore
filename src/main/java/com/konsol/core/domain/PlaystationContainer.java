@@ -235,4 +235,9 @@ public class PlaystationContainer implements Serializable {
     public void setAcceptedOrderCategories(@NotNull Set<String> acceptedOrderCategories) {
         this.acceptedOrderCategories = acceptedOrderCategories;
     }
+
+    public PlaystationContainer acceptedOrderCategories(Set<String> ps5) {
+        this.acceptedOrderCategories = ps5;
+        return this;
+    }
 }
