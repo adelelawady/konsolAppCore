@@ -1,0 +1,54 @@
+<div class="last-sessions">
+  <div class="last-sessions__header">
+    <h2>{{ 'playstation.lastSessions.title' | translate }}</h2>
+    <button class="btn btn-primary" (click)="loadLastSessions()" [disabled]="isLoading">
+      <i class="fa fa-sync fa-spin" *ngIf="isLoading"></i>
+      <span>{{ 'playstation.lastSessions.refresh' | translate }}</span>
+    </button>
+  </div>
+
+  <div class="last-sessions__content">
+    <div *ngIf="isLoading" class="loading-state">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p>{{ 'playstation.lastSessions.loading' | translate }}</p>
+    </div>
+
+    <div *ngIf="!isLoading && sessions.length === 0" class="empty-state">
+      <i class="fa fa-history" size="2x"></i>
+      <p>{{ 'playstation.lastSessions.noSessions' | translate }}</p>
+    </div>
+
+    <div *ngIf="!isLoading && sessions.length > 0" class="sessions-table">
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>{{ 'playstation.lastSessions.table.startTime' | translate }}</th>
+              <th>{{ 'playstation.lastSessions.table.type' | translate }}</th>
+              <!-- <th>{{ 'playstation.lastSessions.table.device' | translate }}</th>-->
+              <th>{{ 'playstation.lastSessions.table.duration' | translate }}</th>
+              <th>{{ 'playstation.lastSessions.table.total' | translate }}</th>
+              <th>{{ 'playstation.lastSessions.table.actions' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let session of sessions; trackBy: trackById">
+              <td>{{ session.startTime | date: 'medium' }}</td>
+              <td>{{ session.type?.name }}</td>
+              <!--  <td>{{ session.device?.name }}</td> -->
+              <td>{{ session.startTime ? calculateDuration(session.startTime, session.endTime) : '-' }}</td>
+              <td>{{ session.invoice?.netPrice | currencyK }}</td>
+              <td>
+                <button class="btn btn-sm btn-info" (click)="viewSession(session)">
+                  <i class="fa fa-eye"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

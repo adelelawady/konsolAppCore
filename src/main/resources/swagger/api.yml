@@ -2700,6 +2700,22 @@ paths:
                 $ref: '#/components/schemas/SheftDTO'
       tags:
         - sheft-resource
+  /shefts/current/active/sessions:
+    parameters: []
+    get:
+      summary: ''
+      operationId: getActiveSheftSessions
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PsSessionDTO'
+      tags:
+        - sheft-resource
 components:
   schemas:
     ChartDataDTO:

@@ -2,6 +2,7 @@ package com.konsol.core.web.rest;
 
 import com.konsol.core.repository.SheftRepository;
 import com.konsol.core.service.SheftService;
+import com.konsol.core.service.api.dto.PsSessionDTO;
 import com.konsol.core.service.api.dto.SheftDTO;
 import com.konsol.core.service.mapper.SheftMapper;
 import com.konsol.core.service.mapper.SheftMapperImpl;
@@ -190,5 +191,10 @@ public class SheftResource implements SheftsApiDelegate {
     @Override
     public ResponseEntity<SheftDTO> stopActiveSheft() {
         return ResponseEntity.ok(sheftMapper.toDto(sheftService.endSheft()));
+    }
+
+    @Override
+    public ResponseEntity<List<PsSessionDTO>> getActiveSheftSessions() {
+        return ResponseEntity.ok(sheftService.activeSheftSessions());
     }
 }

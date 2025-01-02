@@ -11,7 +11,9 @@ import com.konsol.core.repository.SheftRepository;
 import com.konsol.core.security.SecurityUtils;
 import com.konsol.core.service.SheftService;
 import com.konsol.core.service.UserService;
+import com.konsol.core.service.api.dto.PsSessionDTO;
 import com.konsol.core.service.api.dto.SheftDTO;
+import com.konsol.core.service.mapper.PlayStationSessionMapper;
 import com.konsol.core.service.mapper.SheftMapper;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
@@ -21,6 +23,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.bson.BsonNull;
 import org.bson.Document;
 import org.slf4j.Logger;
@@ -48,6 +51,7 @@ public class SheftServiceImpl implements SheftService {
     private final SheftMapper sheftMapper;
     private final UserService userService;
 
+    private final PlayStationSessionMapper playStationSessionMapper;
     private final PlayStationSessionRepository playStationSessionRepository;
     private final MongoTemplate mongoTemplate;
 
@@ -55,12 +59,14 @@ public class SheftServiceImpl implements SheftService {
         SheftRepository sheftRepository,
         SheftMapper sheftMapper,
         UserService userService,
+        PlayStationSessionMapper playStationSessionMapper,
         PlayStationSessionRepository playStationSessionRepository,
         MongoTemplate mongoTemplate
     ) {
         this.sheftRepository = sheftRepository;
         this.sheftMapper = sheftMapper;
         this.userService = userService;
+        this.playStationSessionMapper = playStationSessionMapper;
         this.playStationSessionRepository = playStationSessionRepository;
         this.mongoTemplate = mongoTemplate;
     }
@@ -353,6 +359,20 @@ public class SheftServiceImpl implements SheftService {
     @Override
     public void reCalculateActiveSheftIfAvailable() {
         sheftRepository.findByActiveTrue().ifPresent(sheft -> calculateSheft(sheft.getId()));
+    }
+
+    @Override
+    public List<PsSessionDTO> activeSheftSessions() {
+        Optional<Sheft> optionalSheft = sheftRepository.findByActiveTrue();
+        return optionalSheft
+            .map(sheft ->
+                playStationSessionRepository
+                    .findByEndTimeBetween(sheft.getStartTime(), Instant.now())
+                    .stream()
+                    .map(playStationSessionMapper::toDto)
+                    .collect(Collectors.toList())
+            )
+            .orElse(Collections.emptyList());
     }
 
     // Helper method to extract ID from various possible formats

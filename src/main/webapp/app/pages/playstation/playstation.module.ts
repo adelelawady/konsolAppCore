@@ -27,6 +27,7 @@ import { ConfirmationModalComponent } from 'app/shared/components/confirmation-m
 import { PlaystationContainerStateService } from './services/playstation-container.service';
 import { SessionHistoryControlComponent } from './session-history-control/session-history-control.component';
 import { SessionDetailsComponent } from './session-history-control/session-details/session-details.component';
+import { LastSessionsComponent } from './components/last-sessions/last-sessions.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { SessionDetailsComponent } from './session-history-control/session-detai
     ConfirmationModalComponent,
     SessionHistoryControlComponent,
     SessionDetailsComponent,
+    LastSessionsComponent,
   ],
   imports: [
     CommonModule,

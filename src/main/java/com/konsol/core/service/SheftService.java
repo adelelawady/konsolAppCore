@@ -1,7 +1,9 @@
 package com.konsol.core.service;
 
 import com.konsol.core.domain.Sheft;
+import com.konsol.core.service.api.dto.PsSessionDTO;
 import com.konsol.core.service.api.dto.SheftDTO;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -66,4 +68,6 @@ public interface SheftService {
     void calculateSheft(String id);
 
     void reCalculateActiveSheftIfAvailable();
+
+    List<PsSessionDTO> activeSheftSessions();
 }
