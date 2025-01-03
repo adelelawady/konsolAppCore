@@ -25,11 +25,14 @@
         <div *ngFor="let container of groupedSessions | keyvalue" class="col-md-6 col-lg-6">
           <div class="container-card">
             <div class="container-header">
-              <h4>{{ 'playstation.lastSessions.container' | translate }} {{ container.key }}</h4>
+              <h4>
+                {{ 'playstation.lastSessions.container' | translate }}
+                {{ container.value.container?.name || container.key }}
+              </h4>
             </div>
             <div class="sessions-list">
               <div class="accordion" [id]="'accordion-' + container.key">
-                <div class="accordion-item" *ngFor="let session of container.value; trackBy: trackById; let i = index">
+                <div class="accordion-item" *ngFor="let session of container.value.sessions; trackBy: trackById; let i = index">
                   <h2 class="accordion-header" [id]="'heading-' + container.key + '-' + i">
                     <button
                       class="accordion-button collapsed"
@@ -84,7 +87,7 @@
                             <h5>{{ 'playstation.lastSessions.invoiceDetails' | translate }}</h5>
                             <ul class="list-unstyled">
                               <li>
-                                <strong>{{ 'playstation.lastSessions.invoice.id' | translate }}:</strong> {{ session.invoice.id }}
+                                <strong>{{ 'playstation.lastSessions.invoice.id' | translate }}:</strong> {{ session.invoice.pk }}
                               </li>
                               <li>
                                 <strong>{{ 'playstation.lastSessions.invoice.totalPrice' | translate }}:</strong>
@@ -97,6 +100,10 @@
                               <li>
                                 <strong>{{ 'playstation.lastSessions.invoice.netPrice' | translate }}:</strong>
                                 {{ session.invoice.netPrice | currencyK }}
+                              </li>
+                              <li>
+                                <strong>{{ 'playstation.lastSessions.invoice.userNetPrice' | translate }}:</strong>
+                                {{ session.invoice.userNetPrice | currencyK }}
                               </li>
                               <li>
                                 <strong>{{ 'playstation.lastSessions.invoice.created' | translate }}:</strong>

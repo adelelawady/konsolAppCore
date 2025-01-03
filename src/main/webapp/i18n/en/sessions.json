@@ -39,7 +39,11 @@
         "totalPrice": "Total Price",
         "discount": "Discount",
         "netPrice": "Net Price",
+        "userNetPrice": "User Net Price",
         "created": "Created Date"
+      },
+      "error": {
+        "loading": "Error loading sessions and containers"
       }
     }
   }

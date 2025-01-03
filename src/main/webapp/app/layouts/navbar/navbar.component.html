@@ -107,6 +107,20 @@
                 <span jhiTranslate="konsolCoreApp.sheft.list.title">shefts reports</span>
               </a>
             </li>
+
+            <!-- last sessions -->
+            <li>
+              <a
+                class="dropdown-item"
+                routerLink="last-sessions"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: true }"
+                (click)="collapseNavbar()"
+              >
+                <i class="fa-solid fa-clock me-2"></i>
+                <span jhiTranslate="playstation.lastSessions.title">Last Sessions</span>
+              </a>
+            </li>
           </ul>
         </li>
 
