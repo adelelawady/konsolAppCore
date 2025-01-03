@@ -1,6 +1,7 @@
 package com.konsol.core.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.konsol.core.domain.VAR.VARAbstractAuditingEntity;
 import java.io.Serializable;
 import java.time.Instant;
 import org.springframework.data.annotation.CreatedBy;
@@ -14,7 +15,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * last modified by attributes.
  */
 @JsonIgnoreProperties(value = { "createdBy", "createdDate", "lastModifiedBy", "lastModifiedDate" }, allowGetters = true)
-public abstract class AbstractAuditingEntity<T> implements Serializable {
+public abstract class AbstractAuditingEntity<T> extends VARAbstractAuditingEntity<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

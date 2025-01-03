@@ -1,6 +1,7 @@
 package com.konsol.core.domain.VAR;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.konsol.core.domain.AbstractAuditingEntity;
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.Instant;

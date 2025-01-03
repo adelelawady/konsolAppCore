@@ -1,5 +1,6 @@
 package com.konsol.core.domain.playstation;
 
+import com.konsol.core.domain.AbstractAuditingEntity;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -15,7 +16,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  */
 @Document(collection = "ps_device_type")
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class PlaystationDeviceType implements Serializable {
+public class PlaystationDeviceType extends AbstractAuditingEntity<String> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

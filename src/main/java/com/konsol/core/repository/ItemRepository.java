@@ -1,6 +1,7 @@
 package com.konsol.core.repository;
 
 import com.konsol.core.domain.Item;
+import com.konsol.core.domain.playstation.PlaystationDevice;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -28,4 +29,6 @@ public interface ItemRepository extends MongoRepository<Item, String> {
     long countByCategoryAndBuildInIsTrue(String category);
 
     Page<Item> findAllByBuildInIsFalse(Pageable pageable);
+
+    Optional<Item> findByVarRefId(String id);
 }

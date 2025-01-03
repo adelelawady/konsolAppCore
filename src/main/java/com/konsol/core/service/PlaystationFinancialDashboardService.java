@@ -1,5 +1,7 @@
 package com.konsol.core.service;
 
+import com.konsol.core.domain.Invoice;
+import com.konsol.core.domain.InvoiceItem;
 import com.konsol.core.service.api.dto.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -22,12 +24,12 @@ public interface PlaystationFinancialDashboardService {
     /**
      * Sales and Revenue Methods
      */
-    SalesMetricsDTO getSalesMetrics(LocalDateTime startDate, LocalDateTime endDate); // *
-    List<FinancialChartDTO> getSalesCharts(LocalDateTime startDate, LocalDateTime endDate); //*
-    FinancialChartDTO getDailySalesTrend(LocalDateTime startDate, LocalDateTime endDate);
-    FinancialChartDTO getMonthlySalesTrend(LocalDateTime startDate, LocalDateTime endDate);
-    FinancialChartDTO getSalesVsCostsComparison(LocalDateTime startDate, LocalDateTime endDate);
-    FinancialChartDTO getProfitMarginDistribution(LocalDateTime startDate, LocalDateTime endDate);
+    SalesMetricsDTO getSalesMetrics(List<Invoice> playStationSessionsInvoices); // *
+    List<FinancialChartDTO> getSalesCharts(List<Invoice> invoices); //*
+    FinancialChartDTO getDailySalesTrend(List<Invoice> invoices);
+    FinancialChartDTO getMonthlySalesTrend(List<Invoice> invoices);
+    FinancialChartDTO getSalesVsCostsComparison(List<Invoice> invoices);
+    FinancialChartDTO getProfitMarginDistribution(List<Invoice> invoices);
 
     /**
      * Cash Flow Methods
@@ -41,7 +43,7 @@ public interface PlaystationFinancialDashboardService {
     /**
      * Invoice Analysis Methods
      */
-    InvoiceAnalysisDTO getInvoiceAnalysis(String storeId, LocalDateTime startDate, LocalDateTime endDate); //*
+    InvoiceAnalysisDTO getInvoiceAnalysis(String storeId, List<Invoice> invoices); //*
     List<FinancialChartDTO> getInvoiceCharts(LocalDateTime startDate, LocalDateTime endDate); //*
     FinancialChartDTO getDiscountDistribution(LocalDateTime startDate, LocalDateTime endDate);
     // FinancialChartDTO getExpensesByType();
@@ -51,14 +53,14 @@ public interface PlaystationFinancialDashboardService {
      * Invoice Item Analysis Methods
      */
     // FinancialChartDTO getDailyItemSalesTrend(String itemId, LocalDateTime startDate, LocalDateTime endDate);
-    InvoiceItemAnalysisDTO getInvoiceItemAnalysis(LocalDateTime startDate, LocalDateTime endDate); //*
-    List<FinancialChartDTO> getItemSalesCharts(LocalDateTime startDate, LocalDateTime endDate); //*
-    FinancialChartDTO getItemSalesTrend(LocalDateTime startDate, LocalDateTime endDate);
-    List<FinancialChartDTO> getTopSellingItems(LocalDateTime startDate, LocalDateTime endDate, int limit);
-    FinancialChartDTO getItemCategoryDistribution();
+    InvoiceItemAnalysisDTO getInvoiceItemAnalysis(List<InvoiceItem> invoiceItems); //*
+    List<FinancialChartDTO> getItemSalesCharts(List<InvoiceItem> invoiceItems); //*
+    FinancialChartDTO getItemSalesTrend(List<InvoiceItem> invoiceItems);
+    List<FinancialChartDTO> getTopSellingItems(List<InvoiceItem> invoiceItems, int limit);
+    FinancialChartDTO getItemCategoryDistribution(List<InvoiceItem> invoiceItems);
     FinancialChartDTO getItemProfitMargins(LocalDateTime startDate, LocalDateTime endDate);
     List<ItemSalesDTO> getDetailedItemSalesReport(LocalDateTime startDate, LocalDateTime endDate, String storeId);
-    Map<String, BigDecimal> getItemCategoryRevenue(LocalDateTime startDate, LocalDateTime endDate);
+    Map<String, BigDecimal> getItemCategoryRevenue(List<InvoiceItem> invoiceItems);
     List<ItemProfitabilityDTO> getItemProfitabilityAnalysis(LocalDateTime startDate, LocalDateTime endDate);
     InvoiceItemAnalysisDTO getItemSalesAnalysis(LocalDateTime startDate, LocalDateTime endDate);
 

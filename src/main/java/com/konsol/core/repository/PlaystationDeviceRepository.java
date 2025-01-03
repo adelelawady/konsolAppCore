@@ -20,4 +20,6 @@ public interface PlaystationDeviceRepository extends MongoRepository<Playstation
 
     @Cacheable(cacheNames = DEVICES_BY_CATEGORY)
     List<PlaystationDevice> findAllByCategory(String category);
+
+    Optional<PlaystationDevice> findByVarRefId(String id);
 }

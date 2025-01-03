@@ -110,6 +110,8 @@ public interface InvoiceService {
      */
     InvoiceDTO addInvoiceItem(String id, CreateInvoiceItemDTO createInvoiceItemDTO);
 
+    InvoiceItem addInvoiceItemDomain(String id, CreateInvoiceItemDTO createInvoiceItemDTO);
+
     /**
      * @param id invoiceItem id to delete from invoice
      * @apiNote uses {calcInvoice}

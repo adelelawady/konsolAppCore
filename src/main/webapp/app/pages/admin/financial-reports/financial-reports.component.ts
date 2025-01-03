@@ -1357,6 +1357,13 @@ export class PlayStationFinancialReportsComponent implements OnInit, AfterViewIn
           endDate: now,
         };
         break;
+      case 'last-year':
+        const lastyearStart = new Date(today.getFullYear() - 4, 0, 1);
+        this.dateRange = {
+          startDate: lastyearStart,
+          endDate: now,
+        };
+        break;
     }
 
     this.onPeriodChange();

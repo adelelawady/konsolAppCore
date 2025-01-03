@@ -3,6 +3,7 @@ package com.konsol.core.domain.VAR;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.konsol.core.domain.AbstractAuditingEntity;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;

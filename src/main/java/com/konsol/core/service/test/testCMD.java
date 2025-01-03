@@ -2,23 +2,20 @@ package com.konsol.core.service.test;
 
 import static org.reflections.Reflections.log;
 
-import com.konsol.core.domain.Item;
-import com.konsol.core.domain.ItemPriceOptions;
+import com.konsol.core.domain.*;
 import com.konsol.core.domain.PlaystationContainer;
-import com.konsol.core.domain.VAR.Device;
-import com.konsol.core.domain.VAR.DeviceType;
-import com.konsol.core.domain.VAR.Product;
+import com.konsol.core.domain.VAR.*;
+import com.konsol.core.domain.VAR.Record;
+import com.konsol.core.domain.enumeration.InvoiceKind;
+import com.konsol.core.domain.playstation.PlayStationSession;
 import com.konsol.core.domain.playstation.PlaystationDevice;
 import com.konsol.core.domain.playstation.PlaystationDeviceType;
-import com.konsol.core.repository.ItemRepository;
-import com.konsol.core.repository.PlaystationContainerRepository;
-import com.konsol.core.repository.PlaystationDeviceRepository;
-import com.konsol.core.repository.PlaystationDeviceTypeRepository;
+import com.konsol.core.repository.*;
 import com.konsol.core.repository.VAR.ProductRepository;
 import com.konsol.core.service.*;
-import com.konsol.core.service.api.dto.CategoryItem;
-import com.konsol.core.service.api.dto.FinancialDashboardDTO;
-import com.konsol.core.service.api.dto.PsDeviceType;
+import com.konsol.core.service.api.dto.*;
+import com.konsol.core.service.impl.InvoiceServiceImpl;
+import com.konsol.core.service.impl.PlayStationSessionServiceImpl;
 import com.konsol.core.service.impl.PlaystationDeviceServiceImpl;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -26,18 +23,18 @@ import com.mongodb.client.MongoDatabase;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -56,9 +53,14 @@ public class testCMD implements CommandLineRunner {
     private final PlaystationDeviceTypeRepository playstationDeviceTypeRepository;
 
     private final PlaystationDeviceRepository playstationDeviceRepository;
-    private final PlaystationDeviceService playstationDeviceServiceImpl;
+    private final PlaystationDeviceService playstationDeviceService;
 
     private final ItemService itemService;
+    private final InvoiceService invoiceServiceImpl;
+    private final PlayStationSessionRepository playStationSessionRepository;
+    private final InvoiceRepository invoiceRepository;
+    private final InvoiceItemRepository invoiceItemRepository;
+    private final PlayStationSessionServiceImpl playStationSessionServiceImpl;
 
     public testCMD(
         @Qualifier("erMongoTemplate") MongoTemplate erMongoTemplate,
@@ -69,7 +71,12 @@ public class testCMD implements CommandLineRunner {
         com.konsol.core.repository.PlaystationDeviceTypeRepository playstationDeviceTypeRepository,
         PlaystationDeviceRepository playstationDeviceRepository,
         PlaystationDeviceService playstationDeviceServiceImpl,
-        ItemService itemService
+        ItemService itemService,
+        InvoiceService invoiceServiceImpl,
+        PlayStationSessionRepository playStationSessionRepository,
+        InvoiceRepository invoiceRepository,
+        InvoiceItemRepository invoiceItemRepository,
+        PlayStationSessionServiceImpl playStationSessionServiceImpl
     ) {
         this.erMongoTemplate = erMongoTemplate;
 
@@ -79,16 +86,24 @@ public class testCMD implements CommandLineRunner {
         this.playstationDeviceTypeService = playstationDeviceTypeService;
         this.playstationDeviceTypeRepository = playstationDeviceTypeRepository;
         this.playstationDeviceRepository = playstationDeviceRepository;
-        this.playstationDeviceServiceImpl = playstationDeviceServiceImpl;
+        this.playstationDeviceService = playstationDeviceServiceImpl;
         this.itemService = itemService;
+        this.invoiceServiceImpl = invoiceServiceImpl;
+        this.playStationSessionRepository = playStationSessionRepository;
+        this.invoiceRepository = invoiceRepository;
+        this.invoiceItemRepository = invoiceItemRepository;
+        this.playStationSessionServiceImpl = playStationSessionServiceImpl;
     }
 
     /**
      * @param args incoming main method arguments
      * @throws Exception
      */
+    int recordsRetCount = 10000;
+
     @Override
     public void run(String... args) throws Exception {
+        /*
         playstationContainerRepository.deleteAll();
         // Create and save PlayStation containers
         PlaystationContainer PlayStation = new PlaystationContainer()
@@ -100,44 +115,44 @@ public class testCMD implements CommandLineRunner {
             .showTime(true)
             .canMoveDevice(true)
             .canHaveMultiTimeManagement(true)
-            .orderSelectedPriceCategory("PlayStation")
-            .acceptedOrderCategories(Set.of("PS4", "PS4_PRO"));
+            .orderSelectedPriceCategory("PlayStation");
+            //.acceptedOrderCategories(Set.of("PS4", "PS4_PRO"));
 
         PlaystationContainer Tables = new PlaystationContainer()
             .name("Tables")
             .category("Tables")
             .defaultIcon("ps4pro-icon")
-            .hasTimeManagement(true)
-            .showType(true)
-            .showTime(true)
+            .hasTimeManagement(false)
+            .showType(false)
+            .showTime(false)
             .canMoveDevice(true)
-            .canHaveMultiTimeManagement(true)
-            .orderSelectedPriceCategory("Tables")
-            .acceptedOrderCategories(Set.of("PS4", "PS4_PRO"));
+            .canHaveMultiTimeManagement(false)
+            .orderSelectedPriceCategory("Tables");
+            //.acceptedOrderCategories(Set.of("PS4", "PS4_PRO"));
 
         PlaystationContainer Shops = new PlaystationContainer()
             .name("Shops")
             .category("Shops")
             .defaultIcon("ps5d-icon")
-            .hasTimeManagement(true)
-            .showType(true)
-            .showTime(true)
+            .hasTimeManagement(false)
+            .showType(false)
+            .showTime(false)
             .canMoveDevice(true)
-            .canHaveMultiTimeManagement(true)
-            .orderSelectedPriceCategory("Shops")
-            .acceptedOrderCategories(Set.of("PS5"));
+            .canHaveMultiTimeManagement(false)
+            .orderSelectedPriceCategory("Shops");
+            //.acceptedOrderCategories(Set.of("PS5"));
 
         PlaystationContainer TakeAway = new PlaystationContainer()
             .name("TakeAway")
             .category("TakeAway")
             .defaultIcon("ps5-icon")
-            .hasTimeManagement(true)
-            .showType(true)
-            .showTime(true)
+            .hasTimeManagement(false)
+            .showType(false)
+            .showTime(false)
             .canMoveDevice(true)
-            .canHaveMultiTimeManagement(true)
-            .orderSelectedPriceCategory("TakeAway")
-            .acceptedOrderCategories(Set.of("PS5"));
+            .canHaveMultiTimeManagement(false)
+            .orderSelectedPriceCategory("TakeAway");
+            //.acceptedOrderCategories(Set.of("PS5"));
 
         // Save all containers using mongoTemplate
         mongoTemplate.save(PlayStation);
@@ -145,8 +160,23 @@ public class testCMD implements CommandLineRunner {
         mongoTemplate.save(Shops);
         mongoTemplate.save(TakeAway);
 
+
         DoProducts(PlayStation, Tables, Shops, TakeAway);
+        playstationDeviceTypeRepository.deleteAll();
+        playstationDeviceRepository.deleteAll();
+        DoTables(Tables, Shops, TakeAway);
         DoDevices(PlayStation);
+
+        invoiceRepository.deleteAll();
+
+        invoiceItemRepository.deleteAll();
+        playStationSessionRepository.deleteAll();;
+         DoTablesRecords( Tables, Shops, TakeAway);
+        DoDevicesRecords(PlayStation);
+        playstationDeviceService.clearAllDevicesCaches();
+
+*/
+
     }
 
     public void DoDevicesTypes() {
@@ -170,14 +200,14 @@ public class testCMD implements CommandLineRunner {
 
     public void DoDevices(PlaystationContainer ps) {
         List<Device> results = erMongoTemplate.findAll(Device.class, "device");
-        playstationDeviceTypeRepository.deleteAll();
-        playstationDeviceRepository.deleteAll();
+
         for (Device device : results) {
             PlaystationDevice playstationDevice = new PlaystationDevice();
             playstationDevice.setName(device.getName());
             playstationDevice.setCategory(ps.getCategory());
             playstationDevice.setActive(false);
             playstationDevice.setTimeManagement(true);
+            playstationDevice.setVarRefId(device.getId());
 
             PsDeviceType playstationDeviceTypePricePerHour = new PsDeviceType();
             playstationDeviceTypePricePerHour.setName(device.getType().getName());
@@ -186,6 +216,13 @@ public class testCMD implements CommandLineRunner {
             playstationDeviceTypePricePerHour = playstationDeviceTypeService.save(playstationDeviceTypePricePerHour);
             playstationDeviceTypeRepository.findById(playstationDeviceTypePricePerHour.getId()).ifPresent(playstationDevice::setType);
 
+            playstationDeviceTypeRepository
+                .findById(playstationDeviceTypePricePerHour.getId())
+                .ifPresent(playstationDeviceType -> {
+                    playstationDeviceType.setVarRefId(device.getType().getId());
+                    playstationDeviceTypeRepository.save(playstationDeviceType);
+                });
+
             PsDeviceType playstationDeviceTypePricePerHourMulti = new PsDeviceType();
             playstationDeviceTypePricePerHourMulti.setName(device.getType().getName() + " - Multi");
             playstationDeviceTypePricePerHourMulti.setPrice(String.valueOf(BigDecimal.valueOf(device.getType().getPricePerHour())));
@@ -193,7 +230,6 @@ public class testCMD implements CommandLineRunner {
             playstationDeviceTypeService.save(playstationDeviceTypePricePerHourMulti);
             mongoTemplate.save(playstationDevice);
         }
-        playstationDeviceServiceImpl.clearAllDevicesCaches();
     }
 
     public void DoProducts(PlaystationContainer ps, PlaystationContainer tb, PlaystationContainer sh, PlaystationContainer ta) {
@@ -220,6 +256,8 @@ public class testCMD implements CommandLineRunner {
                     item.setCheckQty(false);
                     item.setBuildIn(false);
                     item.setDeletable(true);
+
+                    item.setVarRefId(result.getId());
 
                     ItemPriceOptions itemPriceOptionsPs = new ItemPriceOptions();
                     itemPriceOptionsPs.setName(ps.getName());
@@ -263,6 +301,256 @@ public class testCMD implements CommandLineRunner {
             playstationContainerRepository.save(ta);
         } catch (Exception e) {
             log.error("Error in DoProducts", e);
+        }
+    }
+
+    void DoTables(PlaystationContainer tb, PlaystationContainer sh, PlaystationContainer ta) {
+        List<Table> results = erMongoTemplate.findAll(Table.class, "table");
+
+        PsDeviceType TABLETYPE = new PsDeviceType();
+        TABLETYPE.setName("TABLE");
+        TABLETYPE.setPrice(String.valueOf(BigDecimal.ZERO));
+
+        PsDeviceType SHOPSTYPE = new PsDeviceType();
+        SHOPSTYPE.setName("SHOPS");
+        SHOPSTYPE.setPrice(String.valueOf(BigDecimal.ZERO));
+
+        PsDeviceType TAKEAWAYTYPE = new PsDeviceType();
+        TAKEAWAYTYPE.setName("TAKE_AWAY");
+        TAKEAWAYTYPE.setPrice(String.valueOf(BigDecimal.ZERO));
+        TABLETYPE = playstationDeviceTypeService.save(TABLETYPE);
+        SHOPSTYPE = playstationDeviceTypeService.save(SHOPSTYPE);
+        TAKEAWAYTYPE = playstationDeviceTypeService.save(TAKEAWAYTYPE);
+        for (Table device : results) {
+            PlaystationDevice playstationDevice = new PlaystationDevice();
+            playstationDevice.setName(device.getName());
+            playstationDevice.setVarRefId(device.getId());
+            playstationDevice.setActive(false);
+            playstationDevice.setTimeManagement(false);
+
+            switch (device.getType()) {
+                case SHOPS:
+                    {
+                        playstationDevice.setCategory(sh.getCategory());
+                        playstationDeviceTypeRepository.findById(SHOPSTYPE.getId()).ifPresent(playstationDevice::setType);
+
+                        break;
+                    }
+                case TABLE:
+                    {
+                        playstationDevice.setCategory(tb.getCategory());
+                        playstationDeviceTypeRepository.findById(TABLETYPE.getId()).ifPresent(playstationDevice::setType);
+
+                        break;
+                    }
+                case TAKEAWAY:
+                    {
+                        playstationDevice.setCategory(ta.getCategory());
+                        playstationDeviceTypeRepository.findById(TAKEAWAYTYPE.getId()).ifPresent(playstationDevice::setType);
+                        break;
+                    }
+                default:
+                    {
+                        playstationDevice.setCategory(tb.getCategory());
+                        break;
+                    }
+            }
+
+            mongoTemplate.save(playstationDevice);
+        }
+    }
+
+    void DoDevicesRecords(PlaystationContainer ps) {
+        Query query = new Query(Criteria.where("created_date").gte(Instant.parse("2022-02-26T03:38:32.398+00:00")))
+            .with(Pageable.ofSize(recordsRetCount));
+        List<Record> results = erMongoTemplate.find(query, Record.class, "record");
+
+        log.debug(results.toString());
+        for (Record tableRecord : results) {
+            boolean isTable;
+            boolean isShops;
+            boolean isTakeAway;
+
+            Optional<PlaystationDevice> tableRecord_table_Device = playstationDeviceRepository.findByVarRefId(
+                tableRecord.getDevice().getId()
+            );
+
+            PlayStationSession tableRecSession = new PlayStationSession();
+            tableRecSession.setActive(false);
+
+            if (tableRecord.getStart() != null) {
+                tableRecSession.setStartTime(tableRecord.getStart());
+            }
+            if (tableRecord.getEnd() != null) {
+                tableRecSession.setEndTime(tableRecord.getEnd());
+            }
+
+            if (tableRecord_table_Device.isPresent()) {
+                tableRecSession.setDevice(tableRecord_table_Device.get());
+                tableRecSession.setType(tableRecord_table_Device.get().getType());
+                tableRecSession.setContainerId(ps.getId());
+            }
+            tableRecSession = playStationSessionRepository.save(tableRecSession);
+
+            InvoiceDTO inv = invoiceServiceImpl.initializeNewInvoice(InvoiceKind.SALE);
+
+            Invoice invoiceDomain = invoiceServiceImpl.findOneDomain(inv.getId()).get();
+            if (tableRecord.getCreatedDate() != null) {
+                invoiceDomain.setCreatedDate(tableRecord.getCreatedDate());
+                invoiceDomain = invoiceRepository.save(invoiceDomain);
+            }
+
+            tableRecSession.setInvoice(invoiceDomain);
+
+            tableRecord
+                .getOrdersData()
+                .forEach(product -> {
+                    Optional<Item> itemOptional = itemsRepository.findByVarRefId(product.getId());
+
+                    if (itemOptional.isPresent()) {
+                        try {
+                            int qty = tableRecord.getOrdersQuantity().get(product.getId());
+
+                            CreateInvoiceItemDTO createInvoiceItemDTO = new CreateInvoiceItemDTO();
+
+                            createInvoiceItemDTO.setPrice(BigDecimal.valueOf(product.getPrice()));
+
+                            createInvoiceItemDTO.setItemId(itemOptional.get().getId());
+                            createInvoiceItemDTO.setQty(BigDecimal.valueOf(qty));
+                            InvoiceItem invoiceItem = invoiceServiceImpl.addInvoiceItemDomain(inv.getId(), createInvoiceItemDTO);
+                            invoiceItem.setCreatedDate(tableRecord.getCreatedDate());
+                            invoiceItemRepository.save(invoiceItem);
+                        } catch (Exception e) {}
+                    }
+                });
+
+            if (tableRecord.getTotalPriceTime() > 0) {
+                CreateInvoiceItemDTO createInvoiceItemDTO = new CreateInvoiceItemDTO();
+                createInvoiceItemDTO.setItemId(tableRecord_table_Device.get().getType().getItem().getId());
+                createInvoiceItemDTO.setPrice(BigDecimal.valueOf(tableRecord.getTotalPriceTime()));
+                createInvoiceItemDTO.setQty(BigDecimal.valueOf(1));
+                InvoiceItem invoiceItem = invoiceServiceImpl.addInvoiceItemDomain(inv.getId(), createInvoiceItemDTO);
+                invoiceItem.setCreatedDate(tableRecord.getCreatedDate());
+                invoiceItemRepository.save(invoiceItem);
+            }
+            if (!invoiceServiceImpl.findOneDomain(inv.getId()).get().getInvoiceItems().isEmpty()) {
+                invoiceServiceImpl.saveInvoice(inv.getId());
+
+                Invoice invoiceDomainX = invoiceServiceImpl.findOneDomain(inv.getId()).get();
+                invoiceDomainX.setUserNetPrice(BigDecimal.valueOf(tableRecord.getTotalPriceUser()));
+                invoiceDomainX = invoiceRepository.save(invoiceDomainX);
+                playStationSessionRepository.save(tableRecSession);
+            } else {
+                invoiceRepository.deleteById(inv.getId());
+                playStationSessionRepository.deleteById(tableRecSession.getId());
+            }
+        }
+    }
+
+    void DoTablesRecords(PlaystationContainer tb, PlaystationContainer sh, PlaystationContainer ta) {
+        Query query = new Query(Criteria.where("created_date").gte(Instant.parse("2022-02-26T03:38:32.398+00:00")))
+            .with(Pageable.ofSize(recordsRetCount));
+        List<TableRecord> results = erMongoTemplate.find(query, TableRecord.class, "tableRecord");
+
+        log.debug(results.toString());
+        for (TableRecord tableRecord : results) {
+            boolean isTable;
+            boolean isShops;
+            boolean isTakeAway;
+
+            Optional<PlaystationDevice> tableRecord_table_Device = playstationDeviceRepository.findByVarRefId(
+                tableRecord.getTable().getId()
+            );
+
+            PlayStationSession tableRecSession = new PlayStationSession();
+            tableRecSession.setActive(false);
+
+            if (tableRecord.getCreatedDate() != null) {
+                tableRecSession.setStartTime(tableRecord.getCreatedDate());
+            }
+            if (tableRecord.getLastModifiedDate() != null) {
+                tableRecSession.setEndTime(tableRecord.getLastModifiedDate());
+            }
+
+            if (!tableRecord_table_Device.isEmpty()) {
+                tableRecSession.setDevice(tableRecord_table_Device.get());
+                tableRecSession.setType(tableRecord_table_Device.get().getType());
+
+                if (tableRecord_table_Device.get().getCategory().equalsIgnoreCase(tb.getCategory())) {
+                    tableRecSession.setContainerId(tb.getId());
+                    isTable = true;
+                } else {
+                    isTable = false;
+                }
+                if (tableRecord_table_Device.get().getCategory().equalsIgnoreCase(ta.getCategory())) {
+                    tableRecSession.setContainerId(ta.getId());
+                    isTakeAway = true;
+                } else {
+                    isTakeAway = false;
+                }
+                if (tableRecord_table_Device.get().getCategory().equalsIgnoreCase(sh.getCategory())) {
+                    tableRecSession.setContainerId(sh.getId());
+                    isShops = true;
+                } else {
+                    isShops = false;
+                }
+            } else {
+                isTakeAway = false;
+                isShops = false;
+                isTable = false;
+            }
+            tableRecSession = playStationSessionRepository.save(tableRecSession);
+
+            InvoiceDTO inv = invoiceServiceImpl.initializeNewInvoice(InvoiceKind.SALE);
+
+            Invoice invoiceDomain = invoiceServiceImpl.findOneDomain(inv.getId()).get();
+            if (tableRecord.getCreatedDate() != null) {
+                invoiceDomain.setCreatedDate(tableRecord.getCreatedDate());
+                invoiceDomain = invoiceRepository.save(invoiceDomain);
+            }
+
+            tableRecSession.setInvoice(invoiceDomain);
+
+            tableRecord
+                .getOrdersData()
+                .forEach(product -> {
+                    Optional<Item> itemOptional = itemsRepository.findByVarRefId(product.getId());
+
+                    if (itemOptional.isPresent()) {
+                        try {
+                            int qty = tableRecord.getOrdersQuantity().get(product.getId());
+
+                            CreateInvoiceItemDTO createInvoiceItemDTO = new CreateInvoiceItemDTO();
+
+                            if (isTable) {
+                                createInvoiceItemDTO.setPrice(BigDecimal.valueOf(product.getPrice()));
+                            }
+                            if (isShops) {
+                                createInvoiceItemDTO.setPrice(BigDecimal.valueOf(product.getShopsPrice()));
+                            }
+
+                            if (isTakeAway) {
+                                createInvoiceItemDTO.setPrice(BigDecimal.valueOf(product.getTakeawayPrice()));
+                            }
+                            createInvoiceItemDTO.setItemId(itemOptional.get().getId());
+                            createInvoiceItemDTO.setQty(BigDecimal.valueOf(qty));
+                            InvoiceItem invoiceItem = invoiceServiceImpl.addInvoiceItemDomain(inv.getId(), createInvoiceItemDTO);
+                            invoiceItem.setCreatedDate(tableRecord.getCreatedDate());
+                            invoiceItemRepository.save(invoiceItem);
+                        } catch (Exception e) {}
+                    }
+                });
+            if (!invoiceServiceImpl.findOneDomain(inv.getId()).get().getInvoiceItems().isEmpty()) {
+                invoiceServiceImpl.saveInvoice(inv.getId());
+
+                Invoice invoiceDomainX = invoiceServiceImpl.findOneDomain(inv.getId()).get();
+                invoiceDomainX.setUserNetPrice(BigDecimal.valueOf(tableRecord.getNetTotalPrice()));
+                invoiceDomainX = invoiceRepository.save(invoiceDomainX);
+                playStationSessionRepository.save(tableRecSession);
+            } else {
+                invoiceRepository.deleteById(inv.getId());
+                playStationSessionRepository.deleteById(tableRecSession.getId());
+            }
         }
     }
 }

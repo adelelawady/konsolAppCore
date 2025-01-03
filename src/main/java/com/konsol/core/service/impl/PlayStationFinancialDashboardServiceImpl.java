@@ -47,6 +47,9 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
         this.bankService = bankService;
     }
 
+    private OffsetDateTime startDateMain;
+    private OffsetDateTime endDateMain;
+
     @Override
     public FinancialDashboardDTO getDashboardData(
         OffsetDateTime startDate,
@@ -55,6 +58,8 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
         String accountId,
         String bankId
     ) {
+        startDateMain = startDate;
+        endDateMain = endDate;
         FinancialDashboardDTO dashboard = new FinancialDashboardDTO();
 
         // Set filter parameters
@@ -64,18 +69,31 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
         dashboard.setAccountId(accountId);
         dashboard.setBankId(bankId);
 
+        List<Invoice> invoices = playStationSessionRepository
+            .findByStartTimeBetweenAndActiveIsFalse(startDate.toInstant(), endDate.toInstant())
+            .stream()
+            .map(PlayStationSession::getInvoice)
+            .collect(Collectors.toList());
+
+        List<InvoiceItem> invoiceItems = playStationSessionRepository
+            .findByStartTimeBetweenAndActiveIsFalse(startDate.toInstant(), endDate.toInstant())
+            .stream()
+            .map(PlayStationSession::getInvoice)
+            .flatMap(invoice -> invoice.getInvoiceItems().stream())
+            .collect(Collectors.toList());
+
         // Get all metrics and charts
-        dashboard.setSalesMetrics(getSalesMetrics(startDate.toLocalDateTime(), endDate.toLocalDateTime())); //*
-        dashboard.setSalesCharts(getSalesCharts(startDate.toLocalDateTime(), endDate.toLocalDateTime())); //*
+        dashboard.setSalesMetrics(getSalesMetrics(invoices)); //*
+        dashboard.setSalesCharts(getSalesCharts(invoices)); //*
 
         // Get invoice items analysis
-        dashboard.setInvoiceItemAnalysis(getInvoiceItemAnalysis(startDate.toLocalDateTime(), endDate.toLocalDateTime()));
+        dashboard.setInvoiceItemAnalysis(getInvoiceItemAnalysis(invoiceItems));
         //dashboard.setItemSalesCharts(getItemSalesCharts(startDate.toLocalDateTime(), endDate.toLocalDateTime()));
 
         dashboard.setCashFlowMetrics(getCashFlowMetrics(startDate.toLocalDateTime(), endDate.toLocalDateTime(), bankId));
         dashboard.setCashFlowCharts(getCashFlowCharts(startDate.toLocalDateTime(), endDate.toLocalDateTime(), bankId));
 
-        dashboard.setInvoiceAnalysis(getInvoiceAnalysis(storeId, startDate.toLocalDateTime(), endDate.toLocalDateTime()));
+        dashboard.setInvoiceAnalysis(getInvoiceAnalysis(storeId, invoices));
         dashboard.setInvoiceCharts(getInvoiceCharts(startDate.toLocalDateTime(), endDate.toLocalDateTime()));
 
         dashboard.setPerformanceIndicators(getPerformanceIndicators(startDate.toLocalDateTime(), endDate.toLocalDateTime()));
@@ -90,13 +108,7 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
     }
 
     @Override
-    public SalesMetricsDTO getSalesMetrics(LocalDateTime startDate, LocalDateTime endDate) {
-        List<Invoice> playStationSessionsInvoices = playStationSessionRepository
-            .findByStartTimeBetweenAndActiveIsFalse(startDate.toInstant(ZoneOffset.UTC), endDate.toInstant(ZoneOffset.UTC))
-            .stream()
-            .map(PlayStationSession::getInvoice)
-            .collect(Collectors.toList());
-
+    public SalesMetricsDTO getSalesMetrics(List<Invoice> playStationSessionsInvoices) {
         SalesMetricsDTO metrics = new SalesMetricsDTO();
         metrics.setTotalSales(calculateTotal(playStationSessionsInvoices, Invoice::getTotalPrice));
         metrics.setNetSales(calculateTotal(playStationSessionsInvoices, Invoice::getNetPrice));
@@ -117,29 +129,24 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
     }
 
     @Override
-    public List<FinancialChartDTO> getSalesCharts(LocalDateTime startDate, LocalDateTime endDate) {
+    public List<FinancialChartDTO> getSalesCharts(List<Invoice> invoices) {
         List<FinancialChartDTO> charts = new ArrayList<>();
 
-        charts.add(getDailySalesTrend(startDate, endDate));
-        charts.add(getMonthlySalesTrend(startDate, endDate));
+        charts.add(getDailySalesTrend(invoices));
+        charts.add(getMonthlySalesTrend(invoices));
 
-        charts.add(getSalesVsCostsComparison(startDate, endDate));
-        charts.add(getProfitMarginDistribution(startDate, endDate));
+        charts.add(getSalesVsCostsComparison(invoices));
+        charts.add(getProfitMarginDistribution(invoices));
         return charts;
     }
 
     @Override
-    public FinancialChartDTO getDailySalesTrend(LocalDateTime startDate, LocalDateTime endDate) {
+    public FinancialChartDTO getDailySalesTrend(List<Invoice> invoices) {
         FinancialChartDTO chart = new FinancialChartDTO();
         chart.setChartType("line");
 
         chart.setTitle("Daily Sales Trend");
 
-        List<Invoice> invoices = playStationSessionRepository
-            .findByStartTimeBetweenAndActiveIsFalse(startDate.toInstant(ZoneOffset.UTC), endDate.toInstant(ZoneOffset.UTC))
-            .stream()
-            .map(PlayStationSession::getInvoice)
-            .collect(Collectors.toList());
         Map<String, BigDecimal> dailyRevenue = new TreeMap<>();
         Map<String, BigDecimal> dailyUserRevenue = new TreeMap<>();
         // Group sales by day
@@ -174,16 +181,10 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
     }
 
     @Override
-    public FinancialChartDTO getMonthlySalesTrend(LocalDateTime startDate, LocalDateTime endDate) {
+    public FinancialChartDTO getMonthlySalesTrend(List<Invoice> invoices) {
         FinancialChartDTO chart = new FinancialChartDTO();
         chart.setChartType("line");
         chart.setTitle("Monthly Sales Trend");
-
-        List<Invoice> invoices = playStationSessionRepository
-            .findByStartTimeBetweenAndActiveIsFalse(startDate.toInstant(ZoneOffset.UTC), endDate.toInstant(ZoneOffset.UTC))
-            .stream()
-            .map(PlayStationSession::getInvoice)
-            .collect(Collectors.toList());
 
         Map<String, BigDecimal> monthlyRevenue = new TreeMap<>();
         Map<String, BigDecimal> monthlyUserRevenue = new TreeMap<>();
@@ -221,16 +222,11 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
     }
 
     @Override
-    public FinancialChartDTO getSalesVsCostsComparison(LocalDateTime startDate, LocalDateTime endDate) {
+    public FinancialChartDTO getSalesVsCostsComparison(List<Invoice> invoices) {
         FinancialChartDTO chart = new FinancialChartDTO();
         chart.setChartType("bar");
         chart.setTitle("Sales vs Costs Comparison");
 
-        List<Invoice> invoices = playStationSessionRepository
-            .findByStartTimeBetweenAndActiveIsFalse(startDate.toInstant(ZoneOffset.UTC), endDate.toInstant(ZoneOffset.UTC))
-            .stream()
-            .map(PlayStationSession::getInvoice)
-            .collect(Collectors.toList());
         Map<String, SalesVsCosts> monthlyData = new TreeMap<>();
 
         // Group sales and costs by month
@@ -271,18 +267,12 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
     }
 
     @Override
-    public FinancialChartDTO getProfitMarginDistribution(LocalDateTime startDate, LocalDateTime endDate) {
+    public FinancialChartDTO getProfitMarginDistribution(List<Invoice> invoices) {
         FinancialChartDTO chart = new FinancialChartDTO();
         chart.setChartType("pie");
         chart.setTitle("Profit Margin Distribution");
 
         // Get all invoices from the last month
-
-        List<Invoice> invoices = playStationSessionRepository
-            .findByStartTimeBetweenAndActiveIsFalse(startDate.toInstant(ZoneOffset.UTC), endDate.toInstant(ZoneOffset.UTC))
-            .stream()
-            .map(PlayStationSession::getInvoice)
-            .collect(Collectors.toList());
 
         // Calculate profit margins and group them into ranges
         Map<String, Integer> marginRanges = new TreeMap<>();
@@ -350,15 +340,8 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
     }
 
     @Override
-    public InvoiceItemAnalysisDTO getInvoiceItemAnalysis(LocalDateTime startDate, LocalDateTime endDate) {
+    public InvoiceItemAnalysisDTO getInvoiceItemAnalysis(List<InvoiceItem> invoiceItems) {
         InvoiceItemAnalysisDTO analysis = new InvoiceItemAnalysisDTO();
-
-        List<InvoiceItem> invoiceItems = playStationSessionRepository
-            .findByStartTimeBetweenAndActiveIsFalse(startDate.toInstant(ZoneOffset.UTC), endDate.toInstant(ZoneOffset.UTC))
-            .stream()
-            .map(PlayStationSession::getInvoice)
-            .flatMap(invoice -> invoice.getInvoiceItems().stream())
-            .collect(Collectors.toList());
 
         // Calculate metrics for each item
         Map<String, List<InvoiceItem>> itemGroups = invoiceItems
@@ -435,7 +418,7 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
         }
 
         // Get category distribution
-        analysis.setItemCategoryDistribution(getItemCategoryRevenue(startDate, endDate));
+        analysis.setItemCategoryDistribution(getItemCategoryRevenue(invoiceItems));
 
         // Get top selling items
         List<ItemSalesDTO> topItems = invoiceItems
@@ -492,34 +475,27 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
         analysis.setTopSellingItems(topItems);
 
         // Get sales charts
-        analysis.setItemSalesCharts(getItemSalesCharts(startDate, endDate));
+        analysis.setItemSalesCharts(getItemSalesCharts(invoiceItems));
 
         return analysis;
     }
 
     @Override
-    public List<FinancialChartDTO> getItemSalesCharts(LocalDateTime startDate, LocalDateTime endDate) {
+    public List<FinancialChartDTO> getItemSalesCharts(List<InvoiceItem> invoiceItems) {
         List<FinancialChartDTO> charts = new ArrayList<>();
 
         // Add daily sales trend chart
-        charts.add(getItemSalesTrend(startDate, endDate));
+        charts.add(getItemSalesTrend(invoiceItems));
 
         // Add top selling items charts (both revenue and quantity)
-        charts.addAll(getTopSellingItems(startDate, endDate, 10));
+        charts.addAll(getTopSellingItems(invoiceItems, 10));
 
         return charts;
     }
 
     @Override
-    public FinancialChartDTO getItemSalesTrend(LocalDateTime startDate, LocalDateTime endDate) {
+    public FinancialChartDTO getItemSalesTrend(List<InvoiceItem> invoiceItems) {
         // Get all invoice items for the period
-
-        List<InvoiceItem> invoiceItems = playStationSessionRepository
-            .findByStartTimeBetweenAndActiveIsFalse(startDate.toInstant(ZoneOffset.UTC), endDate.toInstant(ZoneOffset.UTC))
-            .stream()
-            .map(PlayStationSession::getInvoice)
-            .flatMap(invoice -> invoice.getInvoiceItems().stream())
-            .collect(Collectors.toList());
 
         // Group by date and calculate metrics
         Map<LocalDate, ItemSalesMetrics> dailyMetrics = invoiceItems
@@ -549,13 +525,12 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
                 )
             );
 
-        // Fill in missing dates with zero values
-        LocalDate currentDate = startDate.toLocalDate();
-        LocalDate endLocalDate = endDate.toLocalDate();
+        LocalDate currnetDate = startDateMain.toLocalDate();
+        LocalDate endDate = endDateMain.toLocalDate();
 
-        while (!currentDate.isAfter(endLocalDate)) {
-            dailyMetrics.putIfAbsent(currentDate, new ItemSalesMetrics(BigDecimal.ZERO, BigDecimal.ZERO));
-            currentDate = currentDate.plusDays(1);
+        while (!currnetDate.isAfter(endDate)) {
+            dailyMetrics.putIfAbsent(currnetDate, new ItemSalesMetrics(BigDecimal.ZERO, BigDecimal.ZERO));
+            currnetDate = currnetDate.plusDays(1);
         }
 
         // Sort by date
@@ -639,16 +614,8 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
     }
 
     @Override
-    public List<FinancialChartDTO> getTopSellingItems(LocalDateTime startDate, LocalDateTime endDate, int limit) {
+    public List<FinancialChartDTO> getTopSellingItems(List<InvoiceItem> invoiceItems, int limit) {
         List<FinancialChartDTO> charts = new ArrayList<>();
-
-        // Get invoice items for the date range
-        List<InvoiceItem> invoiceItems = playStationSessionRepository
-            .findByStartTimeBetweenAndActiveIsFalse(startDate.toInstant(ZoneOffset.UTC), endDate.toInstant(ZoneOffset.UTC))
-            .stream()
-            .map(PlayStationSession::getInvoice)
-            .flatMap(invoice -> invoice.getInvoiceItems().stream())
-            .collect(Collectors.toList());
 
         // Group and sum by item
         Map<String, ItemSalesMetrics> itemMetrics = invoiceItems
@@ -749,17 +716,17 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
     }
 
     @Override
-    public FinancialChartDTO getItemCategoryDistribution() {
+    public FinancialChartDTO getItemCategoryDistribution(List<InvoiceItem> invoiceItems) {
         FinancialChartDTO chart = new FinancialChartDTO();
         chart.setChartType("pie");
         chart.setTitle("Item Category Distribution");
 
         // Get current date range (last 30 days)
-        LocalDateTime endDate = LocalDateTime.now();
-        LocalDateTime startDate = endDate.minusDays(30);
+        //LocalDateTime endDate = LocalDateTime.now();
+        //LocalDateTime startDate = endDate.minusDays(30);
 
         // Get category revenue distribution
-        Map<String, BigDecimal> categoryRevenue = getItemCategoryRevenue(startDate, endDate);
+        Map<String, BigDecimal> categoryRevenue = getItemCategoryRevenue(invoiceItems);
 
         // Sort categories by revenue
         List<Map.Entry<String, BigDecimal>> sortedCategories = categoryRevenue
@@ -1889,14 +1856,8 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
     }
 
     @Override
-    public InvoiceAnalysisDTO getInvoiceAnalysis(String storeId, LocalDateTime startDate, LocalDateTime endDate) {
+    public InvoiceAnalysisDTO getInvoiceAnalysis(String storeId, List<Invoice> invoices) {
         InvoiceAnalysisDTO analysis = new InvoiceAnalysisDTO();
-
-        List<Invoice> invoices = playStationSessionRepository
-            .findByStartTimeBetweenAndActiveIsFalse(startDate.toInstant(ZoneOffset.UTC), endDate.toInstant(ZoneOffset.UTC))
-            .stream()
-            .map(PlayStationSession::getInvoice)
-            .collect(Collectors.toList());
 
         if (invoices.isEmpty()) {
             return analysis;
@@ -2084,15 +2045,23 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
 
     // Helper methods for calculations
     private BigDecimal calculateTotal(List<Invoice> invoices, java.util.function.Function<Invoice, BigDecimal> valueExtractor) {
-        return invoices.stream().map(valueExtractor).reduce(BigDecimal.ZERO, BigDecimal::add);
+        try {
+            return invoices.stream().map(valueExtractor).reduce(BigDecimal.ZERO, BigDecimal::add);
+        } catch (Exception e) {
+            return BigDecimal.ZERO;
+        }
     }
 
     private Map<String, BigDecimal> calculateDailyRevenue(List<Invoice> invoices) {
         Map<String, BigDecimal> dailyRevenue = new TreeMap<>(); // TreeMap for sorted dates
 
         invoices.forEach(invoice -> {
-            String dateKey = LocalDateTime.ofInstant(invoice.getCreatedDate(), ZoneId.systemDefault()).format(DateTimeFormatter.ISO_DATE);
-            dailyRevenue.merge(dateKey, invoice.getUserNetPrice(), BigDecimal::add);
+            if (invoice != null) {
+                String dateKey = LocalDateTime
+                    .ofInstant(invoice.getCreatedDate(), ZoneId.systemDefault())
+                    .format(DateTimeFormatter.ISO_DATE);
+                dailyRevenue.merge(dateKey, invoice.getUserNetPrice(), BigDecimal::add);
+            }
         });
 
         return dailyRevenue;
@@ -2102,10 +2071,12 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
         Map<String, BigDecimal> monthlyRevenue = new TreeMap<>(); // TreeMap for sorted months
 
         invoices.forEach(invoice -> {
-            String monthKey = LocalDateTime
-                .ofInstant(invoice.getCreatedDate(), ZoneId.systemDefault())
-                .format(DateTimeFormatter.ofPattern("yyyy-MM"));
-            monthlyRevenue.merge(monthKey, invoice.getUserNetPrice(), BigDecimal::add);
+            if (invoice != null) {
+                String monthKey = LocalDateTime
+                    .ofInstant(invoice.getCreatedDate(), ZoneId.systemDefault())
+                    .format(DateTimeFormatter.ofPattern("yyyy-MM"));
+                monthlyRevenue.merge(monthKey, invoice.getUserNetPrice(), BigDecimal::add);
+            }
         });
 
         return monthlyRevenue;
@@ -2252,14 +2223,8 @@ public class PlayStationFinancialDashboardServiceImpl implements PlaystationFina
     }
 
     @Override
-    public Map<String, BigDecimal> getItemCategoryRevenue(LocalDateTime startDate, LocalDateTime endDate) {
+    public Map<String, BigDecimal> getItemCategoryRevenue(List<InvoiceItem> invoiceItems) {
         // Get all invoice items in the date range
-        List<InvoiceItem> invoiceItems = playStationSessionRepository
-            .findByStartTimeBetweenAndActiveIsFalse(startDate.toInstant(ZoneOffset.UTC), endDate.toInstant(ZoneOffset.UTC))
-            .stream()
-            .map(PlayStationSession::getInvoice)
-            .flatMap(invoice -> invoice.getInvoiceItems().stream())
-            .collect(Collectors.toList());
 
         // Group by category and sum up total revenue
         return invoiceItems

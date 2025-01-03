@@ -1,5 +1,6 @@
 package com.konsol.core.domain.playstation;
 
+import com.konsol.core.domain.AbstractAuditingEntity;
 import com.konsol.core.domain.Invoice;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
@@ -17,11 +18,10 @@ import org.springframework.data.mongodb.core.mapping.Field;
  */
 @Document(collection = "ps_session")
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class PlayStationSession implements Serializable {
+public class PlayStationSession extends AbstractAuditingEntity<String> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @NotNull
     @Id
     private String id;
 

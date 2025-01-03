@@ -602,6 +602,91 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
+    public InvoiceItem addInvoiceItemDomain(String invoiceId, CreateInvoiceItemDTO createInvoiceItemDTO) {
+        Optional<Invoice> invoiceOp = invoiceRepository.findById(invoiceId);
+
+        /**
+         * invoice
+         */
+        if (invoiceOp.isEmpty()) {
+            throw new InvoiceNotFoundException(null);
+        }
+
+        Settings settings = settingService.getSettings();
+
+        boolean isPriceCalc = invoiceOp.get().getKind().equals(InvoiceKind.SALE);
+        boolean isCostCalc = invoiceOp.get().getKind().equals(InvoiceKind.PURCHASE);
+
+        boolean checkQty = isPriceCalc && settings.isSALES_CHECK_ITEM_QTY();
+
+        InvoiceItem invFound = null;
+        if (createInvoiceItemDTO.getUnitId() != null) {
+            invFound =
+                findInvoiceItemByItemIdAndUnitIdAndMoney(
+                    invoiceOp.get().getId(),
+                    createInvoiceItemDTO.getItemId(),
+                    createInvoiceItemDTO.getUnitId(),
+                    createInvoiceItemDTO.getPrice(),
+                    isPriceCalc
+                );
+        } else {
+            invFound =
+                findInvoiceItemByItemIdAndMoney(
+                    invoiceOp.get().getId(),
+                    createInvoiceItemDTO.getItemId(),
+                    createInvoiceItemDTO.getPrice(),
+                    isPriceCalc
+                );
+        }
+
+        if (invFound != null) {
+            BigDecimal totalInvoiceItem_ItemQtyInInvoice = calcItemQtyOutInInvoiceItems(invoiceId, createInvoiceItemDTO.getItemId(), true);
+            if (
+                checkQty &&
+                storeService.checkNotItemQtyAvailable(
+                    createInvoiceItemDTO.getItemId(),
+                    ((createInvoiceItemDTO.getQty().multiply(invFound.getUnitPieces())).add(totalInvoiceItem_ItemQtyInInvoice))
+                )
+            ) {
+                throw new ItemQtyException("مشكلة ف كمية الصنف", "لا يوجد ما يكفي من الصنف ف المخازن");
+            }
+
+            /**
+             * add to invoice item found
+             */
+            AddQtyToInvoiceItem(invoiceOp.get(), invFound.getId(), createInvoiceItemDTO.getQty());
+            regenerateInvoiceItemsPk(invoiceId);
+            return null;
+        } else {
+            if (checkQty && storeService.checkNotItemQtyAvailable(createInvoiceItemDTO.getItemId(), createInvoiceItemDTO.getQty())) {
+                throw new ItemQtyException("مشكلة ف كمية الصنف", "لا يوجد ما يكفي من الصنف ف المخازن");
+            }
+        }
+
+        BigDecimal qtyPieces = new BigDecimal(1);
+        if (createInvoiceItemDTO.getUnitId() != null) {
+            Optional<ItemUnit> itemUnitOp = itemService.getUnitItemById(createInvoiceItemDTO.getUnitId());
+            if (itemUnitOp.isPresent()) {
+                qtyPieces = itemUnitOp.get().getPieces();
+            }
+            /**unit**/
+            if (
+                checkQty &&
+                storeService.checkNotItemQtyAvailable(createInvoiceItemDTO.getItemId(), createInvoiceItemDTO.getQty().add(qtyPieces))
+            ) {
+                throw new ItemQtyException("مشكلة ف كمية الصنف", "لا يوجد ما يكفي من الصنف ف المخازن");
+            }
+        }
+
+        /**
+         * create new Invoice item and add it to invoice
+         */
+        InvoiceItem invoiceItem = createInvoiceItem(invoiceOp.get(), createInvoiceItemDTO);
+        regenerateInvoiceItemsPk(invoiceId);
+        return invoiceItem;
+    }
+
+    @Override
     public void deleteInvoiceItem(String id) {
         Optional<InvoiceItem> invoiceItem = invoiceItemRepository.findById(id);
 
