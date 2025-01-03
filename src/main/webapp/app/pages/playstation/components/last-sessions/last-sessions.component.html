@@ -20,35 +20,190 @@
       <p>{{ 'playstation.lastSessions.noSessions' | translate }}</p>
     </div>
 
-    <div *ngIf="!isLoading && sessions.length > 0" class="sessions-table">
-      <div class="table-responsive">
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th>{{ 'playstation.lastSessions.table.startTime' | translate }}</th>
-              <th>{{ 'playstation.lastSessions.table.type' | translate }}</th>
-              <!-- <th>{{ 'playstation.lastSessions.table.device' | translate }}</th>-->
-              <th>{{ 'playstation.lastSessions.table.duration' | translate }}</th>
-              <th>{{ 'playstation.lastSessions.table.total' | translate }}</th>
-              <th>{{ 'playstation.lastSessions.table.actions' | translate }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let session of sessions; trackBy: trackById">
-              <td>{{ session.startTime | date: 'medium' }}</td>
-              <td>{{ session.type?.name }}</td>
-              <!--  <td>{{ session.device?.name }}</td> -->
-              <td>{{ session.startTime ? calculateDuration(session.startTime, session.endTime) : '-' }}</td>
-              <td>{{ session.invoice?.netPrice | currencyK }}</td>
-              <td>
-                <button class="btn btn-sm btn-info" (click)="viewSession(session)">
-                  <i class="fa fa-eye"></i>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+    <div *ngIf="!isLoading && sessions.length > 0" class="sessions-grid">
+      <div class="row g-4">
+        <div *ngFor="let container of groupedSessions | keyvalue" class="col-md-6 col-lg-6">
+          <div class="container-card">
+            <div class="container-header">
+              <h4>{{ 'playstation.lastSessions.container' | translate }} {{ container.key }}</h4>
+            </div>
+            <div class="sessions-list">
+              <div class="accordion" [id]="'accordion-' + container.key">
+                <div class="accordion-item" *ngFor="let session of container.value; trackBy: trackById; let i = index">
+                  <h2 class="accordion-header" [id]="'heading-' + container.key + '-' + i">
+                    <button
+                      class="accordion-button collapsed"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      [attr.data-bs-target]="'#collapse-' + container.key + '-' + i"
+                      [attr.aria-expanded]="false"
+                      [attr.aria-controls]="'collapse-' + container.key + '-' + i"
+                    >
+                      <div class="session-summary">
+                        <div class="session-time">
+                          <i class="fa fa-clock"></i>
+                          {{ session.startTime | date: 'shortTime' }}
+                        </div>
+                        <div class="session-type">{{ session.type?.name }}</div>
+                        <div class="session-duration">{{ calculateDuration(session.startTime, session.endTime) }}</div>
+                        <div class="session-total">{{ session.invoice?.netPrice | currencyK }}</div>
+                      </div>
+                    </button>
+                  </h2>
+                  <div
+                    [id]="'collapse-' + container.key + '-' + i"
+                    class="accordion-collapse collapse"
+                    [attr.aria-labelledby]="'heading-' + container.key + '-' + i"
+                    [attr.data-bs-parent]="'#accordion-' + container.key"
+                  >
+                    <div class="accordion-body">
+                      <div class="session-details">
+                        <div class="row">
+                          <div class="col-md-6">
+                            <h5>{{ 'playstation.lastSessions.sessionDetails' | translate }}</h5>
+                            <ul class="list-unstyled">
+                              <li><strong>ID:</strong> {{ session.id }}</li>
+                              <li>
+                                <strong>{{ 'playstation.lastSessions.startTime' | translate }}:</strong>
+                                {{ session.startTime | date: 'medium' }}
+                              </li>
+                              <li>
+                                <strong>{{ 'playstation.lastSessions.endTime' | translate }}:</strong>
+                                {{ session.endTime | date: 'medium' }}
+                              </li>
+                              <li>
+                                <strong>{{ 'playstation.lastSessions.type' | translate }}:</strong> {{ session.type?.name }}
+                              </li>
+                              <li>
+                                <strong>{{ 'playstation.lastSessions.deviceSessionsCount' | translate }}:</strong>
+                                {{ session.deviceSessions?.length }}
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="col-md-6" *ngIf="session.invoice">
+                            <h5>{{ 'playstation.lastSessions.invoiceDetails' | translate }}</h5>
+                            <ul class="list-unstyled">
+                              <li>
+                                <strong>{{ 'playstation.lastSessions.invoice.id' | translate }}:</strong> {{ session.invoice.id }}
+                              </li>
+                              <li>
+                                <strong>{{ 'playstation.lastSessions.invoice.totalPrice' | translate }}:</strong>
+                                {{ session.invoice.totalPrice | currencyK }}
+                              </li>
+                              <li>
+                                <strong>{{ 'playstation.lastSessions.invoice.discount' | translate }}:</strong>
+                                {{ session.invoice.discount | currencyK }}
+                              </li>
+                              <li>
+                                <strong>{{ 'playstation.lastSessions.invoice.netPrice' | translate }}:</strong>
+                                {{ session.invoice.netPrice | currencyK }}
+                              </li>
+                              <li>
+                                <strong>{{ 'playstation.lastSessions.invoice.created' | translate }}:</strong>
+                                {{ session.invoice.created_date | date: 'medium' }}
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                        <div class="action-buttons mt-3">
+                          <button class="btn btn-info" (click)="viewSession(session)">
+                            <i class="fa fa-eye"></i>
+                            {{ 'playstation.lastSessions.viewDetails' | translate }}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </div>
+
+<style>
+  .sessions-grid {
+    padding: 1rem;
+  }
+
+  .container-card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    height: 100%;
+  }
+
+  .container-header {
+    border-bottom: 1px solid #eee;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .container-header h4 {
+    margin: 0;
+    font-size: 1rem;
+    color: #333;
+  }
+
+  .sessions-list {
+    max-height: 600px;
+    overflow-y: auto;
+  }
+
+  .session-summary {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+  }
+
+  .session-time {
+    min-width: 80px;
+    color: #666;
+  }
+
+  .session-type {
+    flex: 1;
+    font-weight: 500;
+  }
+
+  .session-duration {
+    color: #666;
+    min-width: 100px;
+  }
+
+  .session-total {
+    font-weight: bold;
+    color: #28a745;
+    min-width: 80px;
+    text-align: right;
+  }
+
+  .accordion-button:not(.collapsed) {
+    background-color: #f8f9fa;
+    color: #333;
+  }
+
+  .session-details {
+    padding: 1rem 0;
+  }
+
+  .session-details ul li {
+    margin-bottom: 0.5rem;
+  }
+
+  .session-details strong {
+    color: #666;
+    margin-right: 0.5rem;
+  }
+
+  .action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+  }
+</style>

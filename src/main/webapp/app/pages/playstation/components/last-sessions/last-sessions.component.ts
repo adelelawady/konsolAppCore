@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { SheftResourceService } from 'app/core/konsolApi/api/sheftResource.service';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'jhi-last-sessions',
@@ -14,8 +15,8 @@ import { SheftResourceService } from 'app/core/konsolApi/api/sheftResource.servi
 export class LastSessionsComponent implements OnInit {
   sessions: PsSessionDTO[] = [];
   isLoading = false;
+  groupedSessions: Map<string, PsSessionDTO[]> = new Map();
   container: PlaystationContainer | null | undefined;
-
   constructor(
     private sheftResourceService: SheftResourceService,
     private router: Router,
@@ -25,22 +26,46 @@ export class LastSessionsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadLastSessions();
+    // First try to get container from resolver data
+    this.route.data.subscribe(data => {
+      if (data['container']) {
+        // eslint-disable-next-line no-console
+        this.container = data['container'];
+        // eslint-disable-next-line no-console
+        this.loadLastSessions();
+      }
+    });
   }
 
   loadLastSessions(): void {
     this.isLoading = true;
-
-    this.sheftResourceService.getActiveSheftSessions().subscribe({
-      next: (sessions: PsSessionDTO[]) => {
+    this.sheftResourceService.getActiveSheftSessions().subscribe(
+      (sessions: PsSessionDTO[]) => {
+        this.isLoading = false;
         this.sessions = sessions;
-        this.isLoading = false;
+        this.groupSessions();
       },
-      error: error => {
-        console.error('Error loading sessions:', error);
+      () => {
         this.isLoading = false;
-        this.toastr.error(this.translateService.instant('playstation.lastSessions.error.loading'));
-      },
+      }
+    );
+  }
+
+  private groupSessions(): void {
+    this.groupedSessions = this.sessions.reduce((groups, session) => {
+      const containerId = session.containerId || 'unassigned';
+      if (!groups.has(containerId)) {
+        groups.set(containerId, []);
+      }
+      groups.get(containerId)?.push(session);
+      return groups;
+    }, new Map<string, PsSessionDTO[]>());
+
+    // Sort sessions within each container by start time
+    this.groupedSessions.forEach(sessions => {
+      sessions.sort((a, b) => {
+        return new Date(b.startTime ?? 0).getTime() - new Date(a.startTime ?? 0).getTime();
+      });
     });
   }
 

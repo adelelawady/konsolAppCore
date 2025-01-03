@@ -20,4 +20,5 @@ export interface PsSessionDTO {
   deviceSessions?: Array<PsSessionDTO>;
   deviceSessionsNetPrice?: number;
   endTime?: string;
+  containerId?: string;
 }

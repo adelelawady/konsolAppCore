@@ -11,5 +11,36 @@
       "success": "<strong>الجلسة أبطلت!</strong>",
       "error": "<strong>حدث خطأ!</strong> تعذر ابطال الجلسة"
     }
+  },
+  "playstation": {
+    "lastSessions": {
+      "title": "الجلسات الأخيرة",
+      "refresh": "تحديث",
+      "loading": "جاري تحميل الجلسات...",
+      "noSessions": "لم يتم العثور على جلسات",
+      "table": {
+        "startTime": "وقت البدء",
+        "type": "النوع",
+        "device": "الجهاز",
+        "duration": "المدة",
+        "total": "المجموع",
+        "actions": "الإجراءات"
+      },
+      "container": "الحاوية",
+      "sessionDetails": "تفاصيل الجلسة",
+      "startTime": "وقت البدء",
+      "endTime": "وقت الانتهاء",
+      "type": "النوع",
+      "deviceSessionsCount": "جلسات الأجهزة",
+      "invoiceDetails": "تفاصيل الفاتورة",
+      "viewDetails": "عرض التفاصيل",
+      "invoice": {
+        "id": "رقم الفاتورة",
+        "totalPrice": "السعر الإجمالي",
+        "discount": "الخصم",
+        "netPrice": "السعر الصافي",
+        "created": "تاريخ الإنشاء"
+      }
+    }
   }
 }

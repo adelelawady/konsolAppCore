@@ -28,6 +28,6 @@ public class testCMD implements CommandLineRunner {
      */
     @Override
     public void run(String... args) throws Exception {
-        sheftService.startSheft();
+        //sheftService.startSheft();
     }
 }

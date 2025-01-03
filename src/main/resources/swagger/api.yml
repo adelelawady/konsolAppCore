@@ -5299,6 +5299,10 @@ components:
           x-stoplight:
             id: 7o0mztgx5nh0e
           format: date-time
+        containerId:
+          type: string
+          x-stoplight:
+            id: j1r7rjfus45i9
     PlaystationContainer:
       type: object
       description: A model representing a Playstation container.
