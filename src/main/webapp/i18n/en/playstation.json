@@ -204,6 +204,16 @@
           "orders": "Orders",
           "currency": "EGP",
           "previous": "Previous Sessions"
+        },
+        "type": {
+          "changeDevice": "Change Device Type",
+          "changeDeviceAndSession": "Change Device & Session Type",
+          "deviceAndSession": "device and session type",
+          "device": "device type",
+          "success": "Successfully updated {{type}}",
+          "error": "Failed to change device type",
+          "loading": "Loading types...",
+          "noTypes": "No device types available"
         }
       }
     },

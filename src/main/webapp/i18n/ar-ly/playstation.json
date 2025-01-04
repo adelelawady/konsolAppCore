@@ -212,6 +212,16 @@
           "orders": "الطلبات",
           "currency": "جنيه",
           "previous": "الجلسات السابقة"
+        },
+        "type": {
+          "changeDevice": "تغيير نوع الجهاز",
+          "changeDeviceAndSession": "تغيير نوع الجهاز والجلسة",
+          "deviceAndSession": "نوع الجهاز والجلسة",
+          "device": "نوع الجهاز",
+          "success": "تم تحديث {{type}} بنجاح",
+          "error": "فشل في تغيير نوع الجهاز",
+          "loading": "جاري تحميل الأنواع...",
+          "noTypes": "لا توجد أنواع متاحة"
         }
       }
     },

@@ -51,11 +51,12 @@
                     {{ item.price1 }} {{ 'playstation.orders.slider.item.currency' | translate }}
                   </span>
                 </div>
+
                 <div
                   class="stock"
                   [class.low-stock]="item.qty && item.qty < 5"
                   [class.out-of-stock]="item.qty === 0"
-                  *ngIf="item.qty !== undefined"
+                  *ngIf="item.qty !== undefined && item.qty !== 0"
                 >
                   {{ item.qty }} {{ 'playstation.orders.slider.item.stock' | translate }}
                 </div>

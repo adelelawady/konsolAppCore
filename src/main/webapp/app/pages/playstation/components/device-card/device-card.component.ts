@@ -276,7 +276,7 @@ export class DeviceCardComponent implements OnInit, OnDestroy {
     // Assuming there's an endpoint to get all device types
     this.playstationResourceService.getDevicesTypes().subscribe({
       next: types => {
-        this.availableTypes = types;
+        this.availableTypes = types.filter(type => type.price && Number(type.price) > 0);
         this.isLoadingTypes = false;
       },
       error: error => {
@@ -300,6 +300,8 @@ export class DeviceCardComponent implements OnInit, OnDestroy {
         // Update the device in the UI
         Object.assign(this.device, updatedDevice);
         this.playstationService.reloadDevices();
+        this.playstationService.selectDevice(this.device);
+        this.cdr.detectChanges();
         // Show success message
         this.toast.success('Device type ' + (updateSession ? 'and session ' : '') + 'updated successfully');
       },

@@ -28,8 +28,8 @@
         <ul class="dropdown-menu">
           <li class="dropdown-submenu" *ngIf="container?.canMoveDevice && device.active">
             <a class="dropdown-item dropdown-toggle">
-              Move Device
-              <i class="fas fa-chevron-right ms-2"></i>
+              {{ 'playstation.features.moveDevice' | translate }}
+              <i class="fas fa-arrow-right ms-2"></i>
             </a>
             <ul class="dropdown-menu">
               <li *ngIf="isLoadingDevices">
@@ -50,12 +50,17 @@
           </li>
           <li class="dropdown-submenu">
             <a class="dropdown-item dropdown-toggle">
-              {{ device.active ? 'Change Device & Session Type' : 'Change Device Type' }}
-              <i class="fas fa-chevron-right ms-2"></i>
+              {{
+                (device.active ? 'playstation.devices.card.type.changeDeviceAndSession' : 'playstation.devices.card.type.changeDevice')
+                  | translate
+              }}
+              <i class="fas fa-arrow-right ms-2"></i>
             </a>
             <ul class="dropdown-menu">
               <li *ngIf="isLoadingTypes">
-                <span class="dropdown-item"> <i class="fas fa-spinner fa-spin me-2"></i>Loading... </span>
+                <span class="dropdown-item">
+                  <i class="fas fa-spinner fa-spin me-2"></i>{{ 'playstation.devices.card.type.loading' | translate }}
+                </span>
               </li>
               <li *ngIf="loadTypesError">
                 <span class="dropdown-item text-danger"> <i class="fas fa-exclamation-circle me-2"></i>{{ loadTypesError }} </span>
@@ -66,7 +71,7 @@
                 </a>
               </li>
               <li *ngIf="!isLoadingTypes && !loadTypesError && availableTypes.length === 0">
-                <span class="dropdown-item disabled">No device types available</span>
+                <span class="dropdown-item disabled">{{ 'playstation.devices.card.type.noTypes' | translate }}</span>
               </li>
             </ul>
           </li>
