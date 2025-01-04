@@ -189,6 +189,102 @@ export class PlaystationResourceService {
   }
 
   /**
+   * Update device type
+   * Updates the device type and optionally updates the active session type
+   * @param id ID of the device to update
+   * @param typeId ID of the new device type
+   * @param updateSession Whether to update the type on active session as well
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public changeDeviceType(
+    id: string,
+    typeId: string,
+    updateSession?: boolean,
+    observe?: 'body',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
+  ): Observable<PsDeviceDTO>;
+  public changeDeviceType(
+    id: string,
+    typeId: string,
+    updateSession?: boolean,
+    observe?: 'response',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
+  ): Observable<HttpResponse<PsDeviceDTO>>;
+  public changeDeviceType(
+    id: string,
+    typeId: string,
+    updateSession?: boolean,
+    observe?: 'events',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
+  ): Observable<HttpEvent<PsDeviceDTO>>;
+  public changeDeviceType(
+    id: string,
+    typeId: string,
+    updateSession?: boolean,
+    observe: any = 'body',
+    reportProgress: boolean = false,
+    options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
+  ): Observable<any> {
+    if (id === null || id === undefined) {
+      throw new Error('Required parameter id was null or undefined when calling changeDeviceType.');
+    }
+    if (typeId === null || typeId === undefined) {
+      throw new Error('Required parameter typeId was null or undefined when calling changeDeviceType.');
+    }
+
+    let localVarQueryParameters = new HttpParams({ encoder: this.encoder });
+    if (updateSession !== undefined && updateSession !== null) {
+      localVarQueryParameters = this.addToHttpParams(localVarQueryParameters, <any>updateSession, 'updateSession');
+    }
+
+    let localVarHeaders = this.defaultHeaders;
+
+    let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+    if (localVarHttpHeaderAcceptSelected === undefined) {
+      // to determine the Accept header
+      const httpHeaderAccepts: string[] = ['application/json'];
+      localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    }
+    if (localVarHttpHeaderAcceptSelected !== undefined) {
+      localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+    }
+
+    let localVarHttpContext: HttpContext | undefined = options && options.context;
+    if (localVarHttpContext === undefined) {
+      localVarHttpContext = new HttpContext();
+    }
+
+    let responseType_: 'text' | 'json' | 'blob' = 'json';
+    if (localVarHttpHeaderAcceptSelected) {
+      if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+        responseType_ = 'text';
+      } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+        responseType_ = 'json';
+      } else {
+        responseType_ = 'blob';
+      }
+    }
+
+    return this.httpClient.post<PsDeviceDTO>(
+      `${this.configuration.basePath}/playstation/device/${encodeURIComponent(String(id))}/type/${encodeURIComponent(String(typeId))}`,
+      null,
+      {
+        context: localVarHttpContext,
+        params: localVarQueryParameters,
+        responseType: <any>responseType_,
+        withCredentials: this.configuration.withCredentials,
+        headers: localVarHeaders,
+        observe: observe,
+        reportProgress: reportProgress,
+      }
+    );
+  }
+
+  /**
    *
    *
    * @param psDeviceDTO

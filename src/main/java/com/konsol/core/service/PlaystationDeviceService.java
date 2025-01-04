@@ -111,4 +111,14 @@ public interface PlaystationDeviceService {
     PsDeviceDTO updateSessionInvoice(String deviceId, InvoiceUpdateDTO invoiceUpdateDTO);
 
     void printReceipt(PlayStationSession session, String printerName);
+
+    /**
+     * Update device type and optionally update active session type.
+     *
+     * @param deviceId The ID of the device to update
+     * @param typeId The ID of the new device type
+     * @param updateSession Whether to update the active session type as well
+     * @return Updated device DTO
+     */
+    PsDeviceDTO changeDeviceType(String deviceId, String typeId, boolean updateSession);
 }

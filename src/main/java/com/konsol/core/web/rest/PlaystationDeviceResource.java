@@ -506,4 +506,9 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
             });
         return ResponseEntity.ok().build();
     }
+
+    @Override
+    public ResponseEntity<PsDeviceDTO> changeDeviceType(String id, String typeId, Boolean updateSession) {
+        return ResponseEntity.ok(playstationDeviceService.changeDeviceType(id, typeId, updateSession));
+    }
 }

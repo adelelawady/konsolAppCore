@@ -8,6 +8,7 @@ import com.konsol.core.domain.Item;
 import com.konsol.core.domain.enumeration.InvoiceKind;
 import com.konsol.core.domain.playstation.PlayStationSession;
 import com.konsol.core.domain.playstation.PlaystationDevice;
+import com.konsol.core.domain.playstation.PlaystationDeviceType;
 import com.konsol.core.repository.*;
 import com.konsol.core.service.InvoiceService;
 import com.konsol.core.service.ItemService;
@@ -594,5 +595,60 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
 
         // Calculate total cost and round to whole number
         return hourlyRate.multiply(BigDecimal.valueOf(durationInHours)).setScale(0, RoundingMode.HALF_UP);
+    }
+
+    @Override
+    public PsDeviceDTO changeDeviceType(String deviceId, String typeId, boolean updateSession) {
+        LOG.debug("Request to update device type for device: {} to type: {}", deviceId, typeId);
+
+        // Find device
+        PlaystationDevice device = playstationDeviceRepository
+            .findById(deviceId)
+            .orElseThrow(() -> new RuntimeException("Device not found with id: " + deviceId));
+
+        // Find new device type
+        PlaystationDeviceType newType = playstationDeviceTypeRepository
+            .findById(typeId)
+            .orElseThrow(() -> new RuntimeException("Device type not found with id: " + typeId));
+
+        // Update device type
+        device.setType(newType);
+
+        // If updateSession is true and there's an active session, update its type
+        if (updateSession && device.getActive() && device.getSession() != null) {
+            PlayStationSession session = device.getSession();
+
+            if (device.getTimeManagement()) {
+                // If time management is enabled, create a new session entry for the old type
+                PlayStationSession lastSession = new PlayStationSession();
+                lastSession.setDevice(session.getDevice());
+                lastSession.setType(session.getType());
+                lastSession.setStartTime(session.getStartTime());
+                lastSession.setEndTime(Instant.now());
+                lastSession.setInvoice(null);
+                lastSession.setDeviceSessions(null);
+
+                // Add the price for the time used with old type
+                session.setDeviceSessionsNetPrice(session.getDeviceSessionsNetPrice().add(calculateSessionTimePrice(session)));
+
+                // Add the old session to device sessions history
+                if (session.getDeviceSessions() == null) {
+                    session.setDeviceSessions(new ArrayList<>());
+                }
+                session.getDeviceSessions().add(lastSession);
+            }
+
+            // Update session with new type and reset start time
+            session.setType(newType);
+            session.setStartTime(Instant.now());
+            session = playStationSessionRepository.save(session);
+            device.setSession(session);
+        }
+
+        // Save and return updated device
+        device = playstationDeviceRepository.save(device);
+        clearDeviceCaches(device);
+
+        return playstationDeviceMapper.toDto(device);
     }
 }

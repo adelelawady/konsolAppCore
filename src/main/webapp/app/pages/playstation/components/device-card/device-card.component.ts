@@ -1,7 +1,7 @@
 import { Component, Input, ChangeDetectorRef, OnInit, OnDestroy, ElementRef, Output, EventEmitter } from '@angular/core';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { PlaystationService } from '../../services/playstation.service';
-import { PlaystationContainer, PsDeviceDTO } from 'app/core/konsolApi';
+import { PlaystationContainer, PsDeviceDTO, PsDeviceType } from 'app/core/konsolApi';
 import { interval, Subscription } from 'rxjs';
 import { startWith, distinctUntilChanged } from 'rxjs/operators';
 import { PlaystationResourceService } from 'app/core/konsolApi/api/playstationResource.service';
@@ -9,6 +9,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmationModalComponent } from 'app/shared/components/confirmation-modal/confirmation-modal.component';
 import { ActivatedRoute } from '@angular/router';
 import { finalize } from 'rxjs/operators';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'jhi-device-card',
@@ -34,13 +35,18 @@ export class DeviceCardComponent implements OnInit, OnDestroy {
   public isLoadingDevices = false;
   public loadError: string | null = null;
 
+  availableTypes: PsDeviceType[] = [];
+  isLoadingTypes = false;
+  loadTypesError = '';
+
   constructor(
     private playstationService: PlaystationService,
     private cdr: ChangeDetectorRef,
     private elementRef: ElementRef,
     private playstationResourceService: PlaystationResourceService,
     private modalService: NgbModal,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private toast: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -85,6 +91,9 @@ export class DeviceCardComponent implements OnInit, OnDestroy {
     );
 
     // this.loadAvailableDevices();
+
+    // Load device types when component initializes
+    this.loadDeviceTypes();
   }
 
   ngOnDestroy(): void {
@@ -258,5 +267,47 @@ export class DeviceCardComponent implements OnInit, OnDestroy {
 
   hasPreviousSessions(): boolean {
     return this.getPreviousSessionsCount() > 0;
+  }
+
+  loadDeviceTypes(): void {
+    this.isLoadingTypes = true;
+    this.loadTypesError = '';
+
+    // Assuming there's an endpoint to get all device types
+    this.playstationResourceService.getDevicesTypes().subscribe({
+      next: types => {
+        this.availableTypes = types;
+        this.isLoadingTypes = false;
+      },
+      error: error => {
+        console.error('Error loading device types:', error);
+        this.loadTypesError = 'Failed to load device types';
+        this.isLoadingTypes = false;
+      },
+    });
+  }
+
+  changeDeviceType(typeId: string): void {
+    if (!this.device.id || !typeId) {
+      return;
+    }
+
+    // If device is active, we'll update both device and session type
+    const updateSession = this.device.active === true;
+
+    this.playstationResourceService.changeDeviceType(this.device.id, typeId, updateSession).subscribe({
+      next: updatedDevice => {
+        // Update the device in the UI
+        Object.assign(this.device, updatedDevice);
+        this.playstationService.reloadDevices();
+        // Show success message
+        this.toast.success('Device type ' + (updateSession ? 'and session ' : '') + 'updated successfully');
+      },
+      error: error => {
+        console.error('Error changing device type:', error);
+        // Show error message
+        this.toast.error('Failed to change device type');
+      },
+    });
   }
 }

@@ -2745,9 +2745,8 @@ paths:
             application/json:
               schema:
                 type: boolean
-                description: Returns true if backup was successful, false otherwise
+                description: 'Returns true if backup was successful, false otherwise'
       description: Initiates a manual backup of the system using current backup settings
-
   /sys/settings/restore:
     post:
       summary: Restore system from backup
@@ -2774,12 +2773,47 @@ paths:
             application/json:
               schema:
                 type: boolean
-                description: Returns true if restore was successful, false otherwise
+                description: 'Returns true if restore was successful, false otherwise'
         '400':
           description: Bad Request - Invalid backup path or backup not found
         '500':
           description: Internal Server Error - Restore operation failed
       description: Restores the system from a specified backup directory
+  '/playstation/device/{id}/type/{typeId}':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+        description: ID of the device to update
+      - schema:
+          type: string
+        name: typeId
+        in: path
+        required: true
+        description: ID of the new device type
+    post:
+      summary: Update device type
+      operationId: changeDeviceType
+      parameters:
+        - name: updateSession
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+          description: Whether to update the type on active session as well
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PsDeviceDTO'
+      tags:
+        - playstation-resource
+      description: Updates the device type and optionally updates the active session type
 components:
   schemas:
     ChartDataDTO:
