@@ -115,6 +115,12 @@ const routes: Routes = [
     canActivate: [UserRouteAccessService],
     data: { breadcrumb: 'Money Transactions' },
   },
+
+  {
+    path: 'banks',
+    data: { breadcrumb: 'Banks' },
+    loadChildren: () => import('./banks/banks.module').then(m => m.BanksModule),
+  },
   {
     path: 'playstation/session-history',
     component: SessionHistoryControlComponent,

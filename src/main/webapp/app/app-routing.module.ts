@@ -17,7 +17,7 @@ import { PagesModule } from './pages/pages.module';
           path: 'admin',
           data: {
             authorities: [Authority.ADMIN],
-            breadcrumb: 'Administration'
+            breadcrumb: 'Administration',
           },
           canActivate: [UserRouteAccessService],
           loadChildren: () => import('./admin/admin-routing.module').then(m => m.AdminRoutingModule),
@@ -35,11 +35,6 @@ import { PagesModule } from './pages/pages.module';
         {
           path: '',
           loadChildren: () => import('./pages/pages.module').then(m => m.PagesModule),
-        },
-        {
-          path: 'banks',
-          data: { breadcrumb: 'Banks' },
-          loadChildren: () => import('./pages/banks/banks.module').then(m => m.BanksModule),
         },
         navbarRoute,
         ...errorRoute,

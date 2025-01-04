@@ -13,7 +13,7 @@ export const adminRoutes: Routes = [
     data: {
       hasPlaystationLayout: true,
       authorities: ['ROLE_ADMIN'],
-      pageTitle: 'PlayStation Containers',
+      pageTitle: 'konsolCoreApp.playstationContainer.home.title',
     },
   },
   {
@@ -23,7 +23,7 @@ export const adminRoutes: Routes = [
     data: {
       hasPlaystationLayout: true,
       authorities: ['ROLE_ADMIN'],
-      pageTitle: 'PlayStation Containers',
+      pageTitle: 'financialReports.playstation.title',
     },
   },
   {
@@ -33,13 +33,13 @@ export const adminRoutes: Routes = [
     data: {
       hasPlaystationLayout: true,
       authorities: ['ROLE_ADMIN'],
-      pageTitle: 'Shefts',
+      pageTitle: 'konsolCoreApp.sheft.list.title',
     },
   },
   {
     path: 'shefts/:id',
     component: ViewSheftComponent,
-    title: 'View Sheft',
+    title: 'konsolCoreApp.sheft.view.title',
     data: {
       hasPlaystationLayout: true,
     },
@@ -51,7 +51,7 @@ export const adminRoutes: Routes = [
     data: {
       hasPlaystationLayout: true,
       authorities: ['ROLE_ADMIN'],
-      pageTitle: 'Shift Management',
+      pageTitle: 'konsolCoreApp.sheft.management.title',
     },
   },
 ];
