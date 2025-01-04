@@ -2232,6 +2232,21 @@ paths:
                 $ref: '#/components/schemas/PsSessionDTO'
       tags:
         - playstation-resource
+  '/playstation/session/{id}/print':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    post:
+      summary: ''
+      operationId: printSession
+      responses:
+        '200':
+          description: OK
+      tags:
+        - playstation-resource
   '/playstation/device/{id}/session/start':
     parameters:
       - schema:

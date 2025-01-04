@@ -109,6 +109,12 @@ public class PlayStationSessionServiceImpl implements PlayStationSessionService 
     }
 
     @Override
+    public Optional<PlayStationSession> findOneDomain(String id) {
+        LOG.debug("Request to get PlayStationSession : {}", id);
+        return playStationSessionRepository.findById(id);
+    }
+
+    @Override
     public void delete(String id) {
         LOG.debug("Request to delete PlayStationSession : {}", id);
         playStationSessionRepository.deleteById(id);

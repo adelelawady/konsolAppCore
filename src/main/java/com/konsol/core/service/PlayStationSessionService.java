@@ -65,6 +65,14 @@ public interface PlayStationSessionService {
     Optional<PsSessionDTO> findOne(String id);
 
     /**
+     * Get the "id" playStationSession.
+     *
+     * @param id the id of the entity.
+     * @return the entity.
+     */
+    Optional<PlayStationSession> findOneDomain(String id);
+
+    /**
      * Delete the "id" playStationSession.
      *
      * @param id the id of the entity.

@@ -366,6 +366,7 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
         return playstationDeviceMapper.toDto(device);
     }
 
+    @Override
     public void printReceipt(PlayStationSession session, String printerName) {
         try {
             boolean isPdfPrinter = printerName.toLowerCase().contains("pdf");

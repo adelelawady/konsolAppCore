@@ -496,4 +496,14 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
     public ResponseEntity<PsDeviceDTO> updateSessionInvoice(String deviceId, InvoiceUpdateDTO invoiceUpdateDTO) {
         return ResponseEntity.ok(playstationDeviceService.updateSessionInvoice(deviceId, invoiceUpdateDTO));
     }
+
+    @Override
+    public ResponseEntity<Void> printSession(String id) {
+        playStationSessionService
+            .findOneDomain(id)
+            .ifPresent(playStationSession -> {
+                playstationDeviceService.printReceipt(playStationSession, "Microsoft Print to PDF");
+            });
+        return ResponseEntity.ok().build();
+    }
 }

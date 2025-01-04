@@ -34,6 +34,7 @@
       "deviceSessionsCount": "Device Sessions",
       "invoiceDetails": "Invoice Details",
       "viewDetails": "View Details",
+      "printReceipt": "Print Receipt",
       "invoice": {
         "id": "Invoice ID",
         "totalPrice": "Total Price",
@@ -44,7 +45,9 @@
       },
       "error": {
         "loading": "Error loading sessions and containers"
-      }
+      },
+      "printSuccess": "Receipt printed successfully",
+      "printError": "Error printing receipt"
     }
   }
 }

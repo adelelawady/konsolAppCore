@@ -8,6 +8,7 @@ import { SheftResourceService } from 'app/core/konsolApi/api/sheftResource.servi
 import { PlaystationContainerResourceService } from 'app/core/konsolApi/api/playstationContainerResource.service';
 import { HttpResponse } from '@angular/common/http';
 import { forkJoin } from 'rxjs';
+import { PlaystationResourceService } from 'app/core/konsolApi/api/playstationResource.service';
 
 export interface GroupedSession {
   container: PlaystationContainer | null;
@@ -29,6 +30,7 @@ export class LastSessionsComponent implements OnInit {
   constructor(
     private sheftResourceService: SheftResourceService,
     private containerService: PlaystationContainerResourceService,
+    private playstationResourceService: PlaystationResourceService,
     private router: Router,
     private route: ActivatedRoute,
     private translateService: TranslateService,
@@ -90,7 +92,7 @@ export class LastSessionsComponent implements OnInit {
 
   viewSession(session: PsSessionDTO): void {
     if (session.id) {
-      this.router.navigate([session.id, 'view'], { relativeTo: this.route });
+      this.printSession(session);
     }
   }
 
@@ -108,5 +110,20 @@ export class LastSessionsComponent implements OnInit {
     const hours = Math.floor(durationMs / (1000 * 60 * 60));
     const minutes = Math.floor((durationMs % (1000 * 60 * 60)) / (1000 * 60));
     return `${hours}h ${minutes}m`;
+  }
+
+  printSession(session: PsSessionDTO): void {
+    if (session.id) {
+      this.playstationResourceService.printSession(session.id).subscribe({
+        next: () => {
+          // Success handling - you might want to show a success message
+          this.toastr.success(this.translateService.instant('playstation.lastSessions.printSuccess'));
+        },
+        error: error => {
+          console.error('Error printing session:', error);
+          this.toastr.error(this.translateService.instant('playstation.lastSessions.printError'));
+        },
+      });
+    }
   }
 }

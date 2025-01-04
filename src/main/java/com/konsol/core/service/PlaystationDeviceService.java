@@ -1,6 +1,7 @@
 package com.konsol.core.service;
 
 import com.konsol.core.domain.User;
+import com.konsol.core.domain.playstation.PlayStationSession;
 import com.konsol.core.domain.playstation.PlaystationDevice;
 import com.konsol.core.repository.UserRepository;
 import com.konsol.core.service.api.dto.*;
@@ -108,4 +109,6 @@ public interface PlaystationDeviceService {
     void clearAllDevicesCaches();
 
     PsDeviceDTO updateSessionInvoice(String deviceId, InvoiceUpdateDTO invoiceUpdateDTO);
+
+    void printReceipt(PlayStationSession session, String printerName);
 }
