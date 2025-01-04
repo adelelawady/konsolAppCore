@@ -16,6 +16,10 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
@@ -25,6 +29,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -74,5 +79,89 @@ public class GlobalSettingsResource implements SysApiDelegate {
             .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, serverSettings.getId().toString()))
             .body(result);
+    }
+
+    @Override
+    public ResponseEntity<Boolean> performBackup() {
+        log.debug("REST request to perform system backup");
+        try {
+            // Execute backup and wait for completion with timeout
+            Boolean success = settingService.performBackup().get(30, TimeUnit.MINUTES); // 30 minute timeout
+
+            if (success) {
+                return ResponseEntity
+                    .ok()
+                    .headers(HeaderUtil.createAlert(applicationName, "Backup completed successfully", settingService.getLatestBackupPath()))
+                    .body(true);
+            } else {
+                return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .headers(HeaderUtil.createFailureAlert(applicationName, true, "backup", "backupFailed", "Backup operation failed"))
+                    .body(false);
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            log.error("Backup operation was interrupted", e);
+            return handleBackupError("Backup operation was interrupted");
+        } catch (ExecutionException e) {
+            log.error("Error during backup execution", e.getCause());
+            return handleBackupError("Error during backup: " + e.getCause().getMessage());
+        } catch (TimeoutException e) {
+            log.error("Backup operation timed out", e);
+            return handleBackupError("Backup operation timed out after 30 minutes");
+        }
+    }
+
+    @Override
+    public ResponseEntity<Boolean> performRestore(PerformRestoreRequest performRestoreRequest) {
+        log.debug("REST request to restore system from backup: {}", performRestoreRequest.getBackupPath());
+
+        if (performRestoreRequest.getBackupPath() == null || performRestoreRequest.getBackupPath().trim().isEmpty()) {
+            return ResponseEntity
+                .badRequest()
+                .headers(HeaderUtil.createFailureAlert(applicationName, true, "restore", "invalidPath", "Backup path cannot be empty"))
+                .body(false);
+        }
+
+        try {
+            // Execute restore and wait for completion with timeout
+            Boolean success = settingService.performRestore(performRestoreRequest.getBackupPath()).get(30, TimeUnit.MINUTES); // 30 minute timeout
+
+            if (success) {
+                return ResponseEntity
+                    .ok()
+                    .headers(HeaderUtil.createAlert(applicationName, "System restored successfully", performRestoreRequest.getBackupPath()))
+                    .body(true);
+            } else {
+                return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .headers(HeaderUtil.createFailureAlert(applicationName, true, "restore", "restoreFailed", "Restore operation failed"))
+                    .body(false);
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            log.error("Restore operation was interrupted", e);
+            return handleRestoreError("Restore operation was interrupted");
+        } catch (ExecutionException e) {
+            log.error("Error during restore execution", e.getCause());
+            return handleRestoreError("Error during restore: " + e.getCause().getMessage());
+        } catch (TimeoutException e) {
+            log.error("Restore operation timed out", e);
+            return handleRestoreError("Restore operation timed out after 30 minutes");
+        }
+    }
+
+    private ResponseEntity<Boolean> handleBackupError(String errorMessage) {
+        return ResponseEntity
+            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .headers(HeaderUtil.createFailureAlert(applicationName, true, "backup", "backupError", errorMessage))
+            .body(false);
+    }
+
+    private ResponseEntity<Boolean> handleRestoreError(String errorMessage) {
+        return ResponseEntity
+            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .headers(HeaderUtil.createFailureAlert(applicationName, true, "restore", "restoreError", errorMessage))
+            .body(false);
     }
 }

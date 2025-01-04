@@ -137,6 +137,141 @@
           </div>
         </div>
 
+        <!-- Backup Settings -->
+        <div class="card mb-4">
+          <div class="card-header">
+            <h3 class="card-title mb-0">
+              <i class="fas fa-database me-2"></i>
+              {{ 'systemSettings.sections.backup' | translate }}
+            </h3>
+          </div>
+          <div class="card-body">
+            <!-- Enable Backup -->
+            <div class="mb-3">
+              <label class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" formControlName="BACKUP_ENABLED" />
+                <span class="form-check-label">{{ 'systemSettings.backup.enable' | translate }}</span>
+              </label>
+            </div>
+
+            <!-- Backup Configuration -->
+            <div class="row" *ngIf="settingsForm.get('BACKUP_ENABLED')?.value">
+              <!-- Schedule Type -->
+              <div class="col-md-6 mb-3">
+                <label class="form-label">{{ 'systemSettings.backup.scheduleType' | translate }}</label>
+                <select class="form-select" formControlName="BACKUP_SCHEDULE_TYPE">
+                  <option value="DAILY">{{ 'systemSettings.backup.scheduleTypes.daily' | translate }}</option>
+                  <option value="WEEKLY">{{ 'systemSettings.backup.scheduleTypes.weekly' | translate }}</option>
+                  <option value="MONTHLY">{{ 'systemSettings.backup.scheduleTypes.monthly' | translate }}</option>
+                  <option value="MANUAL">{{ 'systemSettings.backup.scheduleTypes.manual' | translate }}</option>
+                </select>
+              </div>
+
+              <!-- Backup Time -->
+              <div class="col-md-6 mb-3">
+                <label class="form-label">{{ 'systemSettings.backup.time' | translate }}</label>
+                <input type="time" class="form-control" formControlName="BACKUP_TIME" />
+              </div>
+
+              <!-- Weekly Backup Days -->
+              <div class="col-md-12 mb-3" *ngIf="settingsForm.get('BACKUP_SCHEDULE_TYPE')?.value === 'WEEKLY'">
+                <label class="form-label">{{ 'systemSettings.backup.days' | translate }}</label>
+                <div class="d-flex gap-3 flex-wrap">
+                  <label class="form-check" *ngFor="let day of weekDays">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      [value]="day.value"
+                      (change)="onBackupDayChange($event, day.value)"
+                      [checked]="isBackupDaySelected(day.value)"
+                    />
+                    <span class="form-check-label">{{ day.label | translate }}</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Retention Period -->
+              <div class="col-md-6 mb-3">
+                <label class="form-label">{{ 'systemSettings.backup.retentionDays' | translate }}</label>
+                <input type="number" class="form-control" formControlName="BACKUP_RETENTION_DAYS" min="1" />
+              </div>
+
+              <!-- Backup Location -->
+              <div class="col-md-12 mb-3">
+                <label class="form-label">{{ 'systemSettings.backup.location' | translate }}</label>
+                <input type="text" class="form-control" formControlName="BACKUP_LOCATION" />
+              </div>
+
+              <!-- MongoDB Paths -->
+              <div class="col-md-6 mb-3">
+                <label class="form-label">{{ 'systemSettings.backup.mongodbDumpPath' | translate }}</label>
+                <input type="text" class="form-control" formControlName="MONGODB_DUMP_PATH" />
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label class="form-label">{{ 'systemSettings.backup.mongodbRestorePath' | translate }}</label>
+                <input type="text" class="form-control" formControlName="MONGODB_RESTORE_PATH" />
+              </div>
+
+              <!-- Additional Options -->
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" formControlName="BACKUP_INCLUDE_FILES" />
+                    <span class="form-check-label">{{ 'systemSettings.backup.includeFiles' | translate }}</span>
+                  </label>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" formControlName="BACKUP_COMPRESS" />
+                    <span class="form-check-label">{{ 'systemSettings.backup.compress' | translate }}</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Backup Actions -->
+              <div class="col-12 mt-3">
+                <div class="d-flex gap-2">
+                  <button type="button" class="btn btn-primary" (click)="performBackup()" [disabled]="backupInProgress">
+                    <i class="fas fa-database me-2"></i>
+                    {{ 'systemSettings.backup.performBackup' | translate }}
+                  </button>
+                  <button type="button" class="btn btn-secondary" (click)="openRestoreDialog()" [disabled]="restoreInProgress">
+                    <i class="fas fa-undo me-2"></i>
+                    {{ 'systemSettings.backup.performRestore' | translate }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Restore Dialog -->
+        <ng-template #restoreDialog>
+          <div class="modal-header">
+            <h4 class="modal-title">{{ 'systemSettings.backup.restoreTitle' | translate }}</h4>
+            <button type="button" class="btn-close" (click)="closeRestoreDialog()"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label">{{ 'systemSettings.backup.selectBackupPath' | translate }}</label>
+              <input type="text" class="form-control" [(ngModel)]="restorePath" [ngModelOptions]="{ standalone: true }" />
+            </div>
+            <div class="alert alert-warning">
+              {{ 'systemSettings.backup.restoreWarning' | translate }}
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeRestoreDialog()">
+              {{ 'common.cancel' | translate }}
+            </button>
+            <button type="button" class="btn btn-danger" (click)="performRestore()" [disabled]="!restorePath">
+              {{ 'systemSettings.backup.confirmRestore' | translate }}
+            </button>
+          </div>
+        </ng-template>
+
         <div class="d-flex justify-content-end mt-4">
           <button type="submit" class="btn btn-primary" [disabled]="loading || !settingsForm.valid">
             <i class="ti ti-device-floppy me-2"></i>

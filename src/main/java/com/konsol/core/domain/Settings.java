@@ -1,6 +1,8 @@
 package com.konsol.core.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.validation.constraints.NotNull;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -55,6 +57,39 @@ public class Settings implements Serializable {
 
     @Field("SAVE_INVOICE_DELETETED_INVOICEITEMS")
     private boolean SAVE_INVOICE_DELETETED_INVOICEITEMS = true; // BE
+
+    /**
+     * Backup Settings
+     */
+    @Field("BACKUP_ENABLED")
+    private boolean BACKUP_ENABLED = true;
+
+    @Field("BACKUP_SCHEDULE_TYPE")
+    private String BACKUP_SCHEDULE_TYPE = "DAILY";
+
+    @Field("BACKUP_TIME")
+    private String BACKUP_TIME = "23:00";
+
+    @Field("BACKUP_DAYS")
+    private List<String> BACKUP_DAYS = new ArrayList<>();
+
+    @Field("BACKUP_RETENTION_DAYS")
+    private int BACKUP_RETENTION_DAYS = 30;
+
+    @Field("BACKUP_LOCATION")
+    private String BACKUP_LOCATION = "C:/KonsolBackups";
+
+    @Field("BACKUP_INCLUDE_FILES")
+    private boolean BACKUP_INCLUDE_FILES = true;
+
+    @Field("BACKUP_COMPRESS")
+    private boolean BACKUP_COMPRESS = true;
+
+    @Field("MONGODB_DUMP_PATH")
+    private String MONGODB_DUMP_PATH = "C:/Program Files/MongoDB/Tools/100/bin/mongodump.exe";
+
+    @Field("MONGODB_RESTORE_PATH")
+    private String MONGODB_RESTORE_PATH = "C:/Program Files/MongoDB/Tools/100/bin/mongorestore.exe";
 
     public String getId() {
         return id;
@@ -137,5 +172,85 @@ public class Settings implements Serializable {
 
     public void setSAVE_INVOICE_DELETETED_INVOICEITEMS(boolean SAVE_INVOICE_DELETETED_INVOICEITEMS) {
         this.SAVE_INVOICE_DELETETED_INVOICEITEMS = SAVE_INVOICE_DELETETED_INVOICEITEMS;
+    }
+
+    public boolean isBACKUP_ENABLED() {
+        return BACKUP_ENABLED;
+    }
+
+    public void setBACKUP_ENABLED(boolean BACKUP_ENABLED) {
+        this.BACKUP_ENABLED = BACKUP_ENABLED;
+    }
+
+    public String getBACKUP_SCHEDULE_TYPE() {
+        return BACKUP_SCHEDULE_TYPE;
+    }
+
+    public void setBACKUP_SCHEDULE_TYPE(String BACKUP_SCHEDULE_TYPE) {
+        this.BACKUP_SCHEDULE_TYPE = BACKUP_SCHEDULE_TYPE;
+    }
+
+    public String getBACKUP_TIME() {
+        return BACKUP_TIME;
+    }
+
+    public void setBACKUP_TIME(String BACKUP_TIME) {
+        this.BACKUP_TIME = BACKUP_TIME;
+    }
+
+    public List<String> getBACKUP_DAYS() {
+        return BACKUP_DAYS;
+    }
+
+    public void setBACKUP_DAYS(List<String> BACKUP_DAYS) {
+        this.BACKUP_DAYS = BACKUP_DAYS;
+    }
+
+    public int getBACKUP_RETENTION_DAYS() {
+        return BACKUP_RETENTION_DAYS;
+    }
+
+    public void setBACKUP_RETENTION_DAYS(int BACKUP_RETENTION_DAYS) {
+        this.BACKUP_RETENTION_DAYS = BACKUP_RETENTION_DAYS;
+    }
+
+    public String getBACKUP_LOCATION() {
+        return BACKUP_LOCATION;
+    }
+
+    public void setBACKUP_LOCATION(String BACKUP_LOCATION) {
+        this.BACKUP_LOCATION = BACKUP_LOCATION;
+    }
+
+    public boolean isBACKUP_INCLUDE_FILES() {
+        return BACKUP_INCLUDE_FILES;
+    }
+
+    public void setBACKUP_INCLUDE_FILES(boolean BACKUP_INCLUDE_FILES) {
+        this.BACKUP_INCLUDE_FILES = BACKUP_INCLUDE_FILES;
+    }
+
+    public boolean isBACKUP_COMPRESS() {
+        return BACKUP_COMPRESS;
+    }
+
+    public void setBACKUP_COMPRESS(boolean BACKUP_COMPRESS) {
+        this.BACKUP_COMPRESS = BACKUP_COMPRESS;
+    }
+
+    public String getMONGODB_DUMP_PATH() {
+        return MONGODB_DUMP_PATH;
+    }
+
+    public void setMONGODB_DUMP_PATH(String MONGODB_DUMP_PATH) {
+        this.MONGODB_DUMP_PATH = MONGODB_DUMP_PATH;
+    }
+
+    public String getMONGODB_RESTORE_PATH() {
+        return MONGODB_RESTORE_PATH;
+    }
+
+    public void setMONGODB_RESTORE_PATH(String MONGODB_RESTORE_PATH) {
+        this.MONGODB_RESTORE_PATH = MONGODB_RESTORE_PATH;
     }
 }

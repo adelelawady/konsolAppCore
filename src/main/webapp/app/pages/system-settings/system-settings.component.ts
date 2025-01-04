@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { GLOBALService } from 'app/core/konsolApi/api/gLOBAL.service';
 import { ServerSettings } from 'app/core/konsolApi/model/serverSettings';
 import { ToastrService } from 'ngx-toastr';
@@ -7,6 +7,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { StoreDTO } from 'app/core/konsolApi/model/storeDTO';
 import { StoreResourceService } from 'app/core/konsolApi/api/storeResource.service';
 import { BankDTO, BankResourceService } from 'app/core/konsolApi';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { PerformRestoreRequest } from 'app/core/konsolApi/model/performRestoreRequest';
 
 @Component({
   selector: 'jhi-system-settings',
@@ -14,13 +16,28 @@ import { BankDTO, BankResourceService } from 'app/core/konsolApi';
   styleUrls: ['./system-settings.component.scss'],
 })
 export class SystemSettingsComponent implements OnInit {
-  settingsForm: FormGroup;
+  @ViewChild('restoreDialog') restoreDialog!: TemplateRef<any>;
+
+  settingsForm!: FormGroup;
   loading = false;
   settings: ServerSettings = {};
   mainStore: StoreDTO | null = null;
   playstationStore: StoreDTO | null = null;
   mainBank: BankDTO | null = null;
   playstationBank: BankDTO | null = null;
+  backupInProgress = false;
+  restoreInProgress = false;
+  restorePath = '';
+
+  weekDays = [
+    { value: 'MONDAY', label: 'systemSettings.backup.days.monday' },
+    { value: 'TUESDAY', label: 'systemSettings.backup.days.tuesday' },
+    { value: 'WEDNESDAY', label: 'systemSettings.backup.days.wednesday' },
+    { value: 'THURSDAY', label: 'systemSettings.backup.days.thursday' },
+    { value: 'FRIDAY', label: 'systemSettings.backup.days.friday' },
+    { value: 'SATURDAY', label: 'systemSettings.backup.days.saturday' },
+    { value: 'SUNDAY', label: 'systemSettings.backup.days.sunday' },
+  ];
 
   constructor(
     private globalService: GLOBALService,
@@ -28,8 +45,13 @@ export class SystemSettingsComponent implements OnInit {
     private toastr: ToastrService,
     private translateService: TranslateService,
     private storeService: StoreResourceService,
-    private bankService: BankResourceService
+    private bankService: BankResourceService,
+    private modalService: NgbModal
   ) {
+    this.initForm();
+  }
+
+  private initForm(): void {
     this.settingsForm = this.fb.group({
       MAIN_SELECTED_STORE_ID: [''],
       MAIN_SELECTED_BANK_ID: [''],
@@ -40,6 +62,16 @@ export class SystemSettingsComponent implements OnInit {
       PURCHASE_UPDATE_ITEM_QTY_AFTER_SAVE: [false],
       ALLOW_NEGATIVE_INVENTORY: [false],
       SAVE_INVOICE_DELETETED_INVOICEITEMS: [false],
+      BACKUP_ENABLED: [false],
+      BACKUP_SCHEDULE_TYPE: ['DAILY'],
+      BACKUP_TIME: ['23:00'],
+      BACKUP_DAYS: [[]],
+      BACKUP_RETENTION_DAYS: [30, [Validators.required, Validators.min(1)]],
+      BACKUP_LOCATION: ['C:/KonsolBackups', Validators.required],
+      BACKUP_INCLUDE_FILES: [true],
+      BACKUP_COMPRESS: [true],
+      MONGODB_DUMP_PATH: ['C:/Program Files/MongoDB/Tools/100/bin/mongodump.exe', Validators.required],
+      MONGODB_RESTORE_PATH: ['C:/Program Files/MongoDB/Tools/100/bin/mongorestore.exe', Validators.required],
     });
   }
 
@@ -143,5 +175,85 @@ export class SystemSettingsComponent implements OnInit {
     this.settingsForm.patchValue({
       PLAYSTATION_SELECTED_STORE_ID: store.id,
     });
+  }
+
+  isBackupDaySelected(day: string): boolean {
+    const backupDays = this.settingsForm.get('BACKUP_DAYS')?.value || [];
+    return backupDays.includes(day);
+  }
+
+  onBackupDayChange(event: any, day: string): void {
+    const backupDays = this.settingsForm.get('BACKUP_DAYS')?.value || [];
+    if (event.target.checked) {
+      backupDays.push(day);
+    } else {
+      const index = backupDays.indexOf(day);
+      if (index > -1) {
+        backupDays.splice(index, 1);
+      }
+    }
+    this.settingsForm.patchValue({ BACKUP_DAYS: backupDays });
+  }
+
+  performBackup(): void {
+    this.backupInProgress = true;
+    this.globalService.performBackup().subscribe({
+      next: (success: boolean) => {
+        if (success) {
+          this.toastr.success(this.translateService.instant('systemSettings.backup.backupSuccess'));
+        } else {
+          this.toastr.error(this.translateService.instant('systemSettings.backup.backupError'));
+        }
+      },
+      error: (error: Error) => {
+        this.toastr.error(this.translateService.instant('systemSettings.backup.backupError'));
+        console.error('Backup failed:', error);
+      },
+      complete: () => {
+        this.backupInProgress = false;
+      },
+    });
+  }
+
+  openRestoreDialog(): void {
+    this.restorePath = '';
+    this.modalService.open(this.restoreDialog, { backdrop: 'static' });
+  }
+
+  closeRestoreDialog(): void {
+    this.modalService.dismissAll();
+  }
+
+  performRestore(): void {
+    this.restoreInProgress = true;
+    const request: PerformRestoreRequest = {
+      backupPath: this.restorePath,
+    };
+
+    this.globalService.performRestore(request).subscribe({
+      next: (success: boolean) => {
+        if (success) {
+          this.toastr.success(this.translateService.instant('systemSettings.backup.restoreSuccess'));
+          this.closeRestoreDialog();
+        } else {
+          this.toastr.error(this.translateService.instant('systemSettings.backup.restoreError'));
+        }
+      },
+      error: (error: Error) => {
+        this.toastr.error(this.translateService.instant('systemSettings.backup.restoreError'));
+        console.error('Restore failed:', error);
+      },
+      complete: () => {
+        this.restoreInProgress = false;
+      },
+    });
+  }
+
+  private showSuccessMessage(key: string): void {
+    this.toastr.success(this.translateService.instant(key));
+  }
+
+  private showErrorMessage(key: string): void {
+    this.toastr.error(this.translateService.instant(key));
   }
 }

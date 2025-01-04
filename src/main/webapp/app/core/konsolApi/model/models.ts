@@ -62,6 +62,7 @@ export * from './moniesSearchModel';
 export * from './moniesViewDTOContainer';
 export * from './paginationSearchModel';
 export * from './passwordChangeDTO';
+export * from './performRestoreRequest';
 export * from './performanceIndicatorsDTO';
 export * from './performanceMetricsDTO';
 export * from './pkDTO';

@@ -2731,6 +2731,55 @@ paths:
                   $ref: '#/components/schemas/PsSessionDTO'
       tags:
         - sheft-resource
+  /sys/settings/backup:
+    post:
+      summary: Perform manual backup
+      operationId: performBackup
+      tags:
+        - GLOBAL
+        - server_settings
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: boolean
+                description: Returns true if backup was successful, false otherwise
+      description: Initiates a manual backup of the system using current backup settings
+
+  /sys/settings/restore:
+    post:
+      summary: Restore system from backup
+      operationId: performRestore
+      tags:
+        - GLOBAL
+        - server_settings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                backupPath:
+                  type: string
+                  description: Full path to the backup directory to restore from
+              required:
+                - backupPath
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: boolean
+                description: Returns true if restore was successful, false otherwise
+        '400':
+          description: Bad Request - Invalid backup path or backup not found
+        '500':
+          description: Internal Server Error - Restore operation failed
+      description: Restores the system from a specified backup directory
 components:
   schemas:
     ChartDataDTO:
@@ -4570,6 +4619,71 @@ components:
             id: gkk505h0towkn
           description: 'This option determines whether deleted invoice items should be saved or logged for record-keeping purposes. When enabled, any items removed from an invoice are retained in the system, allowing for auditing or restoration if needed.'
           default: true
+        # Backup Settings
+        BACKUP_ENABLED:
+          type: boolean
+          default: true
+          description: Enable/disable automatic backup system
+
+        BACKUP_SCHEDULE_TYPE:
+          type: string
+          enum:
+            - DAILY
+            - WEEKLY
+            - MONTHLY
+            - MANUAL
+          default: DAILY
+          description: Frequency of automatic backups
+
+        BACKUP_TIME:
+          type: string
+          format: time
+          default: '23:00'
+          description: Time to run backup (HH:mm format)
+
+        BACKUP_DAYS:
+          type: array
+          items:
+            type: string
+            enum:
+              - MONDAY
+              - TUESDAY
+              - WEDNESDAY
+              - THURSDAY
+              - FRIDAY
+              - SATURDAY
+              - SUNDAY
+          description: Days to run backup (for WEEKLY schedule)
+
+        BACKUP_RETENTION_DAYS:
+          type: integer
+          default: 30
+          description: Number of days to keep backup files
+
+        BACKUP_LOCATION:
+          type: string
+          default: 'C:/KonsolBackups'
+          description: Directory path to store backup files
+
+        BACKUP_INCLUDE_FILES:
+          type: boolean
+          default: true
+          description: Include file attachments in backup
+
+        BACKUP_COMPRESS:
+          type: boolean
+          default: true
+          description: Compress backup files
+
+        MONGODB_DUMP_PATH:
+          type: string
+          default: 'C:/Program Files/MongoDB/Tools/100/bin/mongodump.exe'
+          description: Path to MongoDB dump executable
+
+        MONGODB_RESTORE_PATH:
+          type: string
+          default: 'C:/Program Files/MongoDB/Tools/100/bin/mongorestore.exe'
+          description: Path to MongoDB restore executable
     AuthorityDTO:
       title: AuthorityDTO
       x-stoplight:

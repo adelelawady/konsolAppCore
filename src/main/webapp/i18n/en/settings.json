@@ -31,12 +31,6 @@
   },
   "systemSettings": {
     "title": "System Settings",
-    "sections": {
-      "general": "General Settings",
-      "playstation": "Playstation Settings",
-      "inventory": "Inventory Settings",
-      "invoice": "Invoice Settings"
-    },
     "mainStore": "Main Store ID",
     "mainBank": "Main Bank ID",
     "playstationStore": "Playstation Store ID",
@@ -51,6 +45,50 @@
       "success": "Settings updated successfully",
       "error": "Error updating settings",
       "loadError": "Error loading settings"
+    },
+    "sections": {
+      "backup": "Backup Settings",
+      "general": "General Settings",
+      "playstation": "Playstation Settings",
+      "inventory": "Inventory Settings",
+      "invoice": "Invoice Settings"
+    },
+    "backup": {
+      "enable": "Enable automatic backup",
+      "scheduleType": "Backup Schedule",
+      "scheduleTypes": {
+        "daily": "Daily",
+        "weekly": "Weekly",
+        "monthly": "Monthly",
+        "manual": "Manual"
+      },
+      "time": "Backup Time",
+      "days": {
+        "title": "Backup Days",
+        "monday": "Monday",
+        "tuesday": "Tuesday",
+        "wednesday": "Wednesday",
+        "thursday": "Thursday",
+        "friday": "Friday",
+        "saturday": "Saturday",
+        "sunday": "Sunday"
+      },
+      "retentionDays": "Retention Period (days)",
+      "location": "Backup Location",
+      "mongodbDumpPath": "MongoDB Dump Path",
+      "mongodbRestorePath": "MongoDB Restore Path",
+      "includeFiles": "Include File Attachments",
+      "compress": "Compress Backups",
+      "performBackup": "Perform Backup Now",
+      "performRestore": "Restore from Backup",
+      "restoreTitle": "Restore System",
+      "selectBackupPath": "Backup Path",
+      "restoreWarning": "Warning: Restoring from backup will overwrite current data. This action cannot be undone.",
+      "confirmRestore": "Restore System",
+      "backupSuccess": "Backup completed successfully",
+      "backupError": "Backup failed",
+      "restoreSuccess": "System restored successfully",
+      "restoreError": "Restore operation failed"
     }
   }
 }

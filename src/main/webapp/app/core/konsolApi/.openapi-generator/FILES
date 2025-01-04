@@ -87,6 +87,7 @@ model/moniesSearchModel.ts
 model/moniesViewDTOContainer.ts
 model/paginationSearchModel.ts
 model/passwordChangeDTO.ts
+model/performRestoreRequest.ts
 model/performanceIndicatorsDTO.ts
 model/performanceMetricsDTO.ts
 model/pkDTO.ts

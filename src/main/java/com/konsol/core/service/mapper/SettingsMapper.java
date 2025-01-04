@@ -23,5 +23,15 @@ public interface SettingsMapper extends EntityMapper<ServerSettings, Settings> {
     @Mapping(target = "PLAYSTATION_SELECTED_BANK_ID", source = "PLAYSTATIONSELECTEDBANKID")
     @Mapping(target = "ALLOW_NEGATIVE_INVENTORY", source = "ALLOWNEGATIVEINVENTORY")
     @Mapping(target = "SAVE_INVOICE_DELETETED_INVOICEITEMS", source = "SAVEINVOICEDELETETEDINVOICEITEMS")
+    @Mapping(target = "BACKUP_ENABLED", source = "BACKUPENABLED")
+    @Mapping(target = "BACKUP_SCHEDULE_TYPE", source = "BACKUPSCHEDULETYPE")
+    @Mapping(target = "BACKUP_TIME", source = "BACKUPTIME")
+    @Mapping(target = "BACKUP_DAYS", source = "BACKUPDAYS")
+    @Mapping(target = "BACKUP_RETENTION_DAYS", source = "BACKUPRETENTIONDAYS")
+    @Mapping(target = "BACKUP_LOCATION", source = "BACKUPLOCATION")
+    @Mapping(target = "BACKUP_INCLUDE_FILES", source = "BACKUPINCLUDEFILES")
+    @Mapping(target = "BACKUP_COMPRESS", source = "BACKUPCOMPRESS")
+    @Mapping(target = "MONGODB_DUMP_PATH", source = "MONGODBDUMPPATH")
+    @Mapping(target = "MONGODB_RESTORE_PATH", source = "MONGODBRESTOREPATH")
     Settings toEntity(ServerSettings dto);
 }
