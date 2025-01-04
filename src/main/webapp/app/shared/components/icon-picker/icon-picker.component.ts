@@ -1,7 +1,5 @@
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { ControlValueAccessor } from '@angular/forms';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-icon-picker',
@@ -21,6 +19,13 @@ import { ControlValueAccessor } from '@angular/forms';
             <button *ngFor="let icon of filteredIcons" class="btn btn-outline-secondary btn-icon" (click)="selectIcon(icon)" [title]="icon">
               <i [class]="icon"></i>
             </button>
+          </div>
+          <div *ngIf="!searchTerm && displayIcons.length < commonIcons.length" class="text-center mt-2">
+            <button class="btn btn-link" (click)="loadMore()">Load More Icons</button>
+          </div>
+          <div class="mt-3 text-muted small">
+            <i class="fa fa-info-circle"></i> Find more free icons at
+            <a href="https://fontawesome.com/v6/search?o=r&m=free" target="_blank">FontAwesome</a>
           </div>
         </div>
       </div>
@@ -57,283 +62,53 @@ import { ControlValueAccessor } from '@angular/forms';
     `,
   ],
 })
-export class IconPickerComponent implements ControlValueAccessor {
+export class IconPickerComponent implements OnInit {
   @Input() value: string = '';
   @Input() placeholder: string = '';
   @Output() onIconChange = new EventEmitter<string>();
-
+  @Output() onChange = new EventEmitter<string>();
   isOpen = false;
   searchTerm = '';
-  disabled = false;
+  commonIcons: string[] = [];
 
-  onChange = (value: string) => {
-    this.onIconChange.emit(value);
-  };
-  onTouched = () => {};
+  // Keep a cached subset of icons for initial display
+  displayIcons: string[] = [];
+  private readonly INITIAL_ICONS_COUNT = 100;
 
-  writeValue(value: string): void {
-    this.value = value;
+  constructor(private http: HttpClient) {}
+
+  ngOnInit() {
+    // Load icons asynchronously
+    this.loadIcons();
   }
 
-  registerOnChange(fn: any): void {
-    this.onChange = fn;
+  private async loadIcons() {
+    try {
+      const data: any = await this.http.get('content/icons/fontawesome-v6.4.2-free.json').toPromise();
+      // Combine all icon types with their prefixes
+      this.commonIcons = [
+        ...data.solid.map((icon: string) => `fa ${icon}`),
+        ...data.regular.map((icon: string) => `fa-regular ${icon}`),
+        ...data.brands.map((icon: string) => `fa-brands ${icon}`),
+      ];
+
+      // Initialize display icons with a subset
+      this.displayIcons = this.commonIcons.slice(0, this.INITIAL_ICONS_COUNT);
+    } catch (error) {
+      console.error('Error loading icons:', error);
+      // Fallback to a few basic icons in case of error
+      this.commonIcons = ['fa fa-user', 'fa fa-home', 'fa fa-cog'];
+      this.displayIcons = this.commonIcons;
+    }
   }
-
-  registerOnTouched(fn: any): void {
-    this.onTouched = fn;
-  }
-
-  setDisabledState(isDisabled: boolean): void {
-    this.disabled = isDisabled;
-  }
-
-  // This is a sample list of FontAwesome icons - you should expand this list
-  commonIcons = [
-    // General UI icons
-    // Solid icons
-    'fa fa-tv',
-    'fa fa-gamepad',
-    'fa fa-desktop',
-    'fa fa-laptop',
-    'fa fa-mobile',
-    'fa fa-tablet',
-    'fa fa-clock',
-    'fa fa-users',
-    'fa fa-user',
-    'fa fa-cog',
-    'fa fa-home',
-    'fa fa-camera',
-    'fa fa-bell',
-    'fa fa-heart',
-    'fa fa-envelope',
-    'fa fa-search',
-    'fa fa-star',
-    'fa fa-trash',
-    'fa fa-shopping-cart',
-    'fa fa-comments',
-    'fa fa-music',
-    'fa fa-cloud',
-    'fa fa-pen',
-
-    'fa fa-envelope',
-    'fa fa-search',
-    'fa fa-key',
-    'fa fa-lock',
-    'fa fa-unlock',
-    'fa fa-trash',
-    'fa fa-edit',
-    'fa fa-save',
-    'fa fa-file',
-    'fa fa-folder',
-    'fa fa-folder-open',
-    'fa fa-upload',
-    'fa fa-download',
-    'fa fa-print',
-    'fa fa-clipboard',
-    'fa fa-calendar',
-    'fa fa-clock',
-    'fa fa-check',
-    'fa fa-times',
-    'fa fa-plus',
-    'fa fa-minus',
-    'fa fa-bars',
-
-    // Media and devices
-    'fa fa-camera',
-    'fa fa-video',
-    'fa fa-music',
-    'fa fa-headphones',
-    'fa fa-tv',
-    'fa fa-desktop',
-    'fa fa-laptop',
-    'fa fa-tablet',
-    'fa fa-mobile',
-    'fa fa-gamepad',
-    'fa-brands fa-playstation',
-    'fa-brands fa-xbox',
-    'fa-brands fa-steam',
-
-    // E-commerce and finance
-    'fa fa-shopping-cart',
-    'fa fa-credit-card',
-    'fa fa-wallet',
-    'fa fa-dollar-sign',
-    'fa fa-euro-sign',
-    'fa fa-gift',
-    'fa fa-tags',
-    'fa fa-receipt',
-    'fa fa-chart-line',
-
-    // Social and communication
-    'fa fa-comments',
-    'fa fa-comment',
-    'fa fa-phone',
-    'fa fa-address-book',
-    'fa fa-paper-plane',
-    'fa fa-at',
-
-    // Health and fitness
-    'fa fa-heart',
-    'fa fa-stethoscope',
-    'fa fa-hospital',
-    'fa fa-pills',
-    'fa fa-running',
-    'fa fa-dumbbell',
-
-    // Travel and transportation
-    'fa fa-car',
-    'fa fa-bus',
-    'fa fa-plane',
-    'fa fa-ship',
-    'fa fa-map',
-    'fa fa-route',
-    'fa fa-compass',
-    'fa fa-suitcase',
-
-    // Nature and weather
-    'fa fa-sun',
-    'fa fa-cloud',
-    'fa fa-rainbow',
-    'fa fa-snowflake',
-    'fa fa-leaf',
-    'fa fa-tree',
-    'fa fa-water',
-
-    // Education and work
-    'fa fa-book',
-    'fa fa-graduation-cap',
-    'fa fa-chalkboard',
-    'fa fa-briefcase',
-    'fa fa-lightbulb',
-    'fa fa-tools',
-    'fa fa-project-diagram',
-
-    // Brand icons
-    'fa-brands fa-facebook',
-    'fa-brands fa-twitter',
-    'fa-brands fa-instagram',
-    'fa-brands fa-linkedin',
-    'fa-brands fa-youtube',
-    'fa-brands fa-github',
-    'fa-brands fa-whatsapp',
-    'fa-brands fa-snapchat',
-    'fa-brands fa-tiktok',
-    'fa-brands fa-google',
-    'fa-brands fa-amazon',
-    'fa-brands fa-reddit',
-    'fa-brands fa-pinterest',
-    'fa-brands fa-tumblr',
-    'fa-brands fa-apple',
-    'fa-brands fa-windows',
-    'fa-brands fa-android',
-    'fa-brands fa-spotify',
-    'fa-brands fa-discord',
-    'fa-brands fa-slack',
-    'fa-brands fa-dropbox',
-    'fa-brands fa-dribbble',
-    'fa-brands fa-behance',
-    'fa-brands fa-medium',
-    'fa-brands fa-vimeo',
-    // Add more icons as needed
-
-    // Additional UI/UX icons
-    'fa fa-sliders',
-    'fa fa-toggle-on',
-    'fa fa-toggle-off',
-    'fa fa-spinner',
-    'fa fa-circle-notch',
-    'fa fa-sync',
-    'fa fa-undo',
-    'fa fa-redo',
-    'fa fa-expand',
-    'fa fa-compress',
-    'fa fa-arrows-alt',
-    'fa fa-link',
-    'fa fa-unlink',
-    'fa fa-external-link-alt',
-
-    // Content/Text
-    'fa fa-paragraph',
-    'fa fa-heading',
-    'fa fa-text-height',
-    'fa fa-text-width',
-    'fa fa-bold',
-    'fa fa-italic',
-    'fa fa-underline',
-    'fa fa-strikethrough',
-    'fa fa-list-ul',
-    'fa fa-list-ol',
-    'fa fa-quote-left',
-    'fa fa-quote-right',
-
-    // Files and Data
-    'fa fa-database',
-    'fa fa-server',
-    'fa fa-hdd',
-    'fa fa-sd-card',
-    'fa fa-memory',
-    'fa fa-microchip',
-    'fa fa-code',
-    'fa fa-terminal',
-    'fa fa-bug',
-    'fa fa-qrcode',
-    'fa fa-barcode',
-
-    // Additional Brand Icons
-    'fa-brands fa-chrome',
-    'fa-brands fa-firefox',
-    'fa-brands fa-safari',
-    'fa-brands fa-opera',
-    'fa-brands fa-edge',
-    'fa-brands fa-wordpress',
-    'fa-brands fa-joomla',
-    'fa-brands fa-drupal',
-    'fa-brands fa-npm',
-    'fa-brands fa-yarn',
-    'fa-brands fa-docker',
-    'fa-brands fa-aws',
-    'fa-brands fa-angular',
-    'fa-brands fa-react',
-    'fa-brands fa-vuejs',
-    'fa-brands fa-node',
-    'fa-brands fa-php',
-    'fa-brands fa-python',
-    'fa-brands fa-java',
-
-    // Charts and Analytics
-    'fa fa-chart-bar',
-    'fa fa-chart-pie',
-    'fa fa-chart-area',
-    'fa fa-analytics',
-    'fa fa-percentage',
-    'fa fa-poll',
-    'fa fa-funnel-dollar',
-
-    // Security
-    'fa fa-shield-alt',
-    'fa fa-user-shield',
-    'fa fa-fingerprint',
-    'fa fa-id-card',
-    'fa fa-id-badge',
-    'fa fa-user-secret',
-    'fa fa-mask',
-
-    // Additional Social
-    'fa-brands fa-twitch',
-    'fa-brands fa-telegram',
-    'fa-brands fa-skype',
-    'fa-brands fa-viber',
-    'fa-brands fa-wechat',
-    'fa-brands fa-line',
-    'fa-brands fa-meetup',
-    'fa-brands fa-stack-overflow',
-    'fa-brands fa-dev',
-    'fa-brands fa-gitlab',
-    'fa-brands fa-bitbucket',
-  ];
 
   get filteredIcons() {
-    return this.commonIcons.filter(icon => icon.toLowerCase().includes(this.searchTerm.toLowerCase()));
+    if (this.searchTerm) {
+      // When searching, search through all icons
+      return this.commonIcons.filter(icon => icon.toLowerCase().includes(this.searchTerm.toLowerCase()));
+    }
+    // Otherwise return the smaller display set
+    return this.displayIcons;
   }
 
   togglePicker() {
@@ -349,6 +124,12 @@ export class IconPickerComponent implements ControlValueAccessor {
   onInputChange(event: Event) {
     const value = (event.target as HTMLInputElement).value;
     this.value = value;
-    this.onChange(value);
+    this.onChange.emit(value);
+  }
+
+  loadMore() {
+    const currentLength = this.displayIcons.length;
+    const nextBatch = this.commonIcons.slice(currentLength, currentLength + this.INITIAL_ICONS_COUNT);
+    this.displayIcons = [...this.displayIcons, ...nextBatch];
   }
 }
