@@ -4,6 +4,9 @@ import { GLOBALService } from 'app/core/konsolApi/api/gLOBAL.service';
 import { ServerSettings } from 'app/core/konsolApi/model/serverSettings';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateService } from '@ngx-translate/core';
+import { StoreDTO } from 'app/core/konsolApi/model/storeDTO';
+import { StoreResourceService } from 'app/core/konsolApi/api/storeResource.service';
+import { BankDTO, BankResourceService } from 'app/core/konsolApi';
 
 @Component({
   selector: 'jhi-system-settings',
@@ -14,11 +17,18 @@ export class SystemSettingsComponent implements OnInit {
   settingsForm: FormGroup;
   loading = false;
   settings: ServerSettings = {};
+  mainStore: StoreDTO | null = null;
+  playstationStore: StoreDTO | null = null;
+  mainBank: BankDTO | null = null;
+  playstationBank: BankDTO | null = null;
+
   constructor(
     private globalService: GLOBALService,
     private fb: FormBuilder,
     private toastr: ToastrService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private storeService: StoreResourceService,
+    private bankService: BankResourceService
   ) {
     this.settingsForm = this.fb.group({
       MAIN_SELECTED_STORE_ID: [''],
@@ -44,12 +54,61 @@ export class SystemSettingsComponent implements OnInit {
         this.settings = settings;
         this.settingsForm.patchValue(settings);
         this.loading = false;
+        this.loadMainStore();
+        this.loadPlaystationStore();
+        this.loadMainBank();
+        this.loadPlaystationBank();
       },
       error: error => {
         console.error('Error loading settings:', error);
         this.toastr.error('Error loading settings');
         this.loading = false;
       },
+    });
+  }
+
+  loadMainStore(): void {
+    if (this.settings.MAIN_SELECTED_STORE_ID) {
+      this.storeService.getStore(this.settings.MAIN_SELECTED_STORE_ID).subscribe(store => {
+        this.mainStore = store;
+      });
+    }
+  }
+
+  loadPlaystationStore(): void {
+    if (this.settings.PLAYSTATION_SELECTED_STORE_ID) {
+      this.storeService.getStore(this.settings.PLAYSTATION_SELECTED_STORE_ID).subscribe(store => {
+        this.playstationStore = store;
+      });
+    }
+  }
+
+  loadMainBank(): void {
+    if (this.settings.MAIN_SELECTED_BANK_ID) {
+      this.bankService.getBank(this.settings.MAIN_SELECTED_BANK_ID).subscribe(bank => {
+        this.mainBank = bank;
+      });
+    }
+  }
+
+  loadPlaystationBank(): void {
+    if (this.settings.PLAYSTATION_SELECTED_BANK_ID) {
+      this.bankService.getBank(this.settings.PLAYSTATION_SELECTED_BANK_ID).subscribe(bank => {
+        this.playstationBank = bank;
+      });
+    }
+  }
+  onMainBankSelected(bank: BankDTO): void {
+    this.mainBank = bank;
+    this.settingsForm.patchValue({
+      MAIN_SELECTED_BANK_ID: bank.id,
+    });
+  }
+
+  onPlaystationBankSelected(bank: BankDTO): void {
+    this.playstationBank = bank;
+    this.settingsForm.patchValue({
+      PLAYSTATION_SELECTED_BANK_ID: bank.id,
     });
   }
 
@@ -70,5 +129,19 @@ export class SystemSettingsComponent implements OnInit {
         },
       });
     }
+  }
+
+  onMainStoreSelected(store: StoreDTO): void {
+    this.mainStore = store;
+    this.settingsForm.patchValue({
+      MAIN_SELECTED_STORE_ID: store.id,
+    });
+  }
+
+  onPlaystationStoreSelected(store: StoreDTO): void {
+    this.playstationStore = store;
+    this.settingsForm.patchValue({
+      PLAYSTATION_SELECTED_STORE_ID: store.id,
+    });
   }
 }

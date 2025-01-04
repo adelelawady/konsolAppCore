@@ -17,55 +17,52 @@
         <h3 class="mb-4">{{ 'systemSettings.sections.general' | translate }}</h3>
         <div class="mb-3">
           <label class="form-label">{{ 'systemSettings.mainStore' | translate }}</label>
-          <app-store-selector
-            [selectedStore]="mainStore"
-            (storeSelected)="onMainStoreSelected($event)"
-          ></app-store-selector>
+          <app-store-selector [selectedStore]="mainStore" (storeSelected)="onMainStoreSelected($event)"></app-store-selector>
         </div>
 
         <div class="mb-3">
           <label class="form-label">{{ 'systemSettings.mainBank' | translate }}</label>
-          <input type="text" class="form-control" formControlName="MAIN_SELECTED_BANK_ID">
+          <app-bank-selector [selectedBank]="mainBank" (bankSelected)="onMainBankSelected($event)"></app-bank-selector>
         </div>
 
         <!-- Playstation Settings -->
         <h3 class="mb-4 mt-5">{{ 'systemSettings.sections.playstation' | translate }}</h3>
         <div class="mb-3">
           <label class="form-label">{{ 'systemSettings.playstationStore' | translate }}</label>
-          <input type="text" class="form-control" formControlName="PLAYSTATION_SELECTED_STORE_ID">
+          <app-store-selector [selectedStore]="playstationStore" (storeSelected)="onPlaystationStoreSelected($event)"></app-store-selector>
         </div>
 
         <div class="mb-3">
           <label class="form-label">{{ 'systemSettings.playstationBank' | translate }}</label>
-          <input type="text" class="form-control" formControlName="PLAYSTATION_SELECTED_BANK_ID">
+          <app-bank-selector [selectedBank]="playstationBank" (bankSelected)="onPlaystationBankSelected($event)"></app-bank-selector>
         </div>
 
         <!-- Inventory Settings -->
         <h3 class="mb-4 mt-5">{{ 'systemSettings.sections.inventory' | translate }}</h3>
         <div class="mb-3">
           <label class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" formControlName="SALES_CHECK_ITEM_QTY">
+            <input class="form-check-input" type="checkbox" formControlName="SALES_CHECK_ITEM_QTY" />
             <span class="form-check-label">{{ 'systemSettings.checkItemQuantity' | translate }}</span>
           </label>
         </div>
 
         <div class="mb-3">
           <label class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" formControlName="SALES_UPDATE_ITEM_QTY_AFTER_SAVE">
+            <input class="form-check-input" type="checkbox" formControlName="SALES_UPDATE_ITEM_QTY_AFTER_SAVE" />
             <span class="form-check-label">{{ 'systemSettings.updateQuantityAfterSale' | translate }}</span>
           </label>
         </div>
 
         <div class="mb-3">
           <label class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" formControlName="PURCHASE_UPDATE_ITEM_QTY_AFTER_SAVE">
+            <input class="form-check-input" type="checkbox" formControlName="PURCHASE_UPDATE_ITEM_QTY_AFTER_SAVE" />
             <span class="form-check-label">{{ 'systemSettings.updateQuantityAfterPurchase' | translate }}</span>
           </label>
         </div>
 
         <div class="mb-3">
           <label class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" formControlName="ALLOW_NEGATIVE_INVENTORY">
+            <input class="form-check-input" type="checkbox" formControlName="ALLOW_NEGATIVE_INVENTORY" />
             <span class="form-check-label">{{ 'systemSettings.allowNegativeInventory' | translate }}</span>
           </label>
         </div>
@@ -74,7 +71,7 @@
         <h3 class="mb-4 mt-5">{{ 'systemSettings.sections.invoice' | translate }}</h3>
         <div class="mb-3">
           <label class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" formControlName="SAVE_INVOICE_DELETETED_INVOICEITEMS">
+            <input class="form-check-input" type="checkbox" formControlName="SAVE_INVOICE_DELETETED_INVOICEITEMS" />
             <span class="form-check-label">{{ 'systemSettings.saveDeletedInvoiceItems' | translate }}</span>
           </label>
         </div>
@@ -88,4 +85,4 @@
       </form>
     </div>
   </div>
-</div> 
+</div>

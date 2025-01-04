@@ -4,7 +4,6 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from 'app/shared/shared.module';
 import { SystemSettingsComponent } from './system-settings.component';
-import { StoreSelectorComponent } from 'app/shared/components/store-selector/store-selector.component';
 
 @NgModule({
   declarations: [SystemSettingsComponent],
@@ -19,7 +18,6 @@ import { StoreSelectorComponent } from 'app/shared/components/store-selector/sto
         data: { pageTitle: 'System Settings' },
       },
     ]),
-    StoreSelectorComponent,
   ],
 })
 export class SystemSettingsModule {}
