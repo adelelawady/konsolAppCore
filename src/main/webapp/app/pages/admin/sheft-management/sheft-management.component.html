@@ -72,6 +72,48 @@
               </dl>
             </div>
           </div>
+          <div class="row mt-4" *ngIf="activeSheft">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label" jhiTranslate="konsolCoreApp.sheft.additions">Additions</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  [(ngModel)]="activeSheft.additions"
+                  (change)="handleInputChange('additions', $event)"
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label" jhiTranslate="konsolCoreApp.sheft.additionsNotes">Additions Notes</label>
+                <textarea
+                  class="form-control"
+                  rows="2"
+                  [(ngModel)]="activeSheft.additionsNotes"
+                  (change)="handleTextAreaChange('additionsNotes', $event)"
+                ></textarea>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label" jhiTranslate="konsolCoreApp.sheft.sheftExpenses">Shift Expenses</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  [(ngModel)]="activeSheft.sheftExpenses"
+                  (change)="handleInputChange('sheftExpenses', $event)"
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label" jhiTranslate="konsolCoreApp.sheft.notes">Notes</label>
+                <textarea
+                  class="form-control"
+                  rows="2"
+                  [(ngModel)]="activeSheft.notes"
+                  (change)="handleTextAreaChange('notes', $event)"
+                ></textarea>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="card-footer d-flex justify-content-end gap-2">
           <button class="btn btn-primary" (click)="viewSheftDetails()">

@@ -5460,8 +5460,7 @@ components:
           format: decimal
           default: 0
         additionsNotes:
-          type: number
-          format: decimal
+          type: string
           default: 0
         invoicesExpenses:
           type: number

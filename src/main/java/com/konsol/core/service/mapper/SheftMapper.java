@@ -35,5 +35,6 @@ public interface SheftMapper extends EntityMapper<SheftDTO, Sheft> {
     @Mapping(target = "totalinvoices", ignore = true)
     @Mapping(target = "totaldeletedItems", ignore = true)
     @Mapping(target = "totaldeletedItemsPrice", ignore = true)
+    @Mapping(target = "sessions", ignore = true)
     void partialUpdate(@MappingTarget Sheft entity, SheftDTO dto);
 }

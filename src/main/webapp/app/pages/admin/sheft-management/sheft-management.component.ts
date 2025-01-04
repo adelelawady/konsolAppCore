@@ -4,6 +4,7 @@ import { ActiveSheftService } from '../sheft-component/active-sheft.service';
 import { SheftDTO } from 'app/core/konsolApi/model/sheftDTO';
 import { interval, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'jhi-sheft-management',
@@ -16,7 +17,12 @@ export class SheftManagementComponent implements OnInit, OnDestroy {
   error = false;
   private refreshInterval?: Subscription;
 
-  constructor(private sheftResource: SheftResourceService, private activeSheftService: ActiveSheftService, private router: Router) {}
+  constructor(
+    private sheftResource: SheftResourceService,
+    private activeSheftService: ActiveSheftService,
+    private router: Router,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
     this.loadActiveSheft();
@@ -98,5 +104,51 @@ export class SheftManagementComponent implements OnInit, OnDestroy {
     const seconds = diff % 60;
 
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  }
+
+  updateSheft(): void {
+    if (!this.activeSheft || !this.activeSheft.id) {
+      return;
+    }
+
+    this.sheftResource
+      .partialUpdateSheft(this.activeSheft.id, this.activeSheft)
+      .subscribe({
+        next: (updatedSheft) => {
+          this.activeSheft = updatedSheft;
+          this.toastr.success('Shift updated successfully');
+        },
+        error: (error) => {
+          this.loadActiveSheft();
+          this.toastr.error('Failed to update shift');
+          console.error('Error updating shift:', error);
+        }
+      });
+  }
+
+  handleInputChange(field: string, event: Event): void {
+    if (!this.activeSheft) return;
+    
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
+    
+    // Update the local activeSheft object
+    if (field === 'additions' || field === 'sheftExpenses') {
+      (this.activeSheft as any)[field] = parseFloat(value) || 0;
+    } else {
+      (this.activeSheft as any)[field] = value;
+    }
+    
+    this.updateSheft();
+  }
+
+  handleTextAreaChange(field: string, event: Event): void {
+    if (!this.activeSheft) return;
+    
+    const textarea = event.target as HTMLTextAreaElement;
+    // Update the local activeSheft object
+    (this.activeSheft as any)[field] = textarea.value;
+    
+    this.updateSheft();
   }
 }

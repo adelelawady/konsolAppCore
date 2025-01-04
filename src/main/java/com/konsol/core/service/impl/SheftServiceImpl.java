@@ -174,7 +174,6 @@ public class SheftServiceImpl implements SheftService {
         sheft.setDiscount(BigDecimal.ZERO);
         sheft.setInvoicesAdditions(BigDecimal.ZERO);
         sheft.setAdditions(BigDecimal.ZERO);
-        sheft.setAdditionsNotes(BigDecimal.ZERO);
         sheft.setInvoicesExpenses(BigDecimal.ZERO);
         sheft.setSheftExpenses(BigDecimal.ZERO);
         sheft.setTotalinvoices(BigDecimal.ZERO);

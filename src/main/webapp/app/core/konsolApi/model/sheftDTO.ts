@@ -26,7 +26,7 @@ export interface SheftDTO {
   discount?: number;
   invoicesAdditions?: number;
   additions?: number;
-  additionsNotes?: number;
+  additionsNotes?: string;
   invoicesExpenses?: number;
   sheftExpenses?: number;
   totalinvoices?: number;

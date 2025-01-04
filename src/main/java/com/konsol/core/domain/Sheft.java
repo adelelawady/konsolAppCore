@@ -89,7 +89,7 @@ public class Sheft implements Serializable {
 
     @NotNull
     @Field("additions_notes")
-    private BigDecimal additionsNotes;
+    private String additionsNotes;
 
     @NotNull
     @Field("invoices_expenses")
@@ -315,16 +315,16 @@ public class Sheft implements Serializable {
         this.additions = additions;
     }
 
-    public BigDecimal getAdditionsNotes() {
+    public String getAdditionsNotes() {
         return this.additionsNotes;
     }
 
-    public Sheft additionsNotes(BigDecimal additionsNotes) {
+    public Sheft additionsNotes(String additionsNotes) {
         this.setAdditionsNotes(additionsNotes);
         return this;
     }
 
-    public void setAdditionsNotes(BigDecimal additionsNotes) {
+    public void setAdditionsNotes(String additionsNotes) {
         this.additionsNotes = additionsNotes;
     }
 
