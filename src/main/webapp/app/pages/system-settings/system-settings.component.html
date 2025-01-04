@@ -1,5 +1,5 @@
 <div class="container-xl">
-  <div class="page-header d-print-none">
+  <div class="page-header d-print-none mb-4">
     <div class="row align-items-center">
       <div class="col">
         <h2 class="page-title">
@@ -14,66 +14,127 @@
     <div class="card-body">
       <form [formGroup]="settingsForm" (ngSubmit)="onSubmit()">
         <!-- General Store Settings -->
-        <h3 class="mb-4">{{ 'systemSettings.sections.general' | translate }}</h3>
-        <div class="mb-3">
-          <label class="form-label">{{ 'systemSettings.mainStore' | translate }}</label>
-          <app-store-selector [selectedStore]="mainStore" (storeSelected)="onMainStoreSelected($event)"></app-store-selector>
-        </div>
+        <div class="card mb-4">
+          <div class="card-header">
+            <h3 class="card-title mb-0">
+              <i class="fas fa-shop me-2"></i>
+              {{ 'systemSettings.sections.general' | translate }}
+            </h3>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">
+                  <i class="fas fa-store me-2"></i>
+                  {{ 'systemSettings.mainStore' | translate }}
+                </label>
+                <app-store-selector [selectedStore]="mainStore" (storeSelected)="onMainStoreSelected($event)"></app-store-selector>
+              </div>
 
-        <div class="mb-3">
-          <label class="form-label">{{ 'systemSettings.mainBank' | translate }}</label>
-          <app-bank-selector [selectedBank]="mainBank" (bankSelected)="onMainBankSelected($event)"></app-bank-selector>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">
+                  <i class="fas fa-bank me-2"></i>
+                  {{ 'systemSettings.mainBank' | translate }}
+                </label>
+                <app-bank-selector [selectedBank]="mainBank" (bankSelected)="onMainBankSelected($event)"></app-bank-selector>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Playstation Settings -->
-        <h3 class="mb-4 mt-5">{{ 'systemSettings.sections.playstation' | translate }}</h3>
-        <div class="mb-3">
-          <label class="form-label">{{ 'systemSettings.playstationStore' | translate }}</label>
-          <app-store-selector [selectedStore]="playstationStore" (storeSelected)="onPlaystationStoreSelected($event)"></app-store-selector>
-        </div>
+        <div class="card mb-4">
+          <div class="card-header">
+            <h3 class="card-title mb-0">
+              <i class="fas fa-gamepad me-2"></i>
+              {{ 'systemSettings.sections.playstation' | translate }}
+            </h3>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">
+                  <i class="fas fa-store me-2"></i>
+                  {{ 'systemSettings.playstationStore' | translate }}
+                </label>
+                <app-store-selector
+                  [selectedStore]="playstationStore"
+                  (storeSelected)="onPlaystationStoreSelected($event)"
+                ></app-store-selector>
+              </div>
 
-        <div class="mb-3">
-          <label class="form-label">{{ 'systemSettings.playstationBank' | translate }}</label>
-          <app-bank-selector [selectedBank]="playstationBank" (bankSelected)="onPlaystationBankSelected($event)"></app-bank-selector>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">
+                  <i class="fas fa-bank me-2"></i>
+                  {{ 'systemSettings.playstationBank' | translate }}
+                </label>
+                <app-bank-selector [selectedBank]="playstationBank" (bankSelected)="onPlaystationBankSelected($event)"></app-bank-selector>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Inventory Settings -->
-        <h3 class="mb-4 mt-5">{{ 'systemSettings.sections.inventory' | translate }}</h3>
-        <div class="mb-3">
-          <label class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" formControlName="SALES_CHECK_ITEM_QTY" />
-            <span class="form-check-label">{{ 'systemSettings.checkItemQuantity' | translate }}</span>
-          </label>
-        </div>
+        <div class="card mb-4">
+          <div class="card-header">
+            <h3 class="card-title mb-0">
+              <i class="fas fa-boxes me-2"></i>
+              {{ 'systemSettings.sections.inventory' | translate }}
+            </h3>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" formControlName="SALES_CHECK_ITEM_QTY" />
+                    <span class="form-check-label">{{ 'systemSettings.checkItemQuantity' | translate }}</span>
+                  </label>
+                </div>
 
-        <div class="mb-3">
-          <label class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" formControlName="SALES_UPDATE_ITEM_QTY_AFTER_SAVE" />
-            <span class="form-check-label">{{ 'systemSettings.updateQuantityAfterSale' | translate }}</span>
-          </label>
-        </div>
+                <div class="mb-3">
+                  <label class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" formControlName="SALES_UPDATE_ITEM_QTY_AFTER_SAVE" />
+                    <span class="form-check-label">{{ 'systemSettings.updateQuantityAfterSale' | translate }}</span>
+                  </label>
+                </div>
+              </div>
 
-        <div class="mb-3">
-          <label class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" formControlName="PURCHASE_UPDATE_ITEM_QTY_AFTER_SAVE" />
-            <span class="form-check-label">{{ 'systemSettings.updateQuantityAfterPurchase' | translate }}</span>
-          </label>
-        </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" formControlName="PURCHASE_UPDATE_ITEM_QTY_AFTER_SAVE" />
+                    <span class="form-check-label">{{ 'systemSettings.updateQuantityAfterPurchase' | translate }}</span>
+                  </label>
+                </div>
 
-        <div class="mb-3">
-          <label class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" formControlName="ALLOW_NEGATIVE_INVENTORY" />
-            <span class="form-check-label">{{ 'systemSettings.allowNegativeInventory' | translate }}</span>
-          </label>
+                <div class="mb-3">
+                  <label class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" formControlName="ALLOW_NEGATIVE_INVENTORY" />
+                    <span class="form-check-label">{{ 'systemSettings.allowNegativeInventory' | translate }}</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Invoice Settings -->
-        <h3 class="mb-4 mt-5">{{ 'systemSettings.sections.invoice' | translate }}</h3>
-        <div class="mb-3">
-          <label class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" formControlName="SAVE_INVOICE_DELETETED_INVOICEITEMS" />
-            <span class="form-check-label">{{ 'systemSettings.saveDeletedInvoiceItems' | translate }}</span>
-          </label>
+        <div class="card mb-4">
+          <div class="card-header">
+            <h3 class="card-title mb-0">
+              <i class="fas fa-receipt me-2"></i>
+              {{ 'systemSettings.sections.invoice' | translate }}
+            </h3>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <label class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" formControlName="SAVE_INVOICE_DELETETED_INVOICEITEMS" />
+                <span class="form-check-label">{{ 'systemSettings.saveDeletedInvoiceItems' | translate }}</span>
+              </label>
+            </div>
+          </div>
         </div>
 
         <div class="d-flex justify-content-end mt-4">

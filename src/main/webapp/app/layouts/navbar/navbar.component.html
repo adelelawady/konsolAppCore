@@ -132,6 +132,12 @@
           </a>
           <ul class="dropdown-menu dropdown-menu-end" ngbDropdownMenu aria-labelledby="admin-menu">
             <li>
+              <a class="dropdown-item" routerLink="system-settings" routerLinkActive="active" (click)="collapseNavbar()">
+                <fa-icon [icon]="faCogs" [fixedWidth]="true" class="me-2"></fa-icon>
+                <span jhiTranslate="systemSettings.title">System Settings</span>
+              </a>
+            </li>
+            <li>
               <a class="dropdown-item" routerLink="admin/user-management" routerLinkActive="active" (click)="collapseNavbar()">
                 <fa-icon [icon]="faUsers" [fixedWidth]="true" class="me-2"></fa-icon>
                 <span jhiTranslate="global.menu.admin.userManagement">User management</span>

@@ -1,14 +1,10 @@
 package com.konsol.core.service.impl;
 
-import com.konsol.core.domain.Invoice;
 import com.konsol.core.domain.InvoiceItem;
 import com.konsol.core.domain.Sheft;
 import com.konsol.core.domain.User;
-import com.konsol.core.domain.enumeration.SheftStatus;
-import com.konsol.core.domain.playstation.PlayStationSession;
 import com.konsol.core.repository.PlayStationSessionRepository;
 import com.konsol.core.repository.SheftRepository;
-import com.konsol.core.security.SecurityUtils;
 import com.konsol.core.service.SheftService;
 import com.konsol.core.service.UserService;
 import com.konsol.core.service.api.dto.PsSessionDTO;
@@ -31,11 +27,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 /**
