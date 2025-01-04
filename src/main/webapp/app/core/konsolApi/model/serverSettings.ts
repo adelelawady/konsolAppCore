@@ -10,13 +10,21 @@
  * Do not edit the class manually.
  */
 
-
-export interface ServerSettings { 
-    id?: string;
-    MAIN_SELECTED_STORE_ID?: string;
-    MAIN_SELECTED_BANK_ID?: string;
-    SALES_CHECK_ITEM_QTY?: boolean;
-    SALES_UPDATE_ITEM_QTY_AFTER_SAVE?: boolean;
-    PURCHASE_UPDATE_ITEM_QTY_AFTER_SAVE?: boolean;
+export interface ServerSettings {
+  id?: string;
+  MAIN_SELECTED_STORE_ID?: string;
+  MAIN_SELECTED_BANK_ID?: string;
+  SALES_CHECK_ITEM_QTY?: boolean;
+  SALES_UPDATE_ITEM_QTY_AFTER_SAVE?: boolean;
+  PURCHASE_UPDATE_ITEM_QTY_AFTER_SAVE?: boolean;
+  PLAYSTATION_SELECTED_STORE_ID?: string;
+  PLAYSTATION_SELECTED_BANK_ID?: string;
+  /**
+   * Indicates that inventory can drop below zero.
+   */
+  ALLOW_NEGATIVE_INVENTORY?: boolean;
+  /**
+   * This option determines whether deleted invoice items should be saved or logged for record-keeping purposes. When enabled, any items removed from an invoice are retained in the system, allowing for auditing or restoration if needed.
+   */
+  SAVE_INVOICE_DELETETED_INVOICEITEMS?: boolean;
 }
-

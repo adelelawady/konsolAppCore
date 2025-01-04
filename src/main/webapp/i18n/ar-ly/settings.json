@@ -28,5 +28,29 @@
         }
       }
     }
+  },
+  "systemSettings": {
+    "title": "إعدادات النظام",
+    "sections": {
+      "general": "الإعدادات العامة",
+      "playstation": "إعدادات البلايستيشن",
+      "inventory": "إعدادات المخزون",
+      "invoice": "إعدادات الفواتير"
+    },
+    "mainStore": "معرف المتجر الرئيسي",
+    "mainBank": "معرف البنك الرئيسي",
+    "playstationStore": "معرف متجر البلايستيشن",
+    "playstationBank": "معرف بنك البلايستيشن",
+    "checkItemQuantity": "التحقق من كمية المنتج قبل البيع",
+    "updateQuantityAfterSale": "تحديث كمية المنتج بعد البيع",
+    "updateQuantityAfterPurchase": "تحديث كمية المنتج بعد الشراء",
+    "allowNegativeInventory": "السماح بالمخزون السالب",
+    "saveDeletedInvoiceItems": "حفظ عناصر الفاتورة المحذوفة",
+    "save": "حفظ الإعدادات",
+    "messages": {
+      "success": "تم تحديث الإعدادات بنجاح",
+      "error": "خطأ في تحديث الإعدادات",
+      "loadError": "خطأ في تحميل الإعدادات"
+    }
   }
 }

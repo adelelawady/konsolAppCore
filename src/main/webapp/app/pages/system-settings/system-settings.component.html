@@ -1,0 +1,91 @@
+<div class="container-xl">
+  <div class="page-header d-print-none">
+    <div class="row align-items-center">
+      <div class="col">
+        <h2 class="page-title">
+          <i class="ti ti-settings me-2"></i>
+          {{ 'systemSettings.title' | translate }}
+        </h2>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <form [formGroup]="settingsForm" (ngSubmit)="onSubmit()">
+        <!-- General Store Settings -->
+        <h3 class="mb-4">{{ 'systemSettings.sections.general' | translate }}</h3>
+        <div class="mb-3">
+          <label class="form-label">{{ 'systemSettings.mainStore' | translate }}</label>
+          <app-store-selector
+            [selectedStore]="mainStore"
+            (storeSelected)="onMainStoreSelected($event)"
+          ></app-store-selector>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">{{ 'systemSettings.mainBank' | translate }}</label>
+          <input type="text" class="form-control" formControlName="MAIN_SELECTED_BANK_ID">
+        </div>
+
+        <!-- Playstation Settings -->
+        <h3 class="mb-4 mt-5">{{ 'systemSettings.sections.playstation' | translate }}</h3>
+        <div class="mb-3">
+          <label class="form-label">{{ 'systemSettings.playstationStore' | translate }}</label>
+          <input type="text" class="form-control" formControlName="PLAYSTATION_SELECTED_STORE_ID">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">{{ 'systemSettings.playstationBank' | translate }}</label>
+          <input type="text" class="form-control" formControlName="PLAYSTATION_SELECTED_BANK_ID">
+        </div>
+
+        <!-- Inventory Settings -->
+        <h3 class="mb-4 mt-5">{{ 'systemSettings.sections.inventory' | translate }}</h3>
+        <div class="mb-3">
+          <label class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" formControlName="SALES_CHECK_ITEM_QTY">
+            <span class="form-check-label">{{ 'systemSettings.checkItemQuantity' | translate }}</span>
+          </label>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" formControlName="SALES_UPDATE_ITEM_QTY_AFTER_SAVE">
+            <span class="form-check-label">{{ 'systemSettings.updateQuantityAfterSale' | translate }}</span>
+          </label>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" formControlName="PURCHASE_UPDATE_ITEM_QTY_AFTER_SAVE">
+            <span class="form-check-label">{{ 'systemSettings.updateQuantityAfterPurchase' | translate }}</span>
+          </label>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" formControlName="ALLOW_NEGATIVE_INVENTORY">
+            <span class="form-check-label">{{ 'systemSettings.allowNegativeInventory' | translate }}</span>
+          </label>
+        </div>
+
+        <!-- Invoice Settings -->
+        <h3 class="mb-4 mt-5">{{ 'systemSettings.sections.invoice' | translate }}</h3>
+        <div class="mb-3">
+          <label class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" formControlName="SAVE_INVOICE_DELETETED_INVOICEITEMS">
+            <span class="form-check-label">{{ 'systemSettings.saveDeletedInvoiceItems' | translate }}</span>
+          </label>
+        </div>
+
+        <div class="d-flex justify-content-end mt-4">
+          <button type="submit" class="btn btn-primary" [disabled]="loading || !settingsForm.valid">
+            <i class="ti ti-device-floppy me-2"></i>
+            {{ 'systemSettings.save' | translate }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div> 

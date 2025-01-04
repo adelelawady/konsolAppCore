@@ -149,6 +149,16 @@ const routes: Routes = [
     },
     loadChildren: () => import('./playstation/playstation.module').then(m => m.PlaystationModule),
   },
+  {
+    path: 'system-settings',
+    loadChildren: () => import('./system-settings/system-settings.module').then(m => m.SystemSettingsModule),
+    canActivate: [UserRouteAccessService],
+    data: {
+      authorities: ['ROLE_ADMIN'],
+      pageTitle: 'System Settings',
+      breadcrumb: 'System Settings',
+    },
+  },
 ];
 
 @NgModule({

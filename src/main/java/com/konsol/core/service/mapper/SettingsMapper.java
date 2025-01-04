@@ -19,5 +19,9 @@ public interface SettingsMapper extends EntityMapper<ServerSettings, Settings> {
     @Mapping(target = "SALES_CHECK_ITEM_QTY", source = "SALESCHECKITEMQTY")
     @Mapping(target = "SALES_UPDATE_ITEM_QTY_AFTER_SAVE", source = "SALESUPDATEITEMQTYAFTERSAVE")
     @Mapping(target = "PURCHASE_UPDATE_ITEM_QTY_AFTER_SAVE", source = "PURCHASEUPDATEITEMQTYAFTERSAVE")
+    @Mapping(target = "PLAYSTATION_SELECTED_STORE_ID", source = "PLAYSTATIONSELECTEDSTOREID")
+    @Mapping(target = "PLAYSTATION_SELECTED_BANK_ID", source = "PLAYSTATIONSELECTEDBANKID")
+    @Mapping(target = "ALLOW_NEGATIVE_INVENTORY", source = "ALLOWNEGATIVEINVENTORY")
+    @Mapping(target = "SAVE_INVOICE_DELETETED_INVOICEITEMS", source = "SAVEINVOICEDELETETEDINVOICEITEMS")
     Settings toEntity(ServerSettings dto);
 }

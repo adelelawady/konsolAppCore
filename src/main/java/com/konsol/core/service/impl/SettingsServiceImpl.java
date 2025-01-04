@@ -40,10 +40,14 @@ public class SettingsServiceImpl implements SettingService {
             settingsToSave = this.settingsRepository.save(settingsToSave);
             settingsToSave = checkAndAssignSettingsToStore(settingsToSave);
             settingsToSave = checkAndAssignSettingsToBank(settingsToSave);
+            settingsToSave = checkAndAssignPlaystationSettingsToStore(settingsToSave);
+            settingsToSave = checkAndAssignPlaystationSettingsToBank(settingsToSave);
             return settingsToSave;
         } else {
             settings = checkAndAssignSettingsToStore(settings);
             settings = checkAndAssignSettingsToBank(settings);
+            settings = checkAndAssignPlaystationSettingsToStore(settings);
+            settings = checkAndAssignPlaystationSettingsToBank(settings);
             return settings;
         }
     }
@@ -70,9 +74,31 @@ public class SettingsServiceImpl implements SettingService {
         return settingsRepository.save(settings);
     }
 
+    private Settings checkAndAssignPlaystationSettingsToStore(Settings settings) {
+        String playstationSelectedStoreId = settings.getPLAYSTATION_SELECTED_STORE_ID();
+        if (playstationSelectedStoreId == null || playstationSelectedStoreId.isEmpty()) {
+            playstationSelectedStoreId = storeService.findFirstByOrderById().map(Store::getId).orElseThrow();
+        } else if (storeService.findOneDomain(playstationSelectedStoreId).isEmpty()) {
+            playstationSelectedStoreId = storeService.findFirstByOrderById().map(Store::getId).orElseThrow();
+        }
+        settings.setPLAYSTATION_SELECTED_STORE_ID(playstationSelectedStoreId);
+        return settingsRepository.save(settings);
+    }
+
+    private Settings checkAndAssignPlaystationSettingsToBank(Settings settings) {
+        String playstationSelectedBankId = settings.getPLAYSTATION_SELECTED_BANK_ID();
+        if (playstationSelectedBankId == null || playstationSelectedBankId.isEmpty()) {
+            playstationSelectedBankId = bankService.findFirstByOrderById().map(Bank::getId).orElseThrow();
+        } else if (bankService.findOneDomain(playstationSelectedBankId).isEmpty()) {
+            playstationSelectedBankId = bankService.findFirstByOrderById().map(Bank::getId).orElseThrow();
+        }
+        settings.setPLAYSTATION_SELECTED_BANK_ID(playstationSelectedBankId);
+        return settingsRepository.save(settings);
+    }
+
     @Override
     public Settings update(Settings settings) {
-        Settings mainSettings = settingsRepository.findFirstByOrderById();
+        Settings mainSettings = getSettings();
         settings.setId(mainSettings.getId());
         return this.settingsRepository.save(settings);
     }

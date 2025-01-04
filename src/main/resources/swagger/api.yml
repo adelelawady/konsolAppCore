@@ -4550,6 +4550,26 @@ components:
           x-stoplight:
             id: gldsozrb9xp7h
           default: true
+        PLAYSTATION_SELECTED_STORE_ID:
+          type: string
+          x-stoplight:
+            id: gl8ynscc3kryw
+        PLAYSTATION_SELECTED_BANK_ID:
+          type: string
+          x-stoplight:
+            id: 5rcpvzedqebu6
+        ALLOW_NEGATIVE_INVENTORY:
+          type: boolean
+          x-stoplight:
+            id: iysnhrpy7cdbh
+          default: false
+          description: Indicates that inventory can drop below zero.
+        SAVE_INVOICE_DELETETED_INVOICEITEMS:
+          type: boolean
+          x-stoplight:
+            id: gkk505h0towkn
+          description: 'This option determines whether deleted invoice items should be saved or logged for record-keeping purposes. When enabled, any items removed from an invoice are retained in the system, allowing for auditing or restoration if needed.'
+          default: true
     AuthorityDTO:
       title: AuthorityDTO
       x-stoplight:

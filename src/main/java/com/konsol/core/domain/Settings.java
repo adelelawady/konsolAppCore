@@ -43,6 +43,19 @@ public class Settings implements Serializable {
     @Field("PURCHASE_UPDATE_ITEM_QTY_AFTER_SAVE")
     private boolean PURCHASE_UPDATE_ITEM_QTY_AFTER_SAVE = true; // BE
 
+    @Field("PLAYSTATION_SELECTED_STORE_ID")
+    private String PLAYSTATION_SELECTED_STORE_ID = "default";
+
+    // BE
+    @Field("PLAYSTATION_SELECTED_BANK_ID")
+    private String PLAYSTATION_SELECTED_BANK_ID = "default";
+
+    @Field("ALLOW_NEGATIVE_INVENTORY")
+    private boolean ALLOW_NEGATIVE_INVENTORY = false; // BE
+
+    @Field("SAVE_INVOICE_DELETETED_INVOICEITEMS")
+    private boolean SAVE_INVOICE_DELETETED_INVOICEITEMS = true; // BE
+
     public String getId() {
         return id;
     }
@@ -92,5 +105,37 @@ public class Settings implements Serializable {
 
     public void setPURCHASE_UPDATE_ITEM_QTY_AFTER_SAVE(boolean PURCHASE_UPDATE_ITEM_QTY_AFTER_SAVE) {
         this.PURCHASE_UPDATE_ITEM_QTY_AFTER_SAVE = PURCHASE_UPDATE_ITEM_QTY_AFTER_SAVE;
+    }
+
+    public String getPLAYSTATION_SELECTED_STORE_ID() {
+        return PLAYSTATION_SELECTED_STORE_ID;
+    }
+
+    public void setPLAYSTATION_SELECTED_STORE_ID(String PLAYSTATION_SELECTED_STORE_ID) {
+        this.PLAYSTATION_SELECTED_STORE_ID = PLAYSTATION_SELECTED_STORE_ID;
+    }
+
+    public String getPLAYSTATION_SELECTED_BANK_ID() {
+        return PLAYSTATION_SELECTED_BANK_ID;
+    }
+
+    public void setPLAYSTATION_SELECTED_BANK_ID(String PLAYSTATION_SELECTED_BANK_ID) {
+        this.PLAYSTATION_SELECTED_BANK_ID = PLAYSTATION_SELECTED_BANK_ID;
+    }
+
+    public boolean isALLOW_NEGATIVE_INVENTORY() {
+        return ALLOW_NEGATIVE_INVENTORY;
+    }
+
+    public void setALLOW_NEGATIVE_INVENTORY(boolean ALLOW_NEGATIVE_INVENTORY) {
+        this.ALLOW_NEGATIVE_INVENTORY = ALLOW_NEGATIVE_INVENTORY;
+    }
+
+    public boolean isSAVE_INVOICE_DELETETED_INVOICEITEMS() {
+        return SAVE_INVOICE_DELETETED_INVOICEITEMS;
+    }
+
+    public void setSAVE_INVOICE_DELETETED_INVOICEITEMS(boolean SAVE_INVOICE_DELETETED_INVOICEITEMS) {
+        this.SAVE_INVOICE_DELETETED_INVOICEITEMS = SAVE_INVOICE_DELETETED_INVOICEITEMS;
     }
 }
