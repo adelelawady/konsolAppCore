@@ -51,26 +51,20 @@ export class OrdersSliderComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // Check admin status directly
-    this.isAdmin = this.accountService.hasAnyAuthority([
-      AuthoritiesConstants.ADMIN, 
-      AuthoritiesConstants.SUPER_ADMIN
-    ]);
+    this.isAdmin = this.accountService.hasAnyAuthority([AuthoritiesConstants.ADMIN, AuthoritiesConstants.SUPER_ADMIN]);
 
     // Subscribe to account changes to update admin status
     this.subscription = this.accountService.getAuthenticationState().subscribe(account => {
       if (account) {
-        this.isAdmin = this.accountService.hasAnyAuthority([
-          AuthoritiesConstants.ADMIN,
-          AuthoritiesConstants.SUPER_ADMIN
-        ]);
+        this.isAdmin = this.accountService.hasAnyAuthority([AuthoritiesConstants.ADMIN, AuthoritiesConstants.SUPER_ADMIN]);
       }
     });
 
     // First try to get container from resolver data
     this.route.data.subscribe(data => {
       if (data['container']) {
-        this.itemsByCategory={};
-        this.selectedCategory=undefined;
+        this.itemsByCategory = {};
+        this.selectedCategory = undefined;
         // eslint-disable-next-line no-console
         this.container = data['container'];
         this.categories = this.container?.acceptedOrderCategories.map(cat => ({ name: cat })) ?? [];
@@ -91,12 +85,6 @@ export class OrdersSliderComponent implements OnInit, OnDestroy {
     this.subscription.add(
       this.playstationService.selectedDevice$.subscribe(device => {
         this.selectedDevice = device;
-      })
-    );
-
-    this.subscription.add(
-      this.playstationService.orderChange$.subscribe(() => {
-        this.triggerOrderChangeAnimation();
       })
     );
   }
@@ -214,7 +202,7 @@ export class OrdersSliderComponent implements OnInit, OnDestroy {
 
   editItem(item: ItemSimpleDTO): void {
     event?.stopPropagation();
-    
+
     if (!item.id) {
       console.error('No item ID available');
       return;
@@ -235,13 +223,13 @@ export class OrdersSliderComponent implements OnInit, OnDestroy {
           checkQty: fullItem.checkQty || false,
           PriceOptions: fullItem.PriceOptions || [],
         };
-        
+
         this.showEditModal = true;
       },
-      error: (error) => {
+      error: error => {
         console.error('Error loading item details:', error);
         // You may want to show a toastr notification here
-      }
+      },
     });
   }
 
@@ -254,7 +242,7 @@ export class OrdersSliderComponent implements OnInit, OnDestroy {
 
   managePriceOption(item: ItemSimpleDTO): void {
     event?.stopPropagation();
-    
+
     if (!item.id || !this.container?.id) {
       console.error('No item ID or container ID available');
       return;
@@ -264,23 +252,21 @@ export class OrdersSliderComponent implements OnInit, OnDestroy {
     this.itemResourceService.getItem(item.id).subscribe({
       next: (fullItem: ItemDTO) => {
         this.selectedPriceItem = fullItem;
-        
+
         // Check if price option exists for this container
-        const existingPriceOption = fullItem.PriceOptions?.find(
-          po => po.refId === this.container?.id
-        );
+        const existingPriceOption = fullItem.PriceOptions?.find(po => po.refId === this.container?.id);
 
         if (existingPriceOption) {
           this.priceValue = existingPriceOption.value || 0;
         } else {
           this.priceValue = Number(fullItem.price1) || 0;
         }
-        
+
         this.showPriceModal = true;
       },
-      error: (error) => {
+      error: error => {
         console.error('Error loading item details:', error);
-      }
+      },
     });
   }
 
@@ -289,17 +275,15 @@ export class OrdersSliderComponent implements OnInit, OnDestroy {
 
     const updatedItem: ItemDTO = {
       ...this.selectedPriceItem,
-      PriceOptions: [...(this.selectedPriceItem.PriceOptions || [])]
+      PriceOptions: [...(this.selectedPriceItem.PriceOptions || [])],
     };
     // Find existing price option or create new one
-    const existingPriceOptionIndex = updatedItem.PriceOptions?.findIndex(
-      po => po.refId === this.container?.id
-    ) ?? -1;
+    const existingPriceOptionIndex = updatedItem.PriceOptions?.findIndex(po => po.refId === this.container?.id) ?? -1;
 
     const priceOption = {
       refId: this.container.id,
       name: this.container.name || 'Custom Price',
-      value: this.priceValue
+      value: this.priceValue,
     };
 
     if (existingPriceOptionIndex >= 0 && updatedItem.PriceOptions) {
@@ -319,10 +303,10 @@ export class OrdersSliderComponent implements OnInit, OnDestroy {
         }
         this.toastr.success(this.translateService.instant('products.price.success'));
       },
-      error: (error) => {
+      error: error => {
         console.error('Error updating item price:', error);
         this.toastr.error(this.translateService.instant('products.price.error'));
-      }
+      },
     });
   }
 }

@@ -21,8 +21,8 @@
       </span>
     </div>
     <div class="device-actions" *ngIf="device.active">
-      <div class="dropdown">
-        <button class="btn btn-link" type="button" (click)="loadAvailableDevices()" data-bs-toggle="dropdown">
+      <div (click)="loadAvailableDevices()" class="dropdown">
+        <button class="btn btn-link" type="button" data-bs-toggle="dropdown">
           <i class="fas fa-cog"></i>
         </button>
         <ul class="dropdown-menu">

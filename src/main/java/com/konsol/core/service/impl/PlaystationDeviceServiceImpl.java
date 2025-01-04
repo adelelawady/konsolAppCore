@@ -5,7 +5,6 @@ import static com.konsol.core.repository.PlaystationDeviceRepository.DEVICE_BY_D
 
 import com.konsol.core.domain.Invoice;
 import com.konsol.core.domain.Item;
-import com.konsol.core.domain.User;
 import com.konsol.core.domain.enumeration.InvoiceKind;
 import com.konsol.core.domain.playstation.PlayStationSession;
 import com.konsol.core.domain.playstation.PlaystationDevice;
@@ -24,12 +23,12 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Instant;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import javax.print.PrintException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -56,6 +55,7 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
 
     private final PlayStationReceiptService playStationReceiptService;
     private final ReceiptPrinter receiptPrinter;
+    private final PlaystationContainerRepository playstationContainerRepository;
 
     public PlaystationDeviceServiceImpl(
         PlaystationDeviceRepository playstationDeviceRepository,
@@ -69,7 +69,9 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
         ItemService itemService,
         MongoTemplate mongoTemplate,
         PlayStationReceiptService playStationReceiptService,
-        ReceiptPrinter receiptPrinter
+        ReceiptPrinter receiptPrinter,
+        PlaystationContainerRepository playstationContainerRepository,
+        PlaystationContainerRepository playstationContainerRepository1
     ) {
         this.playstationDeviceRepository = playstationDeviceRepository;
         this.playstationDeviceMapper = playstationDeviceMapper;
@@ -83,6 +85,7 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
         this.mongoTemplate = mongoTemplate;
         this.playStationReceiptService = playStationReceiptService;
         this.receiptPrinter = receiptPrinter;
+        this.playstationContainerRepository = playstationContainerRepository1;
     }
 
     @Override
@@ -390,7 +393,17 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
             .findById(deviceId)
             .orElseThrow(() -> new RuntimeException("Device not found with id: " + deviceId));
         // Check if device is not in use
-        if (device.getSession() == null) {
+        if (device.getSession() == null && !device.getTimeManagement()) {
+            playstationContainerRepository
+                .findByCategory(device.getCategory())
+                .ifPresent(playstationContainer -> {
+                    StartDeviceSessionDTO startDeviceSessionDTO = new StartDeviceSessionDTO();
+                    startDeviceSessionDTO.setContainerId(playstationContainer.getId());
+                    this.startSession(deviceId, startDeviceSessionDTO);
+                    clearAllDevicesCaches();
+                });
+            //  this.startSession(deviceId, new StartDeviceSessionDTO());
+        } else if (device.getSession() == null && device.getTimeManagement()) {
             throw new RuntimeException("Device is Not Active");
         }
         invoiceService.addInvoiceItem(device.getSession().getInvoice().getId(), createInvoiceItemDTO);
@@ -413,6 +426,7 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
         }
         invoiceService.updateInvoiceItem(orderId, invoiceItemUpdateDTO);
         clearDeviceCaches(device);
+
         return playstationDeviceMapper.toDto(
             playstationDeviceRepository.findById(deviceId).orElseThrow(() -> new RuntimeException("Device not found with id: " + deviceId))
         );
@@ -429,7 +443,24 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
         if (device.getSession() == null) {
             throw new RuntimeException("Device is Not Active");
         }
+
         invoiceService.deleteInvoiceItem(orderId);
+        clearDeviceCaches(device);
+        playstationDeviceRepository
+            .findById(deviceId)
+            .ifPresent(playstationDevice -> {
+                if (
+                    playstationDevice.getSession() != null &&
+                    !playstationDevice.getTimeManagement() &&
+                    playstationDevice.getSession().getInvoice().getInvoiceItems().isEmpty()
+                ) {
+                    playStationSessionRepository.deleteById(playstationDevice.getSession().getId());
+                    playstationDevice.setSession(null);
+                    playstationDevice.setActive(false);
+                    playstationDeviceRepository.save(playstationDevice);
+                    clearAllDevicesCaches();
+                }
+            });
         clearDeviceCaches(device);
     }
 

@@ -44,9 +44,6 @@ export class DeviceCardComponent implements OnInit, OnDestroy {
       if (data['container']) {
         // eslint-disable-next-line no-console
         this.container = data['container'];
-        // eslint-disable-next-line no-console
-        console.log(this.container);
-        return;
       }
     });
 
@@ -83,7 +80,7 @@ export class DeviceCardComponent implements OnInit, OnDestroy {
       })
     );
 
-    this.loadAvailableDevices();
+    // this.loadAvailableDevices();
   }
 
   ngOnDestroy(): void {

@@ -19,9 +19,6 @@ export class PlaystationContainerResolver implements Resolve<PlaystationContaine
     if (!containerId) {
       return of(null);
     }
-
-    // eslint-disable-next-line no-console
-    console.log(containerId);
     // If containerId is found, call the service to load the container
     return this.containerStateService.loadContainer(containerId).pipe(
       catchError(() => of(null)) // Catch any error and return null

@@ -112,6 +112,9 @@ public class Invoice extends AbstractAuditingEntity<String> implements Serializa
     @Field("details")
     private String details;
 
+    @Field("deleted_items")
+    private Set<DeletedInvoiceItem> deletedItems = new HashSet<>();
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
     public String getPk() {
@@ -420,5 +423,25 @@ public class Invoice extends AbstractAuditingEntity<String> implements Serializa
 
     public void setUserNetPrice(@DecimalMin(value = "0") BigDecimal userNetPrice) {
         this.userNetPrice = userNetPrice;
+    }
+
+    public Set<DeletedInvoiceItem> getDeletedItems() {
+        return deletedItems;
+    }
+
+    public void setDeletedItems(Set<DeletedInvoiceItem> deletedItems) {
+        this.deletedItems = deletedItems;
+    }
+
+    public Invoice deletedItems(Set<DeletedInvoiceItem> deletedItems) {
+        this.setDeletedItems(deletedItems);
+        return this;
+    }
+
+    public void addDeletedItem(InvoiceItem invoiceItem, BigDecimal deletedQty) {
+        if (this.deletedItems == null) {
+            this.deletedItems = new HashSet<>();
+        }
+        this.deletedItems.add(new DeletedInvoiceItem(invoiceItem, deletedQty));
     }
 }

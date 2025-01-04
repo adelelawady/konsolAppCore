@@ -609,10 +609,30 @@ public class InvoiceServiceImpl implements InvoiceService {
             Optional<Invoice> invoice = findOneDomain(invoiceItem.get().getInvoiceId());
             if (invoice.isPresent()) {
                 Invoice updatedInvoice = invoice.get();
-                updatedInvoice.getInvoiceItems().remove(invoiceItem.get());
+                InvoiceItem itemToDelete = invoiceItem.get();
 
+                // Calculate deleted quantity
+                BigDecimal deletedQty = itemToDelete.getQtyOut() != null
+                    ? itemToDelete.getQtyOut()
+                    : (itemToDelete.getQtyIn() != null ? itemToDelete.getQtyIn() : BigDecimal.ZERO);
+
+                // Add to deleted items history
+                updatedInvoice.addDeletedItem(itemToDelete, deletedQty);
+
+                // Log the deletion
+                log.info(
+                    "Removing invoice item: {} from invoice: {}. Item: {}, Quantity: {}, Unit: {}",
+                    itemToDelete.getId(),
+                    updatedInvoice.getId(),
+                    itemToDelete.getItem().getName(),
+                    deletedQty,
+                    itemToDelete.getUnit()
+                );
+
+                // Remove item and update invoice
+                updatedInvoice.getInvoiceItems().remove(itemToDelete);
                 calcInvoice(invoiceRepository.save(updatedInvoice), true);
-                invoiceItemRepository.delete(invoiceItem.get());
+                invoiceItemRepository.delete(itemToDelete);
                 regenerateInvoiceItemsPk(updatedInvoice.getId());
             }
         }
@@ -1172,13 +1192,42 @@ public class InvoiceServiceImpl implements InvoiceService {
         return invoiceItemRepository
             .findById(id)
             .map(existingInvoiceItem -> {
+                // Calculate difference in quantity
+                BigDecimal oldQty = existingInvoiceItem.getUserQty();
+                BigDecimal newQty = invoiceItemUpdateDTO.getQty();
+
+                if (oldQty != null && newQty != null && oldQty.compareTo(newQty) > 0) {
+                    // If new quantity is less than old quantity, track the difference
+                    BigDecimal deletedQty = oldQty.subtract(newQty);
+
+                    // Update invoice's deletedItems
+                    Optional<Invoice> invoice = findOneDomain(existingInvoiceItem.getInvoiceId());
+                    if (invoice.isPresent()) {
+                        Invoice updatedInvoice = invoice.get();
+
+                        // Add to deleted items history
+                        updatedInvoice.addDeletedItem(existingInvoiceItem, deletedQty);
+
+                        // Log the update
+                        log.info(
+                            "Updating invoice item: {} in invoice: {}. Item: {}, Reduced quantity: {}, Unit: {}",
+                            existingInvoiceItem.getId(),
+                            updatedInvoice.getId(),
+                            existingInvoiceItem.getItem().getName(),
+                            deletedQty,
+                            existingInvoiceItem.getUnit()
+                        );
+
+                        invoiceRepository.save(updatedInvoice);
+                    }
+                }
+
                 existingInvoiceItem.setUserQty(invoiceItemUpdateDTO.getQty());
                 invoiceItemMapper.partialUpdate(existingInvoiceItem, invoiceItemUpdateDTO);
                 calcInvoiceInvoiceItem(existingInvoiceItem);
                 calcInvoice(findOneDomain(existingInvoiceItem.getInvoiceId()).get(), true);
                 return existingInvoiceItem;
             })
-            //.map(invoiceItemRepository::save)
             .map(invoiceItemMapper::toInvoiceItemViewDTO)
             .orElseGet(null);
     }
