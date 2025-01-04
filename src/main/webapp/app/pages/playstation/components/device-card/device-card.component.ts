@@ -8,6 +8,7 @@ import { PlaystationResourceService } from 'app/core/konsolApi/api/playstationRe
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmationModalComponent } from 'app/shared/components/confirmation-modal/confirmation-modal.component';
 import { ActivatedRoute } from '@angular/router';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'jhi-device-card',
@@ -29,6 +30,9 @@ export class DeviceCardComponent implements OnInit, OnDestroy {
 
   // eslint-disable-next-line @typescript-eslint/member-ordering
   availableDevices: any[] = [];
+
+  public isLoadingDevices = false;
+  public loadError: string | null = null;
 
   constructor(
     private playstationService: PlaystationService,
@@ -201,14 +205,30 @@ export class DeviceCardComponent implements OnInit, OnDestroy {
   }
 
   loadAvailableDevices(): void {
-    this.playstationResourceService.getDevicesByCategory({ name: this.container?.category }).subscribe(devices => {
-      // Filter out the current device and active devices
-      if (this.device.timeManagement) {
-        this.availableDevices = devices.filter(d => d.id !== this.device.id && !d.active && d.timeManagement);
-      } else {
-        this.availableDevices = devices.filter(d => d.id !== this.device.id && !d.active && !d.timeManagement);
+    // Reset states
+    this.isLoadingDevices = true;
+    this.loadError = null;
+
+    this.playstationResourceService.getDevicesByCategory({ name: this.container?.category }).subscribe(
+      devices => {
+        // Filter out the current device and active devices
+        if (this.device.timeManagement) {
+          this.availableDevices = devices.filter(d => d.id !== this.device.id && !d.active && d.timeManagement);
+        } else {
+          this.availableDevices = devices.filter(d => d.id !== this.device.id && !d.active && !d.timeManagement);
+        }
+        this.isLoadingDevices = false;
+        this.cdr.detectChanges();
+      },
+      error => {
+        this.loadError = 'Failed to load devices';
+        console.error('Error loading devices:', error);
+        this.cdr.detectChanges();
+      },
+      () => {
+        this.isLoadingDevices = false;
       }
-    });
+    );
   }
 
   moveDevice(targetDeviceId: string): void {
