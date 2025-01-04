@@ -116,3 +116,10 @@ jhipster:
 # https://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
+app:
+  license:
+    encryption:
+      # IMPORTANT: Replace this key in production using environment variables
+      # or secure configuration management
+      key: 'HJ9qpbhZUIOO7Dt6sYkxzAjhB3VGQAXTXGUj/PLJ8Kw=' # Dev environment key - DO NOT USE IN PRODUCTION
+

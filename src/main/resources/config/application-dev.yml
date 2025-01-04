@@ -96,3 +96,8 @@ jhipster:
 # ===================================================================
 
 # application:
+
+app:
+  license:
+    encryption:
+      key: 'HJ9qpbhZUIOO7Dt6sYkxzAjhB3VGQAXTXGUj/PLJ8Kw=' # Dev environment key - DO NOT USE IN PRODUCTION
