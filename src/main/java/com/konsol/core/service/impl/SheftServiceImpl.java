@@ -79,6 +79,7 @@ public class SheftServiceImpl implements SheftService {
         return sheftMapper.toDto(sheft);
     }
 
+    /*
     @Override
     public SheftDTO update(SheftDTO sheftDTO) {
         LOG.debug("Request to update Sheft : {}", sheftDTO);
@@ -86,6 +87,8 @@ public class SheftServiceImpl implements SheftService {
         sheft = sheftRepository.save(sheft);
         return sheftMapper.toDto(sheft);
     }
+
+     */
 
     @Override
     public Optional<SheftDTO> partialUpdate(SheftDTO sheftDTO) {

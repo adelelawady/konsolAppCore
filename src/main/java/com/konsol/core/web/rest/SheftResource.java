@@ -89,6 +89,7 @@ public class SheftResource implements SheftsApiDelegate {
      * or with status {@code 500 (Internal Server Error)} if the sheftDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
+    /*
     @Override
     public ResponseEntity<SheftDTO> updateSheft(String id, SheftDTO sheftDTO) {
         LOG.debug("REST request to update Sheft : {}, {}", id, sheftDTO);
@@ -109,7 +110,7 @@ public class SheftResource implements SheftsApiDelegate {
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, sheftDTO.getId()))
             .body(sheftDTO);
     }
-
+*/
     /**
      * {@code PATCH  /shefts/:id} : Partial updates given fields of an existing sheft, field will ignore if it is null
      *

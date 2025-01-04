@@ -26,7 +26,7 @@ public interface SheftService {
      * @param sheftDTO the entity to update.
      * @return the persisted entity.
      */
-    SheftDTO update(SheftDTO sheftDTO);
+    // SheftDTO update(SheftDTO sheftDTO);
 
     /**
      * Partially updates a sheft.
