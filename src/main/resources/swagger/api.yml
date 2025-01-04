@@ -4619,12 +4619,10 @@ components:
             id: gkk505h0towkn
           description: 'This option determines whether deleted invoice items should be saved or logged for record-keeping purposes. When enabled, any items removed from an invoice are retained in the system, allowing for auditing or restoration if needed.'
           default: true
-        # Backup Settings
         BACKUP_ENABLED:
           type: boolean
           default: true
           description: Enable/disable automatic backup system
-
         BACKUP_SCHEDULE_TYPE:
           type: string
           enum:
@@ -4634,13 +4632,11 @@ components:
             - MANUAL
           default: DAILY
           description: Frequency of automatic backups
-
         BACKUP_TIME:
           type: string
           format: time
           default: '23:00'
-          description: Time to run backup (HH:mm format)
-
+          description: 'Time to run backup (HH:mm format)'
         BACKUP_DAYS:
           type: array
           items:
@@ -4654,32 +4650,26 @@ components:
               - SATURDAY
               - SUNDAY
           description: Days to run backup (for WEEKLY schedule)
-
         BACKUP_RETENTION_DAYS:
           type: integer
           default: 30
           description: Number of days to keep backup files
-
         BACKUP_LOCATION:
           type: string
           default: 'C:/KonsolBackups'
           description: Directory path to store backup files
-
         BACKUP_INCLUDE_FILES:
           type: boolean
           default: true
           description: Include file attachments in backup
-
         BACKUP_COMPRESS:
           type: boolean
           default: true
           description: Compress backup files
-
         MONGODB_DUMP_PATH:
           type: string
           default: 'C:/Program Files/MongoDB/Tools/100/bin/mongodump.exe'
           description: Path to MongoDB dump executable
-
         MONGODB_RESTORE_PATH:
           type: string
           default: 'C:/Program Files/MongoDB/Tools/100/bin/mongorestore.exe'
@@ -5452,6 +5442,14 @@ components:
           type: string
           x-stoplight:
             id: j1r7rjfus45i9
+        deviceName:
+          type: string
+          x-stoplight:
+            id: 8gh0gwpz8ftbh
+        deviceId:
+          type: string
+          x-stoplight:
+            id: fbxt339d0j28m
     PlaystationContainer:
       type: object
       description: A model representing a Playstation container.

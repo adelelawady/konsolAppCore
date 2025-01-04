@@ -36,7 +36,7 @@ export class DeviceListComponent implements OnInit, OnDestroy {
         // eslint-disable-next-line no-console
         this.container = data['container'];
         // eslint-disable-next-line no-console
-        //this.loadDevices(true).subscribe();
+        this.loadDevices(true).subscribe();
       }
     });
     this.playstationService.reloadDevices$.subscribe(() => {

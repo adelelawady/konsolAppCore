@@ -12,4 +12,9 @@ import org.mapstruct.*;
     uses = { UtilitsMapper.class, InvoiceMapper.class },
     nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS
 )
-public interface PlayStationSessionMapper extends EntityMapper<PsSessionDTO, PlayStationSession> {}
+public interface PlayStationSessionMapper extends EntityMapper<PsSessionDTO, PlayStationSession> {
+    @Override
+    @Mapping(source = "device.id", target = "deviceId")
+    @Mapping(source = "device.name", target = "deviceName")
+    PsSessionDTO toDto(PlayStationSession entity);
+}

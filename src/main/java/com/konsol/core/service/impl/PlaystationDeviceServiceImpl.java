@@ -454,6 +454,7 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
                     !playstationDevice.getTimeManagement() &&
                     playstationDevice.getSession().getInvoice().getInvoiceItems().isEmpty()
                 ) {
+                    invoiceService.delete(playstationDevice.getSession().getInvoice().getId());
                     playStationSessionRepository.deleteById(playstationDevice.getSession().getId());
                     playstationDevice.setSession(null);
                     playstationDevice.setActive(false);

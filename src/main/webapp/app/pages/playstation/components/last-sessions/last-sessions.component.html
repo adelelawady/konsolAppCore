@@ -47,7 +47,10 @@
                           <i class="fa fa-clock"></i>
                           {{ session.startTime | date: 'shortTime' }}
                         </div>
-                        <div class="session-type">{{ session.type?.name }}</div>
+                        <div class="session-type">
+                          <span class="status status-blue">{{ session.type?.name }}</span>
+                          <span class="status status-gray">#{{ session?.invoice?.pk }}</span>
+                        </div>
                         <div class="session-duration">{{ calculateDuration(session.startTime, session.endTime) }}</div>
                         <div class="session-total">{{ session.invoice?.netPrice | currencyK }}</div>
                       </div>

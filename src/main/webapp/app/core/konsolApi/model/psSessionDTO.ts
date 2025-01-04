@@ -21,4 +21,6 @@ export interface PsSessionDTO {
   deviceSessionsNetPrice?: number;
   endTime?: string;
   containerId?: string;
+  deviceName?: string;
+  deviceId?: string;
 }
