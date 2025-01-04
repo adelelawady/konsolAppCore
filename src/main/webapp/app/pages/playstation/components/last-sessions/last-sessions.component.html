@@ -115,6 +115,31 @@
                             </ul>
                           </div>
                         </div>
+                        <div class="row mt-3" *ngIf="session && session.invoice && session.invoice?.invoiceItems">
+                          <div class="col-12">
+                            <h5>{{ 'playstation.lastSessions.invoice.items' | translate }}</h5>
+                            <div class="table-responsive">
+                              <table class="table table-sm">
+                                <thead>
+                                  <tr>
+                                    <th>{{ 'playstation.lastSessions.invoice.item.name' | translate }}</th>
+                                    <th class="text-center">{{ 'playstation.lastSessions.invoice.item.quantity' | translate }}</th>
+                                    <th class="text-end">{{ 'playstation.lastSessions.invoice.item.price' | translate }}</th>
+                                    <th class="text-end">{{ 'playstation.lastSessions.invoice.item.total' | translate }}</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr *ngFor="let item of session.invoice?.invoiceItems">
+                                    <td>{{ item.item?.name }}</td>
+                                    <td class="text-center">{{ item.qtyOut }}</td>
+                                    <td class="text-end">{{ item.price | currencyK }}</td>
+                                    <td class="text-end">{{ item.netPrice | currencyK }}</td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
                         <div class="action-buttons mt-3">
                           <button class="btn btn-primary" (click)="printSession(session)">
                             <i class="fa fa-print"></i>
@@ -215,5 +240,38 @@
     display: flex;
     justify-content: flex-end;
     gap: 0.5rem;
+  }
+
+  .table-responsive {
+    margin-top: 0.5rem;
+  }
+
+  .table {
+    font-size: 0.875rem;
+    margin-bottom: 0;
+  }
+
+  .table th {
+    font-weight: 600;
+    background-color: #f8f9fa;
+    border-bottom-width: 1px;
+  }
+
+  .table td,
+  .table th {
+    padding: 0.5rem;
+    vertical-align: middle;
+  }
+
+  .table tbody tr:hover {
+    background-color: #f8f9fa;
+  }
+
+  .text-end {
+    text-align: right;
+  }
+
+  .text-center {
+    text-align: center;
   }
 </style>

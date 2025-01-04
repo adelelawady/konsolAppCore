@@ -41,7 +41,14 @@
         "discount": "Discount",
         "netPrice": "Net Price",
         "userNetPrice": "User Net Price",
-        "created": "Created Date"
+        "created": "Created Date",
+        "items": "Invoice Items",
+        "item": {
+          "name": "Item Name",
+          "quantity": "Quantity",
+          "price": "Price",
+          "total": "Total"
+        }
       },
       "error": {
         "loading": "Error loading sessions and containers"
