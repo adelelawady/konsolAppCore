@@ -1,4 +1,4 @@
-import { DEFAULT_CURRENCY_CODE, NgModule } from '@angular/core';
+import { DEFAULT_CURRENCY_CODE, forwardRef, NgModule } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 
 import { SharedLibsModule } from './shared-libs.module';
@@ -23,6 +23,8 @@ import { BankSelectorComponent } from './components/bank-selector/bank-selector.
 import { AccountSelectorComponent } from './components/account-selector/account-selector.component';
 import { TranslationModule } from '../shared/language/translation.module';
 import { CurrencySpacePipe } from './pipes/currency-space.pipe';
+import { IconPickerComponent } from './components/icon-picker/icon-picker.component';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @NgModule({
   imports: [SharedLibsModule],
@@ -46,7 +48,8 @@ import { CurrencySpacePipe } from './pipes/currency-space.pipe';
     StoreSelectorComponent,
     BankSelectorComponent,
     AccountSelectorComponent,
-    CurrencySpacePipe
+    CurrencySpacePipe,
+    IconPickerComponent,
   ],
   exports: [
     SharedLibsModule,
@@ -69,12 +72,18 @@ import { CurrencySpacePipe } from './pipes/currency-space.pipe';
     StoreSelectorComponent,
     BankSelectorComponent,
     AccountSelectorComponent,
-    CurrencySpacePipe
+    CurrencySpacePipe,
+    IconPickerComponent,
   ],
   providers: [
     AppCurrencyPipe,
     CurrencyPipe,
     { provide: DEFAULT_CURRENCY_CODE, useValue: 'EGP' }, // Replace 'USD' with your desired default currency code
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => IconPickerComponent),
+      multi: true,
+    },
   ],
 })
 export class SharedModule {}

@@ -5,6 +5,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpResponse } from '@angular/common/http';
 import { ItemResourceService, CategoryItem } from 'app/core/konsolApi';
+import { IconPickerComponent } from '../../../shared/components/icon-picker/icon-picker.component';
 
 @Component({
   selector: 'jhi-admin-playstation-container',
@@ -116,6 +117,12 @@ export class AdminPlaystationContainerComponent implements OnInit {
         });
       }
     }
+  }
+
+  onIconChange(icon: string): void {
+    this.editForm.patchValue({
+      defaultIcon: icon,
+    });
   }
 
   delete(container: any): void {

@@ -72,9 +72,14 @@
                   [disabled]="loadingContainerId === toString(container.id)"
                 >
                   <span *ngIf="loadingContainerId !== toString(container.id)" class="px-2">
+                    <!--
                     <i *ngIf="selectedContainerId !== toString(container.id)" class="fas fa-folder me-2 opacity-50"></i>
-                    <!-- <i *ngIf="selectedContainerId === toString(container.id)" class="fas fa-folder-open me-2 opacity-50"></i>-->
                     <i *ngIf="selectedContainerId === toString(container.id)" class="fa-brands fa-playstation"></i>
+                  -->
+
+                    <i *ngIf="!container || !container.defaultIcon" class="fas fa-folder me-2 opacity-50"></i>
+                    <i *ngIf="container && container.defaultIcon" class="{{ container.defaultIcon }}"></i>
+
                     {{ container.name }}
                   </span>
                   <span *ngIf="loadingContainerId === toString(container.id)" class="d-inline-flex align-items-center px-2">

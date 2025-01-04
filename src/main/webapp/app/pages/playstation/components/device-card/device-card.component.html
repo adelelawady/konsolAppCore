@@ -7,7 +7,8 @@
 >
   <div class="device-card__header">
     <div class="room-info">
-      <i class="fas fa-tv"></i>
+      <i *ngIf="!container || !container.defaultIcon" class="fas fa-tv"></i>
+      <i *ngIf="container && container.defaultIcon" class="{{ container.defaultIcon }}"></i>
       <span>{{ device.name }}</span>
     </div>
   </div>

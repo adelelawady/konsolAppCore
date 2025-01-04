@@ -30,7 +30,10 @@
         <div *ngFor="let container of containers" class="col-md-6 col-lg-4">
           <div class="card">
             <div class="card-header">
-              <h3 class="card-title">{{ container.name }}</h3>
+              <h3 class="card-title">
+                <i [class]="container.defaultIcon" *ngIf="container.defaultIcon"></i>
+                {{ container.name }}
+              </h3>
               <div class="card-subtitle text-muted">{{ container.category }}</div>
             </div>
             <div class="card-body">
@@ -134,12 +137,12 @@
 
         <div class="mb-3">
           <label class="form-label">{{ 'konsolCoreApp.playstationContainer.defaultIcon' | translate }}</label>
-          <input
-            type="text"
-            class="form-control"
-            formControlName="defaultIcon"
-            placeholder="{{ 'konsolCoreApp.playstationContainer.defaultIconPlaceholder' | translate }}"
-          />
+          <app-icon-picker
+            [value]="editForm.get('defaultIcon')?.value"
+            [formControlName]="'defaultIcon'"
+            (onIconChange)="onIconChange($event)"
+            [placeholder]="'konsolCoreApp.playstationContainer.defaultIconPlaceholder' | translate"
+          ></app-icon-picker>
         </div>
 
         <div class="mb-3">
