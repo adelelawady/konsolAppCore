@@ -63,7 +63,7 @@ public interface SheftService {
 
     SheftDTO getCurrentSheft();
 
-    Sheft endSheft();
+    Sheft endSheft(boolean print);
 
     void calculateSheft(String id);
 

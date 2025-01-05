@@ -17,9 +17,7 @@ import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
 // @ts-ignore
-import { BankBalanceDTO } from '../model/bankBalanceDTO';
-// @ts-ignore
-import { BankTransactionsDTO } from '../model/bankTransactionsDTO';
+import { SheftDTO } from '../model/sheftDTO';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS } from '../variables';
@@ -85,39 +83,30 @@ export class DefaultService {
   }
 
   /**
-   * Your GET endpoint
-   * @param id
+   *
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public getBankAnalysis(
-    id: string,
+  public startSheft(
     observe?: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
-  ): Observable<BankBalanceDTO>;
-  public getBankAnalysis(
-    id: string,
+  ): Observable<SheftDTO>;
+  public startSheft(
     observe?: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
-  ): Observable<HttpResponse<BankBalanceDTO>>;
-  public getBankAnalysis(
-    id: string,
+  ): Observable<HttpResponse<SheftDTO>>;
+  public startSheft(
     observe?: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
-  ): Observable<HttpEvent<BankBalanceDTO>>;
-  public getBankAnalysis(
-    id: string,
+  ): Observable<HttpEvent<SheftDTO>>;
+  public startSheft(
     observe: any = 'body',
     reportProgress: boolean = false,
     options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
   ): Observable<any> {
-    if (id === null || id === undefined) {
-      throw new Error('Required parameter id was null or undefined when calling getBankAnalysis.');
-    }
-
     let localVarHeaders = this.defaultHeaders;
 
     let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
@@ -146,7 +135,7 @@ export class DefaultService {
       }
     }
 
-    return this.httpClient.get<BankBalanceDTO>(`${this.configuration.basePath}/banks/${encodeURIComponent(String(id))}/analysis`, {
+    return this.httpClient.put<SheftDTO>(`${this.configuration.basePath}/shefts/current/active`, null, {
       context: localVarHttpContext,
       responseType: <any>responseType_,
       withCredentials: this.configuration.withCredentials,
@@ -154,81 +143,5 @@ export class DefaultService {
       observe: observe,
       reportProgress: reportProgress,
     });
-  }
-
-  /**
-   * Your GET endpoint
-   *
-   * @param id
-   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-   * @param reportProgress flag to report request and response progress.
-   */
-  public getBankTransactions(
-    id: string,
-    observe?: 'body',
-    reportProgress?: boolean,
-    options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
-  ): Observable<Array<BankTransactionsDTO>>;
-  public getBankTransactions(
-    id: string,
-    observe?: 'response',
-    reportProgress?: boolean,
-    options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
-  ): Observable<HttpResponse<Array<BankTransactionsDTO>>>;
-  public getBankTransactions(
-    id: string,
-    observe?: 'events',
-    reportProgress?: boolean,
-    options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
-  ): Observable<HttpEvent<Array<BankTransactionsDTO>>>;
-  public getBankTransactions(
-    id: string,
-    observe: any = 'body',
-    reportProgress: boolean = false,
-    options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
-  ): Observable<any> {
-    if (id === null || id === undefined) {
-      throw new Error('Required parameter id was null or undefined when calling getBankTransactions.');
-    }
-
-    let localVarHeaders = this.defaultHeaders;
-
-    let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-    if (localVarHttpHeaderAcceptSelected === undefined) {
-      // to determine the Accept header
-      const httpHeaderAccepts: string[] = ['application/json'];
-      localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    }
-    if (localVarHttpHeaderAcceptSelected !== undefined) {
-      localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
-    }
-
-    let localVarHttpContext: HttpContext | undefined = options && options.context;
-    if (localVarHttpContext === undefined) {
-      localVarHttpContext = new HttpContext();
-    }
-
-    let responseType_: 'text' | 'json' | 'blob' = 'json';
-    if (localVarHttpHeaderAcceptSelected) {
-      if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
-        responseType_ = 'text';
-      } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
-        responseType_ = 'json';
-      } else {
-        responseType_ = 'blob';
-      }
-    }
-
-    return this.httpClient.get<Array<BankTransactionsDTO>>(
-      `${this.configuration.basePath}/banks/${encodeURIComponent(String(id))}/transactions`,
-      {
-        context: localVarHttpContext,
-        responseType: <any>responseType_,
-        withCredentials: this.configuration.withCredentials,
-        headers: localVarHeaders,
-        observe: observe,
-        reportProgress: reportProgress,
-      }
-    );
   }
 }

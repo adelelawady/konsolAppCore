@@ -16,6 +16,8 @@ export class SheftManagementComponent implements OnInit, OnDestroy {
   loading = false;
   error = false;
   private refreshInterval?: Subscription;
+  public showStopSheftModal = false;
+  public printSheftOnStop = true;
 
   constructor(
     private sheftResource: SheftResourceService,
@@ -44,6 +46,12 @@ export class SheftManagementComponent implements OnInit, OnDestroy {
     }
     this.activeSheftService.getActiveSheft(true).subscribe({
       next: sheft => {
+        if (sheft == null) {
+          this.activeSheft = null;
+          this.loading = false;
+          this.error = false;
+          return;
+        }
         if (sheft?.id) {
           this.sheftResource.getSheft(sheft.id).subscribe({
             next: sheft => {
@@ -68,20 +76,18 @@ export class SheftManagementComponent implements OnInit, OnDestroy {
   }
 
   stopActiveSheft(): void {
-    if (!confirm('Are you sure you want to stop the active shift?')) {
-      return;
-    }
-
     this.loading = true;
-    this.sheftResource.stopActiveSheft().subscribe({
+    this.sheftResource.stopActiveSheft(this.printSheftOnStop).subscribe({
       next: stoppedSheft => {
         this.activeSheftService.clearCache();
+        this.closeStopSheftModal();
         this.router.navigate(['/shefts', stoppedSheft.id]);
       },
       error: error => {
         console.error('Error stopping sheft:', error);
         this.error = true;
         this.loading = false;
+        this.closeStopSheftModal();
       },
     });
   }
@@ -111,44 +117,63 @@ export class SheftManagementComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.sheftResource
-      .partialUpdateSheft(this.activeSheft.id, this.activeSheft)
-      .subscribe({
-        next: (updatedSheft) => {
-          this.activeSheft = updatedSheft;
-          this.toastr.success('Shift updated successfully');
-        },
-        error: (error) => {
-          this.loadActiveSheft();
-          this.toastr.error('Failed to update shift');
-          console.error('Error updating shift:', error);
-        }
-      });
+    this.sheftResource.partialUpdateSheft(this.activeSheft.id, this.activeSheft).subscribe({
+      next: updatedSheft => {
+        this.activeSheft = updatedSheft;
+        this.toastr.success('Shift updated successfully');
+      },
+      error: error => {
+        this.loadActiveSheft();
+        this.toastr.error('Failed to update shift');
+        console.error('Error updating shift:', error);
+      },
+    });
   }
 
   handleInputChange(field: string, event: Event): void {
     if (!this.activeSheft) return;
-    
+
     const input = event.target as HTMLInputElement;
     const value = input.value;
-    
+
     // Update the local activeSheft object
     if (field === 'additions' || field === 'sheftExpenses') {
       (this.activeSheft as any)[field] = parseFloat(value) || 0;
     } else {
       (this.activeSheft as any)[field] = value;
     }
-    
+
     this.updateSheft();
   }
 
   handleTextAreaChange(field: string, event: Event): void {
     if (!this.activeSheft) return;
-    
+
     const textarea = event.target as HTMLTextAreaElement;
     // Update the local activeSheft object
     (this.activeSheft as any)[field] = textarea.value;
-    
+
     this.updateSheft();
+  }
+
+  public startSheft(): void {
+    this.sheftResource.startSheft().subscribe({
+      next: response => {
+        // Reload the active shift after creation
+        this.loadActiveSheft();
+      },
+      error: error => {
+        console.error('Error starting shift:', error);
+        // Handle error - you might want to show a notification to the user
+      },
+    });
+  }
+
+  public confirmStopSheft(): void {
+    this.showStopSheftModal = true;
+  }
+
+  public closeStopSheftModal(): void {
+    this.showStopSheftModal = false;
   }
 }

@@ -2703,9 +2703,27 @@ paths:
                 $ref: '#/components/schemas/SheftDTO'
       tags:
         - sheft-resource
+      parameters:
+        - schema:
+            type: boolean
+            default: 'false'
+          in: query
+          name: print
     get:
       summary: ''
       operationId: getActiveSheft
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SheftDTO'
+      tags:
+        - sheft-resource
+    put:
+      summary: ''
+      operationId: startSheft
       responses:
         '200':
           description: OK
@@ -2901,7 +2919,7 @@ paths:
       operationId: getUserLicense
       responses:
         '200':
-          description: OK         
+          description: OK
           content:
             application/json:
               schema:

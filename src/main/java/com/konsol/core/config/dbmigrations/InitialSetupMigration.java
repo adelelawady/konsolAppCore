@@ -6,10 +6,12 @@ import com.konsol.core.domain.Bank;
 import com.konsol.core.domain.Store;
 import com.konsol.core.domain.User;
 import com.konsol.core.security.AuthoritiesConstants;
+import com.konsol.core.service.LicenseService;
 import io.mongock.api.annotations.ChangeUnit;
 import io.mongock.api.annotations.Execution;
 import io.mongock.api.annotations.RollbackExecution;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 /**
@@ -20,8 +22,11 @@ public class InitialSetupMigration {
 
     private final MongoTemplate template;
 
-    public InitialSetupMigration(MongoTemplate template) {
+    private final LicenseService licenseService;
+
+    public InitialSetupMigration(MongoTemplate template, LicenseService licenseService) {
         this.template = template;
+        this.licenseService = licenseService;
     }
 
     @Execution
@@ -38,10 +43,15 @@ public class InitialSetupMigration {
         addUsers(userAuthority, adminAuthority, superAdminAuthority);
         createFirstBank();
         createFirstStore();
+        createTrialLicense();
     }
 
     @RollbackExecution
     public void rollback() {}
+
+    private void createTrialLicense() {
+        licenseService.generateLicense("Trial License", Instant.now().plus(30, ChronoUnit.DAYS));
+    }
 
     private Authority createAuthority(String authority) {
         Authority adminAuthority = new Authority();

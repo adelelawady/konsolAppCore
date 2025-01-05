@@ -1,6 +1,11 @@
 {
   "konsolCoreApp": {
     "sheft": {
+      "stop": {
+        "title": "Stop Shift",
+        "confirmation": "Are you sure you want to stop the active shift?",
+        "print": "Print shift report"
+      },
       "management": {
         "title": "Shift Management",
         "loading": "Loading shift information...",
@@ -10,7 +15,9 @@
         "viewDetails": "View Details",
         "stopShift": "Stop Shift",
         "noActiveShift": "No Active Shift",
-        "noActiveShiftDesc": "There is currently no active shift in the system."
+        "noActiveShiftDesc": "There is currently no active shift in the system.",
+        "startShift": "Start Shift",
+        "clickToStart": "Click to start a new shift"
       },
       "home": {
         "title": "Shefts",

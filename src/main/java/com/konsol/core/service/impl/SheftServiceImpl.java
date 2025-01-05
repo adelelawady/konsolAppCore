@@ -5,6 +5,7 @@ import com.konsol.core.domain.Sheft;
 import com.konsol.core.domain.User;
 import com.konsol.core.repository.PlayStationSessionRepository;
 import com.konsol.core.repository.SheftRepository;
+import com.konsol.core.service.PrintableService.SheftReceiptService;
 import com.konsol.core.service.SheftService;
 import com.konsol.core.service.UserService;
 import com.konsol.core.service.api.dto.PsSessionDTO;
@@ -13,6 +14,8 @@ import com.konsol.core.service.mapper.PlayStationSessionMapper;
 import com.konsol.core.service.mapper.SheftMapper;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.math.BigDecimal;
 import java.time.*;
 import java.util.Arrays;
@@ -177,11 +180,16 @@ public class SheftServiceImpl implements SheftService {
 
     @Override
     public SheftDTO getCurrentSheft() {
-        return this.sheftMapper.toDto(startSheft());
+        Optional<Sheft> activeSheft = sheftRepository.findByActiveTrue();
+        if (activeSheft.isEmpty()) {
+            return null;
+        } else {
+            return this.sheftMapper.toDto(startSheft());
+        }
     }
 
     @Override
-    public Sheft endSheft() {
+    public Sheft endSheft(boolean print) {
         LOG.debug("Request to end current Sheft");
 
         // Check if there's already an active shift
@@ -204,6 +212,18 @@ public class SheftServiceImpl implements SheftService {
 
         // Calculate the sheft stats
         calculateSheft(sheft.getId());
+
+        if (print) {
+            SheftReceiptService sheftReceiptService = new SheftReceiptService();
+            sheftReceiptService.prepareReceipt(sheftRepository.findById(sheft.getId()).get());
+            PrinterJob job = PrinterJob.getPrinterJob();
+            job.setPrintable(sheftReceiptService);
+            try {
+                job.print();
+            } catch (PrinterException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
         return sheftRepository
             .findById(sheft.getId())

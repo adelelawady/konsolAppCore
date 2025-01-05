@@ -39,25 +39,45 @@
           <!-- Playstation -->
           <div *ngIf="isPlaystationLayout" class="col-md-6 row">
             <!-- Active sheft -->
-            <div *ngIf="activeSheft$ | async as activeSheft" class="active-sheft-wrapper col-md-4">
-              <div style="cursor: pointer" routerLink="/sheft-management" class="active-sheft-card">
-                <div class="active-sheft-status">
-                  <span class="pulse-dot"></span>
-                  <span class="status-text" jhiTranslate="konsolCoreApp.sheft.status.active">Active</span>
-                  <small class="text-muted" jhiTranslate="konsolCoreApp.sheft.home.title">sheft</small>
-                </div>
-                <div class="active-sheft-info">
-                  <div class="info-row">
-                    <span class="label" jhiTranslate="konsolCoreApp.sheft.id">ID:</span>
-                    <span class="value">{{ activeSheft.id | slice: 0:8 }}...</span>
+            <div class="col-md-4">
+              <ng-container *ngIf="activeSheft$ | async as activeSheft; else noActiveSheft">
+                <div style="cursor: pointer" routerLink="/sheft-management" class="active-sheft-card">
+                  <div class="active-sheft-status">
+                    <span class="pulse-dot"></span>
+                    <span class="status-text" jhiTranslate="konsolCoreApp.sheft.status.active">Active</span>
+                    <small class="text-muted" jhiTranslate="konsolCoreApp.sheft.home.title">sheft</small>
                   </div>
+                  <div class="active-sheft-info">
+                    <div class="info-row">
+                      <span class="label" jhiTranslate="konsolCoreApp.sheft.id">ID:</span>
+                      <span class="value">{{ activeSheft.id | slice: 0:8 }}...</span>
+                    </div>
 
-                  <div *ngIf="activeSheft?.startTime" class="info-row">
-                    <span class="label" jhiTranslate="konsolCoreApp.sheft.duration">Duration:</span>
-                    <span class="value">{{ getDuration(activeSheft?.startTime) }}</span>
+                    <div *ngIf="activeSheft?.startTime" class="info-row">
+                      <span class="label" jhiTranslate="konsolCoreApp.sheft.duration">Duration:</span>
+                      <span class="value">{{ getDuration(activeSheft?.startTime) }}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </ng-container>
+
+              <ng-template #noActiveSheft>
+                <div style="cursor: pointer" routerLink="/sheft-management" class="active-sheft-card inactive">
+                  <div class="active-sheft-status">
+                    <span class="status-dot inactive"></span>
+                    <span class="status-text" jhiTranslate="konsolCoreApp.sheft.status.inactive">Inactive</span>
+                    <small class="text-muted" jhiTranslate="konsolCoreApp.sheft.home.title">sheft</small>
+                  </div>
+                  <div class="active-sheft-info">
+                    <p class="text-muted mb-0" jhiTranslate="konsolCoreApp.sheft.management.noActiveShiftDesc">
+                      There is currently no active shift in the system.
+                    </p>
+                    <small class="text-primary" jhiTranslate="konsolCoreApp.sheft.management.clickToStart">
+                      Click to start a new shift
+                    </small>
+                  </div>
+                </div>
+              </ng-template>
             </div>
 
             <div class="container-buttons d-flex justify-content-end col-md-8">

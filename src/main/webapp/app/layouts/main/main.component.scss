@@ -76,3 +76,29 @@
     }
   }
 }
+
+.active-sheft-card {
+  // ... existing styles ...
+
+  &.inactive {
+    background-color: var(--tblr-gray-100);
+    border: 1px dashed var(--tblr-gray-400);
+
+    &:hover {
+      background-color: var(--tblr-gray-200);
+      border-style: solid;
+    }
+
+    .status-dot {
+      &.inactive {
+        background-color: var(--tblr-gray-500);
+        animation: none;
+      }
+    }
+
+    .text-primary {
+      display: block;
+      margin-top: 0.5rem;
+    }
+  }
+}

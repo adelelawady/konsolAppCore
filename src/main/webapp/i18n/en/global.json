@@ -1,7 +1,8 @@
 {
   "global": {
     "footer": {
-      "copyright": "Copyright {{ year }} KonsolCore. All rights reserved."
+      "copyright": "Copyright {{ year }} KonsolCore. All rights reserved.",
+      "licensedTo": "Licensed to {{ client }}"
     },
     "itemSearch": {
       "placeholder": "Search products...",

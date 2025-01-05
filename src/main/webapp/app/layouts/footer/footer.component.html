@@ -3,13 +3,10 @@
     <div class="col-lg-auto ms-lg-auto">
       <ul class="list-inline list-inline-dots mb-0">
         <li class="list-inline-item">
-          <a href="javascript:void(0)" class="link-secondary" jhiTranslate="global.menu.docs">Documentation</a>
+          <a routerLink="/system-settings" href="javascript:void(0)" class="link-secondary" jhiTranslate="global.menu.license">License</a>
         </li>
         <li class="list-inline-item">
-          <a href="javascript:void(0)" class="link-secondary" jhiTranslate="global.menu.license">License</a>
-        </li>
-        <li class="list-inline-item">
-          <a href="javascript:void(0)" class="link-secondary" jhiTranslate="global.menu.support">Support</a>
+          <a href="mailto:adel50ali50@gmail.com" class="link-secondary" jhiTranslate="global.menu.support">Support</a>
         </li>
       </ul>
     </div>
@@ -21,6 +18,13 @@
           </span>
         </li>
         <li class="list-inline-item"><span jhiTranslate="global.version">Version</span>&nbsp;{{ version }}</li>
+
+        <!-- Licensed To  -->
+        <li class="list-inline-item" *ngIf="license && license.clientId">
+          <span jhiTranslate="global.footer.licensedTo" [translateValues]="{ client: license.clientId }">
+            Licensed to {{ license.clientId }}
+          </span>
+        </li>
       </ul>
     </div>
   </div>
