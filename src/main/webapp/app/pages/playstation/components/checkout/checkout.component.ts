@@ -16,7 +16,7 @@ import { PlaystationEndSessionDTO } from 'app/core/konsolApi';
 })
 export class CheckoutComponent implements OnInit {
   @Output() cancelCheckout = new EventEmitter<void>();
-
+  printSessionReceipt = false;
   checkoutForm: FormGroup;
   selectedDevice: PsDeviceDTO | null = null;
   isProcessing = false;
@@ -212,7 +212,7 @@ export class CheckoutComponent implements OnInit {
 
     const endSessionDTo: PlaystationEndSessionDTO = {
       matchFinalUserPrice: matchFinalUserPrice,
-      printSessionRecipt: true,
+      printSessionRecipt: this.printSessionReceipt,
     };
 
     this.playstationResourceService.stopDeviceSession(this.selectedDevice.id, endSessionDTo).subscribe({

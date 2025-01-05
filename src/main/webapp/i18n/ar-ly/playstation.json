@@ -327,6 +327,9 @@
         "confirm": "تأكيد",
         "endSession": "إنهاء الجلسة",
         "cancel": "إلغاء"
+      },
+      "print": {
+        "receipt": "طباعة الإيصال"
       }
     },
     "session": {

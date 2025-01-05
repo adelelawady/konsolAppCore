@@ -319,6 +319,9 @@
         "confirm": "Confirm",
         "endSession": "End Session",
         "cancel": "Cancel"
+      },
+      "print": {
+        "receipt": "Print Receipt"
       }
     },
     "session": {
