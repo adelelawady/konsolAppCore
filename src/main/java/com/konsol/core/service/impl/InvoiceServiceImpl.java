@@ -557,10 +557,13 @@ public class InvoiceServiceImpl implements InvoiceService {
         if (invFound != null) {
             BigDecimal totalInvoiceItem_ItemQtyInInvoice = calcItemQtyOutInInvoiceItems(invoiceId, createInvoiceItemDTO.getItemId(), true);
             if (
-                checkQty &&
-                storeService.checkNotItemQtyAvailable(
-                    createInvoiceItemDTO.getItemId(),
-                    ((createInvoiceItemDTO.getQty().multiply(invFound.getUnitPieces())).add(totalInvoiceItem_ItemQtyInInvoice))
+                !settings.isALLOW_NEGATIVE_INVENTORY() &&
+                (
+                    checkQty &&
+                    storeService.checkNotItemQtyAvailable(
+                        createInvoiceItemDTO.getItemId(),
+                        ((createInvoiceItemDTO.getQty().multiply(invFound.getUnitPieces())).add(totalInvoiceItem_ItemQtyInInvoice))
+                    )
                 )
             ) {
                 throw new ItemQtyException("مشكلة ف كمية الصنف", "لا يوجد ما يكفي من الصنف ف المخازن");
@@ -573,7 +576,11 @@ public class InvoiceServiceImpl implements InvoiceService {
             regenerateInvoiceItemsPk(invoiceId);
             return findOne(invoiceId).orElseGet(null);
         } else {
-            if (checkQty && storeService.checkNotItemQtyAvailable(createInvoiceItemDTO.getItemId(), createInvoiceItemDTO.getQty())) {
+            if (
+                !settings.isALLOW_NEGATIVE_INVENTORY() &&
+                checkQty &&
+                storeService.checkNotItemQtyAvailable(createInvoiceItemDTO.getItemId(), createInvoiceItemDTO.getQty())
+            ) {
                 throw new ItemQtyException("مشكلة ف كمية الصنف", "لا يوجد ما يكفي من الصنف ف المخازن");
             }
         }
@@ -1189,39 +1196,41 @@ public class InvoiceServiceImpl implements InvoiceService {
      */
     @Override
     public InvoiceItemViewDTO updateInvoiceItem(String id, InvoiceItemUpdateDTO invoiceItemUpdateDTO) {
+        Settings settings = settingService.getSettings();
         return invoiceItemRepository
             .findById(id)
             .map(existingInvoiceItem -> {
                 // Calculate difference in quantity
-                BigDecimal oldQty = existingInvoiceItem.getUserQty();
-                BigDecimal newQty = invoiceItemUpdateDTO.getQty();
+                if (settings.isSAVE_INVOICE_DELETETED_INVOICEITEMS()) {
+                    BigDecimal oldQty = existingInvoiceItem.getUserQty();
+                    BigDecimal newQty = invoiceItemUpdateDTO.getQty();
 
-                if (oldQty != null && newQty != null && oldQty.compareTo(newQty) > 0) {
-                    // If new quantity is less than old quantity, track the difference
-                    BigDecimal deletedQty = oldQty.subtract(newQty);
+                    if (oldQty != null && newQty != null && oldQty.compareTo(newQty) > 0) {
+                        // If new quantity is less than old quantity, track the difference
+                        BigDecimal deletedQty = oldQty.subtract(newQty);
 
-                    // Update invoice's deletedItems
-                    Optional<Invoice> invoice = findOneDomain(existingInvoiceItem.getInvoiceId());
-                    if (invoice.isPresent()) {
-                        Invoice updatedInvoice = invoice.get();
+                        // Update invoice's deletedItems
+                        Optional<Invoice> invoice = findOneDomain(existingInvoiceItem.getInvoiceId());
+                        if (invoice.isPresent()) {
+                            Invoice updatedInvoice = invoice.get();
 
-                        // Add to deleted items history
-                        updatedInvoice.addDeletedItem(existingInvoiceItem, deletedQty);
+                            // Add to deleted items history
+                            updatedInvoice.addDeletedItem(existingInvoiceItem, deletedQty);
 
-                        // Log the update
-                        log.info(
-                            "Updating invoice item: {} in invoice: {}. Item: {}, Reduced quantity: {}, Unit: {}",
-                            existingInvoiceItem.getId(),
-                            updatedInvoice.getId(),
-                            existingInvoiceItem.getItem().getName(),
-                            deletedQty,
-                            existingInvoiceItem.getUnit()
-                        );
+                            // Log the update
+                            log.info(
+                                "Updating invoice item: {} in invoice: {}. Item: {}, Reduced quantity: {}, Unit: {}",
+                                existingInvoiceItem.getId(),
+                                updatedInvoice.getId(),
+                                existingInvoiceItem.getItem().getName(),
+                                deletedQty,
+                                existingInvoiceItem.getUnit()
+                            );
 
-                        invoiceRepository.save(updatedInvoice);
+                            invoiceRepository.save(updatedInvoice);
+                        }
                     }
                 }
-
                 existingInvoiceItem.setUserQty(invoiceItemUpdateDTO.getQty());
                 invoiceItemMapper.partialUpdate(existingInvoiceItem, invoiceItemUpdateDTO);
                 calcInvoiceInvoiceItem(existingInvoiceItem);

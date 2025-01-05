@@ -23,7 +23,6 @@ public class StoreItem implements Serializable {
     @Id
     private String id;
 
-    @DecimalMin(value = "0")
     @Field("qty")
     private BigDecimal qty;
 

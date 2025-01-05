@@ -1,17 +1,10 @@
 package com.konsol.core.service.impl;
 
-import com.konsol.core.domain.Invoice;
-import com.konsol.core.domain.InvoiceItem;
-import com.konsol.core.domain.Item;
-import com.konsol.core.domain.Store;
-import com.konsol.core.domain.StoreItem;
+import com.konsol.core.domain.*;
 import com.konsol.core.domain.enumeration.InvoiceKind;
-import com.konsol.core.repository.InvoiceItemRepository;
-import com.konsol.core.repository.InvoiceRepository;
-import com.konsol.core.repository.MoneyRepository;
-import com.konsol.core.repository.StoreItemRepository;
-import com.konsol.core.repository.StoreRepository;
+import com.konsol.core.repository.*;
 import com.konsol.core.service.ItemService;
+import com.konsol.core.service.SettingService;
 import com.konsol.core.service.StoreService;
 import com.konsol.core.service.api.dto.*;
 import com.konsol.core.service.mapper.StoreItemMapper;
@@ -62,6 +55,7 @@ public class StoreServiceImpl implements StoreService {
     private final InvoiceRepository invoiceRepository;
     private final InvoiceItemRepository invoiceItemRepository;
     private final MoneyRepository moneyRepository;
+    private final SettingsRepository settingsRepository;
 
     public StoreServiceImpl(
         StoreRepository storeRepository,
@@ -72,7 +66,8 @@ public class StoreServiceImpl implements StoreService {
         MongoTemplate mongoTemplate,
         InvoiceRepository invoiceRepository,
         InvoiceItemRepository invoiceItemRepository,
-        MoneyRepository moneyRepository
+        MoneyRepository moneyRepository,
+        SettingsRepository settingsRepository
     ) {
         this.storeRepository = storeRepository;
         this.storeItemRepository = storeItemRepository;
@@ -83,6 +78,7 @@ public class StoreServiceImpl implements StoreService {
         this.invoiceRepository = invoiceRepository;
         this.invoiceItemRepository = invoiceItemRepository;
         this.moneyRepository = moneyRepository;
+        this.settingsRepository = settingsRepository;
     }
 
     @Override
@@ -272,25 +268,37 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public void subtractItemQtyFromStores(String ItemId, BigDecimal qty) {
+        Settings settings = settingsRepository.findFirstByOrderById();
+
         Optional<Item> item = itemService.findOneById(ItemId);
         if (item.isEmpty()) {
             throw new ItemNotFoundException(String.format("الصنف {0} غير متاح لتعديل سجلات المخازن", ItemId));
         }
 
-        if (checkNotItemQtyAvailable(ItemId, qty)) {
+        if (checkNotItemQtyAvailable(ItemId, qty) && settings.isSALES_CHECK_ITEM_QTY() && !settings.isALLOW_NEGATIVE_INVENTORY()) {
             throw new ItemQtyException("مشكلة ف كم��ة الصنف", "لا يوجد ما يكفي من الصنف ف المخازن");
         }
 
-        for (StoreItemDTO storeItemDTO : this.getAllStoresItemsForItem(ItemId)) {
-            if (storeItemDTO.getQty().compareTo(qty) >= 0) {
-                storeItemDTO.setQty(storeItemDTO.getQty().subtract(qty));
+        if (!item.get().isCheckQty()) {
+            return;
+        }
 
+        for (StoreItemDTO storeItemDTO : this.getAllStoresItemsInAllStoresForItem(ItemId)) {
+            if (!settings.isALLOW_NEGATIVE_INVENTORY()) {
+                if (storeItemDTO.getQty().compareTo(qty) >= 0) {
+                    storeItemDTO.setQty(storeItemDTO.getQty().subtract(qty));
+
+                    this.setStoreItem(storeItemMapper.toStoreItemIdOnlyDTO(storeItemDTO));
+                    break;
+                } else {
+                    qty = qty.subtract(storeItemDTO.getQty());
+                    storeItemDTO.setQty(new BigDecimal(0));
+                    this.setStoreItem(storeItemMapper.toStoreItemIdOnlyDTO(storeItemDTO));
+                }
+            } else {
+                storeItemDTO.setQty(storeItemDTO.getQty().subtract(qty));
                 this.setStoreItem(storeItemMapper.toStoreItemIdOnlyDTO(storeItemDTO));
                 break;
-            } else {
-                qty = qty.subtract(storeItemDTO.getQty());
-                storeItemDTO.setQty(new BigDecimal(0));
-                this.setStoreItem(storeItemMapper.toStoreItemIdOnlyDTO(storeItemDTO));
             }
         }
     }

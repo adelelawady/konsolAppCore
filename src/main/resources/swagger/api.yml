@@ -3154,7 +3154,6 @@ components:
           type: string
         qty:
           type: number
-          minimum: 0
           exclusiveMinimum: false
           default: 0
         cost:
@@ -3188,6 +3187,8 @@ components:
       type: object
       x-tags:
         - item
+      title: itemSimpleDTO
+      description: 'simple model details for item '
       properties:
         id:
           type: string
@@ -3202,7 +3203,6 @@ components:
           type: string
         qty:
           type: number
-          minimum: 0
           exclusiveMinimum: false
           default: 0
         cost:
@@ -3211,8 +3211,6 @@ components:
           type: number
       required:
         - name
-      title: itemSimpleDTO
-      description: 'simple model details for item '
     ItemViewDTO:
       type: object
       title: ItemViewDTO
@@ -3236,7 +3234,6 @@ components:
         category:
           type: string
         qty:
-          minimum: 0
           exclusiveMinimum: false
           type: number
         cost:
@@ -3304,7 +3301,6 @@ components:
         id:
           type: string
         qty:
-          minimum: 0
           exclusiveMinimum: false
           type: number
         item:
@@ -3315,7 +3311,6 @@ components:
       type: object
       properties:
         qty:
-          minimum: 0
           exclusiveMinimum: false
           type: number
         itemId:

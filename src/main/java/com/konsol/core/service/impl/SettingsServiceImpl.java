@@ -75,10 +75,10 @@ public class SettingsServiceImpl implements SettingService {
             settingsToSave = checkAndAssignPlaystationSettingsToBank(settingsToSave);
             return settingsToSave;
         } else {
-            settings = checkAndAssignSettingsToStore(settings);
-            settings = checkAndAssignSettingsToBank(settings);
-            settings = checkAndAssignPlaystationSettingsToStore(settings);
-            settings = checkAndAssignPlaystationSettingsToBank(settings);
+            //  settings = checkAndAssignSettingsToStore(settings);
+            //  settings = checkAndAssignSettingsToBank(settings);
+            //  settings = checkAndAssignPlaystationSettingsToStore(settings);
+            //  settings = checkAndAssignPlaystationSettingsToBank(settings);
             return settings;
         }
     }

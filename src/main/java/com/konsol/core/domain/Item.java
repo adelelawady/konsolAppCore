@@ -45,7 +45,6 @@ public class Item extends AbstractAuditingEntity<String> implements Serializable
     @Field("category")
     private String category;
 
-    @DecimalMin(value = "0")
     @Field("qty")
     private BigDecimal qty;
 
