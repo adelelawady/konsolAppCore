@@ -18,6 +18,8 @@ import { SessionHistoryControlComponent } from './playstation/session-history-co
 import { SessionDetailsComponent } from './playstation/session-history-control/session-details/session-details.component';
 import playStationSessionResolve from 'app/entities/play-station-session/route/play-station-session-routing-resolve.service';
 import { LicenseComponent } from './license/license.component';
+import { AccountsEmployeeComponent } from './accounts copy/accounts.component';
+import { AccountEmployeeDetailsComponent } from './accounts copy/account-details/account-details.component';
 
 const routes: Routes = [
   {
@@ -67,6 +69,23 @@ const routes: Routes = [
         component: AccountDetailsComponent,
         canActivate: [UserRouteAccessService],
         data: { breadcrumb: 'Account Details' },
+      },
+    ],
+  },
+  {
+    path: 'employees',
+    data: { breadcrumb: 'employees' },
+    children: [
+      {
+        path: '',
+        component: AccountsEmployeeComponent,
+        canActivate: [UserRouteAccessService],
+      },
+      {
+        path: ':id',
+        component: AccountEmployeeDetailsComponent,
+        canActivate: [UserRouteAccessService],
+        data: { breadcrumb: 'employee Details' },
       },
     ],
   },

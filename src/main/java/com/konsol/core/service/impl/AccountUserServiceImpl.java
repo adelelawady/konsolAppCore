@@ -6,6 +6,7 @@ import com.konsol.core.domain.AccountUser;
 import com.konsol.core.domain.Bank;
 import com.konsol.core.domain.Money;
 import com.konsol.core.domain.Settings;
+import com.konsol.core.domain.enumeration.AccountKind;
 import com.konsol.core.domain.enumeration.InvoiceKind;
 import com.konsol.core.domain.enumeration.MoneyKind;
 import com.konsol.core.repository.AccountUserRepository;
@@ -100,6 +101,10 @@ public class AccountUserServiceImpl implements AccountUserService {
         log.debug("Request to save AccountUser : {}", accountUserDTO);
         AccountUser accountUser = accountUserMapper.toEntity(accountUserDTO);
         accountUser = accountUserRepository.save(accountUser);
+
+        if (accountUserDTO.getEmployee()) {
+            accountUser.setKind(AccountKind.EMPLOYEE);
+        }
         return accountUserMapper.toDto(accountUser);
     }
 
@@ -111,6 +116,9 @@ public class AccountUserServiceImpl implements AccountUserService {
      */
     @Override
     public AccountUser save(AccountUser accountUser) {
+        if (accountUser.isEmployee()) {
+            accountUser.setKind(AccountKind.EMPLOYEE);
+        }
         return accountUserRepository.save(accountUser);
     }
 
@@ -125,7 +133,9 @@ public class AccountUserServiceImpl implements AccountUserService {
         log.debug("Request to save AccountUser : {}", createAccountUserDTO);
 
         AccountUser accountUser = accountUserMapper.fromCreateAccountUser(createAccountUserDTO);
-
+        if (createAccountUserDTO.getEmployee()) {
+            accountUser.setKind(AccountKind.EMPLOYEE);
+        }
         accountUser = accountUserRepository.save(accountUser);
         return accountUserMapper.toDto(accountUser);
     }
@@ -214,6 +224,10 @@ public class AccountUserServiceImpl implements AccountUserService {
                         oldBalanceOut,
                         newBalanceOut
                     );
+                }
+
+                if (accountUserDTO.getEmployee()) {
+                    existingAccountUser.setKind(AccountKind.EMPLOYEE);
                 }
 
                 return existingAccountUser;

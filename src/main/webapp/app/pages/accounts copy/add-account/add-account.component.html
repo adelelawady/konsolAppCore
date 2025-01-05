@@ -1,0 +1,111 @@
+<div class="modal" [class.show]="showModal" [style.display]="showModal ? 'block' : 'none'" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          {{ (account ? 'accounts.actions.edit' : 'accounts.actions.create') | translate }}
+        </h5>
+        <button type="button" class="btn-close" (click)="onClose()"></button>
+      </div>
+      <form [formGroup]="accountForm" (ngSubmit)="onSubmit()">
+        <div class="modal-body">
+          <!-- Name -->
+          <div class="mb-3">
+            <label class="form-label">{{ 'accounts.fields.name' | translate }} <span class="text-danger">*</span></label>
+            <div class="input-icon">
+              <span class="input-icon-addon">
+                <i class="ti ti-user"></i>
+              </span>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="name"
+                [placeholder]="'accounts.placeholders.name' | translate"
+                [class.is-invalid]="submitted && accountForm.get('name')?.errors"
+              />
+            </div>
+            <div class="invalid-feedback" *ngIf="submitted && getFieldError('name') as error">
+              {{ error | translate }}
+            </div>
+          </div>
+
+          <!-- Phone -->
+          <div class="mb-3">
+            <label class="form-label">{{ 'accounts.fields.phone' | translate }}</label>
+            <div class="input-icon">
+              <span class="input-icon-addon">
+                <i class="ti ti-phone"></i>
+              </span>
+              <input type="tel" class="form-control" formControlName="phone" [placeholder]="'accounts.placeholders.phone' | translate" />
+            </div>
+          </div>
+
+          <!-- Address -->
+          <div class="mb-3">
+            <label class="form-label">{{ 'accounts.fields.address' | translate }}</label>
+            <div class="input-icon">
+              <span class="input-icon-addon">
+                <i class="ti ti-map-pin"></i>
+              </span>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="address"
+                [placeholder]="'accounts.placeholders.address' | translate"
+              />
+            </div>
+          </div>
+
+          <!-- Balance In -->
+          <div class="mb-3">
+            <label class="form-label">{{ 'accounts.fields.balanceIn' | translate }} <span class="text-danger">*</span></label>
+            <div class="input-icon">
+              <span class="input-icon-addon">
+                <i class="ti ti-cash"></i>
+              </span>
+              <input
+                type="number"
+                class="form-control"
+                formControlName="balanceIn"
+                [class.is-invalid]="submitted && accountForm.get('balanceIn')?.errors"
+              />
+            </div>
+            <div class="invalid-feedback" *ngIf="submitted && getFieldError('balanceIn') as error">
+              {{ error | translate }}
+            </div>
+          </div>
+
+          <!-- Balance Out -->
+          <div class="mb-3">
+            <label class="form-label">{{ 'accounts.fields.balanceOut' | translate }} <span class="text-danger">*</span></label>
+            <div class="input-icon">
+              <span class="input-icon-addon">
+                <i class="ti ti-cash"></i>
+              </span>
+              <input
+                type="number"
+                class="form-control"
+                formControlName="balanceOut"
+                [class.is-invalid]="submitted && accountForm.get('balanceOut')?.errors"
+              />
+            </div>
+            <div class="invalid-feedback" *ngIf="submitted && getFieldError('balanceOut') as error">
+              {{ error | translate }}
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-link link-secondary" (click)="onClose()">
+              {{ 'accounts.actions.cancel' | translate }}
+            </button>
+            <button type="submit" class="btn btn-primary ms-auto" [disabled]="loading">
+              <span class="spinner-border spinner-border-sm me-2" *ngIf="loading"></span>
+              {{ (account ? 'accounts.actions.save' : 'accounts.actions.create') | translate }}
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop fade show" *ngIf="showModal"></div>

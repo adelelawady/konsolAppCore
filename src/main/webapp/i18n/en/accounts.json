@@ -1,5 +1,8 @@
 {
   "accounts": {
+    "employees": {
+      "title": "Employees"
+    },
     "title": "Accounts Management",
     "subtitle": "Manage your business accounts and contacts",
     "details": {
@@ -51,7 +54,8 @@
       "all": "All Types",
       "CUSTOMER": "Customer",
       "SUPPLIER": "Supplier",
-      "SALEMAN": "Salesman"
+      "SALEMAN": "Salesman",
+      "EMPLOYEE": "employee"
     },
     "actions": {
       "create": "New Account",

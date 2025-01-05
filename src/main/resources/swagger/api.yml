@@ -3349,6 +3349,7 @@ components:
             - CUSTOMER
             - SUPPLIER
             - SALEMAN
+            - EMPLOYEE
         balanceIn:
           minimum: 0
           exclusiveMinimum: false
@@ -3375,6 +3376,11 @@ components:
           x-stoplight:
             id: 47mf7wx6v5ykd
           format: date-time
+        employee:
+          type: boolean
+          x-stoplight:
+            id: 13hd53s7hrn9r
+          default: false
       required:
         - name
     AccountUserContainer:
@@ -3397,6 +3403,7 @@ components:
             - CUSTOMER
             - SUPPLIER
             - SALEMAN
+            - EMPLOYEE
           description: Kind of user searching for
         name:
           type: string
@@ -3430,6 +3437,11 @@ components:
           type: string
           x-stoplight:
             id: yqnhnhx21456f
+        employee:
+          type: boolean
+          x-stoplight:
+            id: fm25u2tkotl3d
+          default: false
     CreateAccountUserDTO:
       type: object
       properties:
@@ -3441,6 +3453,7 @@ components:
             - CUSTOMER
             - SUPPLIER
             - SALEMAN
+            - EMPLOYEE
           default: CUSTOMER
         balanceIn:
           minimum: 0
@@ -3458,6 +3471,11 @@ components:
           type: string
         address2:
           type: string
+        employee:
+          type: boolean
+          x-stoplight:
+            id: 4jmb7ogzbj88z
+          default: false
       required:
         - name
     BankDTO:

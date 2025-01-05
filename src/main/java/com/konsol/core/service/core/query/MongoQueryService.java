@@ -706,6 +706,13 @@ import org.bson.Document;
         Document andCondition = new Document();
 
         // Add the "kind" condition to the `andCondition` document
+        if (accountUserSearchModel.getEmployee() != null && accountUserSearchModel.getEmployee()) {
+            andCondition.put("employee", true);
+        } else {
+            andCondition.put("employee", false);
+        }
+
+        // Add the "kind" condition to the `andCondition` document
         if (accountUserSearchModel.getKind() != null) {
             andCondition.put("kind", new Document("$regex", accountUserSearchModel.getKind().toString()).append("$options", "i"));
         }

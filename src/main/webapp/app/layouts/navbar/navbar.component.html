@@ -144,6 +144,12 @@
               </a>
             </li>
             <li>
+              <a class="dropdown-item" routerLink="employees" routerLinkActive="active" (click)="collapseNavbar()">
+                <i class="fas fa-users-gear" class="me-2"></i>
+                <span jhiTranslate="accounts.employees.title">User management</span>
+              </a>
+            </li>
+            <li>
               <a class="dropdown-item" routerLink="admin/metrics" routerLinkActive="active" (click)="collapseNavbar()">
                 <fa-icon [icon]="faTachometerAlt" [fixedWidth]="true" class="me-2"></fa-icon>
                 <span jhiTranslate="global.menu.admin.metrics">Metrics</span>

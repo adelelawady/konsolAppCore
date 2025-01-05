@@ -27,6 +27,9 @@ public class AccountUser extends AbstractAuditingEntity<String> implements Seria
     @Field("kind")
     private AccountKind kind;
 
+    @Field("employee")
+    private boolean employee = false;
+
     @DecimalMin(value = "0")
     @Field("balance_in")
     private BigDecimal balanceIn;
@@ -182,5 +185,13 @@ public class AccountUser extends AbstractAuditingEntity<String> implements Seria
             ", address='" + getAddress() + "'" +
             ", address2='" + getAddress2() + "'" +
             "}";
+    }
+
+    public boolean isEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(boolean employee) {
+        this.employee = employee;
     }
 }

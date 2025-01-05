@@ -1,5 +1,8 @@
 {
   "accounts": {
+    "employees": {
+      "title": "الموظفين"
+    },
     "title": "إدارة الحسابات",
     "subtitle": "إدارة حسابات وجهات اتصال عملك",
     "details": {
@@ -51,7 +54,8 @@
       "all": "جميع الأنواع",
       "CUSTOMER": "عميل",
       "SUPPLIER": "مورد",
-      "SALEMAN": "مندوب مبيعات"
+      "SALEMAN": "مندوب مبيعات",
+      "EMPLOYEE": "موظف"
     },
     "actions": {
       "create": "حساب جديد",

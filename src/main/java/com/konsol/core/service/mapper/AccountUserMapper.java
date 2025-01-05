@@ -10,5 +10,8 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring", uses = { UtilitsMapper.class })
 public interface AccountUserMapper extends EntityMapper<AccountUserDTO, AccountUser> {
+    @Override
+    AccountUserDTO toDto(AccountUser entity);
+
     AccountUser fromCreateAccountUser(CreateAccountUserDTO createAccountUserDTO);
 }

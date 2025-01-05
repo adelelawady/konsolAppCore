@@ -10,23 +10,22 @@
  * Do not edit the class manually.
  */
 
-
-export interface CreateAccountUserDTO { 
-    name: string;
-    kind?: CreateAccountUserDTO.KindEnum;
-    balanceIn?: number;
-    balanceOut?: number;
-    phone?: string;
-    address?: string;
-    address2?: string;
+export interface CreateAccountUserDTO {
+  name: string;
+  kind?: CreateAccountUserDTO.KindEnum;
+  balanceIn?: number;
+  balanceOut?: number;
+  phone?: string;
+  address?: string;
+  address2?: string;
+  employee?: boolean;
 }
 export namespace CreateAccountUserDTO {
-    export type KindEnum = 'CUSTOMER' | 'SUPPLIER' | 'SALEMAN';
-    export const KindEnum = {
-        Customer: 'CUSTOMER' as KindEnum,
-        Supplier: 'SUPPLIER' as KindEnum,
-        Saleman: 'SALEMAN' as KindEnum
-    };
+  export type KindEnum = 'CUSTOMER' | 'SUPPLIER' | 'SALEMAN' | 'EMPLOYEE';
+  export const KindEnum = {
+    Customer: 'CUSTOMER' as KindEnum,
+    Supplier: 'SUPPLIER' as KindEnum,
+    Saleman: 'SALEMAN' as KindEnum,
+    Employee: 'EMPLOYEE' as KindEnum,
+  };
 }
-
-
