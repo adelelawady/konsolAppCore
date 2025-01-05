@@ -17,7 +17,15 @@ import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
 // @ts-ignore
+import { GenerateAdminLicenseKey200Response } from '../model/generateAdminLicenseKey200Response';
+// @ts-ignore
+import { GenerateAdminLicenseKeyRequest } from '../model/generateAdminLicenseKeyRequest';
+// @ts-ignore
+import { LicenseDTO } from '../model/licenseDTO';
+// @ts-ignore
 import { PerformRestoreRequest } from '../model/performRestoreRequest';
+// @ts-ignore
+import { ProcessSuperAdminLicenseRequest } from '../model/processSuperAdminLicenseRequest';
 // @ts-ignore
 import { ServerSettings } from '../model/serverSettings';
 
@@ -82,6 +90,90 @@ export class GLOBALService {
       throw Error('key may not be null if value is not object or array');
     }
     return httpParams;
+  }
+
+  /**
+   * Generate encrypted admin license key
+   * Generates an encrypted admin license key for testing purposes (development only)
+   * @param generateAdminLicenseKeyRequest
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public generateAdminLicenseKey(
+    generateAdminLicenseKeyRequest: GenerateAdminLicenseKeyRequest,
+    observe?: 'body',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
+  ): Observable<GenerateAdminLicenseKey200Response>;
+  public generateAdminLicenseKey(
+    generateAdminLicenseKeyRequest: GenerateAdminLicenseKeyRequest,
+    observe?: 'response',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
+  ): Observable<HttpResponse<GenerateAdminLicenseKey200Response>>;
+  public generateAdminLicenseKey(
+    generateAdminLicenseKeyRequest: GenerateAdminLicenseKeyRequest,
+    observe?: 'events',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
+  ): Observable<HttpEvent<GenerateAdminLicenseKey200Response>>;
+  public generateAdminLicenseKey(
+    generateAdminLicenseKeyRequest: GenerateAdminLicenseKeyRequest,
+    observe: any = 'body',
+    reportProgress: boolean = false,
+    options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
+  ): Observable<any> {
+    if (generateAdminLicenseKeyRequest === null || generateAdminLicenseKeyRequest === undefined) {
+      throw new Error('Required parameter generateAdminLicenseKeyRequest was null or undefined when calling generateAdminLicenseKey.');
+    }
+
+    let localVarHeaders = this.defaultHeaders;
+
+    let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+    if (localVarHttpHeaderAcceptSelected === undefined) {
+      // to determine the Accept header
+      const httpHeaderAccepts: string[] = ['application/json'];
+      localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    }
+    if (localVarHttpHeaderAcceptSelected !== undefined) {
+      localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+    }
+
+    let localVarHttpContext: HttpContext | undefined = options && options.context;
+    if (localVarHttpContext === undefined) {
+      localVarHttpContext = new HttpContext();
+    }
+
+    // to determine the Content-Type header
+    const consumes: string[] = ['application/json'];
+    const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+    if (httpContentTypeSelected !== undefined) {
+      localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+    }
+
+    let responseType_: 'text' | 'json' | 'blob' = 'json';
+    if (localVarHttpHeaderAcceptSelected) {
+      if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+        responseType_ = 'text';
+      } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+        responseType_ = 'json';
+      } else {
+        responseType_ = 'blob';
+      }
+    }
+
+    return this.httpClient.post<GenerateAdminLicenseKey200Response>(
+      `${this.configuration.basePath}/sys/license/generate`,
+      generateAdminLicenseKeyRequest,
+      {
+        context: localVarHttpContext,
+        responseType: <any>responseType_,
+        withCredentials: this.configuration.withCredentials,
+        headers: localVarHeaders,
+        observe: observe,
+        reportProgress: reportProgress,
+      }
+    );
   }
 
   /**
@@ -283,6 +375,86 @@ export class GLOBALService {
     }
 
     return this.httpClient.post<boolean>(`${this.configuration.basePath}/sys/settings/restore`, performRestoreRequest, {
+      context: localVarHttpContext,
+      responseType: <any>responseType_,
+      withCredentials: this.configuration.withCredentials,
+      headers: localVarHeaders,
+      observe: observe,
+      reportProgress: reportProgress,
+    });
+  }
+
+  /**
+   * Process super admin license key
+   * Processes an encrypted license key to generate a new license
+   * @param processSuperAdminLicenseRequest
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public processSuperAdminLicense(
+    processSuperAdminLicenseRequest: ProcessSuperAdminLicenseRequest,
+    observe?: 'body',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
+  ): Observable<LicenseDTO>;
+  public processSuperAdminLicense(
+    processSuperAdminLicenseRequest: ProcessSuperAdminLicenseRequest,
+    observe?: 'response',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
+  ): Observable<HttpResponse<LicenseDTO>>;
+  public processSuperAdminLicense(
+    processSuperAdminLicenseRequest: ProcessSuperAdminLicenseRequest,
+    observe?: 'events',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
+  ): Observable<HttpEvent<LicenseDTO>>;
+  public processSuperAdminLicense(
+    processSuperAdminLicenseRequest: ProcessSuperAdminLicenseRequest,
+    observe: any = 'body',
+    reportProgress: boolean = false,
+    options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext }
+  ): Observable<any> {
+    if (processSuperAdminLicenseRequest === null || processSuperAdminLicenseRequest === undefined) {
+      throw new Error('Required parameter processSuperAdminLicenseRequest was null or undefined when calling processSuperAdminLicense.');
+    }
+
+    let localVarHeaders = this.defaultHeaders;
+
+    let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+    if (localVarHttpHeaderAcceptSelected === undefined) {
+      // to determine the Accept header
+      const httpHeaderAccepts: string[] = ['application/json'];
+      localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    }
+    if (localVarHttpHeaderAcceptSelected !== undefined) {
+      localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+    }
+
+    let localVarHttpContext: HttpContext | undefined = options && options.context;
+    if (localVarHttpContext === undefined) {
+      localVarHttpContext = new HttpContext();
+    }
+
+    // to determine the Content-Type header
+    const consumes: string[] = ['application/json'];
+    const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+    if (httpContentTypeSelected !== undefined) {
+      localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+    }
+
+    let responseType_: 'text' | 'json' | 'blob' = 'json';
+    if (localVarHttpHeaderAcceptSelected) {
+      if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+        responseType_ = 'text';
+      } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+        responseType_ = 'json';
+      } else {
+        responseType_ = 'blob';
+      }
+    }
+
+    return this.httpClient.post<LicenseDTO>(`${this.configuration.basePath}/sys/license`, processSuperAdminLicenseRequest, {
       context: localVarHttpContext,
       responseType: <any>responseType_,
       withCredentials: this.configuration.withCredentials,

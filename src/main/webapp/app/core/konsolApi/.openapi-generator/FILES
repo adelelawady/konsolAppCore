@@ -46,6 +46,8 @@ model/createMoneyDTO.ts
 model/financialChartDTO.ts
 model/financialDashboardDTO.ts
 model/financialSearchDTO.ts
+model/generateAdminLicenseKey200Response.ts
+model/generateAdminLicenseKeyRequest.ts
 model/globalSettings.ts
 model/globalSettingsItemsOptions.ts
 model/globalSettingsPurchaseInvoiceOptions.ts
@@ -78,6 +80,8 @@ model/keyAndPasswordVM.ts
 model/konsolGridBand.ts
 model/konsolGridColumn.ts
 model/konsolGridOptions.ts
+model/licenseDTO.ts
+model/licenseDTOHardwareIdentifiers.ts
 model/loginVM.ts
 model/managedUserVM.ts
 model/metricValue.ts
@@ -93,6 +97,7 @@ model/performanceMetricsDTO.ts
 model/pkDTO.ts
 model/playstationContainer.ts
 model/playstationEndSessionDTO.ts
+model/processSuperAdminLicenseRequest.ts
 model/psDeviceDTO.ts
 model/psDeviceType.ts
 model/psSessionDTO.ts

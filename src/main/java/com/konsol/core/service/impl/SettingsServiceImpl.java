@@ -3,10 +3,12 @@ package com.konsol.core.service.impl;
 import com.konsol.core.domain.Bank;
 import com.konsol.core.domain.Settings;
 import com.konsol.core.domain.Store;
+import com.konsol.core.repository.LicenseRepository;
 import com.konsol.core.repository.SettingsRepository;
 import com.konsol.core.service.BankService;
 import com.konsol.core.service.SettingService;
 import com.konsol.core.service.StoreService;
+import com.konsol.core.service.mapper.LicenseMapper;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -19,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.TaskScheduler;
@@ -41,13 +44,23 @@ public class SettingsServiceImpl implements SettingService {
 
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private final TaskScheduler taskScheduler = new ConcurrentTaskScheduler(scheduler);
+    private final LicenseRepository licenseRepository;
+    private final LicenseMapper licenseMapper;
     private ScheduledFuture<?> scheduledBackupTask;
     private final AtomicReference<String> lastBackupPath = new AtomicReference<>();
 
-    public SettingsServiceImpl(SettingsRepository settingsRepository, BankService bankService, StoreService storeService) {
+    public SettingsServiceImpl(
+        SettingsRepository settingsRepository,
+        BankService bankService,
+        StoreService storeService,
+        LicenseRepository licenseRepository,
+        LicenseMapper licenseMapper
+    ) {
         this.settingsRepository = settingsRepository;
         this.bankService = bankService;
         this.storeService = storeService;
+        this.licenseRepository = licenseRepository;
+        this.licenseMapper = licenseMapper;
     }
 
     @Override

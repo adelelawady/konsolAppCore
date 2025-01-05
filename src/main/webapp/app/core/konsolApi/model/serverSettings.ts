@@ -9,9 +9,14 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { LicenseDTO } from './licenseDTO';
 
 export interface ServerSettings {
   id?: string;
+  /**
+   * License information for the server
+   */
+  license?: Array<LicenseDTO>;
   MAIN_SELECTED_STORE_ID?: string;
   MAIN_SELECTED_BANK_ID?: string;
   SALES_CHECK_ITEM_QTY?: boolean;

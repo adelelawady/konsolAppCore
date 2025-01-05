@@ -2814,6 +2814,82 @@ paths:
       tags:
         - playstation-resource
       description: Updates the device type and optionally updates the active session type
+  /sys/license:
+    post:
+      summary: Process super admin license key
+      description: Processes an encrypted license key to generate a new license
+      tags:
+        - GLOBAL
+        - server_settings
+      operationId: processSuperAdminLicense
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                encryptedKey:
+                  type: string
+                  description: RSA encrypted license key containing license details
+              required:
+                - encryptedKey
+      responses:
+        '200':
+          description: License successfully processed and generated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LicenseDTO'
+        '400':
+          description: Invalid license key or processing failed
+        '401':
+          description: Unauthorized - insufficient permissions
+        '500':
+          description: Internal server error during license processing
+
+  /sys/license/generate:
+    post:
+      summary: Generate encrypted admin license key
+      description: Generates an encrypted admin license key for testing purposes (development only)
+      tags:
+        - GLOBAL
+        - server_settings
+      operationId: generateAdminLicenseKey
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                clientId:
+                  type: string
+                  description: Client identifier for the license
+                expiryDate:
+                  type: string
+                  format: date-time
+                  description: License expiration date and time
+              required:
+                - clientId
+                - expiryDate
+      responses:
+        '200':
+          description: Encrypted admin key generated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  encryptedKey:
+                    type: string
+                    description: The generated encrypted license key
+        '400':
+          description: Invalid request parameters
+        '401':
+          description: Unauthorized - insufficient permissions
+        '500':
+          description: Internal server error during key generation
 components:
   schemas:
     ChartDataDTO:
@@ -4608,6 +4684,11 @@ components:
       properties:
         id:
           type: string
+        license:
+          description: License information for the server
+          type: array
+          items:
+            $ref: '#/components/schemas/LicenseDTO'
         MAIN_SELECTED_STORE_ID:
           type: string
           x-stoplight:
@@ -4673,6 +4754,7 @@ components:
           description: 'Time to run backup (HH:mm format)'
         BACKUP_DAYS:
           type: array
+          description: Days to run backup (for WEEKLY schedule)
           items:
             type: string
             enum:
@@ -4683,7 +4765,6 @@ components:
               - FRIDAY
               - SATURDAY
               - SUNDAY
-          description: Days to run backup (for WEEKLY schedule)
         BACKUP_RETENTION_DAYS:
           type: integer
           default: 30
@@ -5685,3 +5766,42 @@ components:
           x-stoplight:
             id: r5pp6vhee8g8z
           default: false
+    LicenseDTO:
+      type: object
+      description: Data Transfer Object for software license information
+      properties:
+        clientId:
+          type: string
+          description: Unique identifier for the client
+        licenseKey:
+          type: string
+          description: License activation key
+        expiryDate:
+          type: string
+          format: date-time
+          description: License expiration date and time
+        hardwareIdentifiers:
+          type: object
+          properties:
+            processorIdentifier:
+              type: string
+              description: CPU identifier
+            processorArchitecture:
+              type: string
+              description: CPU architecture
+            processorArchitew6432:
+              type: string
+              description: CPU architecture (32/64 bit)
+            numberOfProcessors:
+              type: string
+              description: Number of CPU processors
+            motherboardSerialNumber:
+              type: string
+              description: Motherboard serial number
+            biosSerialNumber:
+              type: string
+              description: BIOS serial number
+            diskDriveSerialNumber:
+              type: string
+              description: Disk drive serial number
+          description: Hardware identifiers used for license validation

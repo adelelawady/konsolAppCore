@@ -1,10 +1,13 @@
 package com.konsol.core.web.rest.api;
 
 import com.konsol.core.repository.BankRepository;
+import com.konsol.core.repository.LicenseRepository;
 import com.konsol.core.security.AuthoritiesConstants;
 import com.konsol.core.service.BankService;
+import com.konsol.core.service.LicenseService;
 import com.konsol.core.service.SettingService;
 import com.konsol.core.service.api.dto.*;
+import com.konsol.core.service.mapper.LicenseMapper;
 import com.konsol.core.service.mapper.SettingsMapper;
 import com.konsol.core.service.mapper.sup.BankBalanceMapper;
 import com.konsol.core.service.mapper.sup.BankTransactionsMapper;
@@ -13,6 +16,7 @@ import com.konsol.core.web.api.SysApiDelegate;
 import com.konsol.core.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -20,6 +24,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
@@ -49,6 +54,7 @@ public class GlobalSettingsResource implements SysApiDelegate {
     private final Logger log = LoggerFactory.getLogger(GlobalSettingsResource.class);
 
     private static final String ENTITY_NAME = "bank";
+    private final LicenseRepository licenseRepository;
 
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
@@ -57,15 +63,32 @@ public class GlobalSettingsResource implements SysApiDelegate {
 
     private final SettingService settingService;
 
-    public GlobalSettingsResource(SettingsMapper settingsMapper, SettingService settingService) {
-        this.settingsMapper = settingsMapper;
+    private final LicenseService licenseService;
 
+    private final LicenseMapper licenseMapper;
+
+    public GlobalSettingsResource(
+        SettingsMapper settingsMapper,
+        SettingService settingService,
+        LicenseService licenseService,
+        LicenseMapper licenseMapper,
+        LicenseRepository licenseRepository
+    ) {
+        this.settingsMapper = settingsMapper;
         this.settingService = settingService;
+        this.licenseService = licenseService;
+        this.licenseMapper = licenseMapper;
+        this.licenseRepository = licenseRepository;
     }
 
     @Override
     public ResponseEntity<ServerSettings> getServerSettings() {
-        return ResponseEntity.ok(settingsMapper.toDto(settingService.getSettings()));
+        //
+
+        ServerSettings serverSettings = settingsMapper.toDto(settingService.getSettings());
+        serverSettings.setLicense(licenseRepository.findAll().stream().map(licenseMapper::toApiDto).collect(Collectors.toList()));
+
+        return ResponseEntity.ok(serverSettings);
     }
 
     @Override
@@ -163,5 +186,106 @@ public class GlobalSettingsResource implements SysApiDelegate {
             .status(HttpStatus.INTERNAL_SERVER_ERROR)
             .headers(HeaderUtil.createFailureAlert(applicationName, true, "restore", "restoreError", errorMessage))
             .body(false);
+    }
+
+    @Override
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
+    public ResponseEntity<com.konsol.core.service.api.dto.LicenseDTO> processSuperAdminLicense(ProcessSuperAdminLicenseRequest request) {
+        log.debug("REST request to process super admin license key");
+
+        try {
+            if (request.getEncryptedKey() == null || request.getEncryptedKey().trim().isEmpty()) {
+                return ResponseEntity
+                    .badRequest()
+                    .headers(HeaderUtil.createFailureAlert(applicationName, true, "license", "emptyKey", "License key cannot be empty"))
+                    .build();
+            }
+
+            com.konsol.core.service.dto.LicenseDTO serviceLicense = licenseService.processSuperAdminKey(request.getEncryptedKey());
+
+            return ResponseEntity
+                .ok()
+                .headers(
+                    HeaderUtil.createAlert(
+                        applicationName,
+                        "License processed successfully",
+                        "Valid until: " + serviceLicense.getExpiryDate()
+                    )
+                )
+                .body(licenseMapper.toApiDto(serviceLicense));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity
+                .badRequest()
+                .headers(HeaderUtil.createFailureAlert(applicationName, true, "license", "invalidKey", e.getMessage()))
+                .build();
+        } catch (Exception e) {
+            log.error("Error processing license key", e);
+            return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .headers(
+                    HeaderUtil.createFailureAlert(
+                        applicationName,
+                        true,
+                        "license",
+                        "processingError",
+                        "Error processing license key: " + e.getMessage()
+                    )
+                )
+                .build();
+        }
+    }
+
+    @Override
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.SUPER_ADMIN + "\")")
+    public ResponseEntity<GenerateAdminLicenseKey200Response> generateAdminLicenseKey(GenerateAdminLicenseKeyRequest request) {
+        log.debug("REST request to generate admin license key");
+
+        try {
+            if (request.getClientId() == null || request.getClientId().trim().isEmpty()) {
+                return ResponseEntity
+                    .badRequest()
+                    .headers(HeaderUtil.createFailureAlert(applicationName, true, "license", "emptyClientId", "Client ID cannot be empty"))
+                    .build();
+            }
+
+            if (request.getExpiryDate() == null) {
+                return ResponseEntity
+                    .badRequest()
+                    .headers(
+                        HeaderUtil.createFailureAlert(applicationName, true, "license", "emptyExpiryDate", "Expiry date cannot be empty")
+                    )
+                    .build();
+            }
+
+            Instant expiryDate = Instant.parse(request.getExpiryDate().toString());
+            String encryptedKey = licenseService.createEncryptedAdminKey(request.getClientId(), expiryDate);
+
+            GenerateAdminLicenseKey200Response response = new GenerateAdminLicenseKey200Response();
+            response.setEncryptedKey(encryptedKey);
+
+            return ResponseEntity
+                .ok()
+                .headers(HeaderUtil.createAlert(applicationName, "Admin license key generated successfully", "Valid until: " + expiryDate))
+                .body(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity
+                .badRequest()
+                .headers(HeaderUtil.createFailureAlert(applicationName, true, "license", "invalidRequest", e.getMessage()))
+                .build();
+        } catch (Exception e) {
+            log.error("Error generating admin license key", e);
+            return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .headers(
+                    HeaderUtil.createFailureAlert(
+                        applicationName,
+                        true,
+                        "license",
+                        "generationError",
+                        "Error generating admin license key: " + e.getMessage()
+                    )
+                )
+                .build();
+        }
     }
 }

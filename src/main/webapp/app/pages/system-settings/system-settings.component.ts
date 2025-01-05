@@ -9,6 +9,7 @@ import { StoreResourceService } from 'app/core/konsolApi/api/storeResource.servi
 import { BankDTO, BankResourceService } from 'app/core/konsolApi';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PerformRestoreRequest } from 'app/core/konsolApi/model/performRestoreRequest';
+import { LicenseDTO } from 'app/core/konsolApi/model/licenseDTO';
 
 @Component({
   selector: 'jhi-system-settings',
@@ -17,6 +18,7 @@ import { PerformRestoreRequest } from 'app/core/konsolApi/model/performRestoreRe
 })
 export class SystemSettingsComponent implements OnInit {
   @ViewChild('restoreDialog') restoreDialog!: TemplateRef<any>;
+  @ViewChild('licenseDialog') licenseDialog!: TemplateRef<any>;
 
   settingsForm!: FormGroup;
   loading = false;
@@ -28,6 +30,8 @@ export class SystemSettingsComponent implements OnInit {
   backupInProgress = false;
   restoreInProgress = false;
   restorePath = '';
+  licenseKey: string = '';
+  processingLicense = false;
 
   weekDays = [
     { value: 'MONDAY', label: 'systemSettings.backup.days.monday' },
@@ -255,5 +259,65 @@ export class SystemSettingsComponent implements OnInit {
 
   private showErrorMessage(key: string): void {
     this.toastr.error(this.translateService.instant(key));
+  }
+
+  calculateDaysRemaining(license: LicenseDTO): number {
+    if (!license.expiryDate) return 0;
+    const today = new Date();
+    const expiry = new Date(license.expiryDate);
+    const diffTime = expiry.getTime() - today.getTime();
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  }
+
+  getLicenseDaysClass(license: LicenseDTO): string {
+    const daysRemaining = this.calculateDaysRemaining(license);
+    if (daysRemaining <= 0) return 'text-danger';
+    if (daysRemaining <= 30) return 'text-warning';
+    return 'text-success';
+  }
+
+  getLicenseStatus(license: LicenseDTO): string {
+    const daysRemaining = this.calculateDaysRemaining(license);
+    if (daysRemaining <= 0) return 'systemSettings.license.status.expired';
+    return 'systemSettings.license.status.active';
+  }
+
+  getLicenseStatusClass(license: LicenseDTO): string {
+    const daysRemaining = this.calculateDaysRemaining(license);
+    return daysRemaining <= 0 ? 'badge bg-danger' : 'badge bg-success';
+  }
+
+  openLicenseDialog(): void {
+    this.licenseKey = '';
+    this.modalService.open(this.licenseDialog, { backdrop: 'static' });
+  }
+
+  closeLicenseDialog(): void {
+    this.modalService.dismissAll();
+  }
+
+  processLicense(): void {
+    if (!this.licenseKey) return;
+
+    this.processingLicense = true;
+    const request = {
+      encryptedKey: this.licenseKey,
+    };
+
+    this.globalService.processSuperAdminLicense(request).subscribe({
+      next: response => {
+        this.toastr.success(this.translateService.instant('systemSettings.license.success'));
+        this.closeLicenseDialog();
+        this.loadSettings(); // Reload settings to show new license
+      },
+      error: error => {
+        this.processingLicense = false;
+        console.error('Error processing license:', error);
+        this.toastr.error(error.error?.detail || this.translateService.instant('systemSettings.license.error'));
+      },
+      complete: () => {
+        this.processingLicense = false;
+      },
+    });
   }
 }
