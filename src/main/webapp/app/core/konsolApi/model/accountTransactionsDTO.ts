@@ -10,17 +10,19 @@
  * Do not edit the class manually.
  */
 
-export interface AccountTransactionsDTO {
-  id?: string;
-  pk?: string;
-  accountId?: string;
-  accountName?: string;
-  sourceType?: string;
-  sourceKind?: string;
-  sourceId?: string;
-  sourcePk?: string;
-  moneyIn?: number;
-  moneyOut?: number;
-  details?: string;
-  createdDate?: string;
+
+export interface AccountTransactionsDTO { 
+    id?: string;
+    pk?: string;
+    accountId?: string;
+    accountName?: string;
+    sourceType?: string;
+    sourceKind?: string;
+    sourceId?: string;
+    sourcePk?: string;
+    moneyIn?: number;
+    moneyOut?: number;
+    details?: string;
+    createdDate?: string;
 }
+

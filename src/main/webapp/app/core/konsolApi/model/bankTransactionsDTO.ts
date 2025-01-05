@@ -10,57 +10,59 @@
  * Do not edit the class manually.
  */
 
-export interface BankTransactionsDTO {
-  /**
-   * Unique identifier for the transaction.
-   */
-  id?: string;
-  /**
-   * Primary key.
-   */
-  pk?: string;
-  /**
-   * Identifier for the associated bank.
-   */
-  bankId?: string;
-  /**
-   * Type of the source, e.g., \"INVOICE\" or \"MONEY\".
-   */
-  sourceType?: string;
-  /**
-   * Kind of the source.
-   */
-  sourceKind?: string;
-  /**
-   * Identifier for the source.
-   */
-  sourceId?: string;
-  /**
-   * Primary key of the source.
-   */
-  sourcePk?: string;
-  /**
-   * Amount of money coming in.
-   */
-  moneyIn?: number;
-  /**
-   * Amount of money going out.
-   */
-  moneyOut?: number;
-  /**
-   * Additional details about the transaction.
-   */
-  details?: string;
-  /**
-   * The date and time when the transaction was created.
-   */
-  createdDate?: string;
-  /**
-   * Identifier for the associated account.
-   */
-  accountId?: string;
-  /**
-   * Name of the associated account.
-   */
-  accountName?: string;
+
+export interface BankTransactionsDTO { 
+    /**
+     * Unique identifier for the transaction.
+     */
+    id?: string;
+    /**
+     * Primary key.
+     */
+    pk?: string;
+    /**
+     * Identifier for the associated bank.
+     */
+    bankId?: string;
+    /**
+     * Type of the source, e.g., \"INVOICE\" or \"MONEY\".
+     */
+    sourceType?: string;
+    /**
+     * Kind of the source.
+     */
+    sourceKind?: string;
+    /**
+     * Identifier for the source.
+     */
+    sourceId?: string;
+    /**
+     * Primary key of the source.
+     */
+    sourcePk?: string;
+    /**
+     * Amount of money coming in.
+     */
+    moneyIn?: number;
+    /**
+     * Amount of money going out.
+     */
+    moneyOut?: number;
+    /**
+     * Additional details about the transaction.
+     */
+    details?: string;
+    /**
+     * The date and time when the transaction was created.
+     */
+    createdDate?: string;
+    /**
+     * Identifier for the associated account.
+     */
+    accountId?: string;
+    /**
+     * Name of the associated account.
+     */
+    accountName?: string;
 }
+

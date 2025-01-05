@@ -10,6 +10,8 @@
  * Do not edit the class manually.
  */
 
-export interface StartDeviceSessionDTO {
-  containerId: string;
+
+export interface StartDeviceSessionDTO { 
+    containerId: string;
 }
+

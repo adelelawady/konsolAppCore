@@ -3,6 +3,8 @@ package com.konsol.core.security;
 import com.konsol.core.domain.Authority;
 import com.konsol.core.domain.User;
 import com.konsol.core.repository.UserRepository;
+import com.konsol.core.service.LicenseService;
+import com.konsol.core.service.error.InvalidSystemLicenseException;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator;
@@ -18,20 +20,30 @@ import org.springframework.stereotype.Component;
 /**
  * Authenticate a user from the database.
  */
-@Component("userDetailsServicSe")
+@Component("userDetailsService")
 public class DomainUserDetailsService implements UserDetailsService {
 
     private final Logger log = LoggerFactory.getLogger(DomainUserDetailsService.class);
 
     private final UserRepository userRepository;
+    private final LicenseService licenseService;
 
-    public DomainUserDetailsService(UserRepository userRepository) {
+    public DomainUserDetailsService(UserRepository userRepository, LicenseService licenseService) {
         this.userRepository = userRepository;
+        this.licenseService = licenseService;
     }
 
     @Override
     public UserDetails loadUserByUsername(final String login) {
         log.debug("Authenticating {}", login);
+
+        // Validate system license before allowing login
+        try {
+            licenseService.validateSystemLicense();
+        } catch (InvalidSystemLicenseException e) {
+            log.error("System license validation failed during login attempt for user: {}", login);
+            throw e;
+        }
 
         if (new EmailValidator().isValid(login, null)) {
             return userRepository

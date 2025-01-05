@@ -7,12 +7,14 @@ import com.konsol.core.service.dto.LicenseDTO;
 import com.konsol.core.service.dto.LicenseValidationResult;
 import com.konsol.core.service.util.HardwareIdentifier;
 import com.konsol.core.service.util.LicenseEncryption;
+import com.konsol.core.service.error.InvalidSystemLicenseException;
 import java.security.*;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Base64;
+import java.util.List;
 import java.util.Optional;
 import javax.crypto.Cipher;
 import org.slf4j.Logger;
@@ -347,5 +349,44 @@ public class LicenseService {
                 '}'
             );
         }
+    }
+
+    /**
+     * Validate that the system has at least one valid license
+     * @throws InvalidSystemLicenseException if no valid license is found
+     */
+    public void validateSystemLicense() {
+        List<License> validLicenses = licenseRepository.findByActiveTrueAndExpiryDateAfter(Instant.now());
+
+        if (validLicenses.isEmpty()) {
+            log.error("No valid system license found");
+            throw new InvalidSystemLicenseException();
+        }
+
+        // Additional validation if needed
+        for (License license : validLicenses) {
+            try {
+                LicenseValidationResult result = validateLicense(license.getLicenseKey());
+                if (result.isValid()) {
+                    // Found a valid license, return successfully
+                    return;
+                }
+            } catch (Exception e) {
+                log.warn("Error validating license {}: {}", license.getLicenseKey(), e.getMessage());
+                // Continue checking other licenses
+            }
+        }
+
+        // If we get here, no valid license was found
+        throw new InvalidSystemLicenseException();
+    }
+
+    /**
+     * Validate that the system has at least one valid license
+     * @throws InvalidSystemLicenseException if no valid license is found
+     */
+    public boolean validateSystemLicenseKeys() {
+        List<License> validLicenses = licenseRepository.findByActiveTrueAndExpiryDateAfter(Instant.now());
+        return !validLicenses.isEmpty();
     }
 }

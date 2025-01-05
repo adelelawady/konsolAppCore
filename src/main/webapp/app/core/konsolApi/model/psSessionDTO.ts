@@ -12,15 +12,17 @@
 import { PsDeviceType } from './psDeviceType';
 import { InvoiceDTO } from './invoiceDTO';
 
-export interface PsSessionDTO {
-  id?: string;
-  startTime?: string;
-  invoice?: InvoiceDTO;
-  type?: PsDeviceType;
-  deviceSessions?: Array<PsSessionDTO>;
-  deviceSessionsNetPrice?: number;
-  endTime?: string;
-  containerId?: string;
-  deviceName?: string;
-  deviceId?: string;
+
+export interface PsSessionDTO { 
+    id?: string;
+    startTime?: string;
+    invoice?: InvoiceDTO;
+    type?: PsDeviceType;
+    deviceSessions?: Array<PsSessionDTO>;
+    deviceSessionsNetPrice?: number;
+    endTime?: string;
+    containerId?: string;
+    deviceName?: string;
+    deviceId?: string;
 }
+

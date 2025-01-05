@@ -12,19 +12,21 @@
 import { ItemUnitDTO } from './itemUnitDTO';
 import { ItemPriceOptionDTO } from './itemPriceOptionDTO';
 
-export interface ItemDTO {
-  id?: string;
-  pk?: number;
-  name: string;
-  barcode?: string;
-  price1?: string;
-  price2?: string;
-  category?: string;
-  qty?: number;
-  cost?: number;
-  itemUnits?: Set<ItemUnitDTO>;
-  createdBy?: string;
-  createdDate?: string;
-  checkQty?: boolean;
-  PriceOptions?: Array<ItemPriceOptionDTO>;
+
+export interface ItemDTO { 
+    id?: string;
+    pk?: number;
+    name: string;
+    barcode?: string;
+    price1?: string;
+    price2?: string;
+    category?: string;
+    qty?: number;
+    cost?: number;
+    itemUnits?: Set<ItemUnitDTO>;
+    createdBy?: string;
+    createdDate?: string;
+    checkQty?: boolean;
+    PriceOptions?: Array<ItemPriceOptionDTO>;
 }
+

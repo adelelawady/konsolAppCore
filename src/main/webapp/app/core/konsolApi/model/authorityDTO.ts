@@ -10,8 +10,10 @@
  * Do not edit the class manually.
  */
 
-export interface AuthorityDTO {
-  id?: string;
-  category?: string;
-  description?: string;
+
+export interface AuthorityDTO { 
+    id?: string;
+    category?: string;
+    description?: string;
 }
+

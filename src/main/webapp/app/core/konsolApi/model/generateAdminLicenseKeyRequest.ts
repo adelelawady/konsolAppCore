@@ -10,13 +10,15 @@
  * Do not edit the class manually.
  */
 
-export interface GenerateAdminLicenseKeyRequest {
-  /**
-   * Client identifier for the license
-   */
-  clientId: string;
-  /**
-   * License expiration date and time
-   */
-  expiryDate: string;
+
+export interface GenerateAdminLicenseKeyRequest { 
+    /**
+     * Client identifier for the license
+     */
+    clientId: string;
+    /**
+     * License expiration date and time
+     */
+    expiryDate: string;
 }
+

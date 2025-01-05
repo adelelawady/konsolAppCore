@@ -10,8 +10,10 @@
  * Do not edit the class manually.
  */
 
-export interface ItemPriceOptionDTO {
-  name: string;
-  value: number;
-  refId?: string;
+
+export interface ItemPriceOptionDTO { 
+    name: string;
+    value: number;
+    refId?: string;
 }
+

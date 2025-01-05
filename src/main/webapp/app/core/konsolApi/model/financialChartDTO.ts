@@ -11,19 +11,21 @@
  */
 import { SeriesData } from './seriesData';
 
+
 /**
  * Data Transfer Object for financial dashboard charts and visualizations. Supports various chart types including line, bar, pie, radar, and area charts.
  */
-export interface FinancialChartDTO {
-  chartId?: string;
-  title?: string;
-  subtitle?: string;
-  chartType?: string;
-  xAxisLabel?: string;
-  yAxisLabel?: string;
-  labels?: Array<string>;
-  series?: Array<SeriesData>;
-  options?: { [key: string]: object };
-  metadata?: { [key: string]: string };
-  data?: Array<number>;
+export interface FinancialChartDTO { 
+    chartId?: string;
+    title?: string;
+    subtitle?: string;
+    chartType?: string;
+    xAxisLabel?: string;
+    yAxisLabel?: string;
+    labels?: Array<string>;
+    series?: Array<SeriesData>;
+    options?: { [key: string]: object; };
+    metadata?: { [key: string]: string; };
+    data?: Array<number>;
 }
+

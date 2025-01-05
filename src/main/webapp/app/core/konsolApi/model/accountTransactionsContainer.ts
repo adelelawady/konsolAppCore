@@ -11,7 +11,9 @@
  */
 import { AccountTransactionsDTO } from './accountTransactionsDTO';
 
-export interface AccountTransactionsContainer {
-  result?: Array<AccountTransactionsDTO>;
-  total?: number;
+
+export interface AccountTransactionsContainer { 
+    result?: Array<AccountTransactionsDTO>;
+    total?: number;
 }
+

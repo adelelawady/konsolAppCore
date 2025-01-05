@@ -10,20 +10,22 @@
  * Do not edit the class manually.
  */
 
-export interface PerformanceMetricsDTO {
-  totalRevenue?: number;
-  averageInvoiceValue?: number;
-  grossProfit?: number;
-  grossProfitMargin?: number;
-  operatingExpenses?: number;
-  operatingProfit?: number;
-  operatingProfitMargin?: number;
-  netProfit?: number;
-  netProfitMargin?: number;
-  revenueGrowth?: number;
-  totalTransactions?: number;
-  /**
-   * Map of additional metric names to values
-   */
-  additionalMetrics?: { [key: string]: number };
+
+export interface PerformanceMetricsDTO { 
+    totalRevenue?: number;
+    averageInvoiceValue?: number;
+    grossProfit?: number;
+    grossProfitMargin?: number;
+    operatingExpenses?: number;
+    operatingProfit?: number;
+    operatingProfitMargin?: number;
+    netProfit?: number;
+    netProfitMargin?: number;
+    revenueGrowth?: number;
+    totalTransactions?: number;
+    /**
+     * Map of additional metric names to values
+     */
+    additionalMetrics?: { [key: string]: number; };
 }
+

@@ -13,44 +13,46 @@ import { ItemProfitabilityDTO } from './itemProfitabilityDTO';
 import { ItemSalesDTO } from './itemSalesDTO';
 import { FinancialChartDTO } from './financialChartDTO';
 
+
 /**
  * Data Transfer Object for detailed invoice item analysis and metrics
  */
-export interface InvoiceItemAnalysisDTO {
-  /**
-   * Total quantity of items sold
-   */
-  totalItemsSold?: number;
-  /**
-   * Total revenue from all items
-   */
-  totalItemRevenue?: number;
-  /**
-   * Average price per item
-   */
-  averageItemPrice?: number;
-  /**
-   * Revenue from the top selling item
-   */
-  topSellingItemRevenue?: number;
-  /**
-   * Name of the top selling item
-   */
-  topSellingItemName?: string;
-  /**
-   * Distribution of sales by item category
-   */
-  itemCategoryDistribution?: { [key: string]: number };
-  /**
-   * List of profit margins by item
-   */
-  itemProfitMargins?: Array<ItemProfitabilityDTO>;
-  /**
-   * List of top selling items with details
-   */
-  topSellingItems?: Array<ItemSalesDTO>;
-  /**
-   * Charts showing item sales trends
-   */
-  itemSalesCharts?: Array<FinancialChartDTO>;
+export interface InvoiceItemAnalysisDTO { 
+    /**
+     * Total quantity of items sold
+     */
+    totalItemsSold?: number;
+    /**
+     * Total revenue from all items
+     */
+    totalItemRevenue?: number;
+    /**
+     * Average price per item
+     */
+    averageItemPrice?: number;
+    /**
+     * Revenue from the top selling item
+     */
+    topSellingItemRevenue?: number;
+    /**
+     * Name of the top selling item
+     */
+    topSellingItemName?: string;
+    /**
+     * Distribution of sales by item category
+     */
+    itemCategoryDistribution?: { [key: string]: number; };
+    /**
+     * List of profit margins by item
+     */
+    itemProfitMargins?: Array<ItemProfitabilityDTO>;
+    /**
+     * List of top selling items with details
+     */
+    topSellingItems?: Array<ItemSalesDTO>;
+    /**
+     * Charts showing item sales trends
+     */
+    itemSalesCharts?: Array<FinancialChartDTO>;
 }
+

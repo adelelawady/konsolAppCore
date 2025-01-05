@@ -12,6 +12,7 @@ api/itemResource.service.ts
 api/moneyResource.service.ts
 api/playstationContainerResource.service.ts
 api/playstationResource.service.ts
+api/publicResource.service.ts
 api/publicUserResource.service.ts
 api/serverSettings.service.ts
 api/sheftResource.service.ts

@@ -11,7 +11,9 @@
  */
 import { ChartDataDTO } from './chartDataDTO';
 
-export interface ChartDataContainer {
-  result?: Array<ChartDataDTO>;
-  total?: number;
+
+export interface ChartDataContainer { 
+    result?: Array<ChartDataDTO>;
+    total?: number;
 }
+

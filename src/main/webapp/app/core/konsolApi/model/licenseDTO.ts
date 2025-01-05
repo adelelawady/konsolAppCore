@@ -11,21 +11,23 @@
  */
 import { LicenseDTOHardwareIdentifiers } from './licenseDTOHardwareIdentifiers';
 
+
 /**
  * Data Transfer Object for software license information
  */
-export interface LicenseDTO {
-  /**
-   * Unique identifier for the client
-   */
-  clientId?: string;
-  /**
-   * License activation key
-   */
-  licenseKey?: string;
-  /**
-   * License expiration date and time
-   */
-  expiryDate?: string;
-  hardwareIdentifiers?: LicenseDTOHardwareIdentifiers;
+export interface LicenseDTO { 
+    /**
+     * Unique identifier for the client
+     */
+    clientId?: string;
+    /**
+     * License activation key
+     */
+    licenseKey?: string;
+    /**
+     * License expiration date and time
+     */
+    expiryDate?: string;
+    hardwareIdentifiers?: LicenseDTOHardwareIdentifiers;
 }
+

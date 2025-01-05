@@ -10,13 +10,15 @@
  * Do not edit the class manually.
  */
 
-export interface SalesMetricsDTO {
-  totalSales?: number;
-  netSales?: number;
-  totalCost?: number;
-  netCost?: number;
-  netProfit?: number;
-  dailyRevenue?: number;
-  monthlyRevenue?: number;
-  netUserSales?: number;
+
+export interface SalesMetricsDTO { 
+    totalSales?: number;
+    netSales?: number;
+    totalCost?: number;
+    netCost?: number;
+    netProfit?: number;
+    dailyRevenue?: number;
+    monthlyRevenue?: number;
+    netUserSales?: number;
 }
+

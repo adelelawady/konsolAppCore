@@ -18,6 +18,8 @@ export * from './playstationContainerResource.service';
 import { PlaystationContainerResourceService } from './playstationContainerResource.service';
 export * from './playstationResource.service';
 import { PlaystationResourceService } from './playstationResource.service';
+export * from './publicResource.service';
+import { PublicResourceService } from './publicResource.service';
 export * from './publicUserResource.service';
 import { PublicUserResourceService } from './publicUserResource.service';
 export * from './serverSettings.service';
@@ -30,21 +32,4 @@ export * from './userJwtController.service';
 import { UserJwtControllerService } from './userJwtController.service';
 export * from './userResource.service';
 import { UserResourceService } from './userResource.service';
-export const APIS = [
-  AccountResourceService,
-  AccountUserResourceService,
-  BankResourceService,
-  FinancialReportsService,
-  GLOBALService,
-  InvoiceResourceService,
-  ItemResourceService,
-  MoneyResourceService,
-  PlaystationContainerResourceService,
-  PlaystationResourceService,
-  PublicUserResourceService,
-  ServerSettingsService,
-  SheftResourceService,
-  StoreResourceService,
-  UserJwtControllerService,
-  UserResourceService,
-];
+export const APIS = [AccountResourceService, AccountUserResourceService, BankResourceService, FinancialReportsService, GLOBALService, InvoiceResourceService, ItemResourceService, MoneyResourceService, PlaystationContainerResourceService, PlaystationResourceService, PublicResourceService, PublicUserResourceService, ServerSettingsService, SheftResourceService, StoreResourceService, UserJwtControllerService, UserResourceService];

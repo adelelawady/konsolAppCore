@@ -10,8 +10,10 @@
  * Do not edit the class manually.
  */
 
-export interface PsDeviceType {
-  id?: string;
-  name?: string;
-  price?: string;
+
+export interface PsDeviceType { 
+    id?: string;
+    name?: string;
+    price?: string;
 }
+

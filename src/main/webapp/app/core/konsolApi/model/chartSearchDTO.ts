@@ -10,8 +10,10 @@
  * Do not edit the class manually.
  */
 
-export interface ChartSearchDTO {
-  itemId: string;
-  startDate?: string;
-  endDate?: string;
+
+export interface ChartSearchDTO { 
+    itemId: string;
+    startDate?: string;
+    endDate?: string;
 }
+

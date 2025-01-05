@@ -13,41 +13,43 @@ import { TopPerformerDTO } from './topPerformerDTO';
 import { AccountMetricsDTO } from './accountMetricsDTO';
 import { StoreMetricsDTO } from './storeMetricsDTO';
 
-export interface StoreAccountAnalysisDTO {
-  /**
-   * Store ID to sales amount
-   */
-  storePerformance?: { [key: string]: number };
-  /**
-   * Account ID to transaction volume
-   */
-  accountPerformance?: { [key: string]: number };
-  /**
-   * Bank ID to transaction volume
-   */
-  bankTransactions?: { [key: string]: number };
-  /**
-   * Store ID to profit margin
-   */
-  storeProfitMargins?: { [key: string]: number };
-  /**
-   * Store ID to number of transactions
-   */
-  storeTransactionCounts?: { [key: string]: number };
-  /**
-   * Store ID to revenue growth rate
-   */
-  storeRevenueGrowth?: { [key: string]: number };
-  /**
-   * Account ID to current balance
-   */
-  accountBalances?: { [key: string]: number };
-  /**
-   * Account ID to credit limit
-   */
-  accountCreditLimits?: { [key: string]: number };
-  topStores?: Array<TopPerformerDTO>;
-  topAccounts?: Array<TopPerformerDTO>;
-  storeMetrics?: Array<StoreMetricsDTO>;
-  accountMetrics?: Array<AccountMetricsDTO>;
+
+export interface StoreAccountAnalysisDTO { 
+    /**
+     * Store ID to sales amount
+     */
+    storePerformance?: { [key: string]: number; };
+    /**
+     * Account ID to transaction volume
+     */
+    accountPerformance?: { [key: string]: number; };
+    /**
+     * Bank ID to transaction volume
+     */
+    bankTransactions?: { [key: string]: number; };
+    /**
+     * Store ID to profit margin
+     */
+    storeProfitMargins?: { [key: string]: number; };
+    /**
+     * Store ID to number of transactions
+     */
+    storeTransactionCounts?: { [key: string]: number; };
+    /**
+     * Store ID to revenue growth rate
+     */
+    storeRevenueGrowth?: { [key: string]: number; };
+    /**
+     * Account ID to current balance
+     */
+    accountBalances?: { [key: string]: number; };
+    /**
+     * Account ID to credit limit
+     */
+    accountCreditLimits?: { [key: string]: number; };
+    topStores?: Array<TopPerformerDTO>;
+    topAccounts?: Array<TopPerformerDTO>;
+    storeMetrics?: Array<StoreMetricsDTO>;
+    accountMetrics?: Array<AccountMetricsDTO>;
 }
+

@@ -10,9 +10,11 @@
  * Do not edit the class manually.
  */
 
-export interface ProcessSuperAdminLicenseRequest {
-  /**
-   * RSA encrypted license key containing license details
-   */
-  encryptedKey: string;
+
+export interface ProcessSuperAdminLicenseRequest { 
+    /**
+     * RSA encrypted license key containing license details
+     */
+    encryptedKey: string;
 }
+

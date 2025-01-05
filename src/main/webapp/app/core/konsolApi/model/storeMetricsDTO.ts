@@ -10,13 +10,15 @@
  * Do not edit the class manually.
  */
 
-export interface StoreMetricsDTO {
-  storeId?: string;
-  storeName?: string;
-  totalRevenue?: number;
-  totalCost?: number;
-  profitMargin?: number;
-  transactionCount?: number;
-  averageTransactionValue?: number;
-  revenueGrowth?: number;
+
+export interface StoreMetricsDTO { 
+    storeId?: string;
+    storeName?: string;
+    totalRevenue?: number;
+    totalCost?: number;
+    profitMargin?: number;
+    transactionCount?: number;
+    averageTransactionValue?: number;
+    revenueGrowth?: number;
 }
+

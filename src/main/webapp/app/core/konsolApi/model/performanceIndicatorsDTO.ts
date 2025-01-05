@@ -10,32 +10,34 @@
  * Do not edit the class manually.
  */
 
+
 /**
  * Data Transfer Object for key financial performance indicators and ratios
  */
-export interface PerformanceIndicatorsDTO {
-  /**
-   * Gross profit as a percentage of revenue
-   */
-  grossProfitMargin?: number;
-  /**
-   * Net profit as a percentage of revenue
-   */
-  netProfitMargin?: number;
-  /**
-   * Operating expenses as a percentage of revenue
-   */
-  operatingExpensesRatio?: number;
-  /**
-   * Current assets divided by current liabilities
-   */
-  currentRatio?: number;
-  /**
-   * Quick assets divided by current liabilities
-   */
-  quickRatio?: number;
-  /**
-   * Percentage growth in revenue compared to previous period
-   */
-  revenueGrowth?: number;
+export interface PerformanceIndicatorsDTO { 
+    /**
+     * Gross profit as a percentage of revenue
+     */
+    grossProfitMargin?: number;
+    /**
+     * Net profit as a percentage of revenue
+     */
+    netProfitMargin?: number;
+    /**
+     * Operating expenses as a percentage of revenue
+     */
+    operatingExpensesRatio?: number;
+    /**
+     * Current assets divided by current liabilities
+     */
+    currentRatio?: number;
+    /**
+     * Quick assets divided by current liabilities
+     */
+    quickRatio?: number;
+    /**
+     * Percentage growth in revenue compared to previous period
+     */
+    revenueGrowth?: number;
 }
+

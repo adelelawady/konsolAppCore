@@ -10,7 +10,9 @@
  * Do not edit the class manually.
  */
 
-export interface PlaystationEndSessionDTO {
-  matchFinalUserPrice?: boolean;
-  printSessionRecipt?: boolean;
+
+export interface PlaystationEndSessionDTO { 
+    matchFinalUserPrice?: boolean;
+    printSessionRecipt?: boolean;
 }
+

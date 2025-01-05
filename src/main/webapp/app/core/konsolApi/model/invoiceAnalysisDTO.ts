@@ -10,32 +10,34 @@
  * Do not edit the class manually.
  */
 
+
 /**
  * Data Transfer Object for invoice analysis metrics and statistics
  */
-export interface InvoiceAnalysisDTO {
-  /**
-   * Average discount amount across all invoices
-   */
-  averageDiscount?: number;
-  /**
-   * Average discount percentage across all invoices
-   */
-  averageDiscountPercentage?: number;
-  /**
-   * Total additional charges on invoices
-   */
-  totalAdditions?: number;
-  /**
-   * Total expenses across all invoices
-   */
-  totalExpenses?: number;
-  /**
-   * Number of deferred invoices
-   */
-  deferredInvoicesCount?: number;
-  /**
-   * Map of expense types to their total amounts
-   */
-  expensesByType?: { [key: string]: number };
+export interface InvoiceAnalysisDTO { 
+    /**
+     * Average discount amount across all invoices
+     */
+    averageDiscount?: number;
+    /**
+     * Average discount percentage across all invoices
+     */
+    averageDiscountPercentage?: number;
+    /**
+     * Total additional charges on invoices
+     */
+    totalAdditions?: number;
+    /**
+     * Total expenses across all invoices
+     */
+    totalExpenses?: number;
+    /**
+     * Number of deferred invoices
+     */
+    deferredInvoicesCount?: number;
+    /**
+     * Map of expense types to their total amounts
+     */
+    expensesByType?: { [key: string]: number; };
 }
+

@@ -4,15 +4,25 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateService } from '@ngx-translate/core';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class ErrorHandlerInterceptor implements HttpInterceptor {
-  constructor(private toastr: ToastrService, private translateService: TranslateService) {}
+  constructor(
+    private toastr: ToastrService, 
+    private translateService: TranslateService,
+    private router: Router
+  ) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
       tap({
         error: (err: HttpErrorResponse) => {
+          if (err.status === 401 && err.error?.detail?.includes('System license is invalid or expired')) {
+            this.router.navigate(['/public/license']);
+            return;
+          }
+
           if (err.status === 401 && (err.message === '' || err.url?.includes('api/account'))) {
             return;
           }

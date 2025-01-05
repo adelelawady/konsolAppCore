@@ -10,8 +10,10 @@
  * Do not edit the class manually.
  */
 
-export interface MetricValue {
-  name?: string;
-  value?: number;
-  unit?: string;
+
+export interface MetricValue { 
+    name?: string;
+    value?: number;
+    unit?: string;
 }
+

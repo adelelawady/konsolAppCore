@@ -12,12 +12,14 @@
 import { PsDeviceType } from './psDeviceType';
 import { PsSessionDTO } from './psSessionDTO';
 
-export interface PsDeviceDTO {
-  id?: string;
-  name?: string;
-  active?: boolean;
-  type?: PsDeviceType;
-  session?: PsSessionDTO;
-  timeManagement?: boolean;
-  category?: string;
+
+export interface PsDeviceDTO { 
+    id?: string;
+    name?: string;
+    active?: boolean;
+    type?: PsDeviceType;
+    session?: PsSessionDTO;
+    timeManagement?: boolean;
+    category?: string;
 }
+

@@ -3,6 +3,7 @@ package com.konsol.core.repository;
 import com.konsol.core.domain.License;
 import java.util.List;
 import java.util.Optional;
+import java.time.Instant;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
@@ -35,4 +36,11 @@ public interface LicenseRepository extends MongoRepository<License, String> {
      * @return true if exists
      */
     boolean existsByLicenseKey(String licenseKey);
+
+    /**
+     * Find all active licenses with expiry date after specified date
+     * @param date the reference date
+     * @return list of valid licenses
+     */
+    List<License> findByActiveTrueAndExpiryDateAfter(Instant date);
 }

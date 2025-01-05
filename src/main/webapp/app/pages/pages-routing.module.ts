@@ -17,6 +17,7 @@ import { PlaystationContainerResolver } from './playstation/resolvers/playstatio
 import { SessionHistoryControlComponent } from './playstation/session-history-control/session-history-control.component';
 import { SessionDetailsComponent } from './playstation/session-history-control/session-details/session-details.component';
 import playStationSessionResolve from 'app/entities/play-station-session/route/play-station-session-routing-resolve.service';
+import { LicenseComponent } from './license/license.component';
 
 const routes: Routes = [
   {
@@ -155,6 +156,15 @@ const routes: Routes = [
     canActivate: [UserRouteAccessService],
     data: {
       authorities: ['ROLE_ADMIN'],
+      pageTitle: 'System Settings',
+      breadcrumb: 'System Settings',
+    },
+  },
+
+  {
+    path: 'public/license',
+    loadChildren: () => import('./license/license.module').then(m => m.LicenseModule),
+    data: {
       pageTitle: 'System Settings',
       breadcrumb: 'System Settings',
     },

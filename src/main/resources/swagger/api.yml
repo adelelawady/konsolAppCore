@@ -2847,7 +2847,67 @@ paths:
           description: Unauthorized - insufficient permissions
         '500':
           description: Internal server error during license processing
-
+  /public/sys/license:
+    post:
+      summary: Process super admin license key
+      description: Processes an encrypted license key to generate a new license
+      tags:
+        - GLOBAL
+        - server_settings
+        - public-resource
+      operationId: processLicensePublic
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                encryptedKey:
+                  type: string
+                  description: RSA encrypted license key containing license details
+              required:
+                - encryptedKey
+      responses:
+        '200':
+          description: License successfully processed and generated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LicenseDTO'
+        '400':
+          description: Invalid license key or processing failed
+        '401':
+          description: Unauthorized - insufficient permissions
+        '500':
+          description: Internal server error during license processing
+    parameters: []
+    get:
+      summary: ''
+      operationId: validateLicensePublic
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: boolean
+      tags:
+        - public-resource
+  /public/sys/user/license:
+    parameters: []
+    get:
+      summary: ''
+      operationId: getUserLicense
+      responses:
+        '200':
+          description: OK         
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LicenseDTO'
+      tags:
+        - public-resource
   /sys/license/generate:
     post:
       summary: Generate encrypted admin license key

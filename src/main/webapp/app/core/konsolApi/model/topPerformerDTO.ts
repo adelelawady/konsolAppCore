@@ -12,15 +12,17 @@
 import { MetricValue } from './metricValue';
 import { TrendPoint } from './trendPoint';
 
-export interface TopPerformerDTO {
-  id?: string;
-  name?: string;
-  category?: string;
-  totalRevenue?: number;
-  totalProfit?: number;
-  profitMargin?: number;
-  transactionCount?: number;
-  averageTransactionValue?: number;
-  trend?: Array<TrendPoint>;
-  metrics?: Array<MetricValue>;
+
+export interface TopPerformerDTO { 
+    id?: string;
+    name?: string;
+    category?: string;
+    totalRevenue?: number;
+    totalProfit?: number;
+    profitMargin?: number;
+    transactionCount?: number;
+    averageTransactionValue?: number;
+    trend?: Array<TrendPoint>;
+    metrics?: Array<MetricValue>;
 }
+

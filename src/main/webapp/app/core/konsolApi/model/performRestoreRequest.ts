@@ -10,9 +10,11 @@
  * Do not edit the class manually.
  */
 
-export interface PerformRestoreRequest {
-  /**
-   * Full path to the backup directory to restore from
-   */
-  backupPath: string;
+
+export interface PerformRestoreRequest { 
+    /**
+     * Full path to the backup directory to restore from
+     */
+    backupPath: string;
 }
+

@@ -10,21 +10,23 @@
  * Do not edit the class manually.
  */
 
-export interface ChartDataDTO {
-  /**
-   * Date in day/month/year format (التاريخ (يوم/شهر/سنة)).
-   */
-  date?: string;
-  /**
-   * Total sales (إجمالي المبيعات).
-   */
-  totalSales?: number;
-  /**
-   * Total quantity sold (إجمالي الكمية المباعة).
-   */
-  totalQty?: number;
-  /**
-   * Average price (متوسط السعر).
-   */
-  avgPrice?: number;
+
+export interface ChartDataDTO { 
+    /**
+     * Date in day/month/year format (التاريخ (يوم/شهر/سنة)).
+     */
+    date?: string;
+    /**
+     * Total sales (إجمالي المبيعات).
+     */
+    totalSales?: number;
+    /**
+     * Total quantity sold (إجمالي الكمية المباعة).
+     */
+    totalQty?: number;
+    /**
+     * Average price (متوسط السعر).
+     */
+    avgPrice?: number;
 }
+

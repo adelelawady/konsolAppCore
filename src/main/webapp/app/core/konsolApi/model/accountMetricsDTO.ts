@@ -10,13 +10,15 @@
  * Do not edit the class manually.
  */
 
-export interface AccountMetricsDTO {
-  accountId?: string;
-  accountName?: string;
-  totalTransactionVolume?: number;
-  transactionCount?: number;
-  averageTransactionValue?: number;
-  currentBalance?: number;
-  creditLimit?: number;
-  creditUtilization?: number;
+
+export interface AccountMetricsDTO { 
+    accountId?: string;
+    accountName?: string;
+    totalTransactionVolume?: number;
+    transactionCount?: number;
+    averageTransactionValue?: number;
+    currentBalance?: number;
+    creditLimit?: number;
+    creditUtilization?: number;
 }
+

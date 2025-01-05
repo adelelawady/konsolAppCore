@@ -10,8 +10,10 @@
  * Do not edit the class manually.
  */
 
-export interface TrendPoint {
-  period?: string;
-  value?: number;
-  growth?: number;
+
+export interface TrendPoint { 
+    period?: string;
+    value?: number;
+    growth?: number;
 }
+

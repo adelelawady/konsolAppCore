@@ -10,27 +10,29 @@
  * Do not edit the class manually.
  */
 
-export interface SheftDTO {
-  id?: string;
-  startTime?: string;
-  endTime?: string;
-  active?: boolean;
-  assignedEmployee?: string;
-  duration?: string;
-  totalprice?: number;
-  totalCost?: number;
-  netPrice?: number;
-  netCost?: number;
-  netUserPrice?: number;
-  totalItemsOut?: number;
-  discount?: number;
-  invoicesAdditions?: number;
-  additions?: number;
-  additionsNotes?: string;
-  invoicesExpenses?: number;
-  sheftExpenses?: number;
-  totalinvoices?: number;
-  totaldeletedItems?: number;
-  totaldeletedItemsPrice?: number;
-  notes?: string;
+
+export interface SheftDTO { 
+    id?: string;
+    startTime?: string;
+    endTime?: string;
+    active?: boolean;
+    assignedEmployee?: string;
+    duration?: string;
+    totalprice?: number;
+    totalCost?: number;
+    netPrice?: number;
+    netCost?: number;
+    netUserPrice?: number;
+    totalItemsOut?: number;
+    discount?: number;
+    invoicesAdditions?: number;
+    additions?: number;
+    additionsNotes?: string;
+    invoicesExpenses?: number;
+    sheftExpenses?: number;
+    totalinvoices?: number;
+    totaldeletedItems?: number;
+    totaldeletedItemsPrice?: number;
+    notes?: string;
 }
+

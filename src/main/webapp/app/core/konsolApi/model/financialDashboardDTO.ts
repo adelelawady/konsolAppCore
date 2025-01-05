@@ -17,22 +17,24 @@ import { FinancialChartDTO } from './financialChartDTO';
 import { CashFlowMetricsDTO } from './cashFlowMetricsDTO';
 import { InvoiceAnalysisDTO } from './invoiceAnalysisDTO';
 
-export interface FinancialDashboardDTO {
-  salesMetrics?: SalesMetricsDTO;
-  salesCharts?: Array<FinancialChartDTO>;
-  cashFlowMetrics?: CashFlowMetricsDTO;
-  cashFlowCharts?: Array<FinancialChartDTO>;
-  invoiceAnalysis?: InvoiceAnalysisDTO;
-  invoiceCharts?: Array<FinancialChartDTO>;
-  invoiceItemAnalysis?: InvoiceItemAnalysisDTO;
-  itemSalesCharts?: Array<FinancialChartDTO>;
-  performanceIndicators?: PerformanceIndicatorsDTO;
-  performanceCharts?: Array<FinancialChartDTO>;
-  storeAccountAnalysis?: StoreAccountAnalysisDTO;
-  analysisCharts?: Array<FinancialChartDTO>;
-  startDate?: string;
-  endDate?: string;
-  storeId?: string;
-  accountId?: string;
-  bankId?: string;
+
+export interface FinancialDashboardDTO { 
+    salesMetrics?: SalesMetricsDTO;
+    salesCharts?: Array<FinancialChartDTO>;
+    cashFlowMetrics?: CashFlowMetricsDTO;
+    cashFlowCharts?: Array<FinancialChartDTO>;
+    invoiceAnalysis?: InvoiceAnalysisDTO;
+    invoiceCharts?: Array<FinancialChartDTO>;
+    invoiceItemAnalysis?: InvoiceItemAnalysisDTO;
+    itemSalesCharts?: Array<FinancialChartDTO>;
+    performanceIndicators?: PerformanceIndicatorsDTO;
+    performanceCharts?: Array<FinancialChartDTO>;
+    storeAccountAnalysis?: StoreAccountAnalysisDTO;
+    analysisCharts?: Array<FinancialChartDTO>;
+    startDate?: string;
+    endDate?: string;
+    storeId?: string;
+    accountId?: string;
+    bankId?: string;
 }
+

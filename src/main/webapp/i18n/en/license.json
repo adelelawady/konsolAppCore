@@ -1,0 +1,23 @@
+{
+  "license": {
+    "title": "License Required",
+    "subtitle": "Please enter your license key to continue using the application",
+    "key": {
+      "label": "License Key",
+      "placeholder": "Enter your license key"
+    },
+    "submit": "Activate License",
+    "help": "Need help with your license?",
+    "contact": "Contact support",
+    "error": {
+      "invalid": "Invalid license key",
+      "expired": "License has expired",
+      "generic": "Failed to activate license",
+      "required": "Please enter a valid license key"
+    },
+    "success": {
+      "activated": "License activated successfully"
+    },
+    "loading": "Verifying license..."
+  }
+} 

@@ -10,41 +10,43 @@
  * Do not edit the class manually.
  */
 
-export interface BankBalanceDTO {
-  /**
-   * Total sales profits.
-   */
-  totalSalesProfits?: number;
-  /**
-   * Gross revenue (الإيرادات الإجمالية قبل الخصم).
-   */
-  grossRevenue?: number;
-  /**
-   * Net revenue (الإيرادات الصافية بعد الخصم).
-   */
-  netRevenue?: number;
-  /**
-   * Total cost of purchases (التكلفة الإجمالية للمشتريات).
-   */
-  totalCost?: number;
-  /**
-   * Total discounts offered (إجمالي الخصومات المقدمة).
-   */
-  totalDiscounts?: number;
-  /**
-   * Total additions (إجمالي الإضافات).
-   */
-  totalAdditions?: number;
-  /**
-   * Total balance.
-   */
-  totalBalance?: number;
-  /**
-   * Money in from money.
-   */
-  moneyInFromMoney?: number;
-  /**
-   * Money out from money.
-   */
-  moneyOutFromMoney?: number;
+
+export interface BankBalanceDTO { 
+    /**
+     * Total sales profits.
+     */
+    totalSalesProfits?: number;
+    /**
+     * Gross revenue (الإيرادات الإجمالية قبل الخصم).
+     */
+    grossRevenue?: number;
+    /**
+     * Net revenue (الإيرادات الصافية بعد الخصم).
+     */
+    netRevenue?: number;
+    /**
+     * Total cost of purchases (التكلفة الإجمالية للمشتريات).
+     */
+    totalCost?: number;
+    /**
+     * Total discounts offered (إجمالي الخصومات المقدمة).
+     */
+    totalDiscounts?: number;
+    /**
+     * Total additions (إجمالي الإضافات).
+     */
+    totalAdditions?: number;
+    /**
+     * Total balance.
+     */
+    totalBalance?: number;
+    /**
+     * Money in from money.
+     */
+    moneyInFromMoney?: number;
+    /**
+     * Money out from money.
+     */
+    moneyOutFromMoney?: number;
 }
+

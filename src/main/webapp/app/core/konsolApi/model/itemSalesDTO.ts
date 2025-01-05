@@ -10,32 +10,34 @@
  * Do not edit the class manually.
  */
 
+
 /**
  * Data Transfer Object for item sales details
  */
-export interface ItemSalesDTO {
-  /**
-   * Name of the item
-   */
-  itemName?: string;
-  /**
-   * Item code/SKU
-   */
-  itemCode?: string;
-  /**
-   * Quantity sold
-   */
-  quantity?: number;
-  /**
-   * Total revenue from this item
-   */
-  revenue?: number;
-  /**
-   * Total profit from this item
-   */
-  profit?: number;
-  /**
-   * Profit margin percentage
-   */
-  profitMargin?: number;
+export interface ItemSalesDTO { 
+    /**
+     * Name of the item
+     */
+    itemName?: string;
+    /**
+     * Item code/SKU
+     */
+    itemCode?: string;
+    /**
+     * Quantity sold
+     */
+    quantity?: number;
+    /**
+     * Total revenue from this item
+     */
+    revenue?: number;
+    /**
+     * Total profit from this item
+     */
+    profit?: number;
+    /**
+     * Profit margin percentage
+     */
+    profitMargin?: number;
 }
+

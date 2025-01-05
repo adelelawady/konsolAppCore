@@ -10,9 +10,11 @@
  * Do not edit the class manually.
  */
 
-export interface GenerateAdminLicenseKey200Response {
-  /**
-   * The generated encrypted license key
-   */
-  encryptedKey?: string;
+
+export interface GenerateAdminLicenseKey200Response { 
+    /**
+     * The generated encrypted license key
+     */
+    encryptedKey?: string;
 }
+

@@ -10,11 +10,13 @@
  * Do not edit the class manually.
  */
 
-export interface SheftSimpleDTO {
-  id?: string;
-  startTime?: string;
-  endTime?: string;
-  active?: boolean;
-  assignedEmployee?: string;
-  duration?: string;
+
+export interface SheftSimpleDTO { 
+    id?: string;
+    startTime?: string;
+    endTime?: string;
+    active?: boolean;
+    assignedEmployee?: string;
+    duration?: string;
 }
+

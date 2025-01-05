@@ -10,36 +10,38 @@
  * Do not edit the class manually.
  */
 
+
 /**
  * Hardware identifiers used for license validation
  */
-export interface LicenseDTOHardwareIdentifiers {
-  /**
-   * CPU identifier
-   */
-  processorIdentifier?: string;
-  /**
-   * CPU architecture
-   */
-  processorArchitecture?: string;
-  /**
-   * CPU architecture (32/64 bit)
-   */
-  processorArchitew6432?: string;
-  /**
-   * Number of CPU processors
-   */
-  numberOfProcessors?: string;
-  /**
-   * Motherboard serial number
-   */
-  motherboardSerialNumber?: string;
-  /**
-   * BIOS serial number
-   */
-  biosSerialNumber?: string;
-  /**
-   * Disk drive serial number
-   */
-  diskDriveSerialNumber?: string;
+export interface LicenseDTOHardwareIdentifiers { 
+    /**
+     * CPU identifier
+     */
+    processorIdentifier?: string;
+    /**
+     * CPU architecture
+     */
+    processorArchitecture?: string;
+    /**
+     * CPU architecture (32/64 bit)
+     */
+    processorArchitew6432?: string;
+    /**
+     * Number of CPU processors
+     */
+    numberOfProcessors?: string;
+    /**
+     * Motherboard serial number
+     */
+    motherboardSerialNumber?: string;
+    /**
+     * BIOS serial number
+     */
+    biosSerialNumber?: string;
+    /**
+     * Disk drive serial number
+     */
+    diskDriveSerialNumber?: string;
 }
+

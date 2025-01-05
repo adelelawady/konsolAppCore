@@ -10,10 +10,12 @@
  * Do not edit the class manually.
  */
 
-export interface FinancialSearchDTO {
-  startDate: string;
-  endDate: string;
-  storeId?: string;
-  accountId?: string;
-  bankId?: string;
+
+export interface FinancialSearchDTO { 
+    startDate: string;
+    endDate: string;
+    storeId?: string;
+    accountId?: string;
+    bankId?: string;
 }
+

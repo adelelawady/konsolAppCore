@@ -10,9 +10,11 @@
  * Do not edit the class manually.
  */
 
-export interface ItemAnalysisSearchDTO {
-  itemId?: string;
-  storeId?: string;
-  startDate?: string;
-  endDate?: string;
+
+export interface ItemAnalysisSearchDTO { 
+    itemId?: string;
+    storeId?: string;
+    startDate?: string;
+    endDate?: string;
 }
+
