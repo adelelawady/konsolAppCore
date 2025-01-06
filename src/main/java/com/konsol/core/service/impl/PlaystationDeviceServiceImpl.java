@@ -5,6 +5,7 @@ import static com.konsol.core.repository.PlaystationDeviceRepository.DEVICE_BY_D
 
 import com.konsol.core.domain.Invoice;
 import com.konsol.core.domain.Item;
+import com.konsol.core.domain.Settings;
 import com.konsol.core.domain.enumeration.InvoiceKind;
 import com.konsol.core.domain.playstation.PlayStationSession;
 import com.konsol.core.domain.playstation.PlaystationDevice;
@@ -15,6 +16,7 @@ import com.konsol.core.service.ItemService;
 import com.konsol.core.service.PlaystationDeviceService;
 import com.konsol.core.service.PrintableService.PlayStationReceiptService;
 import com.konsol.core.service.PrintableService.ReceiptPrinter;
+import com.konsol.core.service.SettingService;
 import com.konsol.core.service.api.dto.*;
 import com.konsol.core.service.mapper.PlayStationSessionMapper;
 import com.konsol.core.service.mapper.PlaystationDeviceMapper;
@@ -54,6 +56,7 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
     private final ItemService itemService;
     private final MongoTemplate mongoTemplate;
 
+    private final SettingService settingService;
     private final PlayStationReceiptService playStationReceiptService;
     private final ReceiptPrinter receiptPrinter;
     private final PlaystationContainerRepository playstationContainerRepository;
@@ -68,7 +71,7 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
         PlaystationDeviceTypeRepository playstationDeviceTypeRepository,
         CacheManager cacheManager,
         ItemService itemService,
-        MongoTemplate mongoTemplate,
+        MongoTemplate mongoTemplate, SettingService settingService,
         PlayStationReceiptService playStationReceiptService,
         ReceiptPrinter receiptPrinter,
         PlaystationContainerRepository playstationContainerRepository,
@@ -84,6 +87,7 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
         this.cacheManager = cacheManager;
         this.itemService = itemService;
         this.mongoTemplate = mongoTemplate;
+        this.settingService = settingService;
         this.playStationReceiptService = playStationReceiptService;
         this.receiptPrinter = receiptPrinter;
         this.playstationContainerRepository = playstationContainerRepository1;
@@ -251,6 +255,7 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
      */
     @Override
     public PsDeviceDTO stopSession(String deviceId, PlaystationEndSessionDTO playstationEndSessionDTO) {
+        Settings settings=settingService.getSettings();
         // Log the request to stop a session
         LOG.debug("Request to stop session for PlayStationDevice : {}", deviceId);
 
@@ -320,6 +325,12 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
         invoiceUpdateDTO.setId(invoiceDTO.getId());
         if (playstationEndSessionDTO.getMatchFinalUserPrice()) {
             invoiceUpdateDTO.setUserNetPrice(invoiceDTO.getNetPrice());
+        }
+        if (settings.getPLAYSTATION_SELECTED_BANK_ID()!=null){
+            invoiceUpdateDTO.setBankId(settings.getPLAYSTATION_SELECTED_BANK_ID());
+        }
+        if (settings.getPLAYSTATION_SELECTED_STORE_ID()!=null){
+            invoiceUpdateDTO.setStoreId(settings.getPLAYSTATION_SELECTED_STORE_ID());
         }
         invoiceUpdateDTO.setUserNetCost(invoiceDTO.getNetCost());
         invoiceService.updateInvoice(invoiceUpdateDTO);
