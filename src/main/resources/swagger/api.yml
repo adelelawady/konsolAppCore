@@ -4880,6 +4880,14 @@ components:
           type: string
           default: 'C:/Program Files/MongoDB/Tools/100/bin/mongorestore.exe'
           description: Path to MongoDB restore executable
+        PLAYSTATION_DEFAULT_PRINTER:
+          type: string
+          default: 'default'
+          description: Default printer name for playstation-related printing
+        PLAYSTATION_PRINT_ON_CHECKOUT:
+          type: boolean
+          default: true
+          description: Whether to automatically print when checking out from playstation sessions
     AuthorityDTO:
       title: AuthorityDTO
       x-stoplight:
