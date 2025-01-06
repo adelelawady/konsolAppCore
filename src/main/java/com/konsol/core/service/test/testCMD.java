@@ -7,6 +7,7 @@ import com.konsol.core.domain.PlaystationContainer;
 import com.konsol.core.domain.VAR.*;
 import com.konsol.core.domain.VAR.Record;
 import com.konsol.core.domain.enumeration.InvoiceKind;
+import com.konsol.core.domain.enumeration.PkKind;
 import com.konsol.core.domain.playstation.PlayStationSession;
 import com.konsol.core.domain.playstation.PlaystationDevice;
 import com.konsol.core.domain.playstation.PlaystationDeviceType;
@@ -55,6 +56,7 @@ public class testCMD implements CommandLineRunner {
     private final PlaystationDeviceRepository playstationDeviceRepository;
     private final PlaystationDeviceService playstationDeviceService;
 
+    private final PkService pkService;
     private final ItemService itemService;
     private final InvoiceService invoiceServiceImpl;
     private final PlayStationSessionRepository playStationSessionRepository;
@@ -70,7 +72,7 @@ public class testCMD implements CommandLineRunner {
         PlaystationDeviceTypeService playstationDeviceTypeService,
         com.konsol.core.repository.PlaystationDeviceTypeRepository playstationDeviceTypeRepository,
         PlaystationDeviceRepository playstationDeviceRepository,
-        PlaystationDeviceService playstationDeviceServiceImpl,
+        PlaystationDeviceService playstationDeviceServiceImpl, PkService pkService,
         ItemService itemService,
         InvoiceService invoiceServiceImpl,
         PlayStationSessionRepository playStationSessionRepository,
@@ -87,6 +89,7 @@ public class testCMD implements CommandLineRunner {
         this.playstationDeviceTypeRepository = playstationDeviceTypeRepository;
         this.playstationDeviceRepository = playstationDeviceRepository;
         this.playstationDeviceService = playstationDeviceServiceImpl;
+        this.pkService = pkService;
         this.itemService = itemService;
         this.invoiceServiceImpl = invoiceServiceImpl;
         this.playStationSessionRepository = playStationSessionRepository;
@@ -242,7 +245,10 @@ public class testCMD implements CommandLineRunner {
             // Process the results
             for (Product result : results) {
                 try {
+                    Pk pk = pkService.generatePkEntity(PkKind.ITEM);
+
                     Item item = new Item();
+                    item.setPk(String.valueOf(pk.getValue().intValue()));
                     item.setName(result.getName());
                     item.setBarcode("result.getBarcode()");
                     item.setPrice1(result.getPrice().toString());
