@@ -91,6 +91,12 @@ public class Settings implements Serializable {
     @Field("MONGODB_RESTORE_PATH")
     private String MONGODB_RESTORE_PATH = "C:/Program Files/MongoDB/Tools/100/bin/mongorestore.exe";
 
+    @Field("PLAYSTATION_DEFAULT_PRINTER")
+    private String PLAYSTATION_DEFAULT_PRINTER = "default";
+
+    @Field("PLAYSTATION_PRINT_ON_CHECKOUT")
+    private boolean PLAYSTATION_PRINT_ON_CHECKOUT = true;
+
     public String getId() {
         return id;
     }
@@ -252,5 +258,21 @@ public class Settings implements Serializable {
 
     public void setMONGODB_RESTORE_PATH(String MONGODB_RESTORE_PATH) {
         this.MONGODB_RESTORE_PATH = MONGODB_RESTORE_PATH;
+    }
+
+    public String getPLAYSTATION_DEFAULT_PRINTER() {
+        return PLAYSTATION_DEFAULT_PRINTER;
+    }
+
+    public void setPLAYSTATION_DEFAULT_PRINTER(String PLAYSTATION_DEFAULT_PRINTER) {
+        this.PLAYSTATION_DEFAULT_PRINTER = PLAYSTATION_DEFAULT_PRINTER;
+    }
+
+    public boolean isPLAYSTATION_PRINT_ON_CHECKOUT() {
+        return PLAYSTATION_PRINT_ON_CHECKOUT;
+    }
+
+    public void setPLAYSTATION_PRINT_ON_CHECKOUT(boolean PLAYSTATION_PRINT_ON_CHECKOUT) {
+        this.PLAYSTATION_PRINT_ON_CHECKOUT = PLAYSTATION_PRINT_ON_CHECKOUT;
     }
 }

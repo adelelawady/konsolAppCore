@@ -33,5 +33,7 @@ public interface SettingsMapper extends EntityMapper<ServerSettings, Settings> {
     @Mapping(target = "BACKUP_COMPRESS", source = "BACKUPCOMPRESS")
     @Mapping(target = "MONGODB_DUMP_PATH", source = "MONGODBDUMPPATH")
     @Mapping(target = "MONGODB_RESTORE_PATH", source = "MONGODBRESTOREPATH")
+    @Mapping(target = "PLAYSTATION_DEFAULT_PRINTER", source = "PLAYSTATIONDEFAULTPRINTER")
+    @Mapping(target = "PLAYSTATION_PRINT_ON_CHECKOUT", source = "PLAYSTATIONPRINTONCHECKOUT")
     Settings toEntity(ServerSettings dto);
 }
