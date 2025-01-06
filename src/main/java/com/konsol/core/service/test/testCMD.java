@@ -45,9 +45,9 @@ public class testCMD implements CommandLineRunner {
         String decryptedJson = licenseService.decryptRSA(data);
 
         // Parse the JSON into AdminLicenseData
-        LicenseService.AdminLicenseData licenseData = jacksonObjectMapper.readValue(decryptedJson, LicenseService.AdminLicenseData.class);
+        //  LicenseService.AdminLicenseData licenseData = jacksonObjectMapper.readValue(decryptedJson, LicenseService.AdminLicenseData.class);
 
-        System.out.println("Decrypted license data: " + licenseData.toString());
+        System.out.println("EncryptedAdminKey: " + data);
         // LicenseDTO licenseDTO=  licenseService.processSuperAdminKey(data);
 
         // System.out.println( "LicenseDTO: "+licenseDTO.toString());

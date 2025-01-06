@@ -7,7 +7,7 @@
 
     <groupId>com.konsol.core</groupId>
     <artifactId>konsol-core</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>2.7</version>
     <packaging>jar</packaging>
     <name>Konsol Core</name>
     <description>Description for KonsolCore</description>

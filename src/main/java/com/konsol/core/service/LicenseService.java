@@ -5,9 +5,9 @@ import com.konsol.core.domain.License;
 import com.konsol.core.repository.LicenseRepository;
 import com.konsol.core.service.dto.LicenseDTO;
 import com.konsol.core.service.dto.LicenseValidationResult;
+import com.konsol.core.service.error.InvalidSystemLicenseException;
 import com.konsol.core.service.util.HardwareIdentifier;
 import com.konsol.core.service.util.LicenseEncryption;
-import com.konsol.core.service.error.InvalidSystemLicenseException;
 import java.security.*;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
@@ -387,6 +387,19 @@ public class LicenseService {
      */
     public boolean validateSystemLicenseKeys() {
         List<License> validLicenses = licenseRepository.findByActiveTrueAndExpiryDateAfter(Instant.now());
-        return !validLicenses.isEmpty();
+        // Additional validation if needed
+        for (License license : validLicenses) {
+            try {
+                LicenseValidationResult result = validateLicense(license.getLicenseKey());
+                if (result.isValid()) {
+                    // Found a valid license, return successfully
+                    return true;
+                }
+            } catch (Exception e) {
+                log.warn("Error validating license {}: {}", license.getLicenseKey(), e.getMessage());
+                // Continue checking other licenses
+            }
+        }
+        return false;
     }
 }
