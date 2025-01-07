@@ -458,7 +458,7 @@ public class SettingsServiceImpl implements SettingService {
         validateBackupSettings(settings);
 
         Settings updatedSettings = this.settingsRepository.save(settings);
-        clearSettingsCache();
+     
         // No need to call clearSettingsCache() explicitly since @CacheEvict annotation will handle it
 
         // Reschedule backups if backup settings have changed
