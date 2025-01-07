@@ -154,8 +154,8 @@
                     (change)="updateAuthorities($event)"
                   />
                   <label class="form-check-label" [for]="auth.id">
-                    <div>{{ auth.id }}</div>
-                    <small class="text-muted">{{ auth.description }}</small>
+                    <div>{{ 'userManagement.authorities.roles.' + auth.id + '.name' | translate }}</div>
+                    <small class="text-muted">{{ 'userManagement.authorities.roles.' + auth.id + '.description' | translate }}</small>
                   </label>
                 </div>
               </div>
