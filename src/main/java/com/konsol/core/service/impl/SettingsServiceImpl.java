@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.stereotype.Service;
+import org.springframework.cache.annotation.CacheEvict;
 
 /**
  * Service Implementation for managing {@link Store}.
@@ -436,6 +437,9 @@ public class SettingsServiceImpl implements SettingService {
         }
     }
 
+    private void clearSettingsCache() {
+        Objects.requireNonNull(cacheManager.getCache(SettingsRepository.SETTINGS_CACHE)).evict(SettingsRepository.SETTINGS_CACHE);
+    }
     @Override
     public Settings update(Settings settings) {
         Settings mainSettings = getSettings();
@@ -445,10 +449,11 @@ public class SettingsServiceImpl implements SettingService {
         validateBackupSettings(settings);
 
         Settings updatedSettings = this.settingsRepository.save(settings);
-
+        clearSettingsCache();
         // Reschedule backups if backup settings have changed
         scheduleBackups();
 
+       
         return updatedSettings;
     }
 }

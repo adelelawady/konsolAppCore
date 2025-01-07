@@ -43,6 +43,7 @@ public class CacheConfiguration {
             createCache(cm, com.konsol.core.repository.UserRepository.USERS_BY_EMAIL_CACHE);
             createCache(cm, com.konsol.core.repository.PlaystationDeviceRepository.DEVICES_BY_CATEGORY);
             createCache(cm, PlaystationDeviceRepository.DEVICE_BY_DEVICE_ID);
+            createCache(cm, com.konsol.core.repository.SettingsRepository.SETTINGS_CACHE);
             // jhipster-needle-ehcache-add-entry
         };
     }
