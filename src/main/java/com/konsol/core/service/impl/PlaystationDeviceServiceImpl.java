@@ -371,7 +371,12 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
 
         if (playstationEndSessionDTO.getPrintSessionRecipt()) {
             try {
-                printReceipt(session, "Microsoft Print to PDF");
+                String printerName = settings.getPLAYSTATION_DEFAULT_PRINTER();
+                if (printerName != null && !printerName.isEmpty()) {
+                    printReceipt(session, printerName);
+                } else {
+                    printReceipt(session, "Microsoft Print to PDF");
+                }
             } catch (Exception e) {
                 LOG.debug("Error printing receipt", e);
             }
@@ -384,12 +389,13 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
     @Override
     public void printReceipt(PlayStationSession session, String printerName) {
         try {
+
             boolean isPdfPrinter = printerName.toLowerCase().contains("pdf");
 
             // Prepare the receipt content
             playStationReceiptService.prepareReceipt(session);
 
-            // Print using receipt printer service
+
             receiptPrinter.print(printerName, false);
         } catch (PrintException e) {
             LOG.error("Error printing receipt", e);

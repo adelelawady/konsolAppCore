@@ -7,7 +7,7 @@ import { InvoiceUpdateDTO } from 'app/core/konsolApi/model/invoiceUpdateDTO';
 import { HttpErrorResponse } from '@angular/common/http';
 import { finalize, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { InvoiceResourceService } from 'app/core/konsolApi/api/invoiceResource.service';
-import { PlaystationEndSessionDTO } from 'app/core/konsolApi';
+import { GLOBALService, PlaystationEndSessionDTO, ServerSettings } from 'app/core/konsolApi';
 
 @Component({
   selector: 'jhi-checkout',
@@ -16,8 +16,10 @@ import { PlaystationEndSessionDTO } from 'app/core/konsolApi';
 })
 export class CheckoutComponent implements OnInit {
   @Output() cancelCheckout = new EventEmitter<void>();
-  printSessionReceipt = false;
+  printSessionReceipt: boolean | undefined = undefined;
+  defaultPrinter: string | undefined = undefined;
   checkoutForm: FormGroup;
+  settings: ServerSettings | undefined = undefined;
   selectedDevice: PsDeviceDTO | null = null;
   isProcessing = false;
   isUpdating = false;
@@ -27,7 +29,8 @@ export class CheckoutComponent implements OnInit {
     private fb: FormBuilder,
     private playstationService: PlaystationService,
     private playstationResourceService: PlaystationResourceService,
-    private invoiceResourceService: InvoiceResourceService
+    private invoiceResourceService: InvoiceResourceService,
+    private globalService: GLOBALService,
   ) {
     this.checkoutForm = this.fb.group({
       discount: [0, [Validators.min(0)]],
@@ -86,6 +89,18 @@ export class CheckoutComponent implements OnInit {
           this.updateInvoice();
         }
       });
+
+    // Load print settings
+    this.globalService.getServerSettings().subscribe({
+      next: (settings) => {
+        this.settings = settings;
+        this.printSessionReceipt = settings.PLAYSTATION_PRINT_ON_CHECKOUT;
+        this.defaultPrinter = settings.PLAYSTATION_DEFAULT_PRINTER;
+      },
+      error: (error) => {
+        console.error('Error loading print settings:', error);
+      }
+    });
   }
 
   updateUserNetPriceValue(): void {
@@ -210,12 +225,13 @@ export class CheckoutComponent implements OnInit {
 
     this.isProcessing = true;
 
-    const endSessionDTo: PlaystationEndSessionDTO = {
-      matchFinalUserPrice: matchFinalUserPrice,
-      printSessionRecipt: this.printSessionReceipt,
+    const endSessionDTO: PlaystationEndSessionDTO = {
+      matchFinalUserPrice,
+      printSessionRecipt: !this.printSessionReceipt,
+      printerName: this.defaultPrinter
     };
 
-    this.playstationResourceService.stopDeviceSession(this.selectedDevice.id, endSessionDTo).subscribe({
+    this.playstationResourceService.stopDeviceSession(this.selectedDevice.id, endSessionDTO).subscribe({
       next: () => {
         this.playstationService.reloadDevices();
         this.playstationService.selectDevice(null);
@@ -265,5 +281,17 @@ export class CheckoutComponent implements OnInit {
     const ordersCost = prevSession.invoice?.netPrice || 0;
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/restrict-plus-operands
     return timeCost + ordersCost;
+  }
+
+  onPrintSettingChange(checked: boolean): void {
+    this.printSessionReceipt = checked;
+    this.settings!.PLAYSTATION_PRINT_ON_CHECKOUT = checked;
+    this.globalService.updateServerSettings(this.settings!).subscribe({
+      error: (error) => {
+        console.error('Error updating print settings:', error);
+        // Optionally revert the checkbox if save fails
+        this.printSessionReceipt = !checked;
+      }
+    });
   }
 }

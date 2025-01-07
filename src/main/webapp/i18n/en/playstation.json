@@ -321,7 +321,8 @@
         "cancel": "Cancel"
       },
       "print": {
-        "receipt": "Print Receipt"
+        "receipt": "Print Receipt",
+        "using": "using printer:"
       }
     },
     "session": {

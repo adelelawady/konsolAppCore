@@ -1,14 +1,17 @@
 package com.konsol.core.service.impl;
 
 import com.konsol.core.domain.InvoiceItem;
+import com.konsol.core.domain.Settings;
 import com.konsol.core.domain.Sheft;
 import com.konsol.core.domain.User;
 import com.konsol.core.repository.PlayStationSessionRepository;
 import com.konsol.core.repository.SheftRepository;
 import com.konsol.core.service.PrintableService.SheftReceiptService;
+import com.konsol.core.service.SettingService;
 import com.konsol.core.service.SheftService;
 import com.konsol.core.service.UserService;
 import com.konsol.core.service.api.dto.PsSessionDTO;
+import com.konsol.core.service.api.dto.ServerSettings;
 import com.konsol.core.service.api.dto.SheftDTO;
 import com.konsol.core.service.mapper.PlayStationSessionMapper;
 import com.konsol.core.service.mapper.SheftMapper;
@@ -32,6 +35,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.print.PrintService;
+import javax.print.PrintServiceLookup;
+
 /**
  * Service Implementation for managing {@link com.konsol.core.domain.Sheft}.
  */
@@ -42,6 +48,7 @@ public class SheftServiceImpl implements SheftService {
 
     private final SheftRepository sheftRepository;
 
+    private final SettingService settingsService;
     private final SheftMapper sheftMapper;
     private final UserService userService;
 
@@ -50,7 +57,7 @@ public class SheftServiceImpl implements SheftService {
     private final MongoTemplate mongoTemplate;
 
     public SheftServiceImpl(
-        SheftRepository sheftRepository,
+        SheftRepository sheftRepository, SettingService settings,
         SheftMapper sheftMapper,
         UserService userService,
         PlayStationSessionMapper playStationSessionMapper,
@@ -58,6 +65,7 @@ public class SheftServiceImpl implements SheftService {
         MongoTemplate mongoTemplate
     ) {
         this.sheftRepository = sheftRepository;
+        this.settingsService = settings;
         this.sheftMapper = sheftMapper;
         this.userService = userService;
         this.playStationSessionMapper = playStationSessionMapper;
@@ -130,7 +138,7 @@ public class SheftServiceImpl implements SheftService {
     @Override
     public Sheft startSheft() {
         LOG.debug("Request to start new Sheft");
-
+        Settings settings = settingsService.getSettings();
         // Check if there's already an active shift
         Optional<Sheft> activeSheft = sheftRepository.findByActiveTrue();
         if (activeSheft.isPresent()) {
@@ -218,6 +226,25 @@ public class SheftServiceImpl implements SheftService {
             sheftReceiptService.prepareReceipt(sheftRepository.findById(sheft.getId()).get());
             PrinterJob job = PrinterJob.getPrinterJob();
             job.setPrintable(sheftReceiptService);
+
+            // Get default printer from settings
+            String defaultPrinter =  settingsService.getSettings().getPLAYSTATION_DEFAULT_PRINTER();
+            if (defaultPrinter != null && !defaultPrinter.isEmpty()) {
+                PrintService[] printServices = PrintServiceLookup.lookupPrintServices(null, null);
+                PrintService selectedService = Arrays.stream(printServices)
+                    .filter(service -> service.getName().equalsIgnoreCase(defaultPrinter))
+                    .findFirst()
+                    .orElse(null);
+
+                if (selectedService != null) {
+                    try {
+                        job.setPrintService(selectedService);
+                    } catch (PrinterException e) {
+                        // If setting printer fails, continue with default
+                    }
+                }
+            }
+
             try {
                 job.print();
             } catch (PrinterException e) {

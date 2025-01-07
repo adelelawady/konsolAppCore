@@ -81,6 +81,7 @@ public class ReceiptPrinter {
 
     public boolean isPrinterSupported(String printerName) {
         try {
+
             PrintService[] services = PrintServiceLookup.lookupPrintServices(null, null);
             return Arrays.stream(services).anyMatch(service -> service.getName().equalsIgnoreCase(printerName));
         } catch (Exception e) {

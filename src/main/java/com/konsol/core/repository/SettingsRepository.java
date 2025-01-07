@@ -9,5 +9,8 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface SettingsRepository extends MongoRepository<Settings, String> {
+
+
+   
     Settings findFirstByOrderById();
 }
