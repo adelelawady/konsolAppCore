@@ -25,6 +25,7 @@ import {
   faUserPlus,
   faAsterisk,
   faHistory,
+  faUsersGear,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { VERSION } from 'app/app.constants';
@@ -74,6 +75,7 @@ export class NavbarComponent implements OnInit {
   faUserPlus = faUserPlus;
   faAsterisk = faAsterisk;
   faHistory = faHistory;
+  faUsersGear = faUsersGear;
 
   containers: PlaystationContainer[] = [];
 
