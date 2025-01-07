@@ -7,6 +7,18 @@ import { AccountService } from 'app/core/auth/account.service';
 import { Account } from 'app/core/auth/account.model';
 import { SharedModule } from '../../shared/shared.module';
 import { Authority } from 'app/config/authority.constants';
+import { PlaystationContainerResourceService } from 'app/core/konsolApi/api/playstationContainerResource.service';
+import { PlaystationContainer } from 'app/core/konsolApi/model/playstationContainer';
+
+interface MenuItem {
+  title: string;
+  route: string;
+  icon: SafeHtml;
+  color: string;
+  translationKey: string;
+  description: string;
+  authorities: string[];
+}
 
 @Component({
   selector: 'jhi-navigation',
@@ -19,7 +31,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
   account: Account | null = null;
   private readonly destroy$ = new Subject<void>();
 
-  mainMenuItems = [
+  mainMenuItems: MenuItem[] = [
     {
       title: 'global.navigation.pages.invoices.title',
       route: '/invoices',
@@ -27,7 +39,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
       color: 'primary',
       translationKey: 'invoices',
       description: 'global.navigation.pages.invoices.description',
-      authorities: [Authority.ADMIN, 'ROLE_VIEW_INVOICE'],
+      authorities: [Authority.ADMIN, 'ROLE_MANAGE_INVOICE'],
     },
     {
       title: 'global.navigation.pages.categories.title',
@@ -36,7 +48,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
       color: 'indigo',
       translationKey: 'categories',
       description: 'global.navigation.pages.categories.description',
-      authorities: [Authority.ADMIN, 'ROLE_VIEW_ITEM'],
+      authorities: [Authority.ADMIN, 'ROLE_MANAGE_ITEM'],
     },
     {
       title: 'global.navigation.pages.money.title',
@@ -45,7 +57,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
       color: 'green',
       translationKey: 'money',
       description: 'global.navigation.pages.money.description',
-      authorities: [Authority.ADMIN, 'ROLE_VIEW_PAYMENT'],
+      authorities: [Authority.ADMIN, 'ROLE_MANAGE_BANK'],
     },
     {
       title: 'global.navigation.pages.accounts.title',
@@ -54,7 +66,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
       color: 'orange',
       translationKey: 'accounts',
       description: 'global.navigation.pages.accounts.description',
-      authorities: [Authority.ADMIN, 'ROLE_VIEW_ACCOUNT'],
+      authorities: [Authority.ADMIN, 'ROLE_MANAGE_ACCOUNT'],
     },
     {
       title: 'global.navigation.pages.financial-reports.title',
@@ -72,7 +84,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
       color: 'yellow',
       translationKey: 'inventory',
       description: 'global.navigation.pages.inventory.description',
-      authorities: [Authority.ADMIN, 'ROLE_VIEW_STORE'],
+      authorities: [Authority.ADMIN, 'ROLE_MANAGE_STORE'],
     },
     {
       title: 'global.navigation.pages.purchase.title',
@@ -94,42 +106,25 @@ export class NavigationComponent implements OnInit, OnDestroy {
     },
   ];
 
-  subMenuItems = [
+  subMenuItems: MenuItem[] = [  
     {
-      title: 'global.navigation.pages.newCategory.title',
-      route: '/products/new',
-      icon: this.getSvgIcon('plus'),
-      color: 'blue',
-      translationKey: 'newCategory',
-      description: 'global.navigation.pages.newCategory.description',
-    },
-    {
-      title: 'global.navigation.pages.moneyMovement.title',
-      route: '/accounts/money-movement',
-      icon: this.getSvgIcon('arrows-left-right'),
-      color: 'slate',
-      translationKey: 'moneyMovement',
-      description: 'global.navigation.pages.moneyMovement.description',
-    },
-    {
-      title: 'global.navigation.pages.exchange.title',
-      route: '/accounts/exchange',
-      icon: this.getSvgIcon('coin'),
-      color: 'gray',
-      translationKey: 'exchange',
-      description: 'global.navigation.pages.exchange.description',
-    },
-    {
-      title: 'global.navigation.pages.receipt.title',
-      route: '/accounts/receipt',
-      icon: this.getSvgIcon('receipt-2'),
-      color: 'zinc',
-      translationKey: 'receipt',
-      description: 'global.navigation.pages.receipt.description',
-    },
+      title: 'playstation.lastSessions.title',
+      route: '/last-sessions',
+      icon: this.getSvgIcon('history'),
+      color: 'purple',
+      translationKey: 'playstation.lastSessions.title',
+      description: 'playstation.lastSessions.title',
+      authorities: [Authority.ADMIN, 'ROLE_VIEW_PLAYSTATION_SESSION'],
+    }
   ];
+  containers: PlaystationContainer[] = [];  
 
-  constructor(private accountService: AccountService, private router: Router, private sanitizer: DomSanitizer) {}
+  constructor(
+    private accountService: AccountService, 
+    private router: Router, 
+    private sanitizer: DomSanitizer,
+    private playstationContainerResourceService: PlaystationContainerResourceService
+  ) {}
 
   ngOnInit(): void {
     // Check authentication state
@@ -142,8 +137,25 @@ export class NavigationComponent implements OnInit, OnDestroy {
           this.router.navigate(['/']);
         }
       });
+    this.loadContainers();
   }
 
+  loadContainers(): void {
+    this.playstationContainerResourceService.getPlaystationContainers().subscribe(response => {
+      this.containers = response ?? [];
+      if (this.containers.length > 0) {
+        this.subMenuItems.push({
+          title: 'playstation.navigation.title',
+          route: '/container/'+this.containers[0].id+'/navigation/dashboard',
+          icon: this.getSvgIcon('dashboard'),
+          color: 'green',
+          translationKey: 'playstation.navigation.title', 
+          description: 'playstation.navigation.title',
+          authorities: [Authority.ADMIN, 'ROLE_VIEW_PLAYSTATION_DEVICE'],
+        });
+      }
+    });
+  }
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
@@ -215,6 +227,17 @@ export class NavigationComponent implements OnInit, OnDestroy {
         <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
         <path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 12.728l-.707.707"></path>
         <path d="M11 10l-1 1m0 0l1 1m-1-1v-4"></path>
+      </svg>`,
+      dashboard: `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-dashboard" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+        <path d="M12 13m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+        <path d="M13.45 11.55l2.05 -2.05" />
+        <path d="M6.4 20a9 9 0 1 1 11.2 0z" />
+      </svg>`,
+      history: `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-history" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+        <path d="M12 8l0 4l2 2" />
+        <path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5" />
       </svg>`,
     };
 
