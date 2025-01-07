@@ -30,6 +30,10 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.stereotype.Service;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.security.access.prepost.PreAuthorize;
+import com.konsol.core.security.SecurityUtils;
+import com.konsol.core.security.AuthoritiesConstants;
+import org.springframework.beans.BeanUtils;
 
 /**
  * Service Implementation for managing {@link Store}.
@@ -450,18 +454,27 @@ public class SettingsServiceImpl implements SettingService {
 
     @Override
     @CacheEvict(value = SettingsRepository.SETTINGS_CACHE, allEntries = true)
+    @PreAuthorize("isAuthenticated()")
     public Settings update(Settings settings) {
         Settings mainSettings = getSettings();
         settings.setId(mainSettings.getId());
 
-        // Validate backup settings before saving
+        // If user doesn't have UPDATE_SYSTEM_SETTINGS authority, only allow updating PLAYSTATION_PRINT_ON_CHECKOUT
+        if (!SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.UPDATE_SYSTEM_SETTINGS)) {
+            Settings limitedUpdate = new Settings();
+            limitedUpdate.setId(mainSettings.getId());
+            limitedUpdate.setPLAYSTATION_PRINT_ON_CHECKOUT(settings.isPLAYSTATION_PRINT_ON_CHECKOUT());
+
+            // Copy all other values from existing settings
+            BeanUtils.copyProperties(mainSettings, limitedUpdate, "id", "PLAYSTATION_PRINT_ON_CHECKOUT");
+
+            return this.settingsRepository.save(limitedUpdate);
+        }
+
+        // User has full update authority - proceed with full validation and update
         validateBackupSettings(settings);
-
         Settings updatedSettings = this.settingsRepository.save(settings);
-     
-        // No need to call clearSettingsCache() explicitly since @CacheEvict annotation will handle it
 
-        // Reschedule backups if backup settings have changed
         scheduleBackups();
 
         return updatedSettings;
