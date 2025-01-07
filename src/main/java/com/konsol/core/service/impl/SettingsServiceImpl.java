@@ -18,12 +18,14 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.CacheManager;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.stereotype.Service;
@@ -43,6 +45,7 @@ public class SettingsServiceImpl implements SettingService {
 
     private final StoreService storeService;
 
+    private final CacheManager cacheManager;
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private final TaskScheduler taskScheduler = new ConcurrentTaskScheduler(scheduler);
     private final LicenseRepository licenseRepository;
@@ -55,13 +58,15 @@ public class SettingsServiceImpl implements SettingService {
         BankService bankService,
         StoreService storeService,
         LicenseRepository licenseRepository,
-        LicenseMapper licenseMapper
+        LicenseMapper licenseMapper,
+        CacheManager cacheManager
     ) {
         this.settingsRepository = settingsRepository;
         this.bankService = bankService;
         this.storeService = storeService;
         this.licenseRepository = licenseRepository;
         this.licenseMapper = licenseMapper;
+        this.cacheManager = cacheManager;
     }
 
     @Override
@@ -453,7 +458,7 @@ public class SettingsServiceImpl implements SettingService {
         // Reschedule backups if backup settings have changed
         scheduleBackups();
 
-       
+
         return updatedSettings;
     }
 }
