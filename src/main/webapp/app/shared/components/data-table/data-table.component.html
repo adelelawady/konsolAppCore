@@ -122,23 +122,21 @@
           {{ size }} {{ 'dataTable.pagination.itemsPerPage' | translate }}
         </option>
       </select>
-      <nav aria-label="Table navigation">
-        <ul class="pagination m-0">
-          <li class="page-item" [class.disabled]="currentPage === 0">
-            <a class="page-link" href="javascript:void(0)" (click)="onPageNumberChange(currentPage - 1)">
-              <i class="ti ti-chevron-right"></i>
-            </a>
-          </li>
-          <li class="page-item" *ngFor="let page of getPages()" [class.active]="page === currentPage">
-            <a class="page-link" href="javascript:void(0)" (click)="onPageNumberChange(page)">{{ page + 1 }}</a>
-          </li>
-          <li class="page-item" [class.disabled]="currentPage >= Math.ceil(totalItems / pageSize) - 1">
-            <a class="page-link" href="javascript:void(0)" (click)="onPageNumberChange(currentPage + 1)">
-              <i class="ti ti-chevron-left"></i>
-            </a>
-          </li>
-        </ul>
-      </nav>
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [(page)]="currentPage"
+        [pageSize]="pageSize"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="onPageNumberChange($event)"
+        class="mb-0"
+      >
+        <ng-template ngbPaginationPrevious><i class="ti ti-chevron-right"></i></ng-template>
+        <ng-template ngbPaginationNext><i class="ti ti-chevron-left"></i></ng-template>
+        <ng-template ngbPaginationFirst><i class="ti ti-chevrons-right"></i></ng-template>
+        <ng-template ngbPaginationLast><i class="ti ti-chevrons-left"></i></ng-template>
+      </ngb-pagination>
     </div>
   </div>
 </div>
