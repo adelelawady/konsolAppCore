@@ -22,7 +22,7 @@ export const adminRoutes: Routes = [
     canActivate: [UserRouteAccessService],
     data: {
       hasPlaystationLayout: true,
-      authorities: ['ROLE_ADMIN'],
+      authorities: ['ROLE_MANAGE_FINANCE'],
       pageTitle: 'financialReports.playstation.title',
     },
   },
@@ -32,7 +32,7 @@ export const adminRoutes: Routes = [
     canActivate: [UserRouteAccessService],
     data: {
       hasPlaystationLayout: true,
-      authorities: ['ROLE_ADMIN'],
+      authorities: [ 'ROLE_VIEW_ACTIVE_SHEFT'],
       pageTitle: 'konsolCoreApp.sheft.list.title',
     },
   },
@@ -42,6 +42,7 @@ export const adminRoutes: Routes = [
     title: 'konsolCoreApp.sheft.view.title',
     data: {
       hasPlaystationLayout: true,
+      authorities: ['ROLE_VIEW_SHEFT'],
     },
   },
   {
@@ -50,7 +51,7 @@ export const adminRoutes: Routes = [
     canActivate: [UserRouteAccessService],
     data: {
       hasPlaystationLayout: true,
-      authorities: ['ROLE_ADMIN'],
+      authorities: [ 'ROLE_VIEW_ACTIVE_SHEFT'],
       pageTitle: 'konsolCoreApp.sheft.management.title',
     },
   },
