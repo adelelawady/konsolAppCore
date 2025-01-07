@@ -33,7 +33,7 @@
           </a>
         </li>
 
-        <li class="nav-item" *ngIf="containers.length > 0">
+        <li  class="nav-item" [ngClass]="{ 'd-none': !hasAnyAuthority(['ROLE_VIEW_PLAYSTATION_DEVICE', 'ROLE_ADMIN']) }">
           <a
             class="nav-link"
             [routerLink]="['/', 'container', containers[0].id, 'navigation', 'dashboard']"
@@ -54,7 +54,7 @@
           </a>
           <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="playstation-menu">
             <!-- Containers Controll -->
-            <li>
+            <li *ngIf="hasAnyAuthority(['ROLE_ADMIN','ROLE_MANAGE_CONTAINERS'])">
               <a
                 class="dropdown-item"
                 routerLink="playstation-container"
@@ -67,7 +67,7 @@
               </a>
             </li>
             <!-- Session History -->
-            <li>
+            <li *ngIf="hasAnyAuthority(['ROLE_ADMIN','ROLE_MANAGE_SHEFTS'])">
               <a
                 class="dropdown-item"
                 routerLink="playstation/session-history"
@@ -81,7 +81,7 @@
             </li>
 
             <!-- financial-reports -->
-            <li>
+            <li *ngIf="hasAnyAuthority(['ROLE_ADMIN','ROLE_MANAGE_FINANCE'])">
               <a
                 class="dropdown-item"
                 routerLink="playstation-financial-reports"
@@ -95,7 +95,7 @@
             </li>
 
             <!-- shefts-reports -->
-            <li>
+            <li *ngIf="hasAnyAuthority(['ROLE_ADMIN','ROLE_MANAGE_SHEFTS'])">
               <a
                 class="dropdown-item"
                 routerLink="sheft"
@@ -109,7 +109,7 @@
             </li>
 
             <!-- last sessions -->
-            <li>
+            <li *ngIf="hasAnyAuthority(['ROLE_ADMIN','ROLE_VIEW_PLAYSTATION_SESSION'])">
               <a
                 class="dropdown-item"
                 routerLink="last-sessions"
@@ -145,7 +145,7 @@
             </li>
             <li>
               <a class="dropdown-item" routerLink="employees" routerLinkActive="active" (click)="collapseNavbar()">
-                <i class="fas fa-users-gear" class="me-2"></i>
+                <i class="fa fa-users" class="me-2"></i>
                 <span jhiTranslate="accounts.employees.title">User management</span>
               </a>
             </li>

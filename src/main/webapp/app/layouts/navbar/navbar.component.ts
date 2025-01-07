@@ -35,6 +35,7 @@ import { LoginService } from 'app/login/login.service';
 import { ProfileService } from 'app/layouts/profiles/profile.service';
 import { PlaystationContainerResourceService } from 'app/core/konsolApi/api/playstationContainerResource.service';
 import { PlaystationContainer } from 'app/core/konsolApi/model/playstationContainer';
+import { Authority } from 'app/config/authority.constants';
 
 @Component({
   selector: 'jhi-navbar',
@@ -127,5 +128,9 @@ export class NavbarComponent implements OnInit {
 
   toggleNavbar(): void {
     this.isNavbarCollapsed = !this.isNavbarCollapsed;
+  }
+
+  hasAnyAuthority(authorities: string[] | string): boolean {
+    return this.accountService.hasAnyAuthority(authorities);
   }
 }
