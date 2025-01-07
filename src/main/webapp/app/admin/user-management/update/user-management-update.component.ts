@@ -184,6 +184,7 @@ export class UserManagementUpdateComponent implements OnInit {
       'Playstation Device Operations',
       'Shift Management',
       'Settings Management',
+      'Management Roles',
       'OTHER'
     ];
 
