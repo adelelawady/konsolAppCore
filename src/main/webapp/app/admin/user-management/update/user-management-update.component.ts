@@ -71,7 +71,11 @@ export class UserManagementUpdateComponent implements OnInit {
         'ROLE_VIEW_ACTIVE_SHEFT',
         'ROLE_SAVE_INVOICE',
         'ROLE_UPDATE_SALE',
-        'ROLE_UPDATE_PURCHASE'
+        'ROLE_UPDATE_PURCHASE',
+        'ROLE_MANAGE_INVOICE',
+        'ROLE_MANAGE_PAYMENT',
+        'ROLE_MANAGE_BANK',
+        'ROLE_MANAGE_ACCOUNT'
       ]
     },
     {
@@ -88,7 +92,9 @@ export class UserManagementUpdateComponent implements OnInit {
         'ROLE_VIEW_ACCOUNT',
         'ROLE_VIEW_ITEM',
          'ROLE_UPDATE_SALE',
-        'ROLE_UPDATE_PURCHASE'
+        'ROLE_UPDATE_PURCHASE',
+        'ROLE_MANAGE_INVOICE',
+         'ROLE_MANAGE_ACCOUNT'
       ]
     },
     {
@@ -106,6 +112,8 @@ export class UserManagementUpdateComponent implements OnInit {
         'ROLE_CREATE_STORE',
         'ROLE_UPDATE_STORE',
         'ROLE_DELETE_STORE',
+         'ROLE_MANAGE_STORE',
+          'ROLE_MANAGE_ITEM'
       ]
     }
   ];
