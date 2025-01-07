@@ -176,15 +176,7 @@ public class InitialSetupMigration {
         saveInvoice.setDescription("Save invoice changes");
         template.save(saveInvoice);
 
-        Authority printInvoice = createAuthority(AuthoritiesConstants.PRINT_INVOICE);
-        printInvoice.setCategory("Invoice Management");
-        printInvoice.setDescription("Print invoice documents");
-        template.save(printInvoice);
 
-        Authority cancelInvoice = createAuthority(AuthoritiesConstants.CANCEL_INVOICE);
-        cancelInvoice.setCategory("Invoice Management");
-        cancelInvoice.setDescription("Cancel existing invoices");
-        template.save(cancelInvoice);
 
         // Store Management
         Authority createStore = createAuthority(AuthoritiesConstants.CREATE_STORE);
@@ -353,21 +345,7 @@ public class InitialSetupMigration {
         printPurchase.setDescription("Print purchase documents");
         template.save(printPurchase);
 
-        // Report Management
-        Authority viewReports = createAuthority(AuthoritiesConstants.VIEW_REPORTS);
-        viewReports.setCategory("Report Management");
-        viewReports.setDescription("View system reports");
-        template.save(viewReports);
 
-        Authority generateReport = createAuthority(AuthoritiesConstants.GENERATE_REPORT);
-        generateReport.setCategory("Report Management");
-        generateReport.setDescription("Generate new reports");
-        template.save(generateReport);
-
-        Authority exportReport = createAuthority(AuthoritiesConstants.EXPORT_REPORT);
-        exportReport.setCategory("Report Management");
-        exportReport.setDescription("Export reports to different formats");
-        template.save(exportReport);
 
         // User Management
         Authority createUser = createAuthority(AuthoritiesConstants.CREATE_USER);
@@ -394,21 +372,6 @@ public class InitialSetupMigration {
         manageRoles.setCategory("User Management");
         manageRoles.setDescription("Manage user roles and permissions");
         template.save(manageRoles);
-
-        // System Settings
-        Authority viewSettings = createAuthority(AuthoritiesConstants.VIEW_SETTINGS);
-        viewSettings.setCategory("System Settings");
-        viewSettings.setDescription("View system settings");
-        template.save(viewSettings);
-
-        Authority updateSettings = createAuthority(AuthoritiesConstants.UPDATE_SETTINGS);
-        updateSettings.setCategory("System Settings");
-        updateSettings.setDescription("Modify system settings");
-        template.save(updateSettings);
-
-        Authority manageSystemConfig = createAuthority(AuthoritiesConstants.MANAGE_SYSTEM_CONFIG);
-        manageSystemConfig.setCategory("System Settings");
-        manageSystemConfig.setDescription("Manage system configuration");
-        template.save(manageSystemConfig);
+        
     }
 }

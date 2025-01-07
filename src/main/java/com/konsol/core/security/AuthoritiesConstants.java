@@ -17,8 +17,6 @@ public final class AuthoritiesConstants {
     public static final String DELETE_INVOICE = "ROLE_DELETE_INVOICE";
     public static final String VIEW_INVOICE = "ROLE_VIEW_INVOICE";
     public static final String SAVE_INVOICE = "ROLE_SAVE_INVOICE";
-    public static final String PRINT_INVOICE = "ROLE_PRINT_INVOICE";
-    public static final String CANCEL_INVOICE = "ROLE_CANCEL_INVOICE";
 
     // Store Authorities
     public static final String CREATE_STORE = "ROLE_CREATE_STORE";
@@ -66,10 +64,6 @@ public final class AuthoritiesConstants {
     public static final String CANCEL_PURCHASE = "ROLE_CANCEL_PURCHASE";
     public static final String PRINT_PURCHASE = "ROLE_PRINT_PURCHASE";
 
-    // Report Authorities
-    public static final String VIEW_REPORTS = "ROLE_VIEW_REPORTS";
-    public static final String GENERATE_REPORT = "ROLE_GENERATE_REPORT";
-    public static final String EXPORT_REPORT = "ROLE_EXPORT_REPORT";
 
     // User Management Authorities
     public static final String CREATE_USER = "ROLE_CREATE_USER";
@@ -78,10 +72,45 @@ public final class AuthoritiesConstants {
     public static final String VIEW_USER = "ROLE_VIEW_USER";
     public static final String MANAGE_ROLES = "ROLE_MANAGE_ROLES";
 
-    // Settings Authorities
-    public static final String VIEW_SETTINGS = "ROLE_VIEW_SETTINGS";
-    public static final String UPDATE_SETTINGS = "ROLE_UPDATE_SETTINGS";
-    public static final String MANAGE_SYSTEM_CONFIG = "ROLE_MANAGE_SYSTEM_CONFIG";
+
+    // Playstation Device Authorities
+    public static final String CREATE_PLAYSTATION_DEVICE = "ROLE_CREATE_PLAYSTATION_DEVICE";
+    public static final String UPDATE_PLAYSTATION_DEVICE = "ROLE_UPDATE_PLAYSTATION_DEVICE";
+    public static final String DELETE_PLAYSTATION_DEVICE = "ROLE_DELETE_PLAYSTATION_DEVICE";
+    public static final String VIEW_PLAYSTATION_DEVICE = "ROLE_VIEW_PLAYSTATION_DEVICE";
+    
+    // Playstation Session Management
+    public static final String START_PLAYSTATION_SESSION = "ROLE_START_PLAYSTATION_SESSION";
+    public static final String STOP_PLAYSTATION_SESSION = "ROLE_STOP_PLAYSTATION_SESSION";
+    public static final String VIEW_PLAYSTATION_SESSION = "ROLE_VIEW_PLAYSTATION_SESSION";
+    
+    // Playstation Device Operations
+    public static final String MOVE_PLAYSTATION_DEVICE = "ROLE_MOVE_PLAYSTATION_DEVICE";
+    public static final String CHANGE_PLAYSTATION_TYPE = "ROLE_CHANGE_PLAYSTATION_TYPE";
+    public static final String MANAGE_PLAYSTATION_ORDERS = "ROLE_MANAGE_PLAYSTATION_ORDERS";
+    
+    // Playstation Device Type Management
+    public static final String CREATE_PLAYSTATION_TYPE = "ROLE_CREATE_PLAYSTATION_TYPE";
+    public static final String UPDATE_PLAYSTATION_TYPE = "ROLE_UPDATE_PLAYSTATION_TYPE";
+    public static final String DELETE_PLAYSTATION_TYPE = "ROLE_DELETE_PLAYSTATION_TYPE";
+    public static final String VIEW_PLAYSTATION_TYPE = "ROLE_VIEW_PLAYSTATION_TYPE";
+
+    // Sheft Management
+    public static final String START_SHEFT = "ROLE_START_SHEFT";
+    public static final String END_SHEFT = "ROLE_END_SHEFT";
+    public static final String VIEW_SHEFT = "ROLE_VIEW_SHEFT";
+    public static final String UPDATE_SHEFT = "ROLE_UPDATE_SHEFT";
+    public static final String DELETE_SHEFT = "ROLE_DELETE_SHEFT";
+    public static final String VIEW_ACTIVE_SHEFT = "ROLE_VIEW_ACTIVE_SHEFT";
+
+    // Settings Management
+    public static final String UPDATE_SYSTEM_SETTINGS = "ROLE_UPDATE_SYSTEM_SETTINGS";
+
+    // Finance Management
+    public static final String MANAGE_FINANCE = "ROLE_MANAGE_FINANCE";
+
+
+
 
     private AuthoritiesConstants() {}
 }
