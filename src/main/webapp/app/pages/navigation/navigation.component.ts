@@ -6,6 +6,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { AccountService } from 'app/core/auth/account.service';
 import { Account } from 'app/core/auth/account.model';
 import { SharedModule } from '../../shared/shared.module';
+import { Authority } from 'app/config/authority.constants';
 
 @Component({
   selector: 'jhi-navigation',
@@ -26,6 +27,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
       color: 'primary',
       translationKey: 'invoices',
       description: 'global.navigation.pages.invoices.description',
+      authorities: [Authority.ADMIN, 'ROLE_VIEW_INVOICE'],
     },
     {
       title: 'global.navigation.pages.categories.title',
@@ -34,6 +36,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
       color: 'indigo',
       translationKey: 'categories',
       description: 'global.navigation.pages.categories.description',
+      authorities: [Authority.ADMIN, 'ROLE_VIEW_ITEM'],
     },
     {
       title: 'global.navigation.pages.money.title',
@@ -42,6 +45,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
       color: 'green',
       translationKey: 'money',
       description: 'global.navigation.pages.money.description',
+      authorities: [Authority.ADMIN, 'ROLE_VIEW_PAYMENT'],
     },
     {
       title: 'global.navigation.pages.accounts.title',
@@ -50,6 +54,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
       color: 'orange',
       translationKey: 'accounts',
       description: 'global.navigation.pages.accounts.description',
+      authorities: [Authority.ADMIN, 'ROLE_VIEW_ACCOUNT'],
     },
     {
       title: 'global.navigation.pages.financial-reports.title',
@@ -58,6 +63,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
       color: 'blue',
       translationKey: 'financial-reports',
       description: 'global.navigation.pages.financial-reports.description',
+      authorities: [Authority.ADMIN, 'ROLE_MANAGE_FINANCE'],
     },
     {
       title: 'global.navigation.pages.inventory.title',
@@ -66,6 +72,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
       color: 'yellow',
       translationKey: 'inventory',
       description: 'global.navigation.pages.inventory.description',
+      authorities: [Authority.ADMIN, 'ROLE_VIEW_STORE'],
     },
     {
       title: 'global.navigation.pages.purchase.title',
@@ -74,6 +81,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
       color: 'teal',
       translationKey: 'purchase',
       description: 'global.navigation.pages.purchase.description',
+      authorities: [Authority.ADMIN, 'ROLE_VIEW_PURCHASE'],
     },
     {
       title: 'global.navigation.pages.sales.title',
@@ -82,6 +90,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
       color: 'cyan',
       translationKey: 'sales',
       description: 'global.navigation.pages.sales.description',
+      authorities: [Authority.ADMIN, 'ROLE_VIEW_SALES'],
     },
   ];
 
@@ -210,5 +219,12 @@ export class NavigationComponent implements OnInit, OnDestroy {
     };
 
     return this.sanitizer.bypassSecurityTrustHtml(icons[name] || '');
+  }
+
+  hasAnyAuthority(authorities: string[] | undefined): boolean {
+    if (!authorities || authorities.length === 0) {
+      return true; // If no authorities specified, show to all
+    }
+    return this.accountService.hasAnyAuthority(authorities);
   }
 }
