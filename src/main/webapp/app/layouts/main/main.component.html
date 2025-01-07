@@ -48,11 +48,6 @@
                     <small class="text-muted" jhiTranslate="konsolCoreApp.sheft.home.title">sheft</small>
                   </div>
                   <div class="active-sheft-info">
-                    <div class="info-row">
-                      <span class="label" jhiTranslate="konsolCoreApp.sheft.id">ID:</span>
-                      <span class="value">{{ activeSheft.id | slice: 0:8 }}...</span>
-                    </div>
-
                     <div *ngIf="activeSheft?.startTime" class="info-row">
                       <span class="label" jhiTranslate="konsolCoreApp.sheft.duration">Duration:</span>
                       <span class="value">{{ getDuration(activeSheft?.startTime) }}</span>
@@ -288,17 +283,19 @@
     background: rgba(255, 255, 255, 0.9);
     border: 1px solid rgba(0, 150, 136, 0.2);
     border-radius: 8px;
-    padding: 3px;
+    padding: 8px;
     display: flex;
-    align-items: center;
-    gap: 1rem;
+    flex-direction: column;
+    gap: 0.5rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    min-width: 0;
   }
 
   .active-sheft-status {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    flex-wrap: wrap;
   }
 
   .pulse-dot {
@@ -333,6 +330,7 @@
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
+    min-width: 0;
   }
 
   .info-row {
@@ -340,16 +338,37 @@
     align-items: center;
     gap: 0.5rem;
     font-size: 0.875rem;
+    min-width: 0;
   }
 
   .label {
     color: #64748b;
     font-weight: 500;
     min-width: 70px;
+    flex-shrink: 0;
   }
 
   .value {
     color: #1e293b;
     font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+  }
+
+  /* Add responsive adjustments */
+  @media (max-width: 576px) {
+    .active-sheft-card {
+      padding: 6px;
+    }
+
+    .info-row {
+      font-size: 0.8rem;
+    }
+
+    .label {
+      min-width: 60px;
+    }
   }
 </style>
