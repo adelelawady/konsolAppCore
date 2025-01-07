@@ -14,6 +14,16 @@
     "detail": {
       "title": "مستخدم"
     },
+    "sections": {
+      "basicInfo": "المعلومات الأساسية"
+    },
+    "roles": {
+      "title": "أدوار وصلاحيات المستخدم"
+    },
+    "status": {
+      "active": "نشط",
+      "inactive": "غير نشط"
+    },
     "login": "تسجيل الدخول",
     "firstName": "الاسم الاول",
     "lastName": "اللقب",

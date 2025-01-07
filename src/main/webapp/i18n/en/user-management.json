@@ -15,6 +15,16 @@
     "detail": {
       "title": "User"
     },
+    "sections": {
+      "basicInfo": "Basic Information"
+    },
+    "roles": {
+      "title": "User Roles & Permissions"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
     "login": "Login",
     "firstName": "First name",
     "lastName": "Last name",
