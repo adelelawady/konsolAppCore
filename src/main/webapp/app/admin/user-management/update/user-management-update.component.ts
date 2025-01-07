@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 
 import { LANGUAGES } from 'app/config/language.constants';
 import { IUser, User } from '../user-management.model';
@@ -20,7 +21,12 @@ export class UserManagementUpdateComponent implements OnInit {
   editForm!: FormGroup;
   authorityGroups: { category: string; authorities: IAuthority[] }[] = [];
 
-  constructor(private userService: UserManagementService, private route: ActivatedRoute, fb: FormBuilder) {
+  constructor(
+    private userService: UserManagementService,
+    private route: ActivatedRoute,
+    private translateService: TranslateService,
+    fb: FormBuilder
+  ) {
     this.fb = fb;
     this.editForm = this.fb.group({
       id: [null as string | null],
@@ -70,21 +76,66 @@ export class UserManagementUpdateComponent implements OnInit {
   }
 
   private organizeAuthorities(authorities: IAuthority[]): void {
+    // Define category order
+    const categoryOrder = [
+      'Basic Roles',
+      'User Management',
+      'Invoice Management',
+      'Store Management',
+      'Item Management',
+      'Account Management',
+      'Bank Management',
+      'Payment Management',
+      'Sales Management',
+      'Purchase Management',
+      'Finance Management',
+      'Playstation Device Management',
+      'Playstation Session Management',
+      'Playstation Type Management',
+      'Playstation Device Operations',
+      'Shift Management',
+      'Settings Management',
+      'OTHER'
+    ];
+
     // Group authorities by category
     const groupedByCategory = authorities.reduce((groups: { [key: string]: IAuthority[] }, auth) => {
-      const category = auth.category || 'Other';
+      const category = auth.category || 'OTHER';
       if (!groups[category]) {
         groups[category] = [];
       }
-      groups[category].push(auth);
+      
+      // Enhance authority with translated name and description
+      const enhancedAuth = {
+        ...auth,
+        name: this.translateService.instant(`userManagement.authorities.roles.${auth.id}.name`),
+        description: this.translateService.instant(`userManagement.authorities.roles.${auth.id}.description`),
+      };
+      
+      groups[category].push(enhancedAuth);
       return groups;
     }, {});
 
-    // Convert to array format
-    this.authorityGroups = Object.entries(groupedByCategory).map(([category, auths]) => ({
-      category,
-      authorities: auths,
-    }));
+    // Convert to array format and sort by predefined category order
+    this.authorityGroups = categoryOrder
+      .filter(category => groupedByCategory[category]?.length > 0)
+      .map(category => ({
+        category: this.translateService.instant(`userManagement.authorities.categories.${category.replace(/\s+/g, '_')}`),
+        authorities: groupedByCategory[category],
+      }));
+  }
+
+  private getCategoryFromRole(role: string): string {
+    // Make the role check more precise by checking for exact role prefixes
+    if (role.startsWith('ROLE_ADMIN')) return 'ADMIN';
+    if (role.startsWith('ROLE_USER')) return 'USER';
+    if (role.startsWith('ROLE_INVENTORY')) return 'INVENTORY';
+    if (role.startsWith('ROLE_SALES')) return 'SALES';
+    if (role.startsWith('ROLE_PURCHASES')) return 'PURCHASES';
+    if (role.startsWith('ROLE_ACCOUNTS')) return 'ACCOUNTS';
+    if (role.startsWith('ROLE_REPORTS')) return 'REPORTS';
+    if (role.startsWith('ROLE_SETTINGS')) return 'SETTINGS';
+    return 'OTHER';
   }
 
   updateForm(user: IUser): void {

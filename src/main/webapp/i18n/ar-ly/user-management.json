@@ -35,6 +35,302 @@
     "createdBy": "تم إنشاؤها بواسطة",
     "createdDate": "تاريخ الإنشاء",
     "lastModifiedBy": "عدل من قبل",
-    "lastModifiedDate": "تاريخ التعديل"
+    "lastModifiedDate": "تاريخ التعديل",
+    "authorities": {
+      "categories": {
+        "Basic_Roles": "الأدوار الأساسية",
+        "User_Management": "إدارة المستخدمين",
+        "Invoice_Management": "إدارة الفواتير",
+        "Store_Management": "إدارة المخازن",
+        "Item_Management": "إدارة المنتجات",
+        "Account_Management": "إدارة الحسابات",
+        "Bank_Management": "إدارة البنوك",
+        "Payment_Management": "إدارة المدفوعات",
+        "Sales_Management": "إدارة المبيعات",
+        "Purchase_Management": "إدارة المشتريات",
+        "Finance_Management": "الإدارة المالية",
+        "Playstation_Device_Management": "إدارة أجهزة البلايستيشن",
+        "Playstation_Session_Management": "إدارة جلسات البلايستيشن",
+        "Playstation_Type_Management": "إدارة أنواع البلايستيشن",
+        "Playstation_Device_Operations": "عمليات أجهزة البلايستيشن",
+        "Shift_Management": "إدارة المناوبات",
+        "Settings_Management": "إدارة الإعدادات",
+        "OTHER": "صلاحيات أخرى"
+      },
+      "roles": {
+        "ROLE_USER": {
+          "name": "مستخدم عادي",
+          "description": "مستخدم عادي مع صلاحيات أساسية"
+        },
+        "ROLE_ADMIN": {
+          "name": "مدير النظام",
+          "description": "مدير النظام مع صلاحيات متقدمة"
+        },
+        "ROLE_SUPER_ADMIN": {
+          "name": "مدير النظام الأعلى",
+          "description": "مدير النظام مع كافة لصلاحيات"
+        },
+        "ROLE_CREATE_INVOICE": {
+          "name": "إنشاء فاتورة",
+          "description": "إنشاء فواتير جديدة"
+        },
+        "ROLE_UPDATE_INVOICE": {
+          "name": "تعديل فاتورة",
+          "description": "تعديل الفواتير الموجودة"
+        },
+        "ROLE_DELETE_INVOICE": {
+          "name": "حذف فاتورة",
+          "description": "حذف الفواتير من النظام"
+        },
+        "ROLE_VIEW_INVOICE": {
+          "name": "عرض فاتورة",
+          "description": "عرض تفاصيل الفواتير"
+        },
+        "ROLE_SAVE_INVOICE": {
+          "name": "حفظ فاتورة",
+          "description": "حفظ تغييرات الفواتير"
+        },
+        "ROLE_CREATE_STORE": {
+          "name": "إنشاء مخزن",
+          "description": "إنشاء مخازن جديدة"
+        },
+        "ROLE_UPDATE_STORE": {
+          "name": "تعديل مخزن",
+          "description": "تعديل معلومات المخازن"
+        },
+        "ROLE_DELETE_STORE": {
+          "name": "حذف مخزن",
+          "description": "حذف المخازن من النظام"
+        },
+        "ROLE_VIEW_STORE": {
+          "name": "عرض مخزن",
+          "description": "عرض تفاصيل المخازن"
+        },
+        "ROLE_CREATE_ACCOUNT": {
+          "name": "إنشاء حساب",
+          "description": "إنشاء حسابات جديدة"
+        },
+        "ROLE_UPDATE_ACCOUNT": {
+          "name": "تعديل حساب",
+          "description": "تعديل معلومات الحسابات"
+        },
+        "ROLE_DELETE_ACCOUNT": {
+          "name": "حذف حساب",
+          "description": "حذف الحسابات من النظام"
+        },
+        "ROLE_VIEW_ACCOUNT": {
+          "name": "عرض حساب",
+          "description": "عرض تفاصيل الحسابات"
+        },
+        "ROLE_CREATE_ITEM": {
+          "name": "إنشاء منتج",
+          "description": "إنشاء منتجات جديدة"
+        },
+        "ROLE_UPDATE_ITEM": {
+          "name": "تعديل منتج",
+          "description": "تعديل معلومات المنتجات"
+        },
+        "ROLE_DELETE_ITEM": {
+          "name": "حذف منتج",
+          "description": "حذف المنتجات من النظام"
+        },
+        "ROLE_VIEW_ITEM": {
+          "name": "عرض منتج",
+          "description": "عرض تفاصيل المنتجات"
+        },
+        "ROLE_CREATE_BANK": {
+          "name": "إنشاء بنك",
+          "description": "إنشاء سجلات بنكية جديدة"
+        },
+        "ROLE_UPDATE_BANK": {
+          "name": "تعديل بنك",
+          "description": "تعديل معلومات البنوك"
+        },
+        "ROLE_DELETE_BANK": {
+          "name": "حذف بنك",
+          "description": "حذف السجلات البنكية"
+        },
+        "ROLE_VIEW_BANK": {
+          "name": "عرض بنك",
+          "description": "عرض تفاصيل البنوك"
+        },
+        "ROLE_CREATE_PAYMENT": {
+          "name": "إنشاء دفعة",
+          "description": "إنشاء دفعات جديدة"
+        },
+        "ROLE_UPDATE_PAYMENT": {
+          "name": "تعديل دفعة",
+          "description": "تعديل معلومات الدفعات"
+        },
+        "ROLE_DELETE_PAYMENT": {
+          "name": "حذف دفعة",
+          "description": "حذف الدفعات من النظام"
+        },
+        "ROLE_VIEW_PAYMENT": {
+          "name": "عرض دفعة",
+          "description": "عرض تفاصيل الدفعات"
+        },
+        "ROLE_CREATE_SALE": {
+          "name": "إنشاء مبيعات",
+          "description": "إنشاء سجلات مبيعات جديدة"
+        },
+        "ROLE_UPDATE_SALE": {
+          "name": "تعديل مبيعات",
+          "description": "تعديل معلومات المبيعات"
+        },
+        "ROLE_DELETE_SALE": {
+          "name": "حذف مبيعات",
+          "description": "حذف سجلات المبيعات"
+        },
+        "ROLE_VIEW_SALE": {
+          "name": "عرض مبيعات",
+          "description": "عرض تفاصيل المبيعات"
+        },
+        "ROLE_CANCEL_SALE": {
+          "name": "إلغاء مبيعات",
+          "description": "إلغاء معاملات المبيعات"
+        },
+        "ROLE_PRINT_SALE": {
+          "name": "طباعة مبيعات",
+          "description": "طباعة مستندات المبيعات"
+        },
+        "ROLE_CREATE_PURCHASE": {
+          "name": "إنشاء مشتريات",
+          "description": "إنشاء سجلات مشتريات جديدة"
+        },
+        "ROLE_UPDATE_PURCHASE": {
+          "name": "تعديل مشتريات",
+          "description": "تعديل معلومات المشتريات"
+        },
+        "ROLE_DELETE_PURCHASE": {
+          "name": "حذف مشتريات",
+          "description": "حذف سجلات المشتريات"
+        },
+        "ROLE_VIEW_PURCHASE": {
+          "name": "عرض مشتريات",
+          "description": "عرض تفاصيل المشتريات"
+        },
+        "ROLE_CANCEL_PURCHASE": {
+          "name": "إلغاء مشتريات",
+          "description": "إلغاء معاملات المشتريات"
+        },
+        "ROLE_PRINT_PURCHASE": {
+          "name": "طباعة مشتريات",
+          "description": "طباعة مستندات المشتريات"
+        },
+        "ROLE_CREATE_USER": {
+          "name": "إنشاء مستخدم",
+          "description": "إنشاء مستخدمين جدد في النظام"
+        },
+        "ROLE_UPDATE_USER": {
+          "name": "تعديل مستخدم",
+          "description": "تعديل معلومات المستخدمين"
+        },
+        "ROLE_DELETE_USER": {
+          "name": "حذف مستخدم",
+          "description": "حذف المستخدمين من النظام"
+        },
+        "ROLE_VIEW_USER": {
+          "name": "عرض مستخدم",
+          "description": "عرض تفاصيل المستخدمين"
+        },
+        "ROLE_MANAGE_ROLES": {
+          "name": "إدارة الصلاحيات",
+          "description": "إدارة أدوار وصلاحيات المستخدمين"
+        },
+        "ROLE_CREATE_PLAYSTATION_DEVICE": {
+          "name": "إنشاء جهاز بلايستيشن",
+          "description": "إنشاء أجهزة بلايستيشن جديدة"
+        },
+        "ROLE_UPDATE_PLAYSTATION_DEVICE": {
+          "name": "تعديل جهاز بلايستيشن",
+          "description": "تعديل معلومات أجهزة البلايستيشن"
+        },
+        "ROLE_DELETE_PLAYSTATION_DEVICE": {
+          "name": "حذف جهاز بلايستيشن",
+          "description": "حذف أجهزة البلايستيشن من النظام"
+        },
+        "ROLE_VIEW_PLAYSTATION_DEVICE": {
+          "name": "عرض جهاز بلايستيشن",
+          "description": "عرض تفاصيل أجهزة البلايستيشن"
+        },
+        "ROLE_START_PLAYSTATION_SESSION": {
+          "name": "بدء جلسة بلايستيشن",
+          "description": "بدء جلسات لعب بلايستيشن جديدة"
+        },
+        "ROLE_STOP_PLAYSTATION_SESSION": {
+          "name": "إنهاء جلسة بلايستيشن",
+          "description": "إنهاء جلسات لعب البلايستيشن النشطة"
+        },
+        "ROLE_VIEW_PLAYSTATION_SESSION": {
+          "name": "عرض جلسة بلايستيشن",
+          "description": "عرض تفاصيل جلسات البلايستيشن"
+        },
+        "ROLE_UPDATE_PLAYSTATION_SESSION": {
+          "name": "تعديل جلسة بلايستيشن",
+          "description": "تعديل معلومات جلسات البلايستيشن"
+        },
+        "ROLE_MOVE_PLAYSTATION_DEVICE": {
+          "name": "نقل جهاز بلايستيشن",
+          "description": "نقل أجهزة البلايستيشن بين المواقع"
+        },
+        "ROLE_CHANGE_PLAYSTATION_TYPE": {
+          "name": "تغيير نوع البلايستيشن",
+          "description": "تغيير نوع جهاز البلايستيشن"
+        },
+        "ROLE_MANAGE_PLAYSTATION_ORDERS": {
+          "name": "إدارة طلبات البلايستيشن",
+          "description": "إدارة الطلبات لأجهزة البلايستيشن"
+        },
+        "ROLE_CREATE_PLAYSTATION_TYPE": {
+          "name": "إنشاء نوع بلايستيشن",
+          "description": "إنشاء أنواع جديدة لأجهزة البلايستيشن"
+        },
+        "ROLE_UPDATE_PLAYSTATION_TYPE": {
+          "name": "تعديل نوع بلايستيشن",
+          "description": "تعديل أنواع أجهزة البلايستيشن"
+        },
+        "ROLE_DELETE_PLAYSTATION_TYPE": {
+          "name": "حذف نوع بلايستيشن",
+          "description": "حذف أنواع أجهزة البلايستيشن"
+        },
+        "ROLE_VIEW_PLAYSTATION_TYPE": {
+          "name": "عرض نوع بلايستيشن",
+          "description": "عرض تفاصيل أنواع أجهزة البلايستيشن"
+        },
+        "ROLE_START_SHEFT": {
+          "name": "بدء مناوبة",
+          "description": "بدء مناوبات عمل جديدة"
+        },
+        "ROLE_END_SHEFT": {
+          "name": "إنهاء مناوبة",
+          "description": "إنهاء مناوبات العمل النشطة"
+        },
+        "ROLE_VIEW_SHEFT": {
+          "name": "عرض مناوبة",
+          "description": "عرض تفاصيل المناوبات"
+        },
+        "ROLE_UPDATE_SHEFT": {
+          "name": "تعديل مناوبة",
+          "description": "تعديل معلومات المناوبات"
+        },
+        "ROLE_DELETE_SHEFT": {
+          "name": "حذف مناوبة",
+          "description": "حذف سجلات المناوبات"
+        },
+        "ROLE_VIEW_ACTIVE_SHEFT": {
+          "name": "عرض المناوبات النشطة",
+          "description": "عرض المناوبات النشطة حالياً"
+        },
+        "ROLE_UPDATE_SYSTEM_SETTINGS": {
+          "name": "تعديل إعدادات النظام",
+          "description": "تعديل إعدادات وتكوينات النظام"
+        },
+        "ROLE_MANAGE_FINANCE": {
+          "name": "إدارة المالية",
+          "description": "إدارة العمليات والتقارير المالية"
+        }
+      }
+    }
   }
 }
