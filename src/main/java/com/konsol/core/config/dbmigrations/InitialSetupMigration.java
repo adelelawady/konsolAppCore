@@ -7,6 +7,7 @@ import com.konsol.core.domain.Store;
 import com.konsol.core.domain.User;
 import com.konsol.core.security.AuthoritiesConstants;
 import com.konsol.core.service.LicenseService;
+import com.konsol.core.service.SettingService;
 import io.mongock.api.annotations.ChangeUnit;
 import io.mongock.api.annotations.Execution;
 import io.mongock.api.annotations.RollbackExecution;
@@ -26,9 +27,11 @@ public class InitialSetupMigration {
 
     private final LicenseService licenseService;
 
-    public InitialSetupMigration(MongoTemplate template, LicenseService licenseService) {
+    private final SettingService settingService;
+    public InitialSetupMigration(MongoTemplate template, LicenseService licenseService, SettingService settingService) {
         this.template = template;
         this.licenseService = licenseService;
+        this.settingService = settingService;
     }
 
     @Execution
@@ -46,13 +49,22 @@ public class InitialSetupMigration {
         createFirstBank();
         createFirstStore();
         createTrialLicense();
+        createSettings();
     }
 
     @RollbackExecution
     public void rollback() {}
 
     private void createTrialLicense() {
-        licenseService.generateLicense("Trial License", Instant.now().plus(30, ChronoUnit.DAYS));
+        licenseService.generateLicense("Trial License", Instant.now().plus(10, ChronoUnit.DAYS));
+    }
+
+    private void createSettings() {
+        try {
+            settingService.getSettings();
+        }catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private Authority createAuthority(String authority) {
