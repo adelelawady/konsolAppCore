@@ -79,6 +79,7 @@ public class SettingsServiceImpl implements SettingService {
             settingsToSave = checkAndAssignSettingsToBank(settingsToSave);
             settingsToSave = checkAndAssignPlaystationSettingsToStore(settingsToSave);
             settingsToSave = checkAndAssignPlaystationSettingsToBank(settingsToSave);
+            clearSettingsCache();
             return settingsToSave;
         } else {
             //  settings = checkAndAssignSettingsToStore(settings);
@@ -442,6 +443,11 @@ public class SettingsServiceImpl implements SettingService {
         }
     }
 
+    @CacheEvict(value = SettingsRepository.SETTINGS_CACHE, allEntries = true)
+    public void clearSettingsCache() {
+        log.debug("Clearing Settings cache");
+    }
+
     @Override
     @CacheEvict(value = SettingsRepository.SETTINGS_CACHE, allEntries = true)
     public Settings update(Settings settings) {
@@ -452,6 +458,7 @@ public class SettingsServiceImpl implements SettingService {
         validateBackupSettings(settings);
 
         Settings updatedSettings = this.settingsRepository.save(settings);
+        clearSettingsCache();
         // No need to call clearSettingsCache() explicitly since @CacheEvict annotation will handle it
 
         // Reschedule backups if backup settings have changed
