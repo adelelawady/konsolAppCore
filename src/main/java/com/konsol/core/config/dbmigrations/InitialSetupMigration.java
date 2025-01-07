@@ -13,11 +13,13 @@ import io.mongock.api.annotations.RollbackExecution;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.stereotype.Component;
 
 /**
  * Creates the initial database setup.
  */
 @ChangeUnit(id = "users-initialization", order = "001")
+//@Component
 public class InitialSetupMigration {
 
     private final MongoTemplate template;
@@ -372,6 +374,127 @@ public class InitialSetupMigration {
         manageRoles.setCategory("User Management");
         manageRoles.setDescription("Manage user roles and permissions");
         template.save(manageRoles);
-        
+
+        // Playstation Device Management
+        Authority createPlaystationDevice = createAuthority(AuthoritiesConstants.CREATE_PLAYSTATION_DEVICE);
+        createPlaystationDevice.setCategory("Playstation Device Management");
+        createPlaystationDevice.setDescription("Create new playstation devices");
+        template.save(createPlaystationDevice);
+
+        Authority updatePlaystationDevice = createAuthority(AuthoritiesConstants.UPDATE_PLAYSTATION_DEVICE);
+        updatePlaystationDevice.setCategory("Playstation Device Management");
+        updatePlaystationDevice.setDescription("Modify playstation device information");
+        template.save(updatePlaystationDevice);
+
+        Authority deletePlaystationDevice = createAuthority(AuthoritiesConstants.DELETE_PLAYSTATION_DEVICE);
+        deletePlaystationDevice.setCategory("Playstation Device Management");
+        deletePlaystationDevice.setDescription("Delete playstation devices from the system");
+        template.save(deletePlaystationDevice);
+
+        Authority viewPlaystationDevice = createAuthority(AuthoritiesConstants.VIEW_PLAYSTATION_DEVICE);
+        viewPlaystationDevice.setCategory("Playstation Device Management");
+        viewPlaystationDevice.setDescription("View playstation device details");
+        template.save(viewPlaystationDevice);
+
+        // Playstation Session Management
+        Authority startPlaystationSession = createAuthority(AuthoritiesConstants.START_PLAYSTATION_SESSION);
+        startPlaystationSession.setCategory("Playstation Session Management");
+        startPlaystationSession.setDescription("Start new playstation gaming sessions");
+        template.save(startPlaystationSession);
+
+        Authority stopPlaystationSession = createAuthority(AuthoritiesConstants.STOP_PLAYSTATION_SESSION);
+        stopPlaystationSession.setCategory("Playstation Session Management");
+        stopPlaystationSession.setDescription("Stop active playstation gaming sessions");
+        template.save(stopPlaystationSession);
+
+        Authority viewPlaystationSession = createAuthority(AuthoritiesConstants.VIEW_PLAYSTATION_SESSION);
+        viewPlaystationSession.setCategory("Playstation Session Management");
+        viewPlaystationSession.setDescription("View playstation session details");
+        template.save(viewPlaystationSession);
+
+        Authority updatePlaystationSession = createAuthority(AuthoritiesConstants.UPDATE_PLAYSTATION_SESSION);
+        updatePlaystationSession.setCategory("Playstation Session Management");
+        updatePlaystationSession.setDescription("Modify playstation session information");
+        template.save(updatePlaystationSession);
+
+        // Playstation Device Operations
+        Authority movePlaystationDevice = createAuthority(AuthoritiesConstants.MOVE_PLAYSTATION_DEVICE);
+        movePlaystationDevice.setCategory("Playstation Device Operations");
+        movePlaystationDevice.setDescription("Move playstation devices between locations");
+        template.save(movePlaystationDevice);
+
+        Authority changePlaystationType = createAuthority(AuthoritiesConstants.CHANGE_PLAYSTATION_TYPE);
+        changePlaystationType.setCategory("Playstation Device Operations");
+        changePlaystationType.setDescription("Change playstation device type");
+        template.save(changePlaystationType);
+
+        Authority managePlaystationOrders = createAuthority(AuthoritiesConstants.MANAGE_PLAYSTATION_ORDERS);
+        managePlaystationOrders.setCategory("Playstation Device Operations");
+        managePlaystationOrders.setDescription("Manage orders for playstation devices");
+        template.save(managePlaystationOrders);
+
+        // Playstation Device Type Management
+        Authority createPlaystationType = createAuthority(AuthoritiesConstants.CREATE_PLAYSTATION_TYPE);
+        createPlaystationType.setCategory("Playstation Type Management");
+        createPlaystationType.setDescription("Create new playstation device types");
+        template.save(createPlaystationType);
+
+        Authority updatePlaystationType = createAuthority(AuthoritiesConstants.UPDATE_PLAYSTATION_TYPE);
+        updatePlaystationType.setCategory("Playstation Type Management");
+        updatePlaystationType.setDescription("Modify playstation device types");
+        template.save(updatePlaystationType);
+
+        Authority deletePlaystationType = createAuthority(AuthoritiesConstants.DELETE_PLAYSTATION_TYPE);
+        deletePlaystationType.setCategory("Playstation Type Management");
+        deletePlaystationType.setDescription("Delete playstation device types");
+        template.save(deletePlaystationType);
+
+        Authority viewPlaystationType = createAuthority(AuthoritiesConstants.VIEW_PLAYSTATION_TYPE);
+        viewPlaystationType.setCategory("Playstation Type Management");
+        viewPlaystationType.setDescription("View playstation device type details");
+        template.save(viewPlaystationType);
+
+        // Shift Management
+        Authority startShift = createAuthority(AuthoritiesConstants.START_SHEFT);
+        startShift.setCategory("Shift Management");
+        startShift.setDescription("Start new work shifts");
+        template.save(startShift);
+
+        Authority endShift = createAuthority(AuthoritiesConstants.END_SHEFT);
+        endShift.setCategory("Shift Management");
+        endShift.setDescription("End active work shifts");
+        template.save(endShift);
+
+        Authority viewShift = createAuthority(AuthoritiesConstants.VIEW_SHEFT);
+        viewShift.setCategory("Shift Management");
+        viewShift.setDescription("View shift details");
+        template.save(viewShift);
+
+        Authority updateShift = createAuthority(AuthoritiesConstants.UPDATE_SHEFT);
+        updateShift.setCategory("Shift Management");
+        updateShift.setDescription("Modify shift information");
+        template.save(updateShift);
+
+        Authority deleteShift = createAuthority(AuthoritiesConstants.DELETE_SHEFT);
+        deleteShift.setCategory("Shift Management");
+        deleteShift.setDescription("Delete shift records");
+        template.save(deleteShift);
+
+        Authority viewActiveShift = createAuthority(AuthoritiesConstants.VIEW_ACTIVE_SHEFT);
+        viewActiveShift.setCategory("Shift Management");
+        viewActiveShift.setDescription("View currently active shifts");
+        template.save(viewActiveShift);
+
+        // Settings Management
+        Authority updateSystemSettings = createAuthority(AuthoritiesConstants.UPDATE_SYSTEM_SETTINGS);
+        updateSystemSettings.setCategory("Settings Management");
+        updateSystemSettings.setDescription("Modify system settings and configurations");
+        template.save(updateSystemSettings);
+
+        // Finance Management
+        Authority manageFinance = createAuthority(AuthoritiesConstants.MANAGE_FINANCE);
+        manageFinance.setCategory("Finance Management");
+        manageFinance.setDescription("Manage financial operations and reports");
+        template.save(manageFinance);
     }
 }
