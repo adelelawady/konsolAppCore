@@ -76,6 +76,8 @@ export class SystemSettingsComponent implements OnInit {
       BACKUP_COMPRESS: [true],
       MONGODB_DUMP_PATH: ['C:/Program Files/MongoDB/Tools/100/bin/mongodump.exe', Validators.required],
       MONGODB_RESTORE_PATH: ['C:/Program Files/MongoDB/Tools/100/bin/mongorestore.exe', Validators.required],
+      PLAYSTATION_DEFAULT_PRINTER: [this.settings?.PLAYSTATION_DEFAULT_PRINTER || 'default'],
+      PLAYSTATION_PRINT_ON_CHECKOUT: [this.settings?.PLAYSTATION_PRINT_ON_CHECKOUT ?? true],
     });
   }
 

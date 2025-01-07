@@ -1,0 +1,17 @@
+{
+  "systemSettings": {
+    "sections": {
+      "general": "General Settings",
+      "playstation": "Playstation Settings",
+      "inventory": "Inventory Settings",
+      "invoice": "Invoice Settings",
+      "license": "License Information",
+      "backup": "Backup Settings"
+    },
+
+    "playstationPrinter": "Default Printer",
+    "printerPlaceholder": "Enter printer name",
+    "printOnCheckout": "Print on Checkout",
+    "printOnCheckoutHelp": "Automatically print receipt when ending playstation session"
+  }
+} 

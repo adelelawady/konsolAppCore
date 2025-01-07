@@ -70,6 +70,36 @@
                 </label>
                 <app-bank-selector [selectedBank]="playstationBank" (bankSelected)="onPlaystationBankSelected($event)"></app-bank-selector>
               </div>
+
+              <!-- Playstation Printer Settings -->
+              <div class="col-md-6 mb-3">
+                <label class="form-label">
+                  <i class="fas fa-print me-2"></i>
+                  {{ 'systemSettings.playstationPrinter' | translate }}
+                </label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  formControlName="PLAYSTATION_DEFAULT_PRINTER" 
+                  placeholder="{{ 'systemSettings.printerPlaceholder' | translate }}"
+                />
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label class="form-check form-switch">
+                  <input 
+                    class="form-check-input" 
+                    type="checkbox" 
+                    formControlName="PLAYSTATION_PRINT_ON_CHECKOUT"
+                  />
+                  <span class="form-check-label">
+                    {{ 'systemSettings.printOnCheckout' | translate }}
+                  </span>
+                </label>
+                <small class="form-text text-muted">
+                  {{ 'systemSettings.printOnCheckoutHelp' | translate }}
+                </small>
+              </div>
             </div>
           </div>
         </div>
