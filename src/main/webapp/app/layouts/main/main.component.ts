@@ -190,4 +190,7 @@ export class MainComponent implements OnInit {
   protected toString(value: any): string {
     return String(value);
   }
+  hasAnyAuthority(authorities: string[] | string): boolean {
+    return this.accountService.hasAnyAuthority(authorities);
+  }
 }
