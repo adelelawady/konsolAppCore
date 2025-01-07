@@ -62,7 +62,7 @@ public class Settings implements Serializable {
      * Backup Settings
      */
     @Field("BACKUP_ENABLED")
-    private boolean BACKUP_ENABLED = true;
+    private boolean BACKUP_ENABLED = false;
 
     @Field("BACKUP_SCHEDULE_TYPE")
     private String BACKUP_SCHEDULE_TYPE = "DAILY";
