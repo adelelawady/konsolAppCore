@@ -143,7 +143,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
   loadContainers(): void {
     this.playstationContainerResourceService.getPlaystationContainers().subscribe(response => {
       this.containers = response ?? [];
-      if (this.containers.length > 0) {
+      if (this.containers.length > 0 && this.containers[0] && this.containers[0].id) {
         this.subMenuItems.push({
           title: 'playstation.navigation.title',
           route: '/container/'+this.containers[0].id+'/navigation/dashboard',

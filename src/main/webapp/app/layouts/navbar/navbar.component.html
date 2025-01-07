@@ -33,7 +33,7 @@
           </a>
         </li>
 
-        <li  class="nav-item" [ngClass]="{ 'd-none': !hasAnyAuthority(['ROLE_VIEW_PLAYSTATION_DEVICE', 'ROLE_ADMIN']) }">
+        <li  *ngIf="containers.length > 0 && containers[0] && containers[0].id" class="nav-item" [ngClass]="{ 'd-none': !hasAnyAuthority(['ROLE_VIEW_PLAYSTATION_DEVICE', 'ROLE_ADMIN']) }">
           <a
             class="nav-link"
             [routerLink]="['/', 'container', containers[0].id, 'navigation', 'dashboard']"
