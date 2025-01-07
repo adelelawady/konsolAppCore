@@ -23,8 +23,8 @@ import { BankSelectorComponent } from './components/bank-selector/bank-selector.
 import { AccountSelectorComponent } from './components/account-selector/account-selector.component';
 import { TranslationModule } from '../shared/language/translation.module';
 import { CurrencySpacePipe } from './pipes/currency-space.pipe';
-import { IconPickerComponent } from './components/icon-picker/icon-picker.component';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { IconPickerComponent } from './components/icon-picker/icon-picker.component';
 
 @NgModule({
   imports: [SharedLibsModule],
