@@ -55,6 +55,7 @@
         "Playstation_Device_Operations": "عمليات أجهزة البلايستيشن",
         "Shift_Management": "إدارة المناوبات",
         "Settings_Management": "إدارة الإعدادات",
+        "Management_Roles": "إدارة الصلاحيات",
         "OTHER": "صلاحيات أخرى"
       },
       "roles": {
@@ -329,6 +330,38 @@
         "ROLE_MANAGE_FINANCE": {
           "name": "إدارة المالية",
           "description": "إدارة العمليات والتقارير المالية"
+        },
+        "ROLE_MANAGE_INVOICE": {
+          "name": "الوصول لإدارة الفواتير",
+          "description": "الوصول لعرض وإدارة صفحة إدارة الفواتير"
+        },
+        "ROLE_MANAGE_STORE": {
+          "name": "الوصول لإدارة المخازن",
+          "description": "الوصول لعرض وإدارة صفحة إدارة المخازن"
+        },
+        "ROLE_MANAGE_BANK": {
+          "name": "الوصول لإدارة البنوك",
+          "description": "الوصول لعرض وإدارة صفحة إدارة البنوك"
+        },
+        "ROLE_MANAGE_ACCOUNT": {
+          "name": "الوصول لإدارة الحسابات",
+          "description": "الوصول لعرض وإدارة صفحة إدارة الحسابات"
+        },
+        "ROLE_MANAGE_ITEM": {
+          "name": "الوصول لإدارة المنتجات",
+          "description": "الوصول لعرض وإدارة صفحة إدارة المنتجات"
+        },
+        "ROLE_MANAGE_PAYMENT": {
+          "name": "الوصول لإدارة المدفوعات",
+          "description": "الوصول لعرض وإدارة صفحة إدارة المدفوعات"
+        },
+        "ROLE_MANAGE_CONTAINERS": {
+          "name": "الوصول لإدارة الحاويات",
+          "description": "الوصول لعرض وإدارة صفحة إدارة الحاويات"
+        },
+        "ROLE_MANAGE_SHEFTS": {
+          "name": "الوصول لإدارة المناوبات",
+          "description": "الوصول لعرض وإدارة صفحة إدارة المناوبات"
         }
       }
     },

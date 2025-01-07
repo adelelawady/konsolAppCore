@@ -56,6 +56,7 @@
         "Playstation_Device_Operations": "Playstation Device Operations",
         "Shift_Management": "Shift Management",
         "Settings_Management": "Settings Management",
+        "Management_Roles": "Management Roles",
         "OTHER": "Other Permissions"
       },
       "roles": {
@@ -330,6 +331,38 @@
         "ROLE_MANAGE_FINANCE": {
           "name": "Manage Finance",
           "description": "Manage financial operations and reports"
+        },
+        "ROLE_MANAGE_INVOICE": {
+          "name": "Invoice Management Access",
+          "description": "Access to view and manage invoice management page"
+        },
+        "ROLE_MANAGE_STORE": {
+          "name": "Store Management Access",
+          "description": "Access to view and manage store management page"
+        },
+        "ROLE_MANAGE_BANK": {
+          "name": "Bank Management Access",
+          "description": "Access to view and manage bank management page"
+        },
+        "ROLE_MANAGE_ACCOUNT": {
+          "name": "Account Management Access",
+          "description": "Access to view and manage account management page"
+        },
+        "ROLE_MANAGE_ITEM": {
+          "name": "Item Management Access",
+          "description": "Access to view and manage item management page"
+        },
+        "ROLE_MANAGE_PAYMENT": {
+          "name": "Payment Management Access",
+          "description": "Access to view and manage payment management page"
+        },
+        "ROLE_MANAGE_CONTAINERS": {
+          "name": "Container Management Access",
+          "description": "Access to view and manage container management page"
+        },
+        "ROLE_MANAGE_SHEFTS": {
+          "name": "Shift Management Access",
+          "description": "Access to view and manage shift management page"
         }
       }
     },
