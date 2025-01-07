@@ -137,26 +137,49 @@
     <!-- Authorities Card -->
     <div class="profile-card">
       <h3 class="section-title" jhiTranslate="userManagement.roles.title">User Roles & Permissions</h3>
-      <div class="authority-groups">
-        <div class="authority-group" *ngFor="let group of authorityGroups">
-          <h4 class="group-title">{{ group.category }}</h4>
-          <div class="row g-3">
-            <div class="col-md-6" *ngFor="let auth of group.authorities">
-              <div class="form-check">
-                <div class="d-flex align-items-start">
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    [id]="auth.id"
-                    name="authorities"
-                    [value]="auth.id"
-                    [checked]="(editForm.get('authorities')?.value || []).includes(auth.id)"
-                    (change)="updateAuthorities($event)"
-                  />
-                  <label class="form-check-label" [for]="auth.id">
-                    <div>{{ 'userManagement.authorities.roles.' + auth.id + '.name' | translate }}</div>
-                    <small class="text-muted">{{ 'userManagement.authorities.roles.' + auth.id + '.description' | translate }}</small>
-                  </label>
+      
+      <!-- Using Bootstrap Accordion -->
+      <div class="accordion" id="authoritiesAccordion">
+        <div class="accordion-item" *ngFor="let group of authorityGroups; let i = index">
+          <h2 class="accordion-header">
+            <button 
+              class="accordion-button" 
+              type="button" 
+              [class.collapsed]="i !== 0"
+              data-bs-toggle="collapse" 
+              [attr.data-bs-target]="'#collapse' + i"
+              [attr.aria-expanded]="i === 0"
+              [attr.aria-controls]="'collapse' + i"
+            >
+              {{ group.category }}
+            </button>
+          </h2>
+          <div 
+            [id]="'collapse' + i" 
+            class="accordion-collapse collapse" 
+            [class.show]="i === 0"
+            [attr.data-bs-parent]="'#authoritiesAccordion'"
+          >
+            <div class="accordion-body">
+              <div class="row g-3">
+                <div class="col-md-6" *ngFor="let auth of group.authorities">
+                  <div class="form-check">
+                    <div class="d-flex align-items-start">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        [id]="auth.id"
+                        name="authorities"
+                        [value]="auth.id"
+                        [checked]="(editForm.get('authorities')?.value || []).includes(auth.id)"
+                        (change)="updateAuthorities($event)"
+                      />
+                      <label class="form-check-label ms-2" [for]="auth.id">
+                        <div>{{ 'userManagement.authorities.roles.' + auth.id + '.name' | translate }}</div>
+                        <small class="text-muted">{{ 'userManagement.authorities.roles.' + auth.id + '.description' | translate }}</small>
+                      </label>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

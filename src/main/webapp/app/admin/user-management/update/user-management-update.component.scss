@@ -286,4 +286,21 @@
       }
     }
   }
+
+  .accordion {
+    margin-bottom: 1rem;
+  }
+
+  .accordion-button:not(.collapsed) {
+    background-color: rgba(0, 0, 0, 0.03);
+  }
+
+  .accordion-button:focus {
+    box-shadow: none;
+    border-color: rgba(0, 0, 0, 0.125);
+  }
+
+  .form-check-label {
+    cursor: pointer;
+  }
 }
