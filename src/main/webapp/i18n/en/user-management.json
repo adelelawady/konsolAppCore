@@ -332,6 +332,15 @@
           "description": "Manage financial operations and reports"
         }
       }
+    },
+    "roleGroups": {
+      "title": "Quick Role Assignment",
+      "info": "Click on a role group to automatically select its associated permissions, or manually select permissions below.",
+      "playstationManager": "Playstation Manager",
+      "financialManager": "Financial Manager",
+      "systemAdmin": "System Administrator",
+      "salesManager": "Sales Manager",
+      "inventoryManager": "Inventory Manager"
     }
   }
 }
