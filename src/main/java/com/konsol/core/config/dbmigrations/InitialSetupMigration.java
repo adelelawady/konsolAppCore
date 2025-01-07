@@ -496,5 +496,46 @@ public class InitialSetupMigration {
         manageFinance.setCategory("Finance Management");
         manageFinance.setDescription("Manage financial operations and reports");
         template.save(manageFinance);
+
+        // Management Roles
+        Authority manageInvoice = createAuthority(AuthoritiesConstants.ROLE_MANAGE_INVOICE);
+        manageInvoice.setCategory("Management Roles");
+        manageInvoice.setDescription("Access to view invoice management page");
+        template.save(manageInvoice);
+
+        Authority manageStore = createAuthority(AuthoritiesConstants.ROLE_MANAGE_STORE);
+        manageStore.setCategory("Management Roles");
+        manageStore.setDescription("Access to view store management page");
+        template.save(manageStore);
+
+        Authority manageBank = createAuthority(AuthoritiesConstants.ROLE_MANAGE_BANK);
+        manageBank.setCategory("Management Roles");
+        manageBank.setDescription("Access to view bank management page");
+        template.save(manageBank);
+
+        Authority manageAccount = createAuthority(AuthoritiesConstants.ROLE_MANAGE_ACCOUNT);
+        manageAccount.setCategory("Management Roles");
+        manageAccount.setDescription("Access to view account management page");
+        template.save(manageAccount);
+
+        Authority manageItem = createAuthority(AuthoritiesConstants.ROLE_MANAGE_ITEM);
+        manageItem.setCategory("Management Roles");
+        manageItem.setDescription("Access to view item management page");
+        template.save(manageItem);
+
+        Authority managePayment = createAuthority(AuthoritiesConstants.ROLE_MANAGE_PAYMENT);
+        managePayment.setCategory("Management Roles");
+        managePayment.setDescription("Access to view payment management page");
+        template.save(managePayment);
+
+        Authority manageContainers = createAuthority(AuthoritiesConstants.ROLE_MANAGE_CONTAINERS);
+        manageContainers.setCategory("Management Roles");
+        manageContainers.setDescription("Access to view container management page");
+        template.save(manageContainers);
+
+        Authority manageShifts = createAuthority(AuthoritiesConstants.ROLE_MANAGE_SHEFTS);
+        manageShifts.setCategory("Management Roles");
+        manageShifts.setDescription("Access to view shift management page");
+        template.save(manageShifts);
     }
 }

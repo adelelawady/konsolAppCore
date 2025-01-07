@@ -112,7 +112,15 @@ public final class AuthoritiesConstants {
     public static final String MANAGE_FINANCE = "ROLE_MANAGE_FINANCE";
 
 
-
+    // Management Roles
+    public static final String ROLE_MANAGE_INVOICE = "ROLE_MANAGE_INVOICE";
+    public static final String ROLE_MANAGE_STORE = "ROLE_MANAGE_STORE";
+    public static final String ROLE_MANAGE_BANK = "ROLE_MANAGE_BANK";
+    public static final String ROLE_MANAGE_ACCOUNT = "ROLE_MANAGE_ACCOUNT";
+    public static final String ROLE_MANAGE_ITEM = "ROLE_MANAGE_ITEM";
+    public static final String ROLE_MANAGE_PAYMENT = "ROLE_MANAGE_PAYMENT";
+    public static final String ROLE_MANAGE_CONTAINERS = "ROLE_MANAGE_CONTAINERS";
+    public static final String ROLE_MANAGE_SHEFTS = "ROLE_MANAGE_SHEFTS";
 
     private AuthoritiesConstants() {}
 }
