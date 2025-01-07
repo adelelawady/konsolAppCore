@@ -138,6 +138,27 @@
     <div class="profile-card">
       <h3 class="section-title" jhiTranslate="userManagement.roles.title">User Roles & Permissions</h3>
       
+      <!-- Quick Role Groups -->
+      <div class="role-groups mb-4">
+        <h4 class="group-subtitle mb-3" jhiTranslate="userManagement.roleGroups.title">Quick Role Assignment</h4>
+        <div class="role-group-buttons">
+          <button
+            *ngFor="let group of roleGroups"
+            type="button"
+            class="btn btn-outline-primary me-2 mb-2"
+            (click)="applyRoleGroup(group)"
+          >
+            <fa-icon icon="user-tag" class="me-2"></fa-icon>
+            {{ group.translateKey | translate }}
+          </button>
+        </div>
+      </div>
+
+      <div class="alert alert-info mb-4">
+        <fa-icon icon="info-circle" class="me-2"></fa-icon>
+        <span jhiTranslate="userManagement.roleGroups.info">Click on a role group to automatically select its associated permissions, or manually select permissions below.</span>
+      </div>
+
       <!-- Using Bootstrap Accordion -->
       <div class="accordion" id="authoritiesAccordion">
         <div class="accordion-item" *ngFor="let group of authorityGroups; let i = index">
