@@ -224,10 +224,11 @@ export class CheckoutComponent implements OnInit {
     }
 
     this.isProcessing = true;
+    
 
     const endSessionDTO: PlaystationEndSessionDTO = {
       matchFinalUserPrice,
-      printSessionRecipt: !this.printSessionReceipt
+      printSessionRecipt: this.printSessionReceipt
     };
 
     this.playstationResourceService.stopDeviceSession(this.selectedDevice.id, endSessionDTO).subscribe({

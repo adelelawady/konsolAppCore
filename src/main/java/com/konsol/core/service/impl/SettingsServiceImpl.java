@@ -442,10 +442,8 @@ public class SettingsServiceImpl implements SettingService {
         }
     }
 
-    private void clearSettingsCache() {
-        Objects.requireNonNull(cacheManager.getCache(SettingsRepository.SETTINGS_CACHE)).evict(SettingsRepository.SETTINGS_CACHE);
-    }
     @Override
+    @CacheEvict(value = SettingsRepository.SETTINGS_CACHE, allEntries = true)
     public Settings update(Settings settings) {
         Settings mainSettings = getSettings();
         settings.setId(mainSettings.getId());
@@ -454,10 +452,10 @@ public class SettingsServiceImpl implements SettingService {
         validateBackupSettings(settings);
 
         Settings updatedSettings = this.settingsRepository.save(settings);
-        clearSettingsCache();
+        // No need to call clearSettingsCache() explicitly since @CacheEvict annotation will handle it
+
         // Reschedule backups if backup settings have changed
         scheduleBackups();
-
 
         return updatedSettings;
     }
