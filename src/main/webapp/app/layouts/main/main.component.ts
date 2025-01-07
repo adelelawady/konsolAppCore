@@ -3,7 +3,7 @@ import { Title } from '@angular/platform-browser';
 import { Router, ActivatedRouteSnapshot, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 import dayjs from 'dayjs/esm';
-import { filter, shareReplay } from 'rxjs/operators';
+import { filter, shareReplay, switchMap } from 'rxjs/operators';
 import { interval, Observable, of, Subscription } from 'rxjs';
 import { map, distinctUntilChanged } from 'rxjs/operators';
 import { PlaystationContainerFormService } from 'app/entities/playstation-container/update/playstation-container-form.service';
@@ -68,8 +68,15 @@ export class MainComponent implements OnInit {
 
   ngOnInit(): void {
     // try to log in automatically
-    this.accountService.identity().subscribe();
-    this.activeSheft$ = this.activeSheftService.getActiveSheft().pipe(shareReplay(1));
+    this.accountService.identity().subscribe(() => {
+      this.activeSheft$ = of(this.accountService.hasAnyAuthority(['ROLE_VIEW_ACTIVE_SHEFT', 'ROLE_ADMIN'])).pipe(
+        switchMap(hasAuthority => hasAuthority ? this.activeSheftService.getActiveSheft() : of(null)),
+        shareReplay(1)
+      );
+    });
+
+
+   
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.updateTitle();
