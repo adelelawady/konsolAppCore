@@ -7,6 +7,12 @@ import { LANGUAGES } from 'app/config/language.constants';
 import { IUser, User } from '../user-management.model';
 import { UserManagementService, IAuthority } from '../service/user-management.service';
 
+interface RoleGroup {
+  name: string;
+  translateKey: string;
+  authorities: string[];
+}
+
 @Component({
   selector: 'jhi-user-mgmt-update',
   templateUrl: './user-management-update.component.html',
@@ -20,6 +26,89 @@ export class UserManagementUpdateComponent implements OnInit {
   private fb!: FormBuilder;
   editForm!: FormGroup;
   authorityGroups: { category: string; authorities: IAuthority[] }[] = [];
+  roleGroups: RoleGroup[] = [
+    {
+      name: 'Playstation Manager',
+      translateKey: 'userManagement.roleGroups.playstationManager',
+      authorities: [
+        'ROLE_PLAYSTATION_VIEW',
+        'ROLE_VIEW_PLAYSTATION_SESSION',
+        'ROLE_START_PLAYSTATION_SESSION',
+        'ROLE_STOP_PLAYSTATION_SESSION',
+        'ROLE_UPDATE_PLAYSTATION_SESSION',
+        'ROLE_MOVE_PLAYSTATION_DEVICE',
+        'ROLE_CHANGE_PLAYSTATION_TYPE',
+        'ROLE_MANAGE_PLAYSTATION_ORDERS',
+        'ROLE_VIEW_PLAYSTATION_TYPE',
+        'ROLE_VIEW_ACTIVE_SHEFT',
+        'ROLE_VIEW_SHEFT',
+        'ROLE_VIEW_ITEM',
+        'ROLE_VIEW_ACCOUNT',
+        'ROLE_VIEW_BANK',
+        'ROLE_VIEW_STORE',
+        'ROLE_VIEW_INVOICE',
+        'ROLE_VIEW_PLAYSTATION_DEVICE'
+      ]
+    },
+    {
+      name: 'Financial Manager',
+      translateKey: 'userManagement.roleGroups.financialManager',
+      authorities: [
+        'ROLE_CREATE_INVOICE',
+        'ROLE_UPDATE_INVOICE',
+        'ROLE_VIEW_INVOICE',
+        'ROLE_VIEW_PAYMENT',
+        'ROLE_VIEW_BANK',
+        'ROLE_VIEW_STORE',
+        'ROLE_VIEW_ACCOUNT',
+        'ROLE_VIEW_ITEM',
+        'ROLE_CREATE_PAYMENT',
+        'ROLE_CREATE_SALE',
+        'ROLE_CREATE_PURCHASE',
+        'ROLE_UPDATE_PAYMENT',
+        'ROLE_MANAGE_FINANCE',
+        'ROLE_VIEW_SHEFT',
+        'ROLE_VIEW_ACTIVE_SHEFT',
+        'ROLE_SAVE_INVOICE',
+        'ROLE_UPDATE_SALE',
+        'ROLE_UPDATE_PURCHASE'
+      ]
+    },
+    {
+      name: 'SALES MANAGER',
+      translateKey: 'userManagement.roleGroups.salesManager',
+      authorities: [
+        'ROLE_CREATE_SALE',
+        'ROLE_CREATE_PURCHASE',
+        'ROLE_CREATE_INVOICE',
+        'ROLE_UPDATE_INVOICE',
+        'ROLE_VIEW_INVOICE',
+        'ROLE_VIEW_BANK',
+        'ROLE_VIEW_STORE',
+        'ROLE_VIEW_ACCOUNT',
+        'ROLE_VIEW_ITEM',
+         'ROLE_UPDATE_SALE',
+        'ROLE_UPDATE_PURCHASE'
+      ]
+    },
+    {
+      name: 'Inventory Manager',
+      translateKey: 'userManagement.roleGroups.inventoryManager',
+      authorities: [
+        'ROLE_VIEW_ITEM',
+        'ROLE_VIEW_ACCOUNT',
+        'ROLE_VIEW_BANK',
+        'ROLE_VIEW_STORE',
+        'ROLE_VIEW_INVOICE',
+        'ROLE_CREATE_ITEM',
+        'ROLE_UPDATE_ITEM',
+        'ROLE_DELETE_ITEM',
+        'ROLE_CREATE_STORE',
+        'ROLE_UPDATE_STORE',
+        'ROLE_DELETE_STORE',
+      ]
+    }
+  ];
 
   constructor(
     private userService: UserManagementService,
@@ -207,5 +296,18 @@ export class UserManagementUpdateComponent implements OnInit {
     }
 
     this.editForm.patchValue({ authorities });
+  }
+
+  applyRoleGroup(group: RoleGroup): void {
+    const currentAuthorities = new Set(this.editForm.get('authorities')?.value || []);
+    
+    currentAuthorities.add('ROLE_USER');
+    // Add all authorities from the group
+    group.authorities.forEach(auth => currentAuthorities.add(auth));
+    
+    // Update the form control
+    this.editForm.patchValue({
+      authorities: Array.from(currentAuthorities)
+    });
   }
 }
