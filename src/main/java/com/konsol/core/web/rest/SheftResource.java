@@ -30,6 +30,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
+import org.springframework.security.access.prepost.PreAuthorize;
+import com.konsol.core.security.AuthoritiesConstants;
 
 /**
  * REST controller for managing {@link com.konsol.core.domain.Sheft}.
@@ -63,6 +65,7 @@ public class SheftResource implements SheftsApiDelegate {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN') or hasAuthority('" + AuthoritiesConstants.START_SHEFT + "')")
     public ResponseEntity<SheftDTO> createSheft(SheftDTO sheftDTO) {
         LOG.debug("REST request to save Sheft : {}", sheftDTO);
         if (sheftDTO.getId() != null) {
@@ -123,6 +126,7 @@ public class SheftResource implements SheftsApiDelegate {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN') or hasAuthority('" + AuthoritiesConstants.UPDATE_SHEFT + "')")
     public ResponseEntity<SheftDTO> partialUpdateSheft(String id, SheftDTO sheftDTO) {
         LOG.debug("REST request to partial update Sheft partially : {}, {}", id, sheftDTO);
         if (sheftDTO.getId() == null) {
@@ -150,6 +154,7 @@ public class SheftResource implements SheftsApiDelegate {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of shefts in body.
      */
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN') or hasAuthority('" + AuthoritiesConstants.VIEW_SHEFT + "')")
     public ResponseEntity<List<SheftDTO>> getAllShefts(Integer pagex, Integer size) {
         LOG.debug("REST request to get a page of Shefts");
         Pageable pageable = PageRequest.of(pagex, size);
@@ -165,6 +170,7 @@ public class SheftResource implements SheftsApiDelegate {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the sheftDTO, or with status {@code 404 (Not Found)}.
      */
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN') or hasAuthority('" + AuthoritiesConstants.VIEW_SHEFT + "')")
     public ResponseEntity<SheftDTO> getSheft(String id) {
         LOG.debug("REST request to get Sheft : {}", id);
         Optional<SheftDTO> sheftDTO = sheftService.findOne(id);
@@ -178,6 +184,7 @@ public class SheftResource implements SheftsApiDelegate {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN') or hasAuthority('" + AuthoritiesConstants.DELETE_SHEFT + "')")
     public ResponseEntity<Void> deleteSheft(String id) {
         LOG.debug("REST request to delete Sheft : {}", id);
         sheftService.delete(id);
@@ -185,21 +192,25 @@ public class SheftResource implements SheftsApiDelegate {
     }
 
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN') or hasAuthority('" + AuthoritiesConstants.VIEW_ACTIVE_SHEFT + "')")
     public ResponseEntity<SheftDTO> getActiveSheft() {
         return ResponseEntity.ok(sheftService.getCurrentSheft());
     }
 
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN') or hasAuthority('" + AuthoritiesConstants.END_SHEFT + "')")
     public ResponseEntity<SheftDTO> stopActiveSheft(Boolean print) {
         return ResponseEntity.ok(sheftMapper.toDto(sheftService.endSheft(print)));
     }
 
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN') or hasAuthority('" + AuthoritiesConstants.START_SHEFT + "')")
     public ResponseEntity<SheftDTO> startSheft() {
         return ResponseEntity.ok(sheftMapper.toDto(sheftService.startSheft()));
     }
 
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN') or hasAuthority('" + AuthoritiesConstants.VIEW_ACTIVE_SHEFT + "')")
     public ResponseEntity<List<PsSessionDTO>> getActiveSheftSessions() {
         return ResponseEntity.ok(sheftService.activeSheftSessions());
     }

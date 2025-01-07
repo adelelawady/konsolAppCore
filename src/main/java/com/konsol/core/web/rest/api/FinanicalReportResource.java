@@ -1,5 +1,6 @@
 package com.konsol.core.web.rest.api;
 
+import com.konsol.core.security.AuthoritiesConstants;
 import com.konsol.core.service.FinancialDashboardService;
 import com.konsol.core.service.PlaystationFinancialDashboardService;
 import com.konsol.core.service.api.dto.FinancialDashboardDTO;
@@ -10,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 /**
@@ -39,6 +41,7 @@ public class FinanicalReportResource implements FinancialApiDelegate {
     }
 
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN') or hasAuthority('" + AuthoritiesConstants.MANAGE_FINANCE + "')")
     public ResponseEntity<FinancialDashboardDTO> getFinancialDashboard(FinancialSearchDTO financialSearchDTO) {
         return ResponseEntity.ok(
             financialDashboardService.getDashboardData(
@@ -52,6 +55,7 @@ public class FinanicalReportResource implements FinancialApiDelegate {
     }
 
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN') or hasAuthority('" + AuthoritiesConstants.MANAGE_FINANCE + "')")
     public ResponseEntity<FinancialDashboardDTO> getPlaystationFinancialDashboard(FinancialSearchDTO financialSearchDTO) {
         return ResponseEntity.ok(
             playstationFinancialDashboardService.getDashboardData(

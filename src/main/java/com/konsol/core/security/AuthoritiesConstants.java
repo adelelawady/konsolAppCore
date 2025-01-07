@@ -78,17 +78,19 @@ public final class AuthoritiesConstants {
     public static final String UPDATE_PLAYSTATION_DEVICE = "ROLE_UPDATE_PLAYSTATION_DEVICE";
     public static final String DELETE_PLAYSTATION_DEVICE = "ROLE_DELETE_PLAYSTATION_DEVICE";
     public static final String VIEW_PLAYSTATION_DEVICE = "ROLE_VIEW_PLAYSTATION_DEVICE";
-    
+
     // Playstation Session Management
     public static final String START_PLAYSTATION_SESSION = "ROLE_START_PLAYSTATION_SESSION";
     public static final String STOP_PLAYSTATION_SESSION = "ROLE_STOP_PLAYSTATION_SESSION";
     public static final String VIEW_PLAYSTATION_SESSION = "ROLE_VIEW_PLAYSTATION_SESSION";
-    
+    public static final String UPDATE_PLAYSTATION_SESSION = "ROLE_UPDATE_PLAYSTATION_SESSION";
+
+
     // Playstation Device Operations
     public static final String MOVE_PLAYSTATION_DEVICE = "ROLE_MOVE_PLAYSTATION_DEVICE";
     public static final String CHANGE_PLAYSTATION_TYPE = "ROLE_CHANGE_PLAYSTATION_TYPE";
     public static final String MANAGE_PLAYSTATION_ORDERS = "ROLE_MANAGE_PLAYSTATION_ORDERS";
-    
+
     // Playstation Device Type Management
     public static final String CREATE_PLAYSTATION_TYPE = "ROLE_CREATE_PLAYSTATION_TYPE";
     public static final String UPDATE_PLAYSTATION_TYPE = "ROLE_UPDATE_PLAYSTATION_TYPE";

@@ -32,6 +32,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
+import org.springframework.security.access.prepost.PreAuthorize;
+import com.konsol.core.security.AuthoritiesConstants;
 
 /**
  * REST controller for managing {@link PlaystationDevice}.
@@ -81,6 +83,7 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new PsDeviceDTO, or with status {@code 400 (Bad Request)} if the playstationDevice has already an ID.
      */
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN') or hasAuthority('" + AuthoritiesConstants.CREATE_PLAYSTATION_DEVICE + "')")
     public ResponseEntity<PsDeviceDTO> createPlayStationDevice(PsDeviceDTO psDeviceDTO) {
         LOG.debug("REST request to save PlaystationDevice : {}", psDeviceDTO);
         if (psDeviceDTO.getId() != null) {
@@ -108,6 +111,7 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN') or hasAuthority('" + AuthoritiesConstants.UPDATE_PLAYSTATION_DEVICE + "')")
     public ResponseEntity<PsDeviceDTO> updateDevice(String id, PsDeviceDTO psDeviceDTO) {
         LOG.debug("REST request to update PlaystationDevice : {}, {}", id, psDeviceDTO);
         if (psDeviceDTO.getId() == null) {
@@ -140,6 +144,7 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN') or hasAuthority('" + AuthoritiesConstants.UPDATE_PLAYSTATION_DEVICE + "')")
     public ResponseEntity<PsDeviceDTO> partialUpdateDevice(String id, PsDeviceDTO psDeviceDTO) {
         LOG.debug("REST request to partial update PlaystationDevice partially : {}, {}", id, psDeviceDTO);
         if (psDeviceDTO.getId() == null) {
@@ -167,6 +172,7 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of playstationDevices in body.
      */
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN') or hasAuthority('" + AuthoritiesConstants.VIEW_PLAYSTATION_DEVICE + "')")
     public ResponseEntity<List<PsDeviceDTO>> getDevices() {
         LOG.debug("REST request to get a page of PlaystationDevices");
         List<PsDeviceDTO> page = playstationDeviceService.findAll();
@@ -175,6 +181,7 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
     }
 
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN') or hasAuthority('" + AuthoritiesConstants.VIEW_PLAYSTATION_DEVICE + "')")
     public ResponseEntity<List<PsDeviceDTO>> getDevicesByCategory(CategoryItem categoryItem) {
         LOG.debug("REST request to get a page of PlaystationDevices");
         List<PsDeviceDTO> page = playstationDeviceService.findAllByCategory(categoryItem.getName());
@@ -182,6 +189,7 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
     }
 
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN') or hasAuthority('" + AuthoritiesConstants.VIEW_PLAYSTATION_DEVICE + "')")
     public ResponseEntity<List<CategoryItem>> getDevicesCategories() {
         List<CategoryItem> page = playstationDeviceService.getAllItemCategories();
         return ResponseEntity.ok().body(page);
@@ -194,6 +202,7 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the PsDeviceDTO, or with status {@code 404 (Not Found)}.
      */
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN') or hasAuthority('" + AuthoritiesConstants.VIEW_PLAYSTATION_DEVICE + "')")
     public ResponseEntity<PsDeviceDTO> getDevice(String id) {
         LOG.debug("REST request to get PlaystationDevice : {}", id);
         Optional<PsDeviceDTO> PsDeviceDTO = playstationDeviceService.findOne(id);
@@ -207,6 +216,7 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN') or hasAuthority('" + AuthoritiesConstants.DELETE_PLAYSTATION_DEVICE + "')")
     public ResponseEntity<PsDeviceDTO> deleteDevice(String id) {
         LOG.debug("REST request to delete PlaystationDevice : {}", id);
         playstationDeviceService.delete(id);
@@ -222,6 +232,7 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
      */
 
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN') or hasAuthority('" + AuthoritiesConstants.CREATE_PLAYSTATION_TYPE + "')")
     public ResponseEntity<PsDeviceType> createPlayStationDeviceType(PsDeviceType psDeviceType) {
         LOG.debug("REST request to save PlaystationDeviceType : {}", psDeviceType);
         if (psDeviceType.getId() != null) {
@@ -249,6 +260,7 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN') or hasAuthority('" + AuthoritiesConstants.UPDATE_PLAYSTATION_TYPE + "')")
     public ResponseEntity<PsDeviceType> updateDeviceType(String id, PsDeviceType psDeviceType) {
         LOG.debug("REST request to update PlaystationDeviceType : {}, {}", id, psDeviceType);
         if (psDeviceType.getId() == null) {
@@ -281,6 +293,7 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN') or hasAuthority('" + AuthoritiesConstants.UPDATE_PLAYSTATION_TYPE + "')")
     public ResponseEntity<PsDeviceType> partialUpdateDeviceType(String id, PsDeviceType psDeviceType) {
         LOG.debug("REST request to partial update PlaystationDeviceType partially : {}, {}", id, psDeviceType);
         if (psDeviceType.getId() == null) {
@@ -308,6 +321,7 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of playstationDeviceTypes in body.
      */
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN') or hasAuthority('" + AuthoritiesConstants.VIEW_PLAYSTATION_TYPE + "')")
     public ResponseEntity<List<PsDeviceType>> getDevicesTypes() {
         LOG.debug("REST request to get a page of PlaystationDeviceTypes");
         List<PsDeviceType> page = playstationDeviceTypeService.findAll();
@@ -322,6 +336,7 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the PsDeviceType, or with status {@code 404 (Not Found)}.
      */
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN') or hasAuthority('" + AuthoritiesConstants.VIEW_PLAYSTATION_TYPE + "')")
     public ResponseEntity<PsDeviceType> getDeviceType(String id) {
         LOG.debug("REST request to get PlaystationDeviceType : {}", id);
         Optional<PsDeviceType> PsDeviceType = playstationDeviceTypeService.findOne(id);
@@ -335,6 +350,7 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN') or hasAuthority('" + AuthoritiesConstants.DELETE_PLAYSTATION_TYPE + "')")
     public ResponseEntity<PsDeviceType> deleteDeviceType(String id) {
         LOG.debug("REST request to delete PlaystationDeviceType : {}", id);
         playstationDeviceTypeService.delete(id);
@@ -342,21 +358,25 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
     }
 
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN') or hasAuthority('" + AuthoritiesConstants.START_PLAYSTATION_SESSION + "')")
     public synchronized ResponseEntity<PsDeviceDTO> startDeviceSession(String id, StartDeviceSessionDTO startDeviceSessionDTO) {
         return ResponseEntity.ok(playstationDeviceService.startSession(id, startDeviceSessionDTO));
     }
 
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN') or hasAuthority('" + AuthoritiesConstants.STOP_PLAYSTATION_SESSION + "')")
     public synchronized ResponseEntity<PsDeviceDTO> stopDeviceSession(String id, PlaystationEndSessionDTO playstationEndSessionDTO) {
         return ResponseEntity.ok(playstationDeviceService.stopSession(id, playstationEndSessionDTO));
     }
 
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN') or hasAuthority('" + AuthoritiesConstants.MANAGE_PLAYSTATION_ORDERS + "')")
     public synchronized ResponseEntity<PsDeviceDTO> addOrderToDevice(String id, CreateInvoiceItemDTO createInvoiceItemDTO) {
         return ResponseEntity.ok(playstationDeviceService.addOrderToDevice(id, createInvoiceItemDTO));
     }
 
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN') or hasAuthority('" + AuthoritiesConstants.MANAGE_PLAYSTATION_ORDERS + "')")
     public synchronized ResponseEntity<PsDeviceDTO> updateDeviceOrder(
         String id,
         String orderId,
@@ -366,12 +386,14 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
     }
 
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN') or hasAuthority('" + AuthoritiesConstants.MANAGE_PLAYSTATION_ORDERS + "')")
     public ResponseEntity<Void> deleteDeviceOrder(String id, String orderId) {
         playstationDeviceService.deleteDeviceOrder(id, orderId);
         return ResponseEntity.ok().build();
     }
 
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN') or hasAuthority('" + AuthoritiesConstants.MOVE_PLAYSTATION_DEVICE + "')")
     public ResponseEntity<PsDeviceDTO> moveDevice(String id, String deviceId) {
         return ResponseEntity.ok(playstationDeviceService.moveDevice(id, deviceId));
     }
@@ -388,6 +410,7 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
      */
 
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN') or hasAuthority('" + AuthoritiesConstants.UPDATE_PLAYSTATION_SESSION + "')")
     public ResponseEntity<PsSessionDTO> updateSession(String id, PsSessionDTO psSessionDTO) {
         LOG.debug("REST request to update PlayStationSession : {}, {}", id, psSessionDTO);
         if (psSessionDTO.getId() == null) {
@@ -420,6 +443,7 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN') or hasAuthority('" + AuthoritiesConstants.UPDATE_PLAYSTATION_SESSION + "')")
     public ResponseEntity<PsSessionDTO> partialUpdateSession(String id, PsSessionDTO psSessionDTO) {
         LOG.debug("REST request to partial update PlayStationSession partially : {}, {}", id, psSessionDTO);
         if (psSessionDTO.getId() == null) {
@@ -447,6 +471,7 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of playStationSessions in body.
      */
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN') or hasAuthority('" + AuthoritiesConstants.VIEW_PLAYSTATION_SESSION + "')")
     public ResponseEntity<List<PsSessionDTO>> getSessions(PaginationSearchModel paginationSearchModel) {
         Pageable pageable = PageRequest.of(paginationSearchModel.getPage(), paginationSearchModel.getSize());
         Page<PsSessionDTO> page = playStationSessionService.findAll(pageable);
@@ -461,6 +486,7 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the PsSessionDTO, or with status {@code 404 (Not Found)}.
      */
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN') or hasAuthority('" + AuthoritiesConstants.VIEW_PLAYSTATION_SESSION + "')")
     public ResponseEntity<PsSessionDTO> getSession(String id) {
         LOG.debug("REST request to get PlayStationSession : {}", id);
         Optional<PsSessionDTO> PsSessionDTO = playStationSessionService.findOne(id);
@@ -474,6 +500,7 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN') or hasAuthority('" + AuthoritiesConstants.VIEW_PLAYSTATION_SESSION + "')")
     public ResponseEntity<PsSessionDTO> deleteSession(String id) {
         LOG.debug("REST request to delete PlayStationSession : {}", id);
         playStationSessionService.delete(id);
@@ -484,6 +511,7 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
     }
 
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN') or hasAuthority('" + AuthoritiesConstants.VIEW_PLAYSTATION_SESSION + "')")
     public ResponseEntity<List<PsSessionDTO>> getSessionsByContainerId(String containerId, PaginationSearchModel paginationSearchModel) {
         LOG.debug("REST request to get a page of PlayStationSessions");
         Pageable pageable = PageRequest.of(paginationSearchModel.getPage(), paginationSearchModel.getSize());
@@ -493,11 +521,13 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
     }
 
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN') or hasAuthority('" + AuthoritiesConstants.MANAGE_PLAYSTATION_ORDERS + "')")
     public ResponseEntity<PsDeviceDTO> updateSessionInvoice(String deviceId, InvoiceUpdateDTO invoiceUpdateDTO) {
         return ResponseEntity.ok(playstationDeviceService.updateSessionInvoice(deviceId, invoiceUpdateDTO));
     }
 
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN') or hasAuthority('" + AuthoritiesConstants.VIEW_PLAYSTATION_SESSION + "')")
     public ResponseEntity<Void> printSession(String id) {
         playStationSessionService
             .findOneDomain(id)
@@ -508,6 +538,7 @@ public class PlaystationDeviceResource implements PlaystationApiDelegate {
     }
 
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN') or hasAuthority('" + AuthoritiesConstants.CHANGE_PLAYSTATION_TYPE + "')")
     public ResponseEntity<PsDeviceDTO> changeDeviceType(String id, String typeId, Boolean updateSession) {
         return ResponseEntity.ok(playstationDeviceService.changeDeviceType(id, typeId, updateSession));
     }
