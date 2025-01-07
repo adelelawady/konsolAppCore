@@ -270,11 +270,21 @@ public class UserService {
     public Set<Authority> handleCreatingUserAuthorities(AdminUserDTO userDTO) {
         Set<String> authorities = userDTO.getAuthorities();
 
+        // Check if there is a logged in user
+        Optional<String> currentUserLogin = SecurityUtils.getCurrentUserLogin();
+        Optional<User> currentUserOptional = getUserByLogin(currentUserLogin.get());
+        if (currentUserOptional.isEmpty()) {
+            // For public registration, only allow ROLE_USER authority
+            Set<Authority> userAuthority = new HashSet<>();
+            Authority authority = authorityRepository.findById(AuthoritiesConstants.USER)
+                .orElseThrow(() -> new RuntimeException("ROLE_USER authority not found"));
+            userAuthority.add(authority);
+            return userAuthority;
+        }
+
         // Get current user's authorities
-        String currentUserLogin = SecurityUtils
-            .getCurrentUserLogin()
-            .orElseThrow(() -> new RuntimeException("Current user login not found"));
-        User currentUser = getUserByLogin(currentUserLogin).orElseThrow(() -> new RuntimeException("Current user not found"));
+        User currentUser = getUserByLogin(currentUserLogin.get())
+            .orElseThrow(() -> new RuntimeException("Current user not found"));
         boolean isCurrentUserSuperAdmin = currentUser
             .getAuthorities()
             .stream()
