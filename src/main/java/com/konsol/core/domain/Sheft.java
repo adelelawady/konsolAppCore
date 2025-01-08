@@ -19,7 +19,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  */
 @Document(collection = "shefts")
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class Sheft implements Serializable {
+public class Sheft extends AbstractAuditingEntity<String> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

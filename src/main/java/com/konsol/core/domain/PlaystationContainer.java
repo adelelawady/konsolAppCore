@@ -2,6 +2,7 @@ package com.konsol.core.domain;
 
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -234,5 +235,10 @@ public class PlaystationContainer implements Serializable {
 
     public void setAcceptedOrderCategories(@NotNull Set<String> acceptedOrderCategories) {
         this.acceptedOrderCategories = acceptedOrderCategories;
+    }
+
+    public PlaystationContainer acceptedOrderCategories(@NotNull Set<String> acceptedOrderCategories) {
+        this.acceptedOrderCategories = acceptedOrderCategories;
+        return this;
     }
 }
