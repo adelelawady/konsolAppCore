@@ -41,6 +41,10 @@ export class AccountService {
     if (!this.userIdentity) {
       return false;
     }
+    // Check for admin first
+    if (this.userIdentity.authorities.includes('ROLE_ADMIN')) {
+      return true;
+    }
     if (!Array.isArray(authorities)) {
       authorities = [authorities];
     }
