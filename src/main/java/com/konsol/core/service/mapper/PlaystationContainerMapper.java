@@ -8,4 +8,5 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring")
 public interface PlaystationContainerMapper
+
     extends EntityMapper<com.konsol.core.service.api.dto.PlaystationContainer, PlaystationContainer> {}
