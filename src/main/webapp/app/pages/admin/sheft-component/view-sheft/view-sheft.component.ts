@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AccountService } from 'app/core/auth/account.service';
 import { SheftResourceService } from 'app/core/konsolApi/api/sheftResource.service';
 import { SheftDTO } from 'app/core/konsolApi/model/sheftDTO';
 
@@ -13,7 +14,7 @@ export class ViewSheftComponent implements OnInit {
   loading = false;
   error = false;
 
-  constructor(private route: ActivatedRoute, private router: Router, private sheftService: SheftResourceService) {}
+  constructor(private route: ActivatedRoute, private router: Router, private sheftService: SheftResourceService, private userService: AccountService) {}
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -42,4 +43,7 @@ export class ViewSheftComponent implements OnInit {
   goBack(): void {
     window.history.back();
   }
+  hasAuthority(authority: string): boolean {
+    return this.userService.hasAnyAuthority([authority]);
+  } 
 }

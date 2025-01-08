@@ -116,7 +116,7 @@
         </div>
 
         <!-- Statistics -->
-        <div class="col-md-6 mb-3">
+        <div  class="col-md-6 mb-3">
           <div class="card">
             <div class="card-header">
               <h4 class="card-title" jhiTranslate="konsolCoreApp.sheft.view.sections.statistics">Statistics</h4>
@@ -125,12 +125,15 @@
               <dl class="row">
                 <dt class="col-5" jhiTranslate="konsolCoreApp.sheft.totalinvoices">Total Invoices:</dt>
                 <dd class="col-7">{{ sheft.totalinvoices }}</dd>
+                <div *ngIf="hasAuthority('ROLE_ADMIN')" style="display: contents;">
 
                 <dt class="col-5" jhiTranslate="konsolCoreApp.sheft.totaldeletedItems">Total Deleted Items:</dt>
                 <dd class="col-7">{{ sheft.totaldeletedItems }}</dd>
 
                 <dt class="col-5" jhiTranslate="konsolCoreApp.sheft.totaldeletedItemsPrice">Deleted Items Price:</dt>
-                <dd class="col-7">{{ sheft.totaldeletedItemsPrice | currencyK }}</dd>
+                    <dd class="col-7">{{ sheft.totaldeletedItemsPrice | currencyK }}</dd>
+
+                </div>
               </dl>
             </div>
           </div>
