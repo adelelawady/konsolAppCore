@@ -187,8 +187,5 @@ public class SheftResource implements SheftsApiDelegate {
         return ResponseEntity.ok(sheftService.getCurrentSheft());
     }
 
-    @Override
-    public ResponseEntity<SheftDTO> stopActiveSheft() {
-        return ResponseEntity.ok(sheftMapper.toDto(sheftService.endSheft()));
-    }
+
 }

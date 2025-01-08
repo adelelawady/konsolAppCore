@@ -83,4 +83,8 @@ public interface PlayStationSessionRepository extends MongoRepository<PlayStatio
         }
     )
     Document debugSessionStats(Instant startTime, Instant endTime);
+
+
+
+    Optional<PlayStationSession> findByVarRefId(String varRefId);
 }

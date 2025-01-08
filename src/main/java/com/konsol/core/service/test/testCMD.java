@@ -22,6 +22,7 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -64,6 +65,9 @@ public class testCMD implements CommandLineRunner {
     private final InvoiceItemRepository invoiceItemRepository;
     private final PlayStationSessionServiceImpl playStationSessionServiceImpl;
 
+    @Autowired
+    private SheftRepository sheftRepository;
+
     public testCMD(
         @Qualifier("erMongoTemplate") MongoTemplate erMongoTemplate,
         MongoTemplate mongoTemplate,
@@ -102,11 +106,12 @@ public class testCMD implements CommandLineRunner {
      * @param args incoming main method arguments
      * @throws Exception
      */
-    int recordsRetCount = 10000;
+    int recordsRetCount = 200;
 
+    Instant fromDate=Instant.parse("2023-01-01T00:38:32.398+00:00");
     @Override
     public void run(String... args) throws Exception {
-        /*
+
         playstationContainerRepository.deleteAll();
         // Create and save PlayStation containers
         PlaystationContainer PlayStation = new PlaystationContainer()
@@ -176,9 +181,11 @@ public class testCMD implements CommandLineRunner {
         playStationSessionRepository.deleteAll();;
          DoTablesRecords( Tables, Shops, TakeAway);
         DoDevicesRecords(PlayStation);
+        DoSheftRecords();
         playstationDeviceService.clearAllDevicesCaches();
 
-*/
+
+
 
     }
 
@@ -296,10 +303,14 @@ public class testCMD implements CommandLineRunner {
                 }
             }
 
-            ps.acceptedOrderCategories(itemService.getAllItemCategories().stream().map(CategoryItem::getName).collect(Collectors.toSet()));
-            tb.acceptedOrderCategories(itemService.getAllItemCategories().stream().map(CategoryItem::getName).collect(Collectors.toSet()));
-            sh.acceptedOrderCategories(itemService.getAllItemCategories().stream().map(CategoryItem::getName).collect(Collectors.toSet()));
-            ta.acceptedOrderCategories(itemService.getAllItemCategories().stream().map(CategoryItem::getName).collect(Collectors.toSet()));
+            ps.acceptedOrderCategories(itemService.getAllItemCategories().stream()
+            .map(CategoryItem::getName).filter(name -> !name.equals("")).collect(Collectors.toSet()));
+            tb.acceptedOrderCategories(itemService.getAllItemCategories().stream()
+            .map(CategoryItem::getName).filter(name -> !name.equals("")).collect(Collectors.toSet()));
+            sh.acceptedOrderCategories(itemService.getAllItemCategories().stream()
+            .map(CategoryItem::getName).filter(name -> !name.equals("")).collect(Collectors.toSet()));
+            ta.acceptedOrderCategories(itemService.getAllItemCategories().stream()
+            .map(CategoryItem::getName).filter(name -> !name.equals("")).collect(Collectors.toSet()));
 
             playstationContainerRepository.save(ps);
             playstationContainerRepository.save(tb);
@@ -367,7 +378,7 @@ public class testCMD implements CommandLineRunner {
     }
 
     void DoDevicesRecords(PlaystationContainer ps) {
-        Query query = new Query(Criteria.where("created_date").gte(Instant.parse("2022-02-26T03:38:32.398+00:00")))
+        Query query = new Query(Criteria.where("created_date").gte(fromDate))
             .with(Pageable.ofSize(recordsRetCount));
         List<Record> results = erMongoTemplate.find(query, Record.class, "record");
 
@@ -454,7 +465,7 @@ public class testCMD implements CommandLineRunner {
     }
 
     void DoTablesRecords(PlaystationContainer tb, PlaystationContainer sh, PlaystationContainer ta) {
-        Query query = new Query(Criteria.where("created_date").gte(Instant.parse("2022-02-26T03:38:32.398+00:00")))
+        Query query = new Query(Criteria.where("created_date").gte(fromDate))
             .with(Pageable.ofSize(recordsRetCount));
         List<TableRecord> results = erMongoTemplate.find(query, TableRecord.class, "tableRecord");
 
@@ -552,11 +563,77 @@ public class testCMD implements CommandLineRunner {
                 Invoice invoiceDomainX = invoiceServiceImpl.findOneDomain(inv.getId()).get();
                 invoiceDomainX.setUserNetPrice(BigDecimal.valueOf(tableRecord.getNetTotalPrice()));
                 invoiceDomainX = invoiceRepository.save(invoiceDomainX);
+                tableRecSession.setVarRefId(tableRecord.getId());
                 playStationSessionRepository.save(tableRecSession);
             } else {
                 invoiceRepository.deleteById(inv.getId());
                 playStationSessionRepository.deleteById(tableRecSession.getId());
             }
+        }
+    }
+
+    void DoSheftRecords() {
+        Query query = new Query(Criteria.where("created_date").gte(fromDate))
+            .with(Pageable.ofSize(recordsRetCount));
+        List<com.konsol.core.domain.VAR.Sheft> results = erMongoTemplate.find(query, com.konsol.core.domain.VAR.Sheft.class, "sheft");
+
+        sheftRepository.deleteAll();
+
+        for (com.konsol.core.domain.VAR.Sheft oldSheft : results) {
+            com.konsol.core.domain.Sheft newSheft = new com.konsol.core.domain.Sheft();
+
+            // Copy basic fields
+            newSheft.setStartTime(oldSheft.getStart());
+            newSheft.setEndTime(oldSheft.getEnd());
+            newSheft.setActive(false); // Since we're migrating old data
+            newSheft.setAssignedEmployee(oldSheft.getUser() != null ? oldSheft.getUser().getLogin() : "");
+            newSheft.setAssignedEmployeeUser(oldSheft.getUser());
+
+            // Calculate duration if start and end times exist
+            if (oldSheft.getStart() != null && oldSheft.getEnd() != null) {
+                newSheft.setDuration(Duration.between(oldSheft.getStart(), oldSheft.getEnd()));
+            } else {
+                newSheft.setDuration(Duration.ZERO);
+            }
+
+            // Set financial fields
+            newSheft.setTotalprice(BigDecimal.valueOf(oldSheft.getTotal_net_price()));
+            newSheft.setTotalCost(BigDecimal.ZERO); // Default as not present in old model
+            newSheft.setNetPrice(BigDecimal.valueOf(oldSheft.getTotal_net_price_after_discount()));
+            newSheft.setNetCost(BigDecimal.ZERO); // Default as not present in old model
+            newSheft.setNetUserPrice(BigDecimal.valueOf(oldSheft.getTotal_net_price_after_discount_system()));
+            newSheft.setTotalItemsOut(BigDecimal.ZERO); // Default as not present in old model
+            newSheft.setDiscount(BigDecimal.valueOf(oldSheft.getTotal_discount()));
+
+            // Set additional financial fields
+            newSheft.setInvoicesAdditions(BigDecimal.ZERO);
+            newSheft.setAdditions(BigDecimal.ZERO);
+            newSheft.setAdditionsNotes(BigDecimal.ZERO);
+            newSheft.setInvoicesExpenses(BigDecimal.ZERO);
+            newSheft.setSheftExpenses(BigDecimal.ZERO);
+            newSheft.setTotalinvoices(BigDecimal.ZERO);
+            newSheft.setTotaldeletedItems(BigDecimal.ZERO);
+            newSheft.setTotaldeletedItemsPrice(BigDecimal.ZERO);
+
+            // Copy audit fields
+            newSheft.setCreatedBy(oldSheft.getCreatedBy());
+            newSheft.setCreatedDate(oldSheft.getCreatedDate());
+            newSheft.setLastModifiedBy(oldSheft.getLastModifiedBy());
+            newSheft.setLastModifiedDate(oldSheft.getLastModifiedDate());
+
+            newSheft.setVarRefId(oldSheft.getId());
+            try {
+
+
+            oldSheft.getRecords().forEach(record -> {
+                playStationSessionRepository.findByVarRefId(record.getId()).ifPresent(session -> {
+                    newSheft.getSessions().add(session);
+                });
+            });
+            } catch (Exception e) {
+                log.error("Error setting varRefId for Sheft", e);
+            }
+            sheftRepository.save(newSheft);
         }
     }
 }

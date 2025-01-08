@@ -7,4 +7,5 @@ public enum AccountKind {
     CUSTOMER,
     SUPPLIER,
     SALEMAN,
+    EMPLOYEE
 }
