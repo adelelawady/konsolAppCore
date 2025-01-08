@@ -7,10 +7,10 @@
 
     <groupId>com.konsol.core</groupId>
     <artifactId>konsol-core</artifactId>
-    <version>2.7</version>
+    <version>3.0</version>
     <packaging>jar</packaging>
     <name>Konsol Core</name>
-    <description>Description for KonsolCore</description>
+    <description>A core management system for gaming centers and internet cafes that handles device control, user management, billingn</description>
 
     <repositories>
         <!-- jhipster-needle-maven-repository -->
