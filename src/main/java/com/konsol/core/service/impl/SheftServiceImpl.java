@@ -110,7 +110,7 @@ public class SheftServiceImpl implements SheftService {
     @Override
     public Page<SheftDTO> findAll(Pageable pageable) {
         LOG.debug("Request to get all Shefts");
-        return sheftRepository.findAll(pageable).map(sheftMapper::toDto);
+        return sheftRepository.findAllByOrderByStartTimeDesc(pageable).map(sheftMapper::toDto);
     }
 
     @Override

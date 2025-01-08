@@ -98,6 +98,7 @@ public class PlaystationDeviceServiceImpl implements PlaystationDeviceService {
         LOG.debug("Request to save PlaystationDevice : {}", PsDeviceDTO);
         PlaystationDevice playstationDevice = playstationDeviceMapper.toEntity(PsDeviceDTO);
         playstationDevice = playstationDeviceRepository.save(playstationDevice);
+        clearDeviceCaches(playstationDevice);
         return playstationDeviceMapper.toDto(playstationDevice);
     }
 
