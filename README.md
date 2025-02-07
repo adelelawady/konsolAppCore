@@ -1,6 +1,171 @@
-# KonsolCore
+# 🎮 KonsolCore
 
-This application was generated using JHipster 7.9.3, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v7.9.3](https://www.jhipster.tech/documentation-archive/v7.9.3).
+<div align="center">
+
+![Version](https://img.shields.io/badge/version-0.0.1-blue.svg?style=for-the-badge)
+![License](https://img.shields.io/badge/license-Apache%202.0-green.svg?style=for-the-badge)
+![JHipster](https://img.shields.io/badge/JHipster-7.9.3-purple.svg?style=for-the-badge&logo=jhipster)
+![MongoDB](https://img.shields.io/badge/MongoDB-4.4+-darkgreen.svg?style=for-the-badge&logo=mongodb)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-2.7-brightgreen.svg?style=for-the-badge&logo=springboot)
+![Angular](https://img.shields.io/badge/Angular-14.x-red.svg?style=for-the-badge&logo=angular)
+![Node](https://img.shields.io/badge/Node-14.x-green.svg?style=for-the-badge&logo=node.js)
+
+<p align="center">
+  <strong>🚀 A Modern Business Management System</strong><br>
+  Built with JHipster, Spring Boot, and Angular
+</p>
+
+[📖 Documentation](http://localhost:8080/swagger-ui.html) |
+[🌐 Demo](http://localhost:8080) |
+[🐛 Issues](https://github.com/adelelawady/issues) |
+[📝 License](LICENSE)
+
+</div>
+
+## 🌟 Overview
+
+KonsolCore is a comprehensive business management system that provides powerful APIs for:
+
+- 🏪 Store & Inventory Management
+- 📦 Item Tracking & Analysis
+- 🧾 Invoice Processing
+- 💰 Financial Operations
+- 🎮 Gaming Services Management
+- 👥 User Account Management
+
+<div align="center">
+  <img src="https://via.placeholder.com/800x400?text=KonsolCore+Dashboard" alt="KonsolCore Dashboard" width="800"/>
+</div>
+
+## ✨ Features
+
+### 🏪 Store Management
+
+- 📋 Complete store CRUD operations
+- 📦 Store inventory tracking
+- 🏢 Multi-store item management
+- 📊 Store item quantity management
+- 🏷️ Store names and metadata management
+
+### 📦 Item Management
+
+- 🔄 Full item lifecycle management
+- 🗂️ Item categorization
+- 📏 Item unit management
+- 📈 Item analysis and charts
+- 🗃️ Category-based item listing
+- 💰 Item price tracking
+- ⏭️ Previous/Next item navigation
+- 📥 Bulk item operations
+
+### 🧾 Invoice Management
+
+- 📝 Invoice creation and management
+- 📋 Invoice item tracking
+- 🔍 Invoice search and filtering
+- 👀 Invoice view customization
+- 🔄 Invoice status management
+- 📚 Batch invoice processing
+
+### 💰 Financial Management
+
+#### 💵 Money Management
+
+- 💳 Financial transaction tracking
+- 💱 Money movement monitoring
+- 📜 Transaction history
+- 📊 Financial reporting
+- 🔍 Search and pagination support
+
+#### 🏦 Bank Management
+
+- 🏛️ Bank account operations
+- 💸 Bank transaction tracking
+- 📊 Bank balance analysis
+- 📈 Transaction monitoring
+
+### 👥 User Account Management
+
+- 👤 User profile management
+- 📜 Transaction history tracking
+- 💰 Account balance monitoring
+- 🔍 User search capabilities
+- 📚 Batch user operations
+
+### 🎮 PlayStation Service Management
+
+- 🖥️ Device session tracking
+- ⏯️ Session start/stop management
+- 🧾 Session invoicing
+- 🎮 Device type management
+- 📊 Real-time session monitoring
+
+## 📚 API Documentation
+
+### 🔗 Core API Endpoints
+
+#### 🏪 Store Management (`/api/stores`)
+
+- `GET /stores` - List all stores (supports pagination)
+- `POST /stores` - Create new store
+- `GET /stores/{id}` - Get store details
+- `PATCH /stores/{id}` - Update store
+- `DELETE /stores/{id}` - Delete store
+- `GET /stores/names` - Get all store names
+- `POST /stores/storeItems` - Manage store items
+
+#### 📦 Item Management (`/api/items`)
+
+- `GET /items` - List all items
+- `POST /items` - Create new item
+- `GET /items/{id}` - Get item details
+- `PUT /items/{id}` - Update item
+- `DELETE /items/{id}` - Delete item
+- `GET /items/{id}/units` - Get item units
+- `POST /items/view` - Search items
+- `POST /items/{id}/analysis` - Get item analysis
+- `POST /items/{id}/charts` - Get item charts
+
+#### 🧾 Invoice Management (`/api/invoices`)
+
+- `GET /invoices` - List all invoices
+- `POST /invoices` - Create invoice
+- `GET /invoices/{id}` - Get invoice details
+- `PATCH /invoices/{id}` - Update invoice
+- `DELETE /invoices/{id}` - Delete invoice
+- `POST /invoices/view` - Search invoices
+- `GET /invoices/{id}/invoiceItems` - Get invoice items
+
+#### 💰 Financial Management
+
+##### Money Management (`/api/monies`)
+
+- `GET /monies` - List all transactions
+- `POST /monies` - Create transaction
+- `GET /monies/{id}` - Get transaction details
+- `POST /monies/view` - Search transactions
+
+##### 🏦 Bank Management (`/api/banks`)
+
+- `GET /banks/{id}` - Get bank details
+- `POST /banks/{id}/transactions` - Get bank transactions
+- `GET /banks/{id}/analysis` - Get bank analysis
+
+#### 🎮 PlayStation Management (`/api/playstation`)
+
+- `POST /playstation/device/{id}/session/start` - Start device session
+- `POST /playstation/device/{id}/session/stop` - Stop device session
+- `POST /playstation/device/{id}/session/invoice/update` - Update session invoice
+- `GET /playstation/device/type/{id}` - Get device types
+
+### 📖 API Documentation Access
+
+The API documentation is available through OpenAPI (Swagger):
+
+- 📑 OpenAPI JSON: http://localhost:8080/api/v3/api-docs
+- 🔍 Swagger UI: http://localhost:8080/swagger-ui.html
+
+To enable API documentation, ensure the `api-docs` profile is active in your configuration:
 
 ## Project Structure
 

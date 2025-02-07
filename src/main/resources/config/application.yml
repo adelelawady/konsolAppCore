@@ -92,7 +92,11 @@ management:
 mongock:
   migration-scan-package:
     - com.konsol.core.config.dbmigrations
-
+  mongo-db:
+    read-concern: local
+    retryWrites: false
+    write-concern:
+      journal: false
 spring:
   application:
     name: KonsolCore
