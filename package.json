@@ -1,9 +1,9 @@
 {
   "name": "konsol-core",
-  "version": "0.0.1-SNAPSHOT",
+  "version": "3.0.0",
   "private": true,
-  "description": "Description for KonsolCore",
-  "license": "UNLICENSED",
+  "description": "A Modern Business Management System",
+  "license": "MIT",
   "scripts": {
     "app:start": "./mvnw",
     "backend:build-cache": "./mvnw dependency:go-offline",
