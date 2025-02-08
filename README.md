@@ -15,7 +15,7 @@
   Built with JHipster, Spring Boot, and Angular
 </p>
 
-[📖 Documentation](http://localhost:8080/swagger-ui.html) |
+[📖 Documentation](ApiDocumentation.md) |
 [🌐 Demo](http://localhost:8080) |
 [🐛 Issues](https://github.com/adelelawady/issues) |
 [📝 License](LICENSE)
