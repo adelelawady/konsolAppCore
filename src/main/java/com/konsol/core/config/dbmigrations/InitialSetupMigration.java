@@ -1,18 +1,20 @@
 package com.konsol.core.config.dbmigrations;
 
 import com.konsol.core.config.Constants;
-import com.konsol.core.domain.Authority;
-import com.konsol.core.domain.Bank;
-import com.konsol.core.domain.Store;
-import com.konsol.core.domain.User;
+import com.konsol.core.domain.*;
+import com.konsol.core.domain.playstation.PlaystationDeviceType;
 import com.konsol.core.security.AuthoritiesConstants;
-import com.konsol.core.service.LicenseService;
-import com.konsol.core.service.SettingService;
+import com.konsol.core.service.*;
+import com.konsol.core.service.api.dto.ItemDTO;
+import com.konsol.core.service.api.dto.PsDeviceDTO;
+import com.konsol.core.service.api.dto.PsDeviceType;
 import io.mongock.api.annotations.ChangeUnit;
 import io.mongock.api.annotations.Execution;
 import io.mongock.api.annotations.RollbackExecution;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;
 
@@ -26,11 +28,24 @@ public class InitialSetupMigration {
     private final MongoTemplate template;
 
     private final LicenseService licenseService;
-
+    private final PlaystationDeviceService playstationDeviceService;
+    private final PlaystationDeviceTypeService playstationDeviceTypeService;
+    private final ItemService itemService;
     private final SettingService settingService;
-    public InitialSetupMigration(MongoTemplate template, LicenseService licenseService, SettingService settingService) {
+
+    public InitialSetupMigration(
+        MongoTemplate template,
+        LicenseService licenseService,
+        PlaystationDeviceService playstationDeviceService,
+        PlaystationDeviceTypeService playstationDeviceTypeService,
+        ItemService itemService,
+        SettingService settingService
+    ) {
         this.template = template;
         this.licenseService = licenseService;
+        this.playstationDeviceService = playstationDeviceService;
+        this.playstationDeviceTypeService = playstationDeviceTypeService;
+        this.itemService = itemService;
         this.settingService = settingService;
     }
 
@@ -50,21 +65,58 @@ public class InitialSetupMigration {
         createFirstStore();
         createTrialLicense();
         createSettings();
+        InitSystem();
     }
 
     @RollbackExecution
     public void rollback() {}
 
     private void createTrialLicense() {
-        licenseService.generateLicense("Trial License", Instant.now().plus(10, ChronoUnit.DAYS));
+        licenseService.generateLicense("Trial License", Instant.now().plus(100, ChronoUnit.DAYS));
     }
 
     private void createSettings() {
         try {
             settingService.getSettings();
-        }catch (Exception e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    private void InitSystem() {
+        PlaystationContainer container = new PlaystationContainer();
+        container.setName("Container 1");
+        container.setCategory("Category");
+        container.setCanHaveMultiTimeManagement(true);
+        container.setCanMoveDevice(true);
+        container.setShowTime(true);
+        container.setShowType(true);
+        container.setAcceptedOrderCategories(Collections.singleton("Category"));
+
+        template.save(container);
+
+        ItemDTO item = new ItemDTO();
+        item.setName("Item 1");
+        item.setCategory("Category");
+        item.setPrice1(String.valueOf(100.0));
+        item.setCost(BigDecimal.valueOf(50.0));
+        item.setCheckQty(true);
+        item.setQty(BigDecimal.valueOf(10.0));
+        item.setBarcode("Barcode");
+        itemService.create(item);
+
+        PsDeviceType deviceType = new PsDeviceType();
+        deviceType.setName("Device Type 1");
+        deviceType.setPrice(String.valueOf(BigDecimal.valueOf(50.0)));
+        deviceType = playstationDeviceTypeService.save(deviceType);
+
+        PsDeviceDTO device = new PsDeviceDTO();
+        device.setName("Device 1");
+        device.setCategory("Category");
+        device.setTimeManagement(true);
+        device.setType(deviceType);
+        device.setActive(false);
+        playstationDeviceService.save(device);
     }
 
     private Authority createAuthority(String authority) {
@@ -189,8 +241,6 @@ public class InitialSetupMigration {
         saveInvoice.setCategory("Invoice Management");
         saveInvoice.setDescription("Save invoice changes");
         template.save(saveInvoice);
-
-
 
         // Store Management
         Authority createStore = createAuthority(AuthoritiesConstants.CREATE_STORE);
@@ -358,8 +408,6 @@ public class InitialSetupMigration {
         printPurchase.setCategory("Purchase Management");
         printPurchase.setDescription("Print purchase documents");
         template.save(printPurchase);
-
-
 
         // User Management
         Authority createUser = createAuthority(AuthoritiesConstants.CREATE_USER);

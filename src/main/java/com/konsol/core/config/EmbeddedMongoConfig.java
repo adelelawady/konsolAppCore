@@ -7,13 +7,13 @@ import javax.annotation.PreDestroy;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-@Configuration // Use in the production profile or any specific profile
-@Profile("prod")
+//@Configuration // Use in the production profile or any specific profile
+//@Profile("prod")
 public class EmbeddedMongoConfig {
 
     private Process mongoProcess;
 
-    @PostConstruct
+    //@PostConstruct
     public void startMongoDB() {
         try {
             String startupPath = Paths.get("").toAbsolutePath().toString();
@@ -31,7 +31,7 @@ public class EmbeddedMongoConfig {
         }
     }
 
-    @PreDestroy
+    //@PreDestroy
     public void stopMongoDB() {
         if (mongoProcess != null) {
             mongoProcess.destroy();
