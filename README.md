@@ -15,8 +15,7 @@
   Built with JHipster, Spring Boot, and Angular
 </p>
 
-[📖 Documentation](ApiDocumentation.md) |
-[🌐 Demo](http://localhost:8080) |
+[📖 API Documentation](ApiDocumentation.md) |
 [🐛 Issues](https://github.com/adelelawady/issues) |
 [📝 License](LICENSE)
 
@@ -34,7 +33,7 @@ KonsolCore is a comprehensive business management system that provides powerful 
 - 👥 User Account Management
 
 <div align="center">
-  <img src="https://via.placeholder.com/800x400?text=KonsolCore+Dashboard" alt="KonsolCore Dashboard" width="800"/>
+  <img width="1125" alt="Screenshot 2025-02-27 174949" src="https://github.com/user-attachments/assets/caa63dc9-575f-40ec-abfe-b6e28dfd9c75" />
 </div>
 
 ## ✨ Features
@@ -99,6 +98,64 @@ KonsolCore is a comprehensive business management system that provides powerful 
 - 🧾 Session invoicing
 - 🎮 Device type management
 - 📊 Real-time session monitoring
+
+## 🚀 Running the Server
+
+### Prerequisites
+
+Before starting the application, ensure you have:
+
+1. MongoDB installed and running on your device
+
+   ```bash
+   # Start MongoDB (command may vary based on installation)
+   mongod --dbpath=/path/to/data/db
+
+   # Default MongoDB connection URL
+   mongodb://localhost:27017/KonsolCore
+   ```
+
+2. Node.js and npm installed
+3. Java 11 or later installed
+
+### Development Mode
+
+To run the server and frontend in development mode with hot-reload:
+
+```bash
+# Start the Spring Boot server
+./mvnw
+```
+
+In a separate terminal, start the Angular development server
+
+```bash
+npm install
+npm start
+```
+
+### Run compiled application jar file :
+
+```bash
+# run compiled application jar file
+java -jar konsol-core-3.0.jar
+```
+
+### Production Mode
+
+To run the server in production mode:
+
+build the application:
+
+```bash
+./mvnw -Pprod clean verify -DskipTests
+```
+
+run the application:
+
+```bash
+java -jar target/*.jar
+```
 
 ## 📚 API Documentation
 
@@ -431,5 +488,3 @@ To configure CI for your project, run the ci-cd sub-generator (`jhipster ci-cd`)
 [openapi-generator]: https://openapi-generator.tech
 [swagger-editor]: https://editor.swagger.io
 [doing api-first development]: https://www.jhipster.tech/documentation-archive/v7.9.3/doing-api-first-development/
-
-./mvnw eclipse:clean eclipse:eclipse
