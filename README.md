@@ -1,5 +1,3 @@
-
-
 <div align="center">
  
   <img src="https://github.com/user-attachments/assets/deb70e45-e60e-4dd7-b17b-1af2cfe567dc" alt="KonsolCore Logo" width="200"/>
@@ -21,6 +19,13 @@
   Built with JHipster, Spring Boot, and Angular
 </p>
 
+<div align="center">
+  <a href="https://github.com/adelelawady/konsolAppCore/releases/download/3.0/KonsolCore.Setup.3.0.0.exe">
+    <img src="https://img.shields.io/badge/Download_for-Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white" alt="Download for Windows" />
+  </a>
+</div>
+
+[🏠 Homepage](https://adelelawady.github.io/konsolAppCore/) |
 [📖 API Documentation](ApiDocumentation.md) |
 [🐛 Issues](https://github.com/adelelawady/issues) |
 [📝 License](LICENSE)
