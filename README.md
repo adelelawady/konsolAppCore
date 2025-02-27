@@ -1,7 +1,9 @@
-# KonsolCore
+
 
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/deb70e45-e60e-4dd7-b17b-1af2cfe567dc" alt="KonsolCore Logo" width="400"/>
+ 
+  <img src="https://github.com/user-attachments/assets/deb70e45-e60e-4dd7-b17b-1af2cfe567dc" alt="KonsolCore Logo" width="200"/>
+  <h1>KonsolCore</h1>
 </div>
 
 <div align="center">
