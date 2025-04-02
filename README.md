@@ -13,6 +13,7 @@
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-2.7-brightgreen.svg?style=for-the-badge&logo=springboot)
 ![Angular](https://img.shields.io/badge/Angular-14.x-red.svg?style=for-the-badge&logo=angular)
 ![Node](https://img.shields.io/badge/Node-14.x-green.svg?style=for-the-badge&logo=node.js)
+[![Downloads](https://img.shields.io/github/downloads/adelelawady/konsolAppCore/total.svg)](https://github.com/adelelawady/konsolAppCore/releases/)
 
 <p align="center">
   <strong>🚀 A Modern Business Management System</strong><br>
